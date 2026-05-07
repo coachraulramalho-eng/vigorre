@@ -31,25 +31,22 @@
     th { background: #f8fafc; font-weight: 600; color: #475569; }
     .btn { padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; font-size: 0.8rem; transition: 0.2s; margin-right: 4px; }
     .btn-primary { background: #3b82f6; color: white; }
-    .btn-success { background: #22c55e; color: white; }
     .btn-warning { background: #f59e0b; color: white; }
     .btn-danger { background: #ef4444; color: white; }
-    .btn-sm { padding: 4px 8px; }
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px); }
     .modal.active { display: flex; }
     .modal-content { background: white; border-radius: 16px; padding: 2rem; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 1rem; }
     .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #94a3b8; }
-    .form-group { margin-bottom: 1rem; }
+    .form-group { margin-bottom: 1rem; position: relative; }
     .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.9rem; }
-    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.95rem; }
+    .form-group input, .form-group select { width: 100%; padding: 10px; padding-right: 35px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.95rem; }
+    .toggle-pass { position: absolute; right: 10px; top: 36px; cursor: pointer; color: #64748b; }
     .credentials-box { background: #f0f9ff; padding: 1rem; border-radius: 8px; border-left: 4px solid #3b82f6; margin: 1rem 0; }
     .credentials-box h4 { color: #1e40af; margin-bottom: 0.5rem; font-size: 0.95rem; }
     .checks { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 5px; }
     .checks label { display: flex; align-items: center; gap: 5px; font-weight: 400; font-size: 0.9rem; background: white; padding: 4px 8px; border-radius: 4px; border: 1px solid #e2e8f0; cursor: pointer; }
-    .checks input { width: auto; }
     .toast { position: fixed; top: 20px; right: 20px; background: white; padding: 12px 16px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 10px; z-index: 2000; animation: slideIn 0.3s; border-left: 4px solid #22c55e; }
-    .toast.error { border-left-color: #ef4444; }
     @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
     @media (max-width: 768px) { .sidebar { width: 60px; padding: 1rem; } .sidebar .logo span, .nav-menu a span, .user-info { display: none; } .main { margin-left: 60px; } .stats { grid-template-columns: 1fr 1fr; } }
   </style>
@@ -79,20 +76,20 @@
         <div class="stat-card"><div class="value" id="statTest">0</div><div class="label">Testes Ativos</div></div>
         <div class="stat-card"><div class="value" id="statRep">0</div><div class="label">Relatórios</div></div>
       </div>
-      <div class="card"><h3>Bem-vindo</h3><p>Painel administrativo Vigorre.</p></div>
+      <div class="card"><h3>Bem-vindo</h3><p>Painel administrativo Vigorre. Use o menu lateral para gerenciar cadastros.</p></div>
     </section>
 
     <section id="companies" style="display:none;">
       <div class="card">
         <h3>Empresas <button class="btn btn-primary" onclick="openModal('compModal')">+ Nova Empresa</button></h3>
-        <table><thead><tr><th>Empresa</th><th>CNPJ</th><th>Responsável</th><th>Participantes Vinculados</th><th>Relatórios</th><th>Ações</th></tr></thead><tbody id="compTable"></tbody></table>
+        <table><thead><tr><th>Empresa</th><th>CNPJ</th><th>Responsável</th><th>Participantes</th><th>Ações</th></tr></thead><tbody id="compTable"></tbody></table>
       </div>
     </section>
 
     <section id="participants" style="display:none;">
       <div class="card">
         <h3>Participantes <button class="btn btn-primary" onclick="openModal('partModal')">+ Novo Participante</button></h3>
-        <table><thead><tr><th>Nome</th><th>E-mail</th><th>Telefone</th><th>Credenciais</th><th>Ações</th></tr></thead><tbody id="partTable"></tbody></table>
+        <table><thead><tr><th>Nome</th><th>E-mail</th><th>Empresa</th><th>Credenciais</th><th>Ações</th></tr></thead><tbody id="partTable"></tbody></table>
       </div>
     </section>
   </main>
@@ -122,24 +119,21 @@
         <div class="form-group"><label>Nome Completo *</label><input type="text" id="pName" required></div>
         <div class="form-group"><label>E-mail *</label><input type="email" id="pEmail" required></div>
         <div class="form-group"><label>Telefone *</label><input type="tel" id="pPhone" required></div>
-        <div class="form-group"><label>Empresa</label><select id="pComp"><option value="">Sem Vínculo</option></select></div>
+        <div class="form-group"><label>Vincular a Empresa</label><select id="pComp"><option value="">Nenhuma</option></select></div>
         
         <div class="credentials-box">
           <h4>🔑 Credenciais de Acesso</h4>
           <div class="form-group"><label>Usuário de Login</label><input type="text" id="pUser" placeholder="Ex: joao.silva"></div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <div class="form-group"><label>Senha Temporária</label><input type="text" id="pPass" placeholder="Senha..."></div>
-            <div class="form-group"><label>Validade</label><input type="date" id="pExp"></div>
-          </div>
+          <div class="form-group"><label>Senha Temporária</label><input type="password" id="pPass" placeholder="Senha..."><span class="toggle-pass" onclick="togglePass('pPass')">👁️</span></div>
+          <div class="form-group"><label>Validade</label><input type="date" id="pExp"></div>
           <div class="form-group"><label>Testes Liberados</label>
             <div class="checks">
               <label><input type="checkbox" id="chkDISC" value="DISC"> DISC</label>
-              <label><input type="checkbox" id="chkIE" value="Inteligência Emocional"> Inteligência Emocional</label>
-              <label><input type="checkbox" id="chkVal" value="Valores Pessoais"> Valores Pessoais</label>
+              <label><input type="checkbox" id="chkIE" value="IE"> Inteligência Emocional</label>
+              <label><input type="checkbox" id="chkVal" value="Valores"> Valores Pessoais</label>
             </div>
           </div>
         </div>
-
         <button type="submit" class="btn btn-primary" style="width:100%;padding:12px;">Salvar Participante</button>
       </form>
     </div>
@@ -166,8 +160,8 @@
     function loadAll() {
       document.getElementById('statComp').textContent = DB.comps.length;
       document.getElementById('statPart').textContent = DB.parts.length;
-      document.getElementById('statTest').textContent = Math.floor(Math.random()*5); // Simulado
-      document.getElementById('statRep').textContent = Math.floor(Math.random()*10); // Simulado
+      document.getElementById('statTest').textContent = Math.floor(Math.random()*5);
+      document.getElementById('statRep').textContent = Math.floor(Math.random()*10);
       loadComps(); loadParts();
     }
 
@@ -179,41 +173,47 @@
       document.getElementById('pageTitle').textContent = s.charAt(0).toUpperCase()+s.slice(1);
     }
 
-    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function openModal(id) { 
+      document.getElementById(id).classList.add('active'); 
+      updateSelect();
+    }
     function closeModal(id) { document.getElementById(id).classList.remove('active'); document.querySelectorAll('form').forEach(f=>f.reset()); }
-
+    function togglePass(id) { const i=document.getElementById(id); i.type = i.type==='password'?'text':'password'; }
     function updateSelect() {
       const sel = document.getElementById('pComp');
-      sel.innerHTML = '<option value="">Sem Vínculo</option>' + DB.comps.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+      sel.innerHTML = '<option value="">Nenhuma</option>' + DB.comps.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
     }
 
     function loadComps() {
       document.getElementById('compTable').innerHTML = DB.comps.map(c => {
         const parts = DB.parts.filter(p => p.compId === c.id);
-        const partNames = parts.map(p => p.name).join(', ') || 'Nenhum';
         return `<tr>
           <td><strong>${c.name}</strong><br><small>${c.email}</small></td>
           <td>${c.cnpj}</td>
           <td>${c.resp}</td>
-          <td style="font-size:0.85rem; color:#64748b;">${partNames}</td>
+          <td style="font-size:0.85rem; color:#64748b;">${parts.map(p=>p.name).join(', ')||'Nenhum'}</td>
           <td>
-            <button class="btn btn-success btn-sm" onclick="sendRep('${c.name}', 'Completo')">📄 Completo</button>
-            <button class="btn btn-warning btn-sm" onclick="sendRep('${c.name}', 'Laudo')">📑 Laudo</button>
+            <button class="btn btn-warning" onclick="editComp('${c.id}')">✏️ Editar</button>
+            <button class="btn btn-danger" onclick="del('comp','${c.id}')">🗑️</button>
           </td>
-          <td><button class="btn btn-sm btn-danger" onclick="del('comp','${c.id}')">🗑️</button></td>
         </tr>`;
-      }).join('') || '<tr><td colspan="6" style="text-align:center;color:#94a3b8;">Nenhuma empresa</td></tr>';
+      }).join('') || '<tr><td colspan="5" style="text-align:center;color:#94a3b8;">Nenhuma empresa</td></tr>';
     }
 
     function loadParts() {
-      document.getElementById('partTable').innerHTML = DB.parts.map(p => `
-        <tr>
+      document.getElementById('partTable').innerHTML = DB.parts.map(p => {
+        const comp = DB.comps.find(c=>c.id===p.compId);
+        return `<tr>
           <td><strong>${p.name}</strong><br><small>${p.email}</small></td>
           <td>${p.phone}</td>
-          <td><span style="font-size:0.8rem; color:#64748b;">U:${p.user||'-'} | S:${p.pass||'-'}</span><br><span style="font-size:0.75rem;">Ex:${p.exp||'-'} | T:${p.tests?.join(',')||'Nenhum'}</span></td>
-          <td><button class="btn btn-sm btn-warning" onclick="editPart('${p.id}')">✏️</button> <button class="btn btn-sm btn-danger" onclick="del('part','${p.id}')">🗑️</button></td>
-        </tr>
-      `).join('') || '<tr><td colspan="5" style="text-align:center;color:#94a3b8;">Nenhum participante</td></tr>';
+          <td>${comp?.name||'Independente'}</td>
+          <td><span style="font-size:0.8rem; color:#64748b;">U:${p.user||'-'} | S:${p.pass||'-'}</span><br><span style="font-size:0.75rem;">Exp:${p.exp||'-'} | T:${p.tests?.join(',')||'Nenhum'}</span></td>
+          <td>
+            <button class="btn btn-warning" onclick="editPart('${p.id}')">✏️ Editar</button>
+            <button class="btn btn-danger" onclick="del('part','${p.id}')">🗑️</button>
+          </td>
+        </tr>`;
+      }).join('') || '<tr><td colspan="5" style="text-align:center;color:#94a3b8;">Nenhum participante</td></tr>';
     }
 
     function saveComp(e) {
@@ -225,20 +225,27 @@
       saveDB(); closeModal('compModal'); showToast('Empresa salva!');
     }
 
+    function editComp(id) {
+      const c = DB.comps.find(x => x.id === id); if(!c) return;
+      document.getElementById('cId').value = c.id;
+      document.getElementById('cName').value = c.name;
+      document.getElementById('cCnpj').value = c.cnpj;
+      document.getElementById('cResp').value = c.resp;
+      document.getElementById('cEmail').value = c.email;
+      document.getElementById('cPhone').value = c.phone;
+      document.getElementById('compTitle').textContent = 'Editar Empresa';
+      openModal('compModal');
+    }
+
     function savePart(e) {
       e.preventDefault();
       const id = document.getElementById('pId').value || Date.now().toString();
       const tests = [];
       if(document.getElementById('chkDISC').checked) tests.push('DISC');
-      if(document.getElementById('chkIE').checked) tests.push('Inteligência Emocional');
-      if(document.getElementById('chkVal').checked) tests.push('Valores Pessoais');
+      if(document.getElementById('chkIE').checked) tests.push('IE');
+      if(document.getElementById('chkVal').checked) tests.push('Valores');
       
-      const data = { 
-        id, name: document.getElementById('pName').value, email: document.getElementById('pEmail').value, 
-        phone: document.getElementById('pPhone').value, compId: document.getElementById('pComp').value,
-        user: document.getElementById('pUser').value, pass: document.getElementById('pPass').value,
-        exp: document.getElementById('pExp').value, tests: tests
-      };
+      const data = { id, name: document.getElementById('pName').value, email: document.getElementById('pEmail').value, phone: document.getElementById('pPhone').value, compId: document.getElementById('pComp').value, user: document.getElementById('pUser').value, pass: document.getElementById('pPass').value, exp: document.getElementById('pExp').value, tests: tests };
       const idx = DB.parts.findIndex(x => x.id === id);
       if (idx > -1) DB.parts[idx] = data; else DB.parts.push(data);
       saveDB(); closeModal('partModal'); showToast('Participante salvo!');
@@ -255,8 +262,8 @@
       document.getElementById('pPass').value = p.pass || '';
       document.getElementById('pExp').value = p.exp || '';
       document.getElementById('chkDISC').checked = p.tests?.includes('DISC');
-      document.getElementById('chkIE').checked = p.tests?.includes('Inteligência Emocional');
-      document.getElementById('chkVal').checked = p.tests?.includes('Valores Pessoais');
+      document.getElementById('chkIE').checked = p.tests?.includes('IE');
+      document.getElementById('chkVal').checked = p.tests?.includes('Valores');
       document.getElementById('partTitle').textContent = 'Editar Participante';
       openModal('partModal');
     }
@@ -268,13 +275,9 @@
       saveDB(); showToast('Item excluído.');
     }
 
-    function sendRep(compName, type) {
-      showToast(`Relatório ${type} sendo gerado e enviado para ${compName}...`);
-    }
-
-    function showToast(msg, isError=false) {
-      const t = document.createElement('div'); t.className = `toast ${isError?'error':''}`;
-      t.innerHTML = `<span>${isError?'❌':'✅'}</span><span>${msg}</span>`;
+    function showToast(msg) {
+      const t = document.createElement('div'); t.className = 'toast';
+      t.innerHTML = `<span>✅</span><span>${msg}</span>`;
       document.body.appendChild(t); setTimeout(() => t.remove(), 3000);
     }
 
