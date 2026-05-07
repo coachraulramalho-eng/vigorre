@@ -122,47 +122,55 @@
       btn.disabled = true;
       btn.textContent = 'Entrando...';
 
-      // LÓGICA DE LOGIN ATUALIZADA
-      setTimeout(() => {
-        // 1. Verifica Admin Padrão (Hardcoded)
-        if (email === 'admin' && password === 'amovin2026') {
-          localStorage.setItem('vigorre_current_user', JSON.stringify({ name: 'Administrador', role: 'admin' }));
-          showAlert('Bem-vindo, Administrador!', 'success');
-          setTimeout(() => window.location.href = 'admin.html', 1500);
-        } 
-        // 2. Verifica Participante (Simulado no LocalStorage)
-        else if (userType === 'participant') {
-          const users = JSON.parse(localStorage.getItem('vigorre_users') || '[]');
-          const user = users.find(u => u.email === email && u.password === password && u.type === 'participant');
-          if (user) {
-            localStorage.setItem('vigorre_current_user', JSON.stringify(user));
-            showAlert('Bem-vindo! Redirecionando...', 'success');
-            setTimeout(() => window.location.href = 'admin.html', 1500);
-          } else {
-            showAlert('E-mail ou senha incorretos', 'error');
-            btn.disabled = false;
-            btn.textContent = 'Entrar';
-          }
-        } 
-        // 3. Verifica Empresa (Simulado no LocalStorage)
-        else if (userType === 'company') {
-          const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
-          const company = companies.find(c => c.email === email && c.password === password);
-          if (company) {
-            localStorage.setItem('vigorre_current_company', JSON.stringify(company));
-            showAlert('Bem-vindo! Redirecionando...', 'success');
-            setTimeout(() => window.location.href = 'admin.html', 1500);
-          } else {
-            showAlert('E-mail ou senha incorretos', 'error');
-            btn.disabled = false;
-            btn.textContent = 'Entrar';
-          }
+      // LOGIN DO ADMINISTRADOR
+      if (userType === 'admin' && email === 'admin' && password === 'amovin2026') {
+        localStorage.setItem('vigorre_current_user', JSON.stringify({ 
+          name: 'Administrador', 
+          role: 'admin',
+          email: 'admin'
+        }));
+        showAlert('✅ Login realizado com sucesso! Redirecionando...', 'success');
+        setTimeout(() => {
+          window.location.href = 'admin.html';
+        }, 1000);
+        return;
+      }
+
+      // LOGIN DE PARTICIPANTE
+      if (userType === 'participant') {
+        const users = JSON.parse(localStorage.getItem('vigorre_users') || '[]');
+        const user = users.find(u => u.email === email && u.password === password);
+        if (user) {
+          localStorage.setItem('vigorre_current_user', JSON.stringify(user));
+          showAlert('✅ Bem-vindo! Redirecionando...', 'success');
+          setTimeout(() => window.location.href = 'admin.html', 1000);
         } else {
-          showAlert('Credenciais inválidas', 'error');
+          showAlert('❌ Usuário ou senha incorretos', 'error');
           btn.disabled = false;
           btn.textContent = 'Entrar';
         }
-      }, 800);
+        return;
+      }
+
+      // LOGIN DE EMPRESA
+      if (userType === 'company') {
+        const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+        const company = companies.find(c => c.email === email && c.password === password);
+        if (company) {
+          localStorage.setItem('vigorre_current_company', JSON.stringify(company));
+          showAlert('✅ Bem-vindo! Redirecionando...', 'success');
+          setTimeout(() => window.location.href = 'admin.html', 1000);
+        } else {
+          showAlert('❌ Usuário ou senha incorretos', 'error');
+          btn.disabled = false;
+          btn.textContent = 'Entrar';
+        }
+        return;
+      }
+
+      showAlert('❌ Credenciais inválidas', 'error');
+      btn.disabled = false;
+      btn.textContent = 'Entrar';
     }
   </script>
 </body>
