@@ -23,11 +23,12 @@
       background: rgba(255,255,255,0.05);
       backdrop-filter: blur(10px);
     }
-    .logo { display: flex; align-items: center; gap: 15px; }
+    .logo { display: flex; align-items: center; gap: 15px; cursor: pointer; }
+    .logo:hover { opacity: 0.9; }
     .logo-img { 
       height: 70px; 
       width: auto;
-      border-radius: 8px;
+      filter: drop-shadow(0 4px 10px rgba(59, 130, 246, 0.4));
     }
     .logo-text h1 { font-size: 1.8rem; font-weight: 700; }
     .logo-text p { font-size: 0.85rem; opacity: 0.9; }
@@ -87,9 +88,9 @@
 </head>
 <body>
   <header>
-    <div class="logo">
+    <div class="logo" onclick="window.location.href='index.html'">
       <!-- LOGO DA VIGORRE -->
-      <img src="./logo-vigorre.png" alt="Vigorre" class="logo-img" onerror="this.style.display='none'">
+      <img src="logo-vigorre.png" alt="Vigorre" class="logo-img" onerror="this.style.display='none'">
       <div class="logo-text">
         <h1>Vigorre</h1>
         <p>Inteligência e Gestão Estratégica</p>
