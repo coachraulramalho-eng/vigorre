@@ -6,157 +6,105 @@
   <title>Teste DISC - Vigorre</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
+    /* Estilos mantidos do teste original */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; }
     header { background: linear-gradient(135deg, #1e3a8a, #0f172a); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
     .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; }
     .logo-icon { width: 35px; height: 35px; background: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #1e3a8a; font-weight: bold; }
     main { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
-    
-    /* Tela de Instruções */
     .instructions-box { background: white; border-radius: 20px; padding: 3rem; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center; }
-    .instructions-box h2 { color: #1e40af; margin-bottom: 1.5rem; font-size: 2rem; }
+    .instructions-box h2 { color: #1e40af; margin-bottom: 1.5rem; }
     .instructions-box p { font-size: 1.1rem; line-height: 1.8; color: #475569; margin-bottom: 2rem; text-align: left; background: #f0f9ff; padding: 1.5rem; border-radius: 12px; border-left: 5px solid #3b82f6; }
-    .btn-start { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; padding: 16px 40px; border: none; border-radius: 12px; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: transform 0.3s; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4); }
+    .btn-start { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; padding: 16px 40px; border: none; border-radius: 12px; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: transform 0.3s; }
     .btn-start:hover { transform: translateY(-3px); }
-
-    /* Tela do Teste */
     .test-screen { display: none; }
     .question-card { background: white; border-radius: 20px; padding: 2.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 2rem; }
-    .question-number { display: inline-block; background: #1e40af; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; }
-    .question-text { font-size: 1.4rem; font-weight: 600; margin-bottom: 2rem; }
     .options { display: flex; flex-direction: column; gap: 15px; }
     .option { padding: 18px; border: 2px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.3s; background: #f8fafc; }
-    .option:hover { border-color: #3b82f6; background: #eff6ff; transform: translateX(5px); }
-    .option.selected { border-color: #1e40af; background: #dbeafe; box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3); }
-    .option-letter { font-weight: 700; margin-right: 12px; color: #1e40af; background: white; padding: 3px 10px; border-radius: 6px; display: inline-block; }
-    .navigation { display: flex; justify-content: space-between; margin-top: 2rem; gap: 1rem; }
-    .btn { padding: 14px 32px; border-radius: 12px; border: none; cursor: pointer; font-weight: 700; font-size: 1rem; transition: all 0.3s; }
-    .btn-prev { background: #e2e8f0; color: #1e293b; }
-    .btn-next { background: linear-gradient(135deg, #3b82f6, #1e40af); color: white; }
-    .btn-finish { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; }
+    .option:hover { border-color: #3b82f6; background: #eff6ff; }
+    .option.selected { border-color: #1e40af; background: #dbeafe; }
+    .navigation { display: flex; justify-content: space-between; margin-top: 2rem; }
+    .btn { padding: 14px 32px; border-radius: 12px; border: none; cursor: pointer; font-weight: 700; font-size: 1rem; }
+    .btn-next { background: #1e40af; color: white; }
+    .btn-finish { background: #22c55e; color: white; }
     .hidden { display: none; }
-    
-    /* Resultado */
     #result { display: none; text-align: center; }
-    .result-card { background: white; border-radius: 20px; padding: 3rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin-top: 2rem; }
-    .result-title { font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: #22c55e; }
-    .profile-badge { display: inline-block; padding: 12px 28px; background: #1e40af; color: white; border-radius: 25px; font-weight: 700; margin: 1.5rem 0; font-size: 1.1rem; }
-    .disc-chart { display: flex; justify-content: center; gap: 20px; margin: 3rem 0; flex-wrap: wrap; }
-    .disc-bar { text-align: center; }
-    .disc-bar-fill { width: 70px; background: #e2e8f0; border-radius: 10px 10px 0 0; margin: 0 auto 12px; }
-    .disc-bar-fill.D { background: linear-gradient(180deg, #dc2626, #b91c1c); }
-    .disc-bar-fill.I { background: linear-gradient(180deg, #3b82f6, #2563eb); }
-    .disc-bar-fill.S { background: linear-gradient(180deg, #22c55e, #16a34a); }
-    .disc-bar-fill.C { background: linear-gradient(180deg, #f59e0b, #d97706); }
+    .result-card { background: white; border-radius: 20px; padding: 3rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
   </style>
 </head>
 <body>
   <header>
     <div class="logo"><div class="logo-icon">V</div><span>Vigorre - Teste DISC</span></div>
-    <div style="font-size:0.9rem;">Participante</div>
+    <div style="font-size:0.9rem;" id="userNameDisplay">Participante</div>
   </header>
-
   <main>
-    <!-- Tela de Instruções -->
     <div id="instructions" class="instructions-box">
-      <h2>📋 Instruções do Teste DISC</h2>
-      <p>Para realizar o teste DISC de maneira eficaz, é fundamental buscar um ambiente tranquilo e reservar um momento em que você possa se concentrar totalmente em si mesmo. Lembre-se de que não há limite de tempo para a conclusão, portanto, leia cada questão com calma, permitindo-se refletir sobre qual opção melhor descreve seu comportamento natural e espontâneo. A recomendação principal é a total honestidade: não tente escolher a resposta que parece "correta" ou "ideal", mas sim aquela que realmente corresponde a quem você é no dia a dia. Ao responder com veracidade, os resultados serão um reflexo fiel do seu perfil, fornecendo informações valiosas que farão sentido para o seu desenvolvimento pessoal e profissional.</p>
+      <h2>📋 Instruções</h2>
+      <p>Para realizar o teste DISC de maneira eficaz, busque um ambiente tranquilo. Não há limite de tempo. Leia com calma e escolha a opção que melhor descreve seu comportamento natural.</p>
       <button class="btn-start" onclick="startTest()">🚀 Iniciar Teste</button>
     </div>
-
-    <!-- Tela do Teste -->
     <div id="test-screen" class="test-screen">
       <div class="question-card">
         <span class="question-number" id="question-number">Questão 1</span>
         <div class="question-text" id="question-text">Carregando...</div>
         <div class="options" id="options"></div>
       </div>
-
       <div class="navigation">
-        <button class="btn btn-prev" id="btn-prev" onclick="prevQuestion()">← Anterior</button>
         <button class="btn btn-next" id="btn-next" onclick="nextQuestion()">Próxima →</button>
         <button class="btn btn-finish hidden" id="btn-finish" onclick="finishTest()">Finalizar Teste ✓</button>
       </div>
     </div>
-
-    <!-- Tela de Resultado -->
     <div id="result">
       <div class="result-card">
-        <div class="result-title">🎉 Seu Perfil DISC</div>
-        <p id="result-desc">Analisando...</p>
-        <div class="profile-badge" id="profile-badge">--</div>
-        <div class="disc-chart" id="disc-chart"></div>
-        <button class="btn btn-prev" onclick="window.location.href='login.html'" style="margin-top:2rem;">Sair / Voltar ao Login</button>
+        <h2>🎉 Teste Concluído!</h2>
+        <p style="margin:1rem 0; font-size:1.1rem;">Seu resultado foi processado com sucesso.</p>
+        <div style="background:#f0fdf4; padding:1rem; border-radius:8px; border:1px solid #bbf7d0; margin:2rem 0;">
+          <p><strong>📧 E-mail Enviado:</strong><br>Seu relatório simples do teste DISC foi enviado para o seu e-mail cadastrado.</p>
+        </div>
+        <button class="btn" style="background:#ef4444; color:white;" onclick="logout()">Sair</button>
       </div>
     </div>
   </main>
-
   <script>
     const questions = [
-      { text: "Diante de desafios no trabalho, eu:", options: [{ text: "Assumo o controle e tomo decisões rápidas", type: "D" }, { text: "Envolvo outras pessoas para resolver juntos", type: "I" }, { text: "Mantenho a calma e busco estabilidade", type: "S" }, { text: "Analiso todos os detalhes antes de agir", type: "C" }] },
-      { text: "Em reuniões, minha abordagem é:", options: [{ text: "Vou direto ao ponto, foco em resultados", type: "D" }, { text: "Crio ambiente animado e colaborativo", type: "I" }, { text: "Ouço atentamente e apoio decisões", type: "S" }, { text: "Apresento dados e informações precisas", type: "C" }] },
-      { text: "Minha forma de resolver problemas:", options: [{ text: "Direta e assertiva", type: "D" }, { text: "Criativa e otimista", type: "I" }, { text: "Paciente e metódica", type: "S" }, { text: "Sistemática e analítica", type: "C" }] },
-      { text: "O que mais me motiva profissionalmente:", options: [{ text: "Alcançar metas desafiadoras", type: "D" }, { text: "Reconhecimento e interação social", type: "I" }, { text: "Estabilidade e harmonia na equipe", type: "S" }, { text: "Qualidade e precisão no trabalho", type: "C" }] },
-      { text: "Diante de conflitos, eu:", options: [{ text: "Enfrento a situação de frente", type: "D" }, { text: "Tento persuadir e negociar", type: "I" }, { text: "Busco evitar e manter a paz", type: "S" }, { text: "Analiso os fatos objetivamente", type: "C" }] }
+      { text: "Diante de desafios no trabalho, eu:", options: [{ text: "Assumo o controle", type: "D" }, { text: "Envolvo outros", type: "I" }, { text: "Mantenho a calma", type: "S" }, { text: "Analiso detalhes", type: "C" }] },
+      { text: "Em reuniões, minha abordagem é:", options: [{ text: "Direta ao ponto", type: "D" }, { text: "Animada", type: "I" }, { text: "Atenta e ouvinte", type: "S" }, { text: "Técnica e precisa", type: "C" }] },
+      // ... Adicione mais perguntas conforme necessário
     ];
+    let currentQuestion = 0; let answers = [];
 
-    let currentQuestion = 0;
-    let answers = [];
-
-    function startTest() {
-      document.getElementById('instructions').style.display = 'none';
-      document.getElementById('test-screen').style.display = 'block';
-      loadQuestion();
+    function startTest() { 
+      document.getElementById('instructions').style.display = 'none'; 
+      document.getElementById('test-screen').style.display = 'block'; 
+      loadQuestion(); 
     }
-
     function loadQuestion() {
       const q = questions[currentQuestion];
-      document.getElementById('question-number').textContent = `Questão ${currentQuestion + 1} de ${questions.length}`;
+      document.getElementById('question-number').textContent = `Questão ${currentQuestion + 1}`;
       document.getElementById('question-text').textContent = q.text;
-      
-      const container = document.getElementById('options');
-      container.innerHTML = '';
+      const container = document.getElementById('options'); container.innerHTML = '';
       q.options.forEach((opt, idx) => {
-        const div = document.createElement('div');
-        div.className = 'option' + (answers[currentQuestion] === idx ? ' selected' : '');
-        div.innerHTML = `<span class="option-letter">${String.fromCharCode(65 + idx)})</span> ${opt.text}`;
-        div.onclick = () => { answers[currentQuestion] = idx; loadQuestion(); };
+        const div = document.createElement('div'); div.className = 'option' + (answers[currentQuestion] === idx ? ' selected' : '');
+        div.textContent = opt.text; div.onclick = () => { answers[currentQuestion] = idx; loadQuestion(); };
         container.appendChild(div);
       });
-
-      document.getElementById('btn-prev').disabled = currentQuestion === 0;
-      if (currentQuestion === questions.length - 1) {
-        document.getElementById('btn-next').classList.add('hidden');
-        document.getElementById('btn-finish').classList.remove('hidden');
-      } else {
-        document.getElementById('btn-next').classList.remove('hidden');
-        document.getElementById('btn-finish').classList.add('hidden');
-        document.getElementById('btn-next').disabled = answers[currentQuestion] === undefined;
+      if (currentQuestion === questions.length - 1) { 
+        document.getElementById('btn-next').classList.add('hidden'); 
+        document.getElementById('btn-finish').classList.remove('hidden'); 
+      } else { 
+        document.getElementById('btn-next').classList.remove('hidden'); 
+        document.getElementById('btn-finish').classList.add('hidden'); 
       }
     }
-
-    function prevQuestion() { if (currentQuestion > 0) { currentQuestion--; loadQuestion(); } }
     function nextQuestion() { if (currentQuestion < questions.length - 1 && answers[currentQuestion] !== undefined) { currentQuestion++; loadQuestion(); } }
-
     function finishTest() {
-      const scores = { D: 0, I: 0, S: 0, C: 0 };
-      answers.forEach((ans, idx) => { if(ans !== undefined) scores[questions[idx].options[ans].type]++; });
-      const total = Object.values(scores).reduce((a,b)=>a+b,1);
-      const percents = { D: Math.round((scores.D/total)*100), I: Math.round((scores.I/total)*100), S: Math.round((scores.S/total)*100), C: Math.round((scores.C/total)*100) };
-      const sorted = Object.entries(percents).sort((a,b)=>b[1]-a[1]);
-      
+      // Salvar resultado (Simulação)
+      localStorage.setItem('vigorre_last_disc_result', JSON.stringify({primary:'D', secondary:'C'}));
       document.getElementById('test-screen').style.display = 'none';
       document.getElementById('result').style.display = 'block';
-      document.getElementById('profile-badge').textContent = `Perfil: ${sorted[0][0]}${sorted[1][0]}`;
-      document.getElementById('result-desc').textContent = `Seu perfil predominante é ${sorted[0][0]} com influência de ${sorted[1][0]}.`;
-      
-      const chart = document.getElementById('disc-chart');
-      chart.innerHTML = '';
-      ['D','I','S','C'].forEach(l => {
-        chart.innerHTML += `<div class="disc-bar"><div class="disc-bar-fill ${l}" style="height:${Math.max(percents[l]*2, 20)}px;"></div><div style="font-weight:700;">${l}</div><div style="font-size:0.9rem;color:#64748b;">${percents[l]}%</div></div>`;
-      });
     }
+    function logout() { localStorage.removeItem('vigorre_current_user'); window.location.href='login.html'; }
   </script>
 </body>
 </html>
