@@ -105,7 +105,7 @@
   <main class="main">
     <div class="header">
       <h1 id="pageTitle">Dashboard</h1>
-      <button class="btn btn-primary" id="actionBtn" onclick="openModal()">+ Novo</button>
+      <button class="btn btn-primary" id="actionBtn" onclick="openModal()">+ Novo Teste</button>
     </div>
 
     <!-- Dashboard Section -->
@@ -213,23 +213,33 @@
   </div>
 
   <script>
-    // Verificar login
-    const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
-    const currentCompany = JSON.parse(localStorage.getItem('vigorre_current_company') || '{}');
-    
-    if (!currentUser.id && !currentCompany.id) {
-      window.location.href = 'login.html';
-    }
-
-    // Setup inicial
+    // ✅ VERIFICAÇÃO DE LOGIN CORRIGIDA
     document.addEventListener('DOMContentLoaded', () => {
-      if (currentUser.id) {
-        document.getElementById('userName').textContent = currentUser.name;
-        document.getElementById('userRole').textContent = 'Participante';
+      const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+      const currentCompany = JSON.parse(localStorage.getItem('vigorre_current_company') || '{}');
+      
+      // Verifica se é admin OU participante OU empresa logado
+      const isAdmin = currentUser.role === 'admin';
+      const isParticipant = currentUser.id;
+      const isCompany = currentCompany.id;
+      
+      if (!isAdmin && !isParticipant && !isCompany) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // Configura informações do usuário
+      if (isAdmin) {
+        document.getElementById('userName').textContent = currentUser.name || 'Administrador';
+        document.getElementById('userRole').textContent = 'Administrador';
       } else if (currentCompany.id) {
         document.getElementById('userName').textContent = currentCompany.responsible;
         document.getElementById('userRole').textContent = 'Empresa: ' + currentCompany.name;
+      } else {
+        document.getElementById('userName').textContent = currentUser.name;
+        document.getElementById('userRole').textContent = 'Participante';
       }
+      
       loadDashboard();
     });
 
@@ -356,7 +366,6 @@
     }
 
     function openModal() {
-      // Preencher select de participantes
       const users = JSON.parse(localStorage.getItem('vigorre_users') || '[]');
       const select = document.getElementById('testParticipant');
       select.innerHTML = users.filter(u => u.type === 'participant').map(p => 
