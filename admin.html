@@ -3,123 +3,198 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel - Vigorre</title>
+  <title>Painel Administrativo - Vigorre</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
+    /* CSS COMPLETO E ATUALIZADO */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; }
     
     /* Sidebar */
-    .sidebar { position: fixed; left: 0; top: 0; height: 100vh; width: 250px; background: linear-gradient(180deg, #1e3a8a, #0f172a); color: white; padding: 1.5rem; display: flex; flex-direction: column; z-index: 50; }
-    .sidebar .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 2rem; cursor: pointer; }
-    .logo-img { width: 35px; height: auto; border-radius: 5px; }
+    .sidebar { position: fixed; left: 0; top: 0; height: 100vh; width: 260px; background: linear-gradient(180deg, #1e3a8a, #0f172a); color: white; padding: 1.5rem; display: flex; flex-direction: column; z-index: 50; box-shadow: 4px 0 15px rgba(0,0,0,0.1); }
+    .sidebar .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
+    .logo-img { width: 40px; height: auto; border-radius: 8px; }
+    .logo-text h2 { font-size: 1.2rem; font-weight: 700; }
+    .logo-text p { font-size: 0.7rem; opacity: 0.7; }
+    
     .nav-menu { list-style: none; flex: 1; }
     .nav-menu li { margin-bottom: 0.5rem; }
-    .nav-menu a { display: flex; align-items: center; gap: 10px; padding: 12px; color: rgba(255,255,255,0.7); text-decoration: none; border-radius: 8px; transition: 0.3s; cursor: pointer; }
-    .nav-menu a:hover, .nav-menu a.active { background: rgba(255,255,255,0.1); color: white; }
+    .nav-menu a { display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: rgba(255,255,255,0.7); text-decoration: none; border-radius: 8px; transition: 0.3s; cursor: pointer; font-size: 0.95rem; }
+    .nav-menu a:hover, .nav-menu a.active { background: rgba(255,255,255,0.1); color: white; border-left: 3px solid #3b82f6; }
     .nav-menu a.danger { color: #fca5a5; margin-top: auto; }
+    .nav-menu a.danger:hover { background: rgba(239, 68, 68, 0.2); }
+    
     .user-info { padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; }
+    .user-info p { margin-bottom: 2px; }
+
+    /* Main Content */
+    .main { margin-left: 260px; padding: 2rem; min-height: 100vh; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; background: white; padding: 1rem 1.5rem; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
+    .header h1 { font-size: 1.5rem; color: #1e40af; font-weight: 700; }
+    .header-actions { display: flex; gap: 10px; }
     
-    /* Main */
-    .main { margin-left: 250px; padding: 2rem; min-height: 100vh; }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-    .header h1 { font-size: 1.8rem; color: #1e40af; }
-    
-    /* Cards e Tabelas */
-    .card { background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow-x: auto; }
-    .card h3 { margin-bottom: 1rem; color: #1e40af; display: flex; justify-content: space-between; align-items: center; }
+    /* Stats */
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .stat-card { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); border-left: 4px solid #3b82f6; }
+    .stat-card .value { font-size: 2rem; font-weight: 700; color: #1e40af; }
+    .stat-card .label { font-size: 0.9rem; color: #64748b; font-weight: 500; }
+
+    /* Cards & Tables */
+    .card { background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 2px 5px rgba(0,0,0,0.03); overflow-x: auto; border: 1px solid #e2e8f0; }
+    .card h3 { margin-bottom: 1rem; color: #1e40af; display: flex; justify-content: space-between; align-items: center; font-size: 1.1rem; }
     table { width: 100%; border-collapse: collapse; min-width: 600px; }
-    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
+    th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
     th { background: #f8fafc; font-weight: 600; color: #475569; }
-    
-    /* Botões */
-    .btn { padding: 8px 14px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: 0.2s; display: inline-flex; align-items: center; gap: 5px; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover { background: #f8fafc; }
+
+    /* Buttons */
+    .btn { padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; }
     .btn-primary { background: #3b82f6; color: white; }
     .btn-success { background: #22c55e; color: white; }
     .btn-warning { background: #f59e0b; color: white; }
     .btn-danger { background: #ef4444; color: white; }
     .btn-secondary { background: #94a3b8; color: white; }
-    .btn:hover { opacity: 0.9; }
-    .badge { padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; background: #e0e7ff; color: #3730a3; margin-right: 4px; }
+    .btn-outline { background: transparent; border: 1px solid #cbd5e1; color: #475569; }
+    .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-sm { padding: 5px 10px; font-size: 0.75rem; }
+    
+    /* Badges */
+    .badge { padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
+    .badge-admin { background: #dbeafe; color: #1e40af; }
+    .badge-part { background: #dcfce7; color: #166534; }
+    .badge-dis { background: #fff7ed; color: #c2410c; }
 
-    /* Modais */
+    /* Modals */
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px); }
     .modal.active { display: flex; }
-    .modal-content { background: white; border-radius: 16px; padding: 2rem; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+    .modal-content { background: white; border-radius: 16px; padding: 2rem; max-width: 700px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 1rem; }
-    .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #94a3b8; }
-    
+    .modal-close { background: none; border: none; font-size: 1.8rem; cursor: pointer; color: #94a3b8; line-height: 1; }
+    .modal-close:hover { color: #ef4444; }
+
+    /* Forms */
     .form-group { margin-bottom: 1rem; }
-    .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.9rem; }
-    .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.95rem; }
+    .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.9rem; color: #334155; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.95rem; transition: border-color 0.3s; }
+    .form-group input:focus, .form-group select:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     
-    .toast { position: fixed; top: 20px; right: 20px; background: white; padding: 12px 16px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 10px; z-index: 2000; animation: slideIn 0.3s; border-left: 4px solid #22c55e; }
-    @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-    @media (max-width: 768px) { .sidebar { width: 70px; padding: 1rem; } .sidebar .logo span, .nav-menu a span, .user-info { display: none; } .main { margin-left: 70px; } }
+    /* Toast Notifications */
+    .toast { position: fixed; top: 20px; right: 20px; background: white; padding: 12px 20px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 10px; z-index: 2000; animation: slideIn 0.3s ease; border-left: 4px solid #22c55e; font-weight: 500; }
+    .toast.error { border-left-color: #ef4444; }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+    /* Details Section */
+    .details-section { display: none; background: white; border-radius: 12px; padding: 1.5rem; margin-top: 1rem; border: 1px solid #e2e8f0; }
+    .details-header { display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #f1f5f9; }
+
+    @media (max-width: 768px) {
+      .sidebar { width: 70px; padding: 1rem; }
+      .sidebar .logo span, .nav-menu a span, .user-info { display: none; }
+      .nav-menu a { justify-content: center; padding: 15px; }
+      .main { margin-left: 70px; padding: 1rem; }
+      .form-row { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
+
+  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="logo" onclick="window.location.href='index.html'">
-      <img src="logo-vigorre.png" class="logo-img" onerror="this.outerHTML='<div style=\'width:35px;height:35px;background:#fff;color:#1e40af;display:flex;align-items:center;justify-content:center;border-radius:5px;font-weight:bold;font-size:18px\'>V</div>'">
-      <span>Vigorre</span>
+      <img src="logo-vigorre.png" class="logo-img" onerror="this.outerHTML='<div style=\'width:35px;height:35px;background:#fff;color:#1e40af;display:flex;align-items:center;justify-content:center;border-radius:8px;font-weight:bold;font-size:18px\'>V</div>'">
+      <div class="logo-text">
+        <h2>Vigorre</h2>
+        <p>Gestão Estratégica</p>
+      </div>
     </div>
     <ul class="nav-menu">
       <li><a href="#" class="active" onclick="showSection('dashboard')"><span>📊</span> <span>Dashboard</span></a></li>
+      <li><a href="#" onclick="showSection('staff')"><span>👥</span> <span>Staff Vigorre</span></a></li>
       <li><a href="#" onclick="showSection('companies')"><span>🏢</span> <span>Empresas</span></a></li>
-      <li><a href="#" onclick="showSection('participants')"><span>👥</span> <span>Participantes</span></a></li>
+      <li><a href="#" onclick="showSection('participants')"><span>👤</span> <span>Participantes</span></a></li>
+      <li><a href="#" onclick="showSection('reports')"><span>📈</span> <span>Relatórios</span></a></li>
       <li><a href="#" class="danger" onclick="logout()"><span>🚪</span> <span>Sair</span></a></li>
     </ul>
-    <div class="user-info"><p id="userName">Admin</p><p>Acesso Total</p></div>
+    <div class="user-info">
+      <p id="userName">Admin</p>
+      <p style="opacity:0.7; font-size:0.75rem;">Acesso Total</p>
+    </div>
   </aside>
 
+  <!-- MAIN CONTENT -->
   <main class="main">
     <div class="header">
       <h1 id="pageTitle">Dashboard</h1>
-      <div id="headerActions"></div>
+      <div class="header-actions" id="headerActions"></div>
     </div>
 
-    <!-- SEÇÃO EMPRESAS -->
+    <!-- DASHBOARD -->
+    <section id="dashboard">
+      <div class="stats">
+        <div class="stat-card"><div class="value" id="statStaff">0</div><div class="label">Staff Vigorre</div></div>
+        <div class="stat-card"><div class="value" id="statComp">0</div><div class="label">Empresas</div></div>
+        <div class="stat-card"><div class="value" id="statPart">0</div><div class="label">Participantes</div></div>
+        <div class="stat-card"><div class="value" id="statRep">0</div><div class="label">Relatórios Emitidos</div></div>
+      </div>
+      <div class="card">
+        <h3>Bem-vindo ao Painel Vigorre</h3>
+        <p style="color:#64748b;">Gerencie sua equipe interna, clientes (empresas) e participantes. Utilize o menu lateral para navegar.</p>
+      </div>
+    </section>
+
+    <!-- STAFF VIGORRE (Cadastro Interno) -->
+    <section id="staff" style="display:none;">
+      <div class="card">
+        <h3>Cadastro de Funcionários Vigorre <button class="btn btn-primary" onclick="openModal('staffModal')">+ Novo Funcionário</button></h3>
+        <table>
+          <thead><tr><th>Nome</th><th>Email</th><th>Telefone</th><th>Acesso</th><th>Senha</th><th>Ações</th></tr></thead>
+          <tbody id="staffTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- EMPRESAS -->
     <section id="companies" style="display:none;">
-      
-      <!-- Lista Principal de Empresas -->
+      <!-- Lista de Empresas -->
       <div class="card" id="companyListView">
         <h3>Empresas Cadastradas <button class="btn btn-primary" onclick="openModal('compModal')">+ Nova Empresa</button></h3>
         <table>
-          <thead><tr><th>Empresa</th><th>Responsável</th><th>Funcionários</th><th>Ações</th></tr></thead>
+          <thead><tr><th>Empresa</th><th>CNPJ</th><th>Responsável</th><th>Contato</th><th>Ações</th></tr></thead>
           <tbody id="companiesTableBody"></tbody>
         </table>
       </div>
 
       <!-- Detalhes da Empresa (Vagas e Funcionários) -->
-      <div class="card" id="companyDetailView" style="display:none;">
-        <div style="display:flex; justify-content:space-between; margin-bottom:1rem;">
+      <div id="companyDetails" class="details-section">
+        <div class="details-header">
           <h3 id="detailCompanyTitle">Detalhes da Empresa</h3>
-          <button class="btn btn-secondary" onclick="closeCompanyDetails()">← Voltar para lista</button>
+          <button class="btn btn-secondary" onclick="closeCompanyDetails()">← Voltar para Lista</button>
         </div>
-
-        <!-- Cadastro de Vaga -->
+        
+        <!-- Vagas -->
         <div style="background:#f0f9ff; padding:15px; border-radius:8px; margin-bottom:20px; border:1px solid #bae6fd;">
-          <h4 style="margin-bottom:10px; color:#0369a1;">📝 Cadastrar Perfil de Vaga</h4>
-          <div style="display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:10px;">
-            <input type="text" id="jobName" placeholder="Nome da Vaga (Ex: Vendas)">
-            <input type="text" id="jobProfile" placeholder="Perfil Desejado (Ex: Alta Dominância)">
-            <input type="number" id="jobSalary" placeholder="Faixa Salarial">
-            <button class="btn btn-primary" onclick="saveJob()">Salvar Vaga</button>
+          <h4 style="color:#0369a1; margin-bottom:10px;">📝 Vagas de Emprego</h4>
+          <div class="form-row" style="grid-template-columns: 1fr 1fr 1fr auto;">
+            <input type="text" id="jobName" placeholder="Nome da Vaga">
+            <input type="text" id="jobProfile" placeholder="Perfil Exigido (Ex: DISC D)">
+            <input type="text" id="jobDesc" placeholder="Descrição rápida">
+            <button class="btn btn-primary" onclick="saveJob()">Salvar</button>
           </div>
           <div id="jobsList" style="margin-top:10px;"></div>
         </div>
 
-        <!-- Lista de Funcionários -->
-        <h4>👥 Funcionários Vinculados</h4>
-        <table style="margin-top:10px;">
-          <thead><tr><th>Nome</th><th>E-mail</th><th>Testes Realizados</th><th>Ações (Relatórios)</th></tr></thead>
+        <!-- Funcionários Vinculados -->
+        <h4 style="margin-bottom:10px; color:#1e40af;">👥 Funcionários Vinculados</h4>
+        <table>
+          <thead><tr><th>Nome</th><th>Email</th><th>Status Testes</th><th>Ações</th></tr></thead>
           <tbody id="employeesTableBody"></tbody>
         </table>
       </div>
     </section>
 
-    <!-- SEÇÃO PARTICIPANTES -->
+    <!-- PARTICIPANTES -->
     <section id="participants" style="display:none;">
       <div class="card">
         <h3>Gestão de Participantes <button class="btn btn-primary" onclick="openModal('partModal')">+ Novo Participante</button></h3>
@@ -127,10 +202,9 @@
           <thead>
             <tr>
               <th>Nome</th>
-              <th>E-mail / Usuário</th>
+              <th>Email / Usuário</th>
               <th>Empresa</th>
-              <th>Credenciais de Acesso</th>
-              <th>Testes Liberados</th>
+              <th>Acesso (Credenciais)</th>
               <th>Ações</th>
             </tr>
           </thead>
@@ -139,13 +213,68 @@
       </div>
     </section>
 
-    <!-- SEÇÃO DASHBOARD -->
-    <section id="dashboard">
-      <div class="card"><h3>Bem-vindo ao Painel Vigorre</h3><p>Selecione uma opção no menu lateral.</p></div>
+    <!-- RELATÓRIOS -->
+    <section id="reports" style="display:none;">
+      <div class="card">
+        <h3>Emissão de Relatórios</h3>
+        <div style="margin-bottom: 15px; color: #64748b; font-size: 0.9rem;">
+          Selecione o participante e o tipo de relatório para visualizar ou imprimir.
+        </div>
+        <div class="form-row" style="grid-template-columns: 2fr 1fr auto; gap: 10px; align-items: end; margin-bottom: 20px;">
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Participante</label>
+            <select id="reportParticipantSelect"></select>
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Tipo de Relatório</label>
+            <select id="reportTypeSelect">
+              <option value="simple">📄 Relatório Simples</option>
+              <option value="complete">📘 Relatório Completo (Modelo HMI)</option>
+              <option value="laudo">📜 Laudo Comportamental</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" style="height: 42px;" onclick="generateReport()">Gerar e Ver</button>
+        </div>
+
+        <div id="reportPreview" style="display:none; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; background: #fff;">
+          <div id="reportContent" style="margin-bottom: 20px;"></div>
+          <div style="text-align: right; border-top: 1px solid #eee; padding-top: 15px;">
+            <button class="btn btn-outline" onclick="document.getElementById('reportPreview').style.display='none'">Fechar</button>
+            <button class="btn btn-success" onclick="printReport()">🖨️ Imprimir Relatório</button>
+            <button class="btn btn-secondary" onclick="sendReportEmail()">📧 Enviar por E-mail</button>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
 
   <!-- MODAIS -->
+
+  <!-- Modal Staff Vigorre -->
+  <div class="modal" id="staffModal">
+    <div class="modal-content">
+      <div class="modal-header"><h3 id="staffModalTitle">Novo Funcionário Vigorre</h3><button class="modal-close" onclick="closeModal('staffModal')">×</button></div>
+      <form onsubmit="saveStaff(event)">
+        <input type="hidden" id="sId">
+        <div class="form-group"><label>Nome Completo *</label><input type="text" id="sName" required></div>
+        <div class="form-row">
+          <div class="form-group"><label>Email *</label><input type="email" id="sEmail" required></div>
+          <div class="form-group"><label>Telefone/WhatsApp *</label><input type="tel" id="sPhone" required></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Login de Acesso *</label><input type="text" id="sLogin" required placeholder="ex: raul.vigorre"></div>
+          <div class="form-group"><label>Senha de Acesso *</label><input type="text" id="sPass" required></div>
+        </div>
+        <div class="form-group"><label>Nível de Acesso *</label>
+          <select id="sRole" required>
+            <option value="admin">Administrador (Acesso Total)</option>
+            <option value="consultant">Consultor (Acesso Parcial)</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;padding:12px;">Salvar Funcionário</button>
+      </form>
+    </div>
+  </div>
 
   <!-- Modal Empresa -->
   <div class="modal" id="compModal">
@@ -154,10 +283,14 @@
       <form onsubmit="saveCompany(event)">
         <input type="hidden" id="cId">
         <div class="form-group"><label>Nome da Empresa *</label><input type="text" id="cName" required></div>
-        <div class="form-group"><label>CNPJ</label><input type="text" id="cCnpj"></div>
-        <div class="form-group"><label>Responsável *</label><input type="text" id="cResp" required></div>
-        <div class="form-group"><label>E-mail Corporativo</label><input type="email" id="cEmail"></div>
-        <div class="form-group"><label>Telefone</label><input type="tel" id="cPhone"></div>
+        <div class="form-row">
+          <div class="form-group"><label>CNPJ *</label><input type="text" id="cCnpj" required></div>
+          <div class="form-group"><label>Responsável *</label><input type="text" id="cResp" required></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Email Corporativo</label><input type="email" id="cEmail"></div>
+          <div class="form-group"><label>Telefone</label><input type="tel" id="cPhone"></div>
+        </div>
         <button type="submit" class="btn btn-primary" style="width:100%;padding:12px;">Salvar Empresa</button>
       </form>
     </div>
@@ -170,16 +303,15 @@
       <form onsubmit="saveParticipant(event)">
         <input type="hidden" id="pId">
         <div class="form-group"><label>Nome Completo *</label><input type="text" id="pName" required></div>
-        <div class="form-group"><label>E-mail *</label><input type="email" id="pEmail" required></div>
-        <div class="form-group"><label>Usuário de Login *</label><input type="text" id="pUser" required placeholder="login.usuario"></div>
-        <div class="form-group"><label>Senha *</label><input type="text" id="pPass" required></div>
-        <div class="form-group"><label>Vincular a Empresa</label><select id="pComp"><option value="">Independente</option></select></div>
-        <div class="form-group">
-          <label>Testes Iniciais Liberados</label>
-          <div style="display:flex; gap:10px;">
-            <label><input type="checkbox" class="test-check" value="DISC" checked> DISC</label>
-            <label><input type="checkbox" class="test-check" value="IE"> Int. Emocional</label>
-            <label><input type="checkbox" class="test-check" value="Valores"> Valores</label>
+        <div class="form-group"><label>Email *</label><input type="email" id="pEmail" required></div>
+        <div class="form-group"><label>Telefone *</label><input type="tel" id="pPhone" required></div>
+        <div class="form-group"><label>Vincular à Empresa</label><select id="pComp"><option value="">Nenhuma (Independente)</option></select></div>
+        
+        <div style="background:#f8fafc; padding:10px; border-radius:8px; margin-bottom:10px; border:1px solid #e2e8f0;">
+          <label style="font-weight:600; font-size:0.9rem;">Credenciais de Acesso</label>
+          <div class="form-row" style="margin-top:5px;">
+            <input type="text" id="pUser" placeholder="Usuário" required>
+            <input type="text" id="pPass" placeholder="Senha Temporária" required>
           </div>
         </div>
         <button type="submit" class="btn btn-primary" style="width:100%;padding:12px;">Salvar Participante</button>
@@ -187,55 +319,56 @@
     </div>
   </div>
 
-  <!-- Modal Enviar Relatório -->
-  <div class="modal" id="reportModal">
-    <div class="modal-content">
-      <div class="modal-header"><h3>Enviar Relatório</h3><button class="modal-close" onclick="closeModal('reportModal')">×</button></div>
-      <p>Enviar relatório para: <strong id="reportTargetName"></strong></p>
-      <div class="form-group" style="margin-top:15px;">
-        <label>Tipo de Relatório</label>
-        <select id="reportTypeSelect">
-          <option value="Completo">📘 Relatório Completo (HMI)</option>
-          <option value="Laudo">📜 Laudo Comportamental Técnico</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Teste Base</label>
-        <select id="reportTestSelect">
-          <option value="DISC">DISC</option>
-          <option value="IE">Inteligência Emocional</option>
-        </select>
-      </div>
-      <button onclick="confirmSendReport()" class="btn btn-success" style="width:100%; padding:12px;">📧 Enviar por E-mail</button>
+  <!-- Modal Relatório (Simulação de Envio) -->
+  <div class="modal" id="emailModal">
+    <div class="modal-content" style="max-width:400px; text-align:center;">
+      <div class="modal-header"><h3>Enviar Relatório</h3><button class="modal-close" onclick="closeModal('emailModal')">×</button></div>
+      <p style="margin-bottom:15px;">Confirme o envio do relatório para o e-mail cadastrado.</p>
+      <div id="emailTarget" style="font-weight:bold; color:#1e40af; margin-bottom:15px; background:#f0f9ff; padding:8px; border-radius:6px;"></div>
+      <button class="btn btn-success" style="width:100%" onclick="confirmEmailSend()">Confirmar Envio</button>
     </div>
   </div>
-
-  <div id="toastBox"></div>
 
   <script>
     // --- DADOS MOCKADOS (Simulando Banco de Dados) ---
     let DB = {
+      staff: JSON.parse(localStorage.getItem('vigorre_staff') || '[]'),
       companies: JSON.parse(localStorage.getItem('vigorre_companies') || '[]'),
       participants: JSON.parse(localStorage.getItem('vigorre_participants') || '[]'),
       jobs: JSON.parse(localStorage.getItem('vigorre_jobs') || '[]'),
       reports: JSON.parse(localStorage.getItem('vigorre_reports') || '[]')
     };
+    
     let currentCompanyId = null;
     let currentReportTarget = null;
 
     function saveDB() {
+      localStorage.setItem('vigorre_staff', JSON.stringify(DB.staff));
       localStorage.setItem('vigorre_companies', JSON.stringify(DB.companies));
       localStorage.setItem('vigorre_participants', JSON.stringify(DB.participants));
       localStorage.setItem('vigorre_jobs', JSON.stringify(DB.jobs));
       localStorage.setItem('vigorre_reports', JSON.stringify(DB.reports));
-      renderCompanies(); renderParticipants();
+      loadAll();
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      if(!JSON.parse(localStorage.getItem('vigorre_current_user')||'{}').role === 'admin') window.location.href='login.html';
+      if(!JSON.parse(localStorage.getItem('vigorre_current_user')||'{}').role) window.location.href='login.html';
+      loadAll();
+    });
+
+    function loadAll() {
+      // Stats
+      document.getElementById('statStaff').textContent = DB.staff.length;
+      document.getElementById('statComp').textContent = DB.companies.length;
+      document.getElementById('statPart').textContent = DB.participants.length;
+      document.getElementById('statRep').textContent = DB.reports.length;
+      
+      // Tables
+      renderStaff();
       renderCompanies();
       renderParticipants();
-    });
+      updateSelects();
+    }
 
     // --- NAVEGAÇÃO ---
     function showSection(id) {
@@ -244,44 +377,83 @@
       document.querySelectorAll('.nav-menu a').forEach(a => a.classList.remove('active'));
       event.target.closest('a').classList.add('active');
       
-      // Reset view ao sair de empresas
+      // Títulos
+      const titles = { dashboard: 'Dashboard', staff: 'Staff Vigorre', companies: 'Empresas', participants: 'Participantes', reports: 'Relatórios' };
+      document.getElementById('pageTitle').textContent = titles[id] || id;
+      
+      // Limpar detalhes se sair de empresas
       if(id !== 'companies') closeCompanyDetails();
     }
 
-    function openModal(id) { document.getElementById(id).classList.add('active'); updateCompanySelect(); }
-    function closeModal(id) { document.getElementById(id).classList.remove('active'); document.querySelectorAll('form').forEach(f => f.reset()); }
+    function openModal(id) { document.getElementById(id).classList.add('active'); updateSelects(); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); document.querySelectorAll('form').forEach(f => f.reset()); document.querySelectorAll('input[type="hidden"]').forEach(i => i.value=''); }
+
+    // --- STAFF VIGORRE ---
+    function renderStaff() {
+      document.getElementById('staffTableBody').innerHTML = DB.staff.map(s => `
+        <tr>
+          <td><strong>${s.name}</strong></td>
+          <td>${s.email}</td>
+          <td>${s.phone}</td>
+          <td><span class="badge ${s.role==='admin'?'badge-admin':'badge-part'}">${s.role==='admin'?'Admin':'Consultor'}</span></td>
+          <td style="font-family:monospace; background:#f1f5f9; padding:4px; border-radius:4px;">${s.pass}</td>
+          <td>
+            <button class="btn btn-warning btn-sm" onclick="editStaff('${s.id}')">✏️</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteItem('staff','${s.id}')">🗑️</button>
+          </td>
+        </tr>`).join('') || '<tr><td colspan="6" style="text-align:center;color:#94a3b8;">Nenhum funcionário cadastrado</td></tr>';
+    }
+
+    function saveStaff(e) {
+      e.preventDefault();
+      const id = document.getElementById('sId').value || Date.now().toString();
+      const data = {
+        id, name: document.getElementById('sName').value, email: document.getElementById('sEmail').value,
+        phone: document.getElementById('sPhone').value, login: document.getElementById('sLogin').value,
+        pass: document.getElementById('sPass').value, role: document.getElementById('sRole').value
+      };
+      const idx = DB.staff.findIndex(x => x.id === id);
+      if(idx > -1) DB.staff[idx] = data; else DB.staff.push(data);
+      saveDB(); closeModal('staffModal'); showToast('Funcionário Vigorre salvo!');
+    }
+
+    function editStaff(id) {
+      const s = DB.staff.find(x => x.id === id); if(!s) return;
+      document.getElementById('sId').value = s.id; document.getElementById('sName').value = s.name;
+      document.getElementById('sEmail').value = s.email; document.getElementById('sPhone').value = s.phone;
+      document.getElementById('sLogin').value = s.login; document.getElementById('sPass').value = s.pass;
+      document.getElementById('sRole').value = s.role;
+      document.getElementById('staffModalTitle').textContent = 'Editar Funcionário';
+      openModal('staffModal');
+    }
 
     // --- EMPRESAS ---
     function renderCompanies() {
-      const tbody = document.getElementById('companiesTableBody');
-      tbody.innerHTML = DB.companies.map(c => {
-        const empCount = DB.participants.filter(p => p.compId === c.id).length;
-        return `<tr>
-          <td><strong>${c.name}</strong><br><small>${c.cnpj || ''}</small></td>
-          <td>${c.resp}<br><small>${c.email || ''}</small></td>
-          <td>${empCount} funcionários</td>
+      document.getElementById('companiesTableBody').innerHTML = DB.companies.map(c => `
+        <tr>
+          <td><strong>${c.name}</strong><br><small>${c.email || ''}</small></td>
+          <td>${c.cnpj}</td>
+          <td>${c.resp}</td>
+          <td>${c.phone}</td>
           <td>
-            <button class="btn btn-primary btn-sm" onclick="openCompanyDetails('${c.id}')"> Ver Vagas/Func.</button>
+            <button class="btn btn-primary btn-sm" onclick="viewCompany('${c.id}')">👁️ Ver Detalhes</button>
             <button class="btn btn-warning btn-sm" onclick="editCompany('${c.id}')">✏️</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteItem('companies','${c.id}')">🗑️</button>
           </td>
-        </tr>`;
-      }).join('') || '<tr><td colspan="4" style="text-align:center">Nenhuma empresa cadastrada</td></tr>';
+        </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:#94a3b8;">Nenhuma empresa</td></tr>';
     }
 
     function saveCompany(e) {
       e.preventDefault();
       const id = document.getElementById('cId').value || Date.now().toString();
-      const data = {
-        id, name: document.getElementById('cName').value, cnpj: document.getElementById('cCnpj').value,
-        resp: document.getElementById('cResp').value, email: document.getElementById('cEmail').value, phone: document.getElementById('cPhone').value
-      };
+      const data = { id, name: document.getElementById('cName').value, cnpj: document.getElementById('cCnpj').value, resp: document.getElementById('cResp').value, email: document.getElementById('cEmail').value, phone: document.getElementById('cPhone').value };
       const idx = DB.companies.findIndex(x => x.id === id);
       if(idx > -1) DB.companies[idx] = data; else DB.companies.push(data);
       saveDB(); closeModal('compModal'); showToast('Empresa salva!');
     }
 
     function editCompany(id) {
-      const c = DB.companies.find(x => x.id === id);
+      const c = DB.companies.find(x => x.id === id); if(!c) return;
       document.getElementById('cId').value = c.id; document.getElementById('cName').value = c.name;
       document.getElementById('cCnpj').value = c.cnpj; document.getElementById('cResp').value = c.resp;
       document.getElementById('cEmail').value = c.email; document.getElementById('cPhone').value = c.phone;
@@ -290,12 +462,12 @@
     }
 
     // --- DETALHES DA EMPRESA (VAGAS E FUNCIONÁRIOS) ---
-    function openCompanyDetails(cid) {
+    function viewCompany(cid) {
       currentCompanyId = cid;
       const c = DB.companies.find(x => x.id === cid);
       document.getElementById('companyListView').style.display = 'none';
-      document.getElementById('companyDetailView').style.display = 'block';
-      document.getElementById('detailCompanyTitle').textContent = `📂 ${c.name} - Vagas e Funcionários`;
+      document.getElementById('companyDetails').style.display = 'block';
+      document.getElementById('detailCompanyTitle').textContent = `📂 ${c.name} - Gestão de Vagas e Funcionários`;
       
       renderJobs();
       renderCompanyEmployees();
@@ -303,27 +475,33 @@
 
     function closeCompanyDetails() {
       document.getElementById('companyListView').style.display = 'block';
-      document.getElementById('companyDetailView').style.display = 'none';
+      document.getElementById('companyDetails').style.display = 'none';
       currentCompanyId = null;
     }
 
     function saveJob() {
       const name = document.getElementById('jobName').value;
       const profile = document.getElementById('jobProfile').value;
-      if(!name) return showToast('Digite o nome da vaga', true);
-      DB.jobs.push({ id: Date.now().toString(), compId: currentCompanyId, name, profile, salary: document.getElementById('jobSalary').value });
+      const desc = document.getElementById('jobDesc').value;
+      if(!name) return showToast('Digite o nome da vaga', 'error');
+      
+      DB.jobs.push({ id: Date.now().toString(), compId: currentCompanyId, name, profile, desc });
       saveDB(); renderJobs();
-      document.getElementById('jobName').value = ''; document.getElementById('jobProfile').value = '';
+      document.getElementById('jobName').value = ''; document.getElementById('jobProfile').value = ''; document.getElementById('jobDesc').value = '';
       showToast('Vaga cadastrada!');
     }
 
     function renderJobs() {
       const list = document.getElementById('jobsList');
       const jobs = DB.jobs.filter(j => j.compId === currentCompanyId);
-      list.innerHTML = jobs.map(j => `<div style="background:white; padding:8px; margin-top:5px; border-radius:4px; display:flex; justify-content:space-between;">
-        <span><strong>${j.name}</strong> (${j.profile})</span>
-        <button class="btn btn-danger btn-sm" onclick="deleteJob('${j.id}')">X</button>
-      </div>`).join('') || '<small>Nenhuma vaga cadastrada.</small>';
+      list.innerHTML = jobs.map(j => `
+        <div style="background:white; padding:10px; margin-top:8px; border-radius:6px; display:flex; justify-content:space-between; align-items:center; border:1px solid #e2e8f0;">
+          <div>
+            <strong style="color:#1e40af;">${j.name}</strong>
+            <div style="font-size:0.85rem; color:#64748b;">Perfil: ${j.profile || 'Não definido'}</div>
+          </div>
+          <button class="btn btn-danger btn-sm" onclick="deleteJob('${j.id}')">X</button>
+        </div>`).join('') || '<div style="padding:10px; color:#94a3b8; font-size:0.9rem;">Nenhuma vaga cadastrada ainda.</div>';
     }
 
     function deleteJob(jid) {
@@ -334,50 +512,44 @@
     function renderCompanyEmployees() {
       const tbody = document.getElementById('employeesTableBody');
       const emps = DB.participants.filter(p => p.compId === currentCompanyId);
-      tbody.innerHTML = emps.map(p => {
-        // Simular testes realizados
-        const testsDone = p.completedTests ? p.completedTests.join(', ') : 'Nenhum concluído ainda';
-        return `<tr>
+      tbody.innerHTML = emps.map(p => `
+        <tr>
           <td>${p.name}</td>
           <td>${p.email}</td>
-          <td style="color:#64748b; font-size:0.85rem">${testsDone}</td>
+          <td><span class="badge badge-dis">Teste DISC</span></td>
           <td>
-            <button class="btn btn-success btn-sm" onclick="openReportModal('${p.id}', '${p.name}')">📧 Enviar Relatório</button>
+            <button class="btn btn-success btn-sm" onclick="openEmailModal('${p.email}', '${p.name}')">📧 Enviar Relatório</button>
           </td>
-        </tr>`;
-      }).join('') || '<tr><td colspan="4" style="text-align:center">Nenhum funcionário vinculado.</td></tr>';
+        </tr>`).join('') || '<tr><td colspan="4" style="text-align:center;color:#94a3b8;">Nenhum funcionário vinculado.</td></tr>';
     }
 
     // --- PARTICIPANTES ---
     function renderParticipants() {
-      const tbody = document.getElementById('participantsTableBody');
-      tbody.innerHTML = DB.participants.map(p => {
+      document.getElementById('participantsTableBody').innerHTML = DB.participants.map(p => {
         const comp = DB.companies.find(c => c.id === p.compId);
-        const tests = p.tests ? p.tests.map(t => `<span class="badge">${t}</span>`).join('') : '<span style="color:red">Nenhum</span>';
         return `<tr>
           <td><strong>${p.name}</strong></td>
-          <td>${p.email}<br><small>User: ${p.user}</small></td>
+          <td>${p.email}<br><small style="color:#64748b;">U: ${p.user}</small></td>
           <td>${comp ? comp.name : 'Independente'}</td>
-          <td style="font-family:monospace; background:#f1f5f9; padding:5px; border-radius:4px;">
-            U: ${p.user}<br>P: ${p.pass}
+          <td style="font-family:monospace; font-size:0.85rem; background:#f1f5f9; padding:4px 8px; border-radius:4px;">
+            U: ${p.user} <br> S: ${p.pass}
           </td>
-          <td>${tests}</td>
           <td>
             <button class="btn btn-warning btn-sm" onclick="editParticipant('${p.id}')">✏️</button>
-            <button class="btn btn-danger btn-sm" onclick="deleteParticipant('${p.id}')">🗑️</button>
+            <button class="btn btn-success btn-sm" onclick="openEmailModal('${p.email}', '${p.name}')">📧 Relatórios</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteItem('participants','${p.id}')">🗑️</button>
           </td>
         </tr>`;
-      }).join('') || '<tr><td colspan="6" style="text-align:center">Nenhum participante cadastrado</td></tr>';
+      }).join('') || '<tr><td colspan="5" style="text-align:center;color:#94a3b8;">Nenhum participante</td></tr>';
     }
 
     function saveParticipant(e) {
       e.preventDefault();
       const id = document.getElementById('pId').value || Date.now().toString();
-      const tests = Array.from(document.querySelectorAll('.test-check:checked')).map(cb => cb.value);
-      const data = {
-        id, name: document.getElementById('pName').value, email: document.getElementById('pEmail').value,
-        user: document.getElementById('pUser').value, pass: document.getElementById('pPass').value,
-        compId: document.getElementById('pComp').value, tests: tests
+      const data = { 
+        id, name: document.getElementById('pName').value, email: document.getElementById('pEmail').value, 
+        phone: document.getElementById('pPhone').value, compId: document.getElementById('pComp').value, 
+        user: document.getElementById('pUser').value, pass: document.getElementById('pPass').value 
       };
       const idx = DB.participants.findIndex(x => x.id === id);
       if(idx > -1) DB.participants[idx] = {...DB.participants[idx], ...data}; else DB.participants.push(data);
@@ -385,54 +557,88 @@
     }
 
     function editParticipant(id) {
-      const p = DB.participants.find(x => x.id === id);
+      const p = DB.participants.find(x => x.id === id); if(!p) return;
       document.getElementById('pId').value = p.id; document.getElementById('pName').value = p.name;
-      document.getElementById('pEmail').value = p.email; document.getElementById('pUser').value = p.user;
-      document.getElementById('pPass').value = p.pass; document.getElementById('pComp').value = p.compId || '';
-      
-      document.querySelectorAll('.test-check').forEach(cb => {
-        cb.checked = p.tests && p.tests.includes(cb.value);
-      });
-      
+      document.getElementById('pEmail').value = p.email; document.getElementById('pPhone').value = p.phone;
+      document.getElementById('pComp').value = p.compId || ''; document.getElementById('pUser').value = p.user || '';
+      document.getElementById('pPass').value = p.pass || '';
       document.getElementById('partTitle').textContent = 'Editar Participante';
       openModal('partModal');
     }
 
-    function deleteParticipant(id) {
-      if(confirm('Excluir participante?')) {
-        DB.participants = DB.participants.filter(p => p.id !== id);
-        saveDB();
+    // --- RELATÓRIOS ---
+    function updateSelects() {
+      const pSel = document.getElementById('reportParticipantSelect');
+      if(pSel) {
+        pSel.innerHTML = '<option value="">Selecione...</option>' + DB.participants.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+      }
+      const cSel = document.getElementById('pComp');
+      if(cSel) {
+        cSel.innerHTML = '<option value="">Nenhuma (Independente)</option>' + DB.companies.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
       }
     }
 
-    // --- RELATÓRIOS ---
-    function openReportModal(pid, name) {
-      currentReportTarget = pid;
-      document.getElementById('reportTargetName').textContent = name;
-      openModal('reportModal');
-    }
-
-    function confirmSendReport() {
+    function generateReport() {
+      const pid = document.getElementById('reportParticipantSelect').value;
       const type = document.getElementById('reportTypeSelect').value;
-      const test = document.getElementById('reportTestSelect').value;
-      // Simula envio
-      showToast(`✅ Relatório ${type} (${test}) enviado com sucesso!`);
-      closeModal('reportModal');
+      if(!pid) return showToast('Selecione um participante', 'error');
+      
+      const p = DB.participants.find(x => x.id === pid);
+      let content = '';
+      
+      // Simulação de conteúdo baseada no tipo
+      if(type === 'simple') {
+        content = `<h2 style="color:#22c55e;">Relatório Simples DISC</h2><p><strong>Participante:</strong> ${p.name}</p><p>O perfil predominante indica alta Dominância com secundária de Conscienciosidade.</p>`;
+      } else if(type === 'complete') {
+        content = `<h2 style="color:#1e40af;">Relatório Completo (Modelo HMI)</h2><p><strong>Participante:</strong> ${p.name}</p><div style="background:#f0f9ff; padding:15px; border-radius:8px; margin:10px 0;"><p>Este relatório detalha as 4 dimensões: Motivação, Observação, Decisão e Estilo de Vida, conforme a apostila HMI.</p></div>`;
+      } else {
+        content = `<h2 style="color:#dc2626;">Laudo Comportamental</h2><p><strong>Participante:</strong> ${p.name}</p><div style="border-left:4px solid #dc2626; padding:10px; margin:10px 0;"><p>Laudo técnico para análise de perfil e desenvolvimento de carreira.</p></div>`;
+      }
+
+      document.getElementById('reportContent').innerHTML = content;
+      document.getElementById('reportPreview').style.display = 'block';
+      currentReportTarget = { id: pid, email: p.email, name: p.name };
     }
 
-    function updateCompanySelect() {
-      const sel = document.getElementById('pComp');
-      sel.innerHTML = '<option value="">Independente</option>' + DB.companies.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+    function printReport() {
+      if(confirm("🖨️ Você deseja imprimir este relatório agora?")) {
+        window.print();
+      }
+    }
+
+    function openEmailModal(email, name) {
+      document.getElementById('emailTarget').textContent = `Para: ${email} (${name})`;
+      currentReportTarget = { email, name };
+      document.getElementById('emailModal').classList.add('active');
+    }
+
+    function sendReportEmail() {
+      if(currentReportTarget) {
+        document.getElementById('emailTarget').textContent = `Para: ${currentReportTarget.email} (${currentReportTarget.name})`;
+        document.getElementById('emailModal').classList.add('active');
+      } else {
+        showToast('Gere o relatório primeiro', 'error');
+      }
+    }
+
+    function confirmEmailSend() {
+      closeModal('emailModal');
+      showToast(`✅ Relatório enviado com sucesso para ${currentReportTarget.email}!`);
     }
 
     // --- UTILITÁRIOS ---
-    function showToast(msg, isError) {
+    function deleteItem(collection, id) {
+      if(!confirm('Tem certeza que deseja excluir este item?')) return;
+      DB[collection] = DB[collection].filter(x => x.id !== id);
+      saveDB();
+    }
+
+    function showToast(msg, type='success') {
       const t = document.createElement('div'); 
-      t.className = 'toast'; 
-      if(isError) t.style.borderLeftColor = '#ef4444';
-      t.innerHTML = `<span>${isError?'❌':'✅'}</span><span>${msg}</span>`;
+      t.className = `toast ${type==='error'?'error':''}`; 
+      t.innerHTML = `<span>${type==='success'?'✅':'❌'}</span><span>${msg}</span>`;
       document.body.appendChild(t); 
-      setTimeout(() => t.remove(), 3000);
+      setTimeout(() => { t.style.opacity='0'; setTimeout(()=>t.remove(),300); }, 3000);
     }
 
     function logout() {
