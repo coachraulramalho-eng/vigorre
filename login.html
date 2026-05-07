@@ -52,7 +52,7 @@
     .links { text-align: center; margin-top: 1.5rem; }
     .links a { color: #3b82f6; text-decoration: none; font-size: 0.9rem; }
     .links a:hover { text-decoration: underline; }
-    .alert { padding: 12px; border-radius: 8px; margin-bottom: 1rem; display: none; }
+    .alert { padding: 12px; border-radius: 8px; margin-bottom: 1rem; display: none; text-align: center; font-weight: 600; }
     .alert.error { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
     .alert.success { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
     .user-type { display: flex; gap: 10px; margin-bottom: 1.5rem; }
@@ -81,8 +81,8 @@
 
     <form id="loginForm" onsubmit="handleLogin(event)">
       <div class="form-group">
-        <label for="email">E-mail</label>
-        <input type="email" id="email" required placeholder="seu@email.com">
+        <label for="email">Usuário ou E-mail</label>
+        <input type="text" id="email" required placeholder="admin">
       </div>
       <div class="form-group">
         <label for="password">Senha</label>
@@ -92,8 +92,6 @@
     </form>
 
     <div class="links">
-      <p><a href="cadastro-participante.html">Criar conta de participante</a></p>
-      <p><a href="cadastro-empresa.html">Cadastrar minha empresa</a></p>
       <p><a href="index.html">← Voltar para início</a></p>
     </div>
   </div>
@@ -124,13 +122,16 @@
       btn.disabled = true;
       btn.textContent = 'Entrando...';
 
-      // Simulação de login (em produção, conectar com Firebase)
+      // LÓGICA DE LOGIN ATUALIZADA
       setTimeout(() => {
-        if (userType === 'admin' && email === 'admin@vigorre.com' && password === 'admin123') {
-          showAlert('Login realizado com sucesso!', 'success');
+        // 1. Verifica Admin Padrão (Hardcoded)
+        if (email === 'admin' && password === 'amovin2026') {
+          localStorage.setItem('vigorre_current_user', JSON.stringify({ name: 'Administrador', role: 'admin' }));
+          showAlert('Bem-vindo, Administrador!', 'success');
           setTimeout(() => window.location.href = 'admin.html', 1500);
-        } else if (userType === 'participant') {
-          // Verifica no localStorage
+        } 
+        // 2. Verifica Participante (Simulado no LocalStorage)
+        else if (userType === 'participant') {
           const users = JSON.parse(localStorage.getItem('vigorre_users') || '[]');
           const user = users.find(u => u.email === email && u.password === password && u.type === 'participant');
           if (user) {
@@ -142,7 +143,9 @@
             btn.disabled = false;
             btn.textContent = 'Entrar';
           }
-        } else if (userType === 'company') {
+        } 
+        // 3. Verifica Empresa (Simulado no LocalStorage)
+        else if (userType === 'company') {
           const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
           const company = companies.find(c => c.email === email && c.password === password);
           if (company) {
@@ -159,7 +162,7 @@
           btn.disabled = false;
           btn.textContent = 'Entrar';
         }
-      }, 1000);
+      }, 800);
     }
   </script>
 </body>
