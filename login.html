@@ -6,30 +6,24 @@
   <title>Login - Vigorre</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
+    /* Estilos mantidos */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%); color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
     .login-container { background: white; border-radius: 20px; padding: 2.5rem; max-width: 420px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
     .logo-area { text-align: center; margin-bottom: 2rem; }
     .logo-area img { height: 80px; width: auto; margin-bottom: 0.5rem; }
     .logo-area h1 { color: #1e40af; font-size: 1.6rem; }
-    .logo-area p { color: #64748b; font-size: 0.9rem; }
     .form-group { margin-bottom: 1.2rem; position: relative; }
     .form-group label { display: block; margin-bottom: 0.4rem; color: #1e293b; font-weight: 600; font-size: 0.9rem; }
     .form-group input { width: 100%; padding: 12px; padding-right: 40px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; }
     .form-group input:focus { outline: none; border-color: #3b82f6; }
-    .toggle-password { position: absolute; right: 12px; top: 38px; cursor: pointer; color: #64748b; user-select: none; }
-    .toggle-password:hover { color: #1e40af; }
     .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; background: linear-gradient(135deg, #3b82f6, #1e40af); color: white; font-weight: 700; font-size: 1rem; cursor: pointer; transition: transform 0.3s; margin-top: 0.5rem; }
     .btn:hover { transform: translateY(-2px); }
-    .user-type { display: flex; gap: 8px; margin-bottom: 1.2rem; }
-    .user-type button { flex: 1; padding: 8px; border: 1px solid #e2e8f0; border-radius: 6px; background: white; color: #64748b; cursor: pointer; font-size: 0.85rem; }
-    .user-type button.active { border-color: #3b82f6; background: #eff6ff; color: #1e40af; font-weight: 600; }
     .alert { padding: 10px; border-radius: 6px; margin-bottom: 1rem; display: none; text-align: center; font-weight: 600; font-size: 0.9rem; }
-    .alert.error { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
-    .alert.success { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+    .alert.error { background: #fef2f2; color: #dc2626; }
+    .alert.success { background: #f0fdf4; color: #16a34a; }
     .links { display: flex; justify-content: space-between; margin-top: 1rem; font-size: 0.85rem; }
     .links a { color: #3b82f6; text-decoration: none; }
-    .links a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -40,55 +34,44 @@
       <p>Acesso ao Sistema</p>
     </div>
     <div class="alert" id="alert"></div>
-    <div class="user-type">
-      <button type="button" class="active" onclick="setUserType('admin')">Admin</button>
-      <button type="button" onclick="setUserType('company')">Empresa</button>
-      <button type="button" onclick="setUserType('participant')">Participante</button>
-    </div>
     <form id="loginForm" onsubmit="handleLogin(event)">
-      <div class="form-group"><label>Usuário ou E-mail</label><input type="text" id="email" required placeholder="Digite seu acesso"></div>
-      <div class="form-group"><label>Senha</label><input type="password" id="password" required placeholder="••••••••"><span class="toggle-password" onclick="togglePass('password')">👁️</span></div>
+      <div class="form-group"><label>Usuário ou E-mail</label><input type="text" id="email" required placeholder="Digite seu usuário ou e-mail"></div>
+      <div class="form-group"><label>Senha</label><input type="password" id="password" required placeholder="••••••••"></div>
       <button type="submit" class="btn" id="loginBtn">Entrar</button>
     </form>
-    <div class="links"><a href="#" onclick="forgotPassword()">Esqueceu a senha?</a><a href="index.html">← Voltar para o site</a></div>
+    <div class="links"><a href="index.html">← Voltar para o site</a></div>
   </div>
   <script>
-    let userType = 'admin';
-    function setUserType(type) { userType = type; document.querySelectorAll('.user-type button').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); }
-    function togglePass(id) { const input = document.getElementById(id); input.type = input.type === 'password' ? 'text' : 'password'; }
-    function forgotPassword() {
-      const email = prompt("Digite seu e-mail cadastrado para recuperar a senha:");
-      if (!email) return;
-      const parts = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-      const comps = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
-      const found = [...parts, ...comps].find(u => u.email?.toLowerCase() === email.toLowerCase());
-      alert(found ? `📧 E-mail simulado enviado para ${email}\nSua senha é: ${found.pass || found.password}\n\n💡 Em produção, este e-mail seria enviado automaticamente.` : "❌ E-mail não encontrado.");
+    function showAlert(msg, type) {
+      const a = document.getElementById('alert'); a.textContent = msg; a.className = `alert ${type}`; a.style.display = 'block';
+      setTimeout(() => a.style.display = 'none', 4000);
     }
-    function showAlert(msg, type) { const a = document.getElementById('alert'); a.textContent = msg; a.className = `alert ${type}`; a.style.display = 'block'; setTimeout(() => a.style.display = 'none', 4000); }
     function handleLogin(e) {
       e.preventDefault();
       const input = document.getElementById('email').value.trim();
       const pass = document.getElementById('password').value;
       const btn = document.getElementById('loginBtn'); btn.disabled = true; btn.textContent = '...';
+
       setTimeout(() => {
-        if (userType === 'admin' && input === 'admin' && pass === 'amovin2026') {
+        // 1. Admin
+        if (input === 'admin' && pass === 'amovin2026') {
           localStorage.setItem('vigorre_current_user', JSON.stringify({ name: 'Administrador', role: 'admin' }));
-          showAlert('✅ Login realizado!', 'success'); setTimeout(() => window.location.href = 'admin.html', 1000);
-        } else if (userType === 'participant') {
-          const parts = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-          const p = parts.find(x => (x.email?.toLowerCase() === input.toLowerCase() || (x.user && x.user.toLowerCase() === input.toLowerCase())) && x.pass === pass);
+          showAlert('✅ Login Admin realizado!', 'success');
+          setTimeout(() => window.location.href = 'admin.html', 1000);
+        } 
+        // 2. Participante (Verifica Usuário OU Email)
+        else {
+          const parts = JSON.parse(localStorage.getItem('v_parts')||'[]');
+          const p = parts.find(x => (x.user?.toLowerCase() === input.toLowerCase() || x.email?.toLowerCase() === input.toLowerCase()) && x.pass === pass);
           if (p) {
             localStorage.setItem('vigorre_current_user', JSON.stringify(p));
-            showAlert('✅ Bem-vindo!', 'success'); setTimeout(() => window.location.href = 'teste-disc.html', 1000);
-          } else { showAlert('❌ Credenciais inválidas', 'error'); btn.disabled = false; btn.textContent = 'Entrar'; }
-        } else if (userType === 'company') {
-          const comps = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
-          const c = comps.find(x => x.email?.toLowerCase() === input.toLowerCase() && x.password === pass);
-          if (c) {
-            localStorage.setItem('vigorre_current_company', JSON.stringify(c));
-            showAlert('✅ Bem-vindo!', 'success'); setTimeout(() => window.location.href = 'admin.html', 1000);
-          } else { showAlert('❌ Credenciais inválidas', 'error'); btn.disabled = false; btn.textContent = 'Entrar'; }
-        } else { showAlert('❌ Selecione o tipo de acesso', 'error'); btn.disabled = false; btn.textContent = 'Entrar'; }
+            showAlert('✅ Login realizado!', 'success');
+            setTimeout(() => window.location.href = 'teste-disc.html', 1000);
+          } else {
+            showAlert('❌ Credenciais inválidas', 'error');
+            btn.disabled = false; btn.textContent = 'Entrar';
+          }
+        }
       }, 600);
     }
   </script>
