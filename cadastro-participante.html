@@ -7,39 +7,173 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; }
+    body { 
+      font-family: 'Inter', sans-serif; 
+      background: #f8fafc; 
+      color: #1e293b; 
+      min-height: 100vh; 
+    }
     
-    header { background: linear-gradient(135deg, #1e3a8a, #0f172a); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
-    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; }
-    .logo-icon { width: 35px; height: 35px; background: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #1e3a8a; font-weight: bold; }
-    .btn-logout { background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; }
-    .btn-logout:hover { background: rgba(255,255,255,0.3); }
+    header { 
+      background: linear-gradient(135deg, #1e3a8a, #0f172a); 
+      color: white; 
+      padding: 15px 20px; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+    }
+    .logo { 
+      display: flex; 
+      align-items: center; 
+      gap: 10px; 
+      font-weight: 700; 
+    }
+    .logo-icon { 
+      width: 35px; 
+      height: 35px; 
+      background: white; 
+      border-radius: 8px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      color: #1e3a8a; 
+      font-weight: bold; 
+    }
+    .btn-logout { 
+      background: rgba(255,255,255,0.2); 
+      border: none; 
+      color: white; 
+      padding: 8px 16px; 
+      border-radius: 6px; 
+      cursor: pointer; 
+      font-weight: 600; 
+    }
+    .btn-logout:hover { 
+      background: rgba(255,255,255,0.3); 
+    }
     
-    main { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+    main { 
+      max-width: 900px; 
+      margin: 0 auto; 
+      padding: 40px 20px; 
+    }
     
-    .card { background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 2rem; }
-    .card h2 { color: #1e40af; margin-bottom: 1rem; font-size: 1.4rem; display: flex; align-items: center; gap: 10px; }
+    .card { 
+      background: white; 
+      border-radius: 16px; 
+      padding: 2rem; 
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+      margin-bottom: 2rem; 
+    }
+    .card h2 { 
+      color: #1e40af; 
+      margin-bottom: 1rem; 
+      font-size: 1.4rem; 
+      display: flex; 
+      align-items: center; 
+      gap: 10px; 
+    }
     
-    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
-    .info-item { background: #f8fafc; padding: 1rem; border-radius: 10px; border-left: 4px solid #3b82f6; }
-    .info-item label { display: block; font-size: 0.85rem; color: #64748b; margin-bottom: 4px; font-weight: 600; }
-    .info-item span { font-size: 1rem; color: #1e293b; font-weight: 500; }
+    .info-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+      gap: 1rem; 
+    }
+    .info-item { 
+      background: #f8fafc; 
+      padding: 1rem; 
+      border-radius: 10px; 
+      border-left: 4px solid #3b82f6; 
+    }
+    .info-item label { 
+      display: block; 
+      font-size: 0.85rem; 
+      color: #64748b; 
+      margin-bottom: 4px; 
+      font-weight: 600; 
+    }
+    .info-item span { 
+      font-size: 1rem; 
+      color: #1e293b; 
+      font-weight: 500; 
+    }
     
-    .tests-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
-    .test-card { border: 2px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; text-align: center; transition: all 0.3s; position: relative; }
-    .test-card:hover { border-color: #3b82f6; transform: translateY(-3px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.15); }
-    .test-card.completed { border-color: #22c55e; background: #f0fdf4; }
-    .test-icon { font-size: 2.5rem; margin-bottom: 1rem; }
-    .test-title { font-size: 1.2rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem; }
-    .test-status { font-size: 0.9rem; color: #64748b; margin-bottom: 1rem; font-weight: 500; }
-    .test-status.realizado { color: #166534; font-weight: 700; }
+    .tests-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+      gap: 1.5rem; 
+    }
+    .test-card { 
+      border: 2px solid #e2e8f0; 
+      border-radius: 12px; 
+      padding: 1.5rem; 
+      text-align: center; 
+      transition: all 0.3s; 
+      position: relative; 
+    }
+    .test-card:hover { 
+      border-color: #3b82f6; 
+      transform: translateY(-3px); 
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.15); 
+    }
+    .test-card.completed { 
+      border-color: #22c55e; 
+      background: #f0fdf4; 
+    }
+    .test-icon { 
+      font-size: 2.5rem; 
+      margin-bottom: 1rem; 
+    }
+    .test-title { 
+      font-size: 1.2rem; 
+      font-weight: 700; 
+      color: #1e293b; 
+      margin-bottom: 0.5rem; 
+    }
+    .test-status { 
+      font-size: 0.9rem; 
+      color: #64748b; 
+      margin-bottom: 1rem; 
+      font-weight: 500; 
+    }
+    .test-status.realizado { 
+      color: #166534; 
+      font-weight: 700; 
+    }
     
-    .btn-start { width: 100%; padding: 12px; border-radius: 8px; border: none; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s; background: linear-gradient(135deg, #3b82f6, #1e40af); color: white; }
-    .btn-start:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4); }
-    .btn-start:disabled { background: #cbd5e1; color: #64748b; cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn-start { 
+      width: 100%; 
+      padding: 12px; 
+      border-radius: 8px; 
+      border: none; 
+      font-weight: 700; 
+      font-size: 1rem; 
+      cursor: pointer; 
+      transition: all 0.3s; 
+      background: linear-gradient(135deg, #3b82f6, #1e40af); 
+      color: white; 
+    }
+    .btn-start:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4); 
+    }
+    .btn-start:disabled { 
+      background: #cbd5e1; 
+      color: #64748b; 
+      cursor: not-allowed; 
+      transform: none; 
+      box-shadow: none; 
+    }
     
-    .empty-state { text-align: center; padding: 3rem; color: #64748b; }
-    .empty-state h3 { color: #94a3b8; margin-bottom: 0.5rem; }
+    .empty-state { 
+      text-align: center; 
+      padding: 3rem; 
+      color: #64748b; 
+    }
+    .empty-state h3 { 
+      color: #94a3b8; 
+      margin-bottom: 0.5rem; 
+    }
   </style>
 </head>
 <body>
@@ -56,7 +190,7 @@
     <div class="card">
       <h2>👤 Seus Dados</h2>
       <div class="info-grid" id="personalInfo">
-        <!-- Preenchido via JS -->
+        <!-- Preenchido via JavaScript -->
       </div>
     </div>
 
@@ -64,19 +198,24 @@
     <div class="card">
       <h2>📝 Testes Liberados</h2>
       <div class="tests-grid" id="testsContainer">
-        <!-- Preenchido via JS -->
+        <!-- Preenchido via JavaScript -->
       </div>
     </div>
   </main>
 
   <script>
-    // 1. Verificar se está logado
+    // ============================================
+    // VERIFICAÇÃO DE SESSÃO
+    // ============================================
     const session = JSON.parse(localStorage.getItem('vigorre_current_user'));
+    
     if (!session || !session.id) {
       window.location.href = 'login.html';
     }
 
-    // 2. Buscar dados do participante no "banco"
+    // ============================================
+    // BUSCAR DADOS DO PARTICIPANTE
+    // ============================================
     const allParticipants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
     const participant = allParticipants.find(p => p.id === session.id);
 
@@ -85,7 +224,9 @@
       logout();
     }
 
-    // 3. Renderizar Informações Pessoais
+    // ============================================
+    // RENDERIZAR INFORMAÇÕES PESSOAIS
+    // ============================================
     function renderPersonalInfo() {
       const container = document.getElementById('personalInfo');
       const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
@@ -119,11 +260,14 @@
       `;
     }
 
-    // 4. Renderizar Testes
+    // ============================================
+    // RENDERIZAR TESTES
+    // ============================================
     function renderTests() {
       const container = document.getElementById('testsContainer');
       container.innerHTML = '';
 
+      // Lista completa de testes disponíveis
       const testsList = [
         { id: 'disc', name: 'Teste DISC', icon: '📊', url: 'teste-disc.html' },
         { id: 'ie', name: 'Inteligência Emocional', icon: '🧠', url: 'teste-ie.html' },
@@ -131,8 +275,12 @@
       ];
 
       // Garantir que os arrays existam
-      if (!participant.assignedTests) participant.assignedTests = [];
-      if (!participant.completedTests) participant.completedTests = [];
+      if (!participant.assignedTests) {
+        participant.assignedTests = [];
+      }
+      if (!participant.completedTests) {
+        participant.completedTests = [];
+      }
 
       let hasAnyTest = false;
 
@@ -171,22 +319,30 @@
       }
     }
 
-    // 5. Função para iniciar teste
+    // ============================================
+    // FUNÇÃO PARA INICIAR TESTE
+    // ============================================
     function startTest(url) {
       window.location.href = url;
     }
 
-    // 6. Logout
+    // ============================================
+    // FUNÇÃO DE LOGOUT
+    // ============================================
     function logout() {
       localStorage.removeItem('vigorre_current_user');
       window.location.href = 'login.html';
     }
 
-    // Inicializar
+    // ============================================
+    // INICIALIZAÇÃO
+    // ============================================
     renderPersonalInfo();
     renderTests();
 
-    // Atualizar automaticamente se o admin alterar algo enquanto o participante está logado
+    // ============================================
+    // ATUALIZAÇÃO AUTOMÁTICA (LISTEN STORAGE)
+    // ============================================
     window.addEventListener('storage', () => {
       const updated = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
       const fresh = updated.find(p => p.id === session.id);
