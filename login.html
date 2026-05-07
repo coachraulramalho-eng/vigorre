@@ -6,72 +6,154 @@
   <title>Login - Vigorre</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    /* Estilos mantidos */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%); color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-    .login-container { background: white; border-radius: 20px; padding: 2.5rem; max-width: 420px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
-    .logo-area { text-align: center; margin-bottom: 2rem; }
-    .logo-area img { height: 80px; width: auto; margin-bottom: 0.5rem; }
-    .logo-area h1 { color: #1e40af; font-size: 1.6rem; }
+    .login-container { background: white; border-radius: 20px; padding: 2.5rem; max-width: 440px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.3); color: #1e293b; }
+    .logo-area { text-align: center; margin-bottom: 1.5rem; }
+    .logo-area img { height: 70px; width: auto; margin-bottom: 0.5rem; }
+    .logo-area h1 { color: #1e40af; font-size: 1.5rem; font-weight: 700; }
+    .logo-area p { color: #64748b; font-size: 0.85rem; }
+    
+    .env-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
+    .env-btn { padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px; background: white; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+    .env-btn span { font-size: 1.5rem; }
+    .env-btn:hover { border-color: #94a3b8; }
+    .env-btn.active { border-color: #1e40af; background: #eff6ff; color: #1e40af; box-shadow: 0 4px 12px rgba(30, 64, 175, 0.15); }
+    
     .form-group { margin-bottom: 1.2rem; position: relative; }
-    .form-group label { display: block; margin-bottom: 0.4rem; color: #1e293b; font-weight: 600; font-size: 0.9rem; }
-    .form-group input { width: 100%; padding: 12px; padding-right: 40px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; }
+    .form-group label { display: block; margin-bottom: 0.4rem; color: #334155; font-weight: 600; font-size: 0.9rem; }
+    .form-group input { width: 100%; padding: 12px; padding-right: 40px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; transition: border-color 0.3s; }
     .form-group input:focus { outline: none; border-color: #3b82f6; }
-    .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; background: linear-gradient(135deg, #3b82f6, #1e40af); color: white; font-weight: 700; font-size: 1rem; cursor: pointer; transition: transform 0.3s; margin-top: 0.5rem; }
+    .toggle-pass { position: absolute; right: 12px; top: 38px; cursor: pointer; color: #64748b; user-select: none; }
+    .toggle-pass:hover { color: #1e40af; }
+    
+    .btn { width: 100%; padding: 14px; border-radius: 10px; border: none; background: linear-gradient(135deg, #3b82f6, #1e40af); color: white; font-weight: 700; font-size: 1rem; cursor: pointer; transition: transform 0.3s; margin-top: 0.5rem; }
     .btn:hover { transform: translateY(-2px); }
-    .alert { padding: 10px; border-radius: 6px; margin-bottom: 1rem; display: none; text-align: center; font-weight: 600; font-size: 0.9rem; }
-    .alert.error { background: #fef2f2; color: #dc2626; }
-    .alert.success { background: #f0fdf4; color: #16a34a; }
-    .links { display: flex; justify-content: space-between; margin-top: 1rem; font-size: 0.85rem; }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    
+    .alert { padding: 10px; border-radius: 8px; margin-bottom: 1rem; display: none; text-align: center; font-weight: 600; font-size: 0.9rem; }
+    .alert.error { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+    .alert.success { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+    
+    .links { display: flex; justify-content: space-between; margin-top: 1.2rem; font-size: 0.85rem; }
     .links a { color: #3b82f6; text-decoration: none; }
+    .links a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
   <div class="login-container">
     <div class="logo-area">
-      <img src="logo-vigorre.png" alt="Vigorre" onerror="this.outerHTML='<div style=\'font-size:36px;color:#1e40af;font-weight:bold;margin-bottom:10px\'>V</div>'">
+      <img src="logo-vigorre.png" alt="Vigorre" onerror="this.outerHTML='<div style=\'font-size:32px;color:#1e40af;font-weight:bold;margin-bottom:8px\'>V</div>'">
       <h1>Vigorre</h1>
-      <p>Acesso ao Sistema</p>
+      <p>Inteligência e Gestão Estratégica</p>
     </div>
+
+    <div class="env-selector">
+      <button type="button" class="env-btn" onclick="setEnv('participant')">
+        <span>👤</span> Participante
+      </button>
+      <button type="button" class="env-btn active" onclick="setEnv('admin')">
+        <span>🛡️</span> Administrador
+      </button>
+    </div>
+
     <div class="alert" id="alert"></div>
+
     <form id="loginForm" onsubmit="handleLogin(event)">
-      <div class="form-group"><label>Usuário ou E-mail</label><input type="text" id="email" required placeholder="Digite seu usuário ou e-mail"></div>
-      <div class="form-group"><label>Senha</label><input type="password" id="password" required placeholder="••••••••"></div>
+      <div class="form-group">
+        <label>Usuário ou E-mail</label>
+        <input type="text" id="email" required placeholder="Digite seu acesso">
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" id="password" required placeholder="••••••••">
+        <span class="toggle-pass" onclick="togglePass('password')">👁️</span>
+      </div>
       <button type="submit" class="btn" id="loginBtn">Entrar</button>
     </form>
-    <div class="links"><a href="index.html">← Voltar para o site</a></div>
+
+    <div class="links">
+      <a href="#" onclick="forgotPassword()">Esqueceu a senha?</a>
+      <a href="index.html">← Voltar ao site</a>
+    </div>
   </div>
+
   <script>
+    let currentEnv = 'admin';
+    function setEnv(env) {
+      currentEnv = env;
+      document.querySelectorAll('.env-btn').forEach(b => b.classList.remove('active'));
+      event.target.closest('.env-btn').classList.add('active');
+      document.getElementById('email').value = '';
+      document.getElementById('password').value = '';
+      document.getElementById('alert').style.display = 'none';
+    }
+
+    function togglePass(id) {
+      const input = document.getElementById(id);
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
     function showAlert(msg, type) {
-      const a = document.getElementById('alert'); a.textContent = msg; a.className = `alert ${type}`; a.style.display = 'block';
+      const a = document.getElementById('alert');
+      a.textContent = msg;
+      a.className = `alert ${type}`;
+      a.style.display = 'block';
       setTimeout(() => a.style.display = 'none', 4000);
     }
+
+    function forgotPassword() {
+      const email = prompt("Digite seu e-mail cadastrado para recuperar a senha:");
+      if (!email) return;
+      const staff = JSON.parse(localStorage.getItem('vigorre_staff') || '[]');
+      const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+      const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+      const found = [...staff, ...participants, ...companies].find(u => u.email?.toLowerCase() === email.toLowerCase());
+      
+      alert(found ? `📧 E-mail simulado enviado para ${email}\nSua senha é: ${found.password || found.pass}\n\n💡 Em produção, este e-mail seria enviado automaticamente.` : "❌ E-mail não encontrado nos cadastros.");
+    }
+
     function handleLogin(e) {
       e.preventDefault();
       const input = document.getElementById('email').value.trim();
       const pass = document.getElementById('password').value;
-      const btn = document.getElementById('loginBtn'); btn.disabled = true; btn.textContent = '...';
+      const btn = document.getElementById('loginBtn');
+      btn.disabled = true; btn.textContent = 'Verificando...';
 
       setTimeout(() => {
-        // 1. Admin
-        if (input === 'admin' && pass === 'amovin2026') {
-          localStorage.setItem('vigorre_current_user', JSON.stringify({ name: 'Administrador', role: 'admin' }));
-          showAlert('✅ Login Admin realizado!', 'success');
+        // 1. Verifica no banco de funcionários Vigorre
+        const staff = JSON.parse(localStorage.getItem('vigorre_staff') || '[]');
+        const staffUser = staff.find(s => (s.login?.toLowerCase() === input.toLowerCase() || s.email?.toLowerCase() === input.toLowerCase()) && s.password === pass && s.role === currentEnv);
+        
+        if (staffUser) {
+          localStorage.setItem('vigorre_current_user', JSON.stringify({ name: staffUser.fullName, role: staffUser.role, env: 'staff' }));
+          showAlert('✅ Login realizado!', 'success');
           setTimeout(() => window.location.href = 'admin.html', 1000);
-        } 
-        // 2. Participante (Verifica Usuário OU Email)
-        else {
-          const parts = JSON.parse(localStorage.getItem('v_parts')||'[]');
-          const p = parts.find(x => (x.user?.toLowerCase() === input.toLowerCase() || x.email?.toLowerCase() === input.toLowerCase()) && x.pass === pass);
-          if (p) {
-            localStorage.setItem('vigorre_current_user', JSON.stringify(p));
+          return;
+        }
+
+        // 2. Fallback para Admin padrão
+        if (currentEnv === 'admin' && input === 'admin' && pass === 'amovin2026') {
+          localStorage.setItem('vigorre_current_user', JSON.stringify({ name: 'Administrador', role: 'admin', env: 'default' }));
+          showAlert('✅ Login realizado!', 'success');
+          setTimeout(() => window.location.href = 'admin.html', 1000);
+          return;
+        }
+
+        // 3. Fallback para Participantes antigos
+        if (currentEnv === 'participant') {
+          const parts = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+          const part = parts.find(p => (p.user?.toLowerCase() === input.toLowerCase() || p.email?.toLowerCase() === input.toLowerCase()) && p.pass === pass);
+          if (part) {
+            localStorage.setItem('vigorre_current_user', JSON.stringify({ name: part.name, role: 'participant', env: 'legacy' }));
             showAlert('✅ Login realizado!', 'success');
             setTimeout(() => window.location.href = 'teste-disc.html', 1000);
-          } else {
-            showAlert('❌ Credenciais inválidas', 'error');
-            btn.disabled = false; btn.textContent = 'Entrar';
+            return;
           }
         }
+
+        showAlert('❌ Credenciais inválidas ou ambiente incorreto', 'error');
+        btn.disabled = false; btn.textContent = 'Entrar';
       }, 600);
     }
   </script>
