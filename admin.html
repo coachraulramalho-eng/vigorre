@@ -3,85 +3,69 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel - Vigorre</title>
+  <title>Painel Administrativo - Vigorre</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; }
-    
-    /* Sidebar */
-    .sidebar {
-      position: fixed; left: 0; top: 0; height: 100vh; width: 250px;
-      background: linear-gradient(180deg, #1e3a8a, #0f172a); color: white;
-      padding: 1.5rem; display: flex; flex-direction: column;
-    }
+    .sidebar { position: fixed; left: 0; top: 0; height: 100vh; width: 250px; background: linear-gradient(180deg, #1e3a8a, #0f172a); color: white; padding: 1.5rem; display: flex; flex-direction: column; z-index: 50; }
     .sidebar .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 2rem; }
-    .logo-icon { 
-      width: 40px; height: 40px; background: white; border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      color: #1e40af; font-weight: bold; font-size: 20px;
-    }
+    .logo-icon { width: 40px; height: 40px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #1e40af; font-weight: bold; font-size: 20px; }
     .nav-menu { list-style: none; flex: 1; }
     .nav-menu li { margin-bottom: 0.5rem; }
-    .nav-menu a {
-      display: flex; align-items: center; gap: 10px; padding: 12px 15px;
-      color: rgba(255,255,255,0.8); text-decoration: none; border-radius: 10px;
-      transition: all 0.3s;
-    }
+    .nav-menu a { display: flex; align-items: center; gap: 10px; padding: 12px 15px; color: rgba(255,255,255,0.8); text-decoration: none; border-radius: 10px; transition: all 0.3s; cursor: pointer; }
     .nav-menu a:hover, .nav-menu a.active { background: rgba(255,255,255,0.1); color: white; }
     .nav-menu a.danger { color: #fca5a5; }
     .user-info { padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); }
-    
-    /* Main Content */
-    .main { margin-left: 250px; padding: 2rem; }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+    .main { margin-left: 250px; padding: 2rem; min-height: 100vh; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
     .header h1 { font-size: 1.8rem; color: #1e40af; }
-    
-    /* Stats Cards */
     .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
-    .stat-card {
-      background: white; padding: 1.5rem; border-radius: 15px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
+    .stat-card { background: white; padding: 1.5rem; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
     .stat-card .value { font-size: 2rem; font-weight: 700; color: #1e40af; }
     .stat-card .label { color: #64748b; font-size: 0.9rem; }
-    
-    /* Tables */
-    .card { background: white; border-radius: 15px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    .card h3 { margin-bottom: 1rem; color: #1e40af; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
-    th { font-weight: 600; color: #64748b; font-size: 0.9rem; }
-    .btn { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 0.9rem; }
+    .card { background: white; border-radius: 15px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow-x: auto; }
+    .card h3 { margin-bottom: 1rem; color: #1e40af; display: flex; justify-content: space-between; align-items: center; }
+    table { width: 100%; border-collapse: collapse; min-width: 600px; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 0.95rem; }
+    th { font-weight: 600; color: #64748b; background: #f8fafc; }
+    .btn { padding: 8px 14px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.2s; display: inline-flex; align-items: center; gap: 5px; }
+    .btn:hover { transform: translateY(-1px); opacity: 0.9; }
     .btn-primary { background: #3b82f6; color: white; }
     .btn-success { background: #22c55e; color: white; }
     .btn-warning { background: #f59e0b; color: white; }
     .btn-danger { background: #ef4444; color: white; }
-    .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
-    
-    /* Modal */
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000; }
+    .btn-sm { padding: 5px 10px; font-size: 0.8rem; }
+    .badge { padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+    .badge-pending { background: #fef3c7; color: #92400e; }
+    .badge-completed { background: #dcfce7; color: #166534; }
+    .badge-expired { background: #fee2e2; color: #991b1b; }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px); }
     .modal.active { display: flex; }
-    .modal-content { background: white; border-radius: 20px; padding: 2rem; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-    .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #64748b; }
-    
-    /* Forms in Modal */
-    .form-group { margin-bottom: 1rem; }
-    .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; }
-    .form-group input, .form-group select { width: 100%; padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; }
-    
-    /* Responsive */
+    .modal-content { background: white; border-radius: 20px; padding: 2rem; max-width: 550px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid #f1f5f9; }
+    .modal-close { background: none; border: none; font-size: 1.8rem; cursor: pointer; color: #64748b; line-height: 1; }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; color: #334155; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 11px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; transition: border-color 0.3s; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #3b82f6; }
+    .credentials-box { background: #f0f9ff; padding: 1rem; border-radius: 10px; margin: 1rem 0; border-left: 4px solid #3b82f6; }
+    .credentials-box p { margin: 0.3rem 0; font-size: 0.95rem; }
+    .credentials-box strong { color: #1e40af; }
+    .toast-container { position: fixed; top: 20px; right: 20px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
+    .toast { background: white; padding: 12px 16px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 10px; animation: slideIn 0.3s ease; border-left: 4px solid #22c55e; min-width: 280px; }
+    .toast.error { border-left-color: #ef4444; }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     @media (max-width: 768px) {
       .sidebar { width: 70px; padding: 1rem; }
       .sidebar .logo span, .nav-menu a span, .user-info { display: none; }
-      .main { margin-left: 70px; }
+      .main { margin-left: 70px; padding: 1rem; }
       .nav-menu a { justify-content: center; }
+      .header { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="logo">
       <div class="logo-icon">V</div>
@@ -96,338 +80,477 @@
       <li><a href="#" class="danger" onclick="logout()"><span>🚪</span> <span>Sair</span></a></li>
     </ul>
     <div class="user-info">
-      <p id="userName">Usuário</p>
-      <p id="userRole" style="font-size: 0.8rem; opacity: 0.7;">Role</p>
+      <p id="userName">Administrador</p>
+      <p style="font-size: 0.8rem; opacity: 0.7;">Acesso Total</p>
     </div>
   </aside>
 
-  <!-- Main Content -->
   <main class="main">
     <div class="header">
       <h1 id="pageTitle">Dashboard</h1>
-      <button class="btn btn-primary" id="actionBtn" onclick="openModal()">+ Novo Teste</button>
+      <button class="btn btn-primary" id="actionBtn" onclick="openCreateModal()">+ Novo Cadastro</button>
     </div>
 
-    <!-- Dashboard Section -->
     <section id="dashboard">
       <div class="stats">
-        <div class="stat-card">
-          <div class="value" id="statCompanies">0</div>
-          <div class="label">Empresas</div>
-        </div>
-        <div class="stat-card">
-          <div class="value" id="statParticipants">0</div>
-          <div class="label">Participantes</div>
-        </div>
-        <div class="stat-card">
-          <div class="value" id="statTests">0</div>
-          <div class="label">Testes Criados</div>
-        </div>
-        <div class="stat-card">
-          <div class="value" id="statReports">0</div>
-          <div class="label">Relatórios</div>
-        </div>
+        <div class="stat-card"><div class="value" id="statCompanies">0</div><div class="label">Empresas</div></div>
+        <div class="stat-card"><div class="value" id="statParticipants">0</div><div class="label">Participantes</div></div>
+        <div class="stat-card"><div class="value" id="statTests">0</div><div class="label">Testes Ativos</div></div>
+        <div class="stat-card"><div class="value" id="statReports">0</div><div class="label">Relatórios</div></div>
       </div>
-
       <div class="card">
-        <h3>Testes Recentes</h3>
-        <table>
-          <thead><tr><th>Participante</th><th>Tipo</th><th>Status</th><th>Ações</th></tr></thead>
-          <tbody id="recentTests"></tbody>
-        </table>
+        <h3>Atividade Recente</h3>
+        <table><thead><tr><th>Data</th><th>Ação</th><th>Detalhe</th></tr></thead><tbody id="recentActivity"></tbody></table>
       </div>
     </section>
 
-    <!-- Companies Section -->
-    <section id="companies" style="display: none;">
+    <section id="companies" style="display:none;">
       <div class="card">
         <h3>Empresas Cadastradas</h3>
-        <table>
-          <thead><tr><th>Empresa</th><th>CNPJ</th><th>Responsável</th><th>Contato</th><th>Ações</th></tr></thead>
-          <tbody id="companiesTable"></tbody>
-        </table>
+        <table><thead><tr><th>Empresa</th><th>CNPJ</th><th>Responsável</th><th>Contato</th><th>Testes</th><th>Ações</th></tr></thead><tbody id="companiesTable"></tbody></table>
       </div>
     </section>
 
-    <!-- Participants Section -->
-    <section id="participants" style="display: none;">
+    <section id="participants" style="display:none;">
       <div class="card">
         <h3>Participantes</h3>
-        <table>
-          <thead><tr><th>Nome</th><th>E-mail</th><th>Empresa</th><th>Testes</th><th>Ações</th></tr></thead>
-          <tbody id="participantsTable"></tbody>
-        </table>
+        <table><thead><tr><th>Nome</th><th>E-mail</th><th>Telefone</th><th>Empresa</th><th>Credenciais</th><th>Ações</th></tr></thead><tbody id="participantsTable"></tbody></table>
       </div>
     </section>
 
-    <!-- Tests Section -->
-    <section id="tests" style="display: none;">
+    <section id="tests" style="display:none;">
       <div class="card">
-        <h3>Testes Disponíveis</h3>
-        <table>
-          <thead><tr><th>Participante</th><th>Tipo</th><th>Credenciais</th><th>Status</th><th>Ações</th></tr></thead>
-          <tbody id="testsTable"></tbody>
-        </table>
+        <h3>Gestão de Testes</h3>
+        <table><thead><tr><th>Destinatário</th><th>Tipo</th><th>Status</th><th>Credenciais</th><th>Ações</th></tr></thead><tbody id="testsTable"></tbody></table>
       </div>
     </section>
 
-    <!-- Reports Section -->
-    <section id="reports" style="display: none;">
+    <section id="reports" style="display:none;">
       <div class="card">
-        <h3>Relatórios Gerados</h3>
-        <table>
-          <thead><tr><th>Participante</th><th>Tipo</th><th>Data</th><th>Ações</th></tr></thead>
-          <tbody id="reportsTable"></tbody>
-        </table>
+        <h3>Emissão de Relatórios</h3>
+        <table><thead><tr><th>Participante</th><th>Empresa</th><th>Tipo de Teste</th><th>Gerado em</th><th>Ações</th></tr></thead><tbody id="reportsTable"></tbody></table>
       </div>
     </section>
   </main>
 
-  <!-- Modal for Creating Test -->
-  <div class="modal" id="testModal">
+  <!-- MODAIS -->
+  <div class="modal" id="participantModal">
     <div class="modal-content">
-      <div class="modal-header">
-        <h3>Novo Teste</h3>
-        <button class="modal-close" onclick="closeModal()">×</button>
-      </div>
-      <form onsubmit="createTest(event)">
-        <div class="form-group">
-          <label>Participante</label>
-          <select id="testParticipant" required></select>
-        </div>
-        <div class="form-group">
-          <label>Tipo de Teste</label>
-          <select id="testType" required>
+      <div class="modal-header"><h3 id="participantModalTitle">Novo Participante</h3><button class="modal-close" onclick="closeModal('participantModal')">×</button></div>
+      <form id="participantForm" onsubmit="saveParticipant(event)">
+        <input type="hidden" id="participantId">
+        <div class="form-group"><label>Nome Completo *</label><input type="text" id="pName" required></div>
+        <div class="form-group"><label>Telefone/WhatsApp *</label><input type="tel" id="pPhone" required placeholder="(00) 00000-0000"></div>
+        <div class="form-group"><label>E-mail *</label><input type="email" id="pEmail" required></div>
+        <div class="form-group"><label>Empresa (Opcional)</label><select id="pCompany"><option value="">Nenhuma</option></select></div>
+        <button type="submit" class="btn btn-primary" style="width:100%;margin-top:10px;">Salvar Participante</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="companyModal">
+    <div class="modal-content">
+      <div class="modal-header"><h3 id="companyModalTitle">Nova Empresa</h3><button class="modal-close" onclick="closeModal('companyModal')">×</button></div>
+      <form id="companyForm" onsubmit="saveCompany(event)">
+        <input type="hidden" id="companyId">
+        <div class="form-group"><label>CNPJ *</label><input type="text" id="cCnpj" required placeholder="00.000.000/0000-00"></div>
+        <div class="form-group"><label>Nome da Empresa *</label><input type="text" id="cName" required></div>
+        <div class="form-group"><label>Responsável *</label><input type="text" id="cResponsible" required></div>
+        <div class="form-group"><label>Contato/WhatsApp *</label><input type="tel" id="cPhone" required placeholder="(00) 00000-0000"></div>
+        <div class="form-group"><label>E-mail Corporativo *</label><input type="email" id="cEmail" required></div>
+        <button type="submit" class="btn btn-primary" style="width:100%;margin-top:10px;">Salvar Empresa</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="assignTestModal">
+    <div class="modal-content">
+      <div class="modal-header"><h3>Atribuir Teste</h3><button class="modal-close" onclick="closeModal('assignTestModal')">×</button></div>
+      <form onsubmit="assignTest(event)">
+        <input type="hidden" id="assignTargetId">
+        <input type="hidden" id="assignTargetType">
+        <div class="form-group"><label>Destinatário</label><input type="text" id="assignTargetName" disabled style="background:#f1f5f9;"></div>
+        <div class="form-group"><label>Tipo de Teste *</label>
+          <select id="testTypeSelect" required>
             <option value="DISC">DISC - Perfil Comportamental</option>
             <option value="EMOTIONAL_INTELLIGENCE">Inteligência Emocional</option>
             <option value="PERSONAL_VALUES">Valores Pessoais</option>
           </select>
         </div>
-        <div class="form-group">
-          <label>Tempo Limite (minutos)</label>
-          <input type="number" id="testTime" value="30" min="5" max="120">
-        </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%;">Criar Teste</button>
+        <div class="form-group"><label>Validade da Senha (dias)</label><input type="number" id="testExpiryDays" value="7" min="1" max="30"></div>
+        <button type="submit" class="btn btn-success" style="width:100%;">Gerar Credenciais e Enviar</button>
       </form>
     </div>
   </div>
 
-  <script>
-    // ✅ VERIFICAÇÃO DE LOGIN CORRIGIDA
-    document.addEventListener('DOMContentLoaded', () => {
-      const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
-      const currentCompany = JSON.parse(localStorage.getItem('vigorre_current_company') || '{}');
-      
-      // Verifica se é admin OU participante OU empresa logado
-      const isAdmin = currentUser.role === 'admin';
-      const isParticipant = currentUser.id;
-      const isCompany = currentCompany.id;
-      
-      if (!isAdmin && !isParticipant && !isCompany) {
-        window.location.href = 'login.html';
-        return;
-      }
+  <div class="modal" id="reportModal">
+    <div class="modal-content">
+      <div class="modal-header"><h3>Emitir Relatório</h3><button class="modal-close" onclick="closeModal('reportModal')">×</button></div>
+      <form onsubmit="generateReport(event)">
+        <input type="hidden" id="reportTestId">
+        <div class="form-group"><label>Teste Base</label><input type="text" id="reportTestInfo" disabled style="background:#f1f5f9;"></div>
+        <div class="form-group"><label>Tipo de Relatório *</label>
+          <select id="reportTypeSelect" required>
+            <option value="simple">📄 Simples (Para o Participante)</option>
+            <option value="complete">📊 Completo (Para a Empresa)</option>
+            <option value="laudo"> Laudo Comportamental (Técnico)</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Gerar e Enviar por E-mail</button>
+      </form>
+    </div>
+  </div>
 
-      // Configura informações do usuário
-      if (isAdmin) {
-        document.getElementById('userName').textContent = currentUser.name || 'Administrador';
-        document.getElementById('userRole').textContent = 'Administrador';
-      } else if (currentCompany.id) {
-        document.getElementById('userName').textContent = currentCompany.responsible;
-        document.getElementById('userRole').textContent = 'Empresa: ' + currentCompany.name;
-      } else {
-        document.getElementById('userName').textContent = currentUser.name;
-        document.getElementById('userRole').textContent = 'Participante';
-      }
-      
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    // VERIFICAÇÃO DE ACESSO
+    if(JSON.parse(localStorage.getItem('vigorre_current_user') || '{}').role !== 'admin') {
+      window.location.href = 'login.html';
+    }
+
+    // INICIALIZAÇÃO
+    document.addEventListener('DOMContentLoaded', () => {
+      initStorage();
       loadDashboard();
+      loadCompanies();
+      loadParticipants();
+      loadTests();
+      loadReports();
+      updateCompanySelect();
     });
 
+    function initStorage() {
+      ['vigorre_participants','vigorre_companies','vigorre_tests','vigorre_reports','vigorre_activity'].forEach(k => {
+        if(!localStorage.getItem(k)) localStorage.setItem(k, JSON.stringify([]));
+      });
+    }
+
+    // TOAST NOTIFICATIONS
+    function showToast(message, type='success') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type === 'error' ? 'error' : ''}`;
+      toast.innerHTML = `<span>${type==='success'?'✅':'❌'}</span><span>${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 4000);
+    }
+
+    // NAVEGAÇÃO
     function showSection(section) {
       document.querySelectorAll('.main section').forEach(s => s.style.display = 'none');
       document.getElementById(section).style.display = 'block';
       document.getElementById('pageTitle').textContent = section.charAt(0).toUpperCase() + section.slice(1);
       document.querySelectorAll('.nav-menu a').forEach(a => a.classList.remove('active'));
-      event.target.closest('a')?.classList.add('active');
-      
-      if (section === 'companies') loadCompanies();
-      if (section === 'participants') loadParticipants();
-      if (section === 'tests') loadTests();
-      if (section === 'reports') loadReports();
+      event.target.closest('a').classList.add('active');
+      document.getElementById('actionBtn').style.display = (section === 'dashboard' || section === 'reports') ? 'none' : 'inline-flex';
+      if(section === 'reports') loadReports();
     }
 
-    function loadDashboard() {
-      const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
-      const users = JSON.parse(localStorage.getItem('vigorre_users') || '[]');
-      const tests = JSON.parse(localStorage.getItem('vigorre_tests') || '[]');
-      const reports = JSON.parse(localStorage.getItem('vigorre_reports') || '[]');
-
-      document.getElementById('statCompanies').textContent = companies.length;
-      document.getElementById('statParticipants').textContent = users.length;
-      document.getElementById('statTests').textContent = tests.length;
-      document.getElementById('statReports').textContent = reports.length;
-
-      // Recent tests
-      const recent = tests.slice(-5).reverse();
-      const tbody = document.getElementById('recentTests');
-      tbody.innerHTML = recent.map(t => {
-        const participant = users.find(u => u.id === t.participantId) || {name: 'N/A'};
-        return `<tr>
-          <td>${participant.name}</td>
-          <td>${t.type}</td>
-          <td><span style="padding:4px 10px;border-radius:20px;background:${t.status==='completed'?'#dcfce7':'#fef3c7'};color:${t.status==='completed'?'#166534':'#92400e'};font-size:0.8rem">${t.status}</span></td>
-          <td><button class="btn btn-sm btn-primary" onclick="viewTest(${t.id})">Ver</button></td>
-        </tr>`;
-      }).join('') || '<tr><td colspan="4" style="text-align:center;color:#64748b">Nenhum teste recente</td></tr>';
+    function openCreateModal() {
+      const section = document.getElementById('pageTitle').textContent.toLowerCase();
+      if(section.includes('empresa')) openModal('companyModal');
+      else if(section.includes('participante')) openModal('participantModal');
     }
 
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { 
+      document.getElementById(id).classList.remove('active'); 
+      document.querySelectorAll('form').forEach(f => f.reset());
+      document.querySelectorAll('input[type="hidden"]').forEach(i => i.value = '');
+    }
+
+    // CRUD EMPRESAS
     function loadCompanies() {
       const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
       const tbody = document.getElementById('companiesTable');
       tbody.innerHTML = companies.map(c => `
         <tr>
-          <td>${c.name}</td>
+          <td><strong>${c.name}</strong></td>
           <td>${c.cnpj}</td>
           <td>${c.responsible}</td>
           <td>${c.phone}<br><small>${c.email}</small></td>
+          <td>${c.tests?.length || 0} ativos</td>
           <td>
-            <button class="btn btn-sm btn-warning" onclick="editCompany(${c.id})">Editar</button>
-            <button class="btn btn-sm btn-danger" onclick="deleteCompany(${c.id})">Excluir</button>
+            <button class="btn btn-sm btn-warning" onclick="editCompany('${c.id}')">✏️ Editar</button>
+            <button class="btn btn-sm btn-success" onclick="openAssignTest('company', '${c.id}', '${c.name}')">📤 Enviar Teste</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteItem('vigorre_companies', '${c.id}', 'Empresa')">🗑️ Excluir</button>
           </td>
-        </tr>
-      `).join('') || '<tr><td colspan="5" style="text-align:center;color:#64748b">Nenhuma empresa cadastrada</td></tr>';
+        </tr>`).join('') || '<tr><td colspan="6" style="text-align:center;color:#64748b">Nenhuma empresa cadastrada</td></tr>';
+      document.getElementById('statCompanies').textContent = companies.length;
     }
 
+    function editCompany(id) {
+      const c = JSON.parse(localStorage.getItem('vigorre_companies') || '[]').find(x => x.id === id);
+      if(!c) return;
+      document.getElementById('companyId').value = c.id;
+      document.getElementById('cCnpj').value = c.cnpj;
+      document.getElementById('cName').value = c.name;
+      document.getElementById('cResponsible').value = c.responsible;
+      document.getElementById('cPhone').value = c.phone;
+      document.getElementById('cEmail').value = c.email;
+      document.getElementById('companyModalTitle').textContent = 'Editar Empresa';
+      openModal('companyModal');
+    }
+
+    function saveCompany(e) {
+      e.preventDefault();
+      const id = document.getElementById('companyId').value || Date.now().toString();
+      const data = {
+        id, cnpj: document.getElementById('cCnpj').value, name: document.getElementById('cName').value,
+        responsible: document.getElementById('cResponsible').value, phone: document.getElementById('cPhone').value,
+        email: document.getElementById('cEmail').value, tests: [], createdAt: new Date().toISOString()
+      };
+      let list = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+      const idx = list.findIndex(x => x.id === id);
+      if(idx > -1) list[idx] = {...list[idx], ...data}; else list.push(data);
+      localStorage.setItem('vigorre_companies', JSON.stringify(list));
+      addActivity(`Empresa ${data.name} salva`);
+      showToast(idx > -1 ? 'Empresa atualizada!' : 'Empresa cadastrada!');
+      closeModal('companyModal');
+      loadCompanies();
+      updateCompanySelect();
+    }
+
+    // CRUD PARTICIPANTES
     function loadParticipants() {
-      const users = JSON.parse(localStorage.getItem('vigorre_users') || '[]');
+      const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
       const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
-      const tests = JSON.parse(localStorage.getItem('vigorre_tests') || '[]');
       const tbody = document.getElementById('participantsTable');
-      
-      tbody.innerHTML = users.filter(u => u.type === 'participant').map(p => {
-        const company = companies.find(c => c.id === p.companyId);
-        const testCount = tests.filter(t => t.participantId === p.id).length;
+      tbody.innerHTML = participants.map(p => {
+        const comp = companies.find(c => c.id === p.companyId);
         return `
-          <tr>
-            <td>${p.name}</td>
-            <td>${p.email}</td>
-            <td>${company?.name || 'Sem empresa'}</td>
-            <td>${testCount} testes</td>
-            <td>
-              <button class="btn btn-sm btn-primary" onclick="sendTest(${p.id})">Enviar Teste</button>
-              <button class="btn btn-sm btn-danger" onclick="deleteParticipant(${p.id})">Excluir</button>
-            </td>
-          </tr>
-        `;
-      }).join('') || '<tr><td colspan="5" style="text-align:center;color:#64748b">Nenhum participante cadastrado</td></tr>';
+        <tr>
+          <td><strong>${p.name}</strong></td>
+          <td>${p.email}</td>
+          <td>${p.phone}</td>
+          <td>${comp?.name || 'Independente'}</td>
+          <td>
+            ${p.username ? `<small>U: ${p.username}<br>S: ${p.tempPass}<br>V: ${p.expiry}</small>` : '<span class="badge badge-pending">Pendente</span>'}
+          </td>
+          <td>
+            <button class="btn btn-sm btn-warning" onclick="editParticipant('${p.id}')">✏️ Editar</button>
+            <button class="btn btn-sm btn-success" onclick="openAssignTest('participant', '${p.id}', '${p.name}')">📤 Enviar Teste</button>
+            <button class="btn btn-sm btn-primary" onclick="resendCredentials('${p.id}')">📧 Reenviar</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteItem('vigorre_participants', '${p.id}', 'Participante')">🗑️ Excluir</button>
+          </td>
+        </tr>`;
+      }).join('') || '<tr><td colspan="6" style="text-align:center;color:#64748b">Nenhum participante cadastrado</td></tr>';
+      document.getElementById('statParticipants').textContent = participants.length;
+    }
+
+    function editParticipant(id) {
+      const p = JSON.parse(localStorage.getItem('vigorre_participants') || '[]').find(x => x.id === id);
+      if(!p) return;
+      document.getElementById('participantId').value = p.id;
+      document.getElementById('pName').value = p.name;
+      document.getElementById('pPhone').value = p.phone;
+      document.getElementById('pEmail').value = p.email;
+      document.getElementById('pCompany').value = p.companyId || '';
+      document.getElementById('participantModalTitle').textContent = 'Editar Participante';
+      openModal('participantModal');
+    }
+
+    function saveParticipant(e) {
+      e.preventDefault();
+      const id = document.getElementById('participantId').value || Date.now().toString();
+      const data = {
+        id, name: document.getElementById('pName').value, phone: document.getElementById('pPhone').value,
+        email: document.getElementById('pEmail').value, companyId: document.getElementById('pCompany').value,
+        createdAt: new Date().toISOString()
+      };
+      let list = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+      const idx = list.findIndex(x => x.id === id);
+      if(idx > -1) list[idx] = {...list[idx], ...data}; else list.push(data);
+      localStorage.setItem('vigorre_participants', JSON.stringify(list));
+      addActivity(`Participante ${data.name} salvo`);
+      showToast(idx > -1 ? 'Participante atualizado!' : 'Participante cadastrado!');
+      closeModal('participantModal');
+      loadParticipants();
+    }
+
+    // TESTES & CREDENCIAIS
+    function openAssignTest(type, id, name) {
+      document.getElementById('assignTargetId').value = id;
+      document.getElementById('assignTargetType').value = type;
+      document.getElementById('assignTargetName').value = name;
+      openModal('assignTestModal');
+    }
+
+    function assignTest(e) {
+      e.preventDefault();
+      const targetId = document.getElementById('assignTargetId').value;
+      const targetType = document.getElementById('assignTargetType').value;
+      const testType = document.getElementById('testTypeSelect').value;
+      const expiryDays = parseInt(document.getElementById('testExpiryDays').value);
+      
+      const username = `VIG${Math.random().toString(36).substr(2, 5).toUpperCase()}`;
+      const tempPass = Math.random().toString(36).substr(2, 8);
+      const expiry = new Date(Date.now() + expiryDays * 24 * 60 * 60 * 1000).toLocaleDateString('pt-BR');
+      
+      const test = {
+        id: Date.now().toString(), targetType, targetId, testType, username, tempPass, expiry,
+        status: 'pending', createdAt: new Date().toISOString()
+      };
+      
+      let tests = JSON.parse(localStorage.getItem('vigorre_tests') || '[]');
+      tests.push(test);
+      localStorage.setItem('vigorre_tests', JSON.stringify(tests));
+      
+      // Atualizar lista do destinatário
+      let targetList = JSON.parse(localStorage.getItem(`vigorre_${targetType}s`) || '[]');
+      const tIdx = targetList.findIndex(x => x.id === targetId);
+      if(tIdx > -1) {
+        if(!targetList[tIdx].tests) targetList[tIdx].tests = [];
+        targetList[tIdx].tests.push(test.id);
+        localStorage.setItem(`vigorre_${targetType}s`, JSON.stringify(targetList));
+      }
+      
+      addActivity(`Teste ${testType} atribuído a ${document.getElementById('assignTargetName').value}`);
+      showToast(`Credenciais geradas! E-mail de envio simulado para ${targetType === 'company' ? 'responsável' : 'participante'}.`);
+      closeModal('assignTestModal');
+      loadTests(); loadCompanies(); loadParticipants();
+    }
+
+    function resendCredentials(participantId) {
+      const p = JSON.parse(localStorage.getItem('vigorre_participants') || '[]').find(x => x.id === participantId);
+      if(p?.username) {
+        showToast(`Credenciais reenviadas para ${p.email}`);
+        addActivity(`Credenciais reenviadas para ${p.name}`);
+      } else {
+        showToast('Participante sem credenciais. Atribua um teste primeiro.', 'error');
+      }
     }
 
     function loadTests() {
       const tests = JSON.parse(localStorage.getItem('vigorre_tests') || '[]');
-      const users = JSON.parse(localStorage.getItem('vigorre_users') || '[]');
       const tbody = document.getElementById('testsTable');
+      const getTypeName = t => t==='DISC'?'DISC':t==='EMOTIONAL_INTELLIGENCE'?'Inteligência Emocional':'Valores Pessoais';
+      const getStatusBadge = s => s==='pending'?'<span class="badge badge-pending">Pendente</span>':'<span class="badge badge-completed">Concluído</span>';
       
       tbody.innerHTML = tests.map(t => {
-        const participant = users.find(u => u.id === t.participantId) || {name: 'N/A'};
+        const targetName = targetType === 'company' ? 'Empresa' : 'Participante';
         return `
-          <tr>
-            <td>${participant.name}</td>
-            <td>${t.type}</td>
-            <td><small>U: ${t.username}<br>S: ${t.tempPassword}</small></td>
-            <td>${t.status}</td>
-            <td>
-              <button class="btn btn-sm btn-success" onclick="sendCredentials(${t.id})">Reenviar</button>
-              <button class="btn btn-sm btn-primary" onclick="generateReport(${t.id})">Gerar Relatório</button>
-            </td>
-          </tr>
-        `;
+        <tr>
+          <td>${targetName}</td>
+          <td>${getTypeName(t.testType)}</td>
+          <td>${getStatusBadge(t.status)}</td>
+          <td><small>U: ${t.username}<br>S: ${t.tempPass}<br>Vence: ${t.expiry}</small></td>
+          <td>
+            <button class="btn btn-sm btn-primary" onclick="openReportModal('${t.id}', '${targetName} - ${getTypeName(t.testType)}')">📈 Gerar Relatório</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteItem('vigorre_tests', '${t.id}', 'Teste')">🗑️</button>
+          </td>
+        </tr>`;
       }).join('') || '<tr><td colspan="5" style="text-align:center;color:#64748b">Nenhum teste criado</td></tr>';
+      document.getElementById('statTests').textContent = tests.filter(t => t.status==='pending').length;
+    }
+
+    // RELATÓRIOS
+    function openReportModal(testId, info) {
+      document.getElementById('reportTestId').value = testId;
+      document.getElementById('reportTestInfo').value = info;
+      openModal('reportModal');
+    }
+
+    function generateReport(e) {
+      e.preventDefault();
+      const testId = document.getElementById('reportTestId').value;
+      const reportType = document.getElementById('reportTypeSelect').value;
+      const test = JSON.parse(localStorage.getItem('vigorre_tests') || '[]').find(t => t.id === testId);
+      if(!test) return;
+
+      const report = {
+        id: Date.now().toString(), testId, type: reportType,
+        targetName: document.getElementById('reportTestInfo').value,
+        generatedAt: new Date().toLocaleString('pt-BR')
+      };
+      
+      let reports = JSON.parse(localStorage.getItem('vigorre_reports') || '[]');
+      reports.unshift(report);
+      localStorage.setItem('vigorre_reports', JSON.stringify(reports));
+      
+      test.status = 'completed';
+      let tests = JSON.parse(localStorage.getItem('vigorre_tests') || '[]');
+      const idx = tests.findIndex(t => t.id === testId);
+      if(idx > -1) tests[idx] = test;
+      localStorage.setItem('vigorre_tests', JSON.stringify(tests));
+      
+      addActivity(`Relatório ${reportType} gerado para ${report.targetName}`);
+      showToast(`✅ Relatório ${reportType.toUpperCase()} gerado e enviado por e-mail!`);
+      closeModal('reportModal');
+      loadReports(); loadTests();
     }
 
     function loadReports() {
       const reports = JSON.parse(localStorage.getItem('vigorre_reports') || '[]');
-      const users = JSON.parse(localStorage.getItem('vigorre_users') || '[]');
       const tbody = document.getElementById('reportsTable');
-      
-      tbody.innerHTML = reports.map(r => {
-        const participant = users.find(u => u.id === r.participantId) || {name: 'N/A'};
-        return `
-          <tr>
-            <td>${participant.name}</td>
-            <td>${r.type}</td>
-            <td>${new Date(r.createdAt).toLocaleDateString('pt-BR')}</td>
-            <td>
-              <button class="btn btn-sm btn-primary" onclick="viewReport('${r.id}')">Ver</button>
-              <button class="btn btn-sm btn-success" onclick="sendReport('${r.id}')">Enviar por E-mail</button>
-            </td>
-          </tr>
-        `;
-      }).join('') || '<tr><td colspan="4" style="text-align:center;color:#64748b">Nenhum relatório gerado</td></tr>';
+      const typeLabels = { simple: '📄 Simples', complete: '📊 Completo', laudo: '🧠 Laudo Comportamental' };
+      tbody.innerHTML = reports.map(r => `
+        <tr>
+          <td>${r.targetName}</td>
+          <td>${r.generatedAt}</td>
+          <td>${typeLabels[r.type] || r.type}</td>
+          <td>${r.generatedAt}</td>
+          <td><button class="btn btn-sm btn-primary" onclick="showToast('Download do relatório simulado!')">📥 Baixar PDF</button></td>
+        </tr>
+      `).join('') || '<tr><td colspan="5" style="text-align:center;color:#64748b">Nenhum relatório emitido</td></tr>';
+      document.getElementById('statReports').textContent = reports.length;
     }
 
-    function openModal() {
-      const users = JSON.parse(localStorage.getItem('vigorre_users') || '[]');
-      const select = document.getElementById('testParticipant');
-      select.innerHTML = users.filter(u => u.type === 'participant').map(p => 
-        `<option value="${p.id}">${p.name}</option>`
-      ).join('');
-      document.getElementById('testModal').classList.add('active');
+    // UTILITÁRIOS
+    function updateCompanySelect() {
+      const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+      const select = document.getElementById('pCompany');
+      select.innerHTML = '<option value="">Nenhuma</option>' + companies.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
     }
 
-    function closeModal() {
-      document.getElementById('testModal').classList.remove('active');
+    function deleteItem(collection, id, label) {
+      if(!confirm(`Tem certeza que deseja excluir ${label}?`)) return;
+      let list = JSON.parse(localStorage.getItem(collection) || '[]');
+      list = list.filter(x => x.id !== id);
+      localStorage.setItem(collection, JSON.stringify(list));
+      showToast(`${label} excluída!`);
+      loadDashboard(); loadCompanies(); loadParticipants(); loadTests(); loadReports();
     }
 
-    function createTest(e) {
-      e.preventDefault();
-      const participantId = parseInt(document.getElementById('testParticipant').value);
-      const type = document.getElementById('testType').value;
-      const timeLimit = parseInt(document.getElementById('testTime').value);
+    function addActivity(msg) {
+      let act = JSON.parse(localStorage.getItem('vigorre_activity') || '[]');
+      act.unshift({ date: new Date().toLocaleString('pt-BR'), msg });
+      if(act.length > 10) act.pop();
+      localStorage.setItem('vigorre_activity', JSON.stringify(act));
+      const tbody = document.getElementById('recentActivity');
+      tbody.innerHTML = act.map(a => `<tr><td>${a.date}</td><td>${a.msg}</td></tr>`).join('');
+    }
 
-      const test = {
-        id: Date.now(),
-        participantId,
-        type,
-        username: 'TEST' + Math.random().toString(36).slice(2, 8).toUpperCase(),
-        tempPassword: Math.random().toString(36).slice(2, 10),
-        passwordExpires: new Date(Date.now() + 7*24*60*60*1000).toISOString(),
-        timeLimit,
-        status: 'pending',
-        createdAt: new Date().toISOString()
-      };
-
-      const tests = JSON.parse(localStorage.getItem('vigorre_tests') || '[]');
-      tests.push(test);
-      localStorage.setItem('vigorre_tests', JSON.stringify(tests));
-
-      closeModal();
-      loadDashboard();
-      loadTests();
-      alert(`Teste criado!\nUsuário: ${test.username}\nSenha: ${test.tempPassword}\nValidade: 7 dias`);
+    function loadDashboard() {
+      addActivity('Sistema inicializado');
+      document.getElementById('actionBtn').style.display = 'none';
     }
 
     function logout() {
       localStorage.removeItem('vigorre_current_user');
-      localStorage.removeItem('vigorre_current_company');
       window.location.href = 'login.html';
     }
 
-    // Funções placeholder para ações
-    function viewTest(id) { alert('Visualizar teste ' + id); }
-    function editCompany(id) { alert('Editar empresa ' + id); }
-    function deleteCompany(id) { if(confirm('Excluir empresa?')) { /* lógica de exclusão */ loadCompanies(); } }
-    function sendTest(participantId) { openModal(); }
-    function deleteParticipant(id) { if(confirm('Excluir participante?')) { /* lógica */ loadParticipants(); } }
-    function sendCredentials(testId) { alert('Credenciais reenviadas por e-mail'); }
-    function generateReport(testId) { 
-      const reports = JSON.parse(localStorage.getItem('vigorre_reports') || '[]');
-      reports.push({ id: 'RPT'+Date.now(), testId, participantId: 1, type: 'DISC', createdAt: new Date().toISOString() });
-      localStorage.setItem('vigorre_reports', JSON.stringify(reports));
-      alert('Relatório gerado com sucesso!');
-      loadReports();
-    }
-    function viewReport(id) { window.location.href = 'relatorio.html?id=' + id; }
-    function sendReport(id) { alert('Relatório enviado por e-mail'); }
+    // Máscaras simples
+    document.querySelectorAll('input[placeholder*="(00)"]').forEach(el => {
+      el.addEventListener('input', e => {
+        let v = e.target.value.replace(/\D/g,'');
+        if(v.length > 11) v = v.slice(0,11);
+        if(v.length > 6) v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+        else if(v.length > 2) v = `(${v.slice(0,2)}) ${v.slice(2)}`;
+        e.target.value = v;
+      });
+    });
+    document.getElementById('cCnpj').addEventListener('input', e => {
+      let v = e.target.value.replace(/\D/g,'');
+      if(v.length > 14) v = v.slice(0,14);
+      v = v.replace(/^(\d{2})(\d)/,'$1.$2');
+      v = v.replace(/^(\d{2})\.(\d{3})(\d)/,'$1.$2.$3');
+      v = v.replace(/\.(\d{3})(\d)/,'.$1/$2');
+      v = v.replace(/(\d{4})(\d)/,'$1-$2');
+      e.target.value = v;
+    });
   </script>
 </body>
 </html>
