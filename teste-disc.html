@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teste DISC - Vigorre</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; }
+    header { background: #1e40af; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: bold; }
+    .logo-icon { width: 35px; height: 35px; background: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #1e40af; }
+    .timer { background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 20px; font-weight: 600; }
+    main { max-width: 700px; margin: 0 auto; padding: 30px 20px; }
+    .progress { margin-bottom: 2rem; }
+    .progress-bar { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+    .progress-fill { height: 100%; background: #1e40af; width: 0%; transition: width 0.3s; }
+    .progress-text { display: flex; justify-content: space-between; margin-top: 5px; font-size: 0.9rem; color: #64748b; }
+    .question-card { background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
+    .question-text { font-size: 1.3rem; font-weight: 600; margin-bottom: 1.5rem; line-height: 1.4; }
+    .options { display: flex; flex-direction: column; gap: 12px; }
+    .option { padding: 15px; border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: 0.2s; text-align: left; }
+    .option:hover { border-color: #1e40af; background: #f0f9ff; }
+    .option.selected { border-color: #1e40af; background: #dbeafe; }
+    .option-letter { font-weight: bold; margin-right: 8px; color: #1e40af; }
+    .navigation { display: flex; justify-content: space-between; margin-top: 2rem; }
+    .btn { padding: 12px 24px; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; font-size: 1rem; transition: 0.2s; }
+    .btn-prev { background: #e2e8f0; color: #1e293b; }
+    .btn-prev:hover { background: #cbd5e1; }
+    .btn-prev:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-next { background: #1e40af; color: white; }
+    .btn-next:hover { background: #1d4ed8; }
+    .btn-next:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-finish { background: #22c55e; color: white; }
+    .btn-finish:hover { background: #16a34a; }
+    .hidden { display: none; }
+    #result { text-align: center; }
+    .result-card { background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+    .result-title { font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem; color: #1e40af; }
+    .disc-chart { display: flex; justify-content: center; gap: 15px; margin: 2rem 0; flex-wrap: wrap; }
+    .disc-bar { text-align: center; }
+    .disc-bar-fill { width: 60px; background: #e2e8f0; border-radius: 8px 8px 0 0; position: relative; margin: 0 auto 8px; }
+    .disc-bar-fill.D { background: #dc2626; }
+    .disc-bar-fill.I { background: #3b82f6; }
+    .disc-bar-fill.S { background: #22c55e; }
+    .disc-bar-fill.C { background: #f59e0b; }
+    .disc-bar-label { font-weight: 600; }
+    .disc-bar-value { font-size: 0.9rem; color: #64748b; }
+    .profile-badge { display: inline-block; padding: 8px 16px; background: #1e40af; color: white; border-radius: 20px; font-weight: 600; margin: 1rem 0; }
+    .strengths { text-align: left; margin-top: 1.5rem; }
+    .strengths h4 { margin-bottom: 0.5rem; }
+    .strengths ul { list-style: none; padding-left: 0; }
+    .strengths li { padding: 4px 0; padding-left: 20px; position: relative; }
+    .strengths li:before { content: "✓"; position: absolute; left: 0; color: #22c55e; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <div class="logo-icon">V</div>
+      <span>Vigorre - Teste DISC</span>
+    </div>
+    <div class="timer" id="timer">30:00</div>
+  </header>
+
+  <main>
+    <!-- Tela do Teste -->
+    <div id="test-screen">
+      <div class="progress">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="progress-text">
+          <span id="progress-text">Questão 1 de 10</span>
+          <span id="progress-percent">10%</span>
+        </div>
+      </div>
+
+      <div class="question-card">
+        <div class="question-text" id="question-text">Carregando questão...</div>
+        <div class="options" id="options"></div>
+      </div>
+
+      <div class="navigation">
+        <button class="btn btn-prev" id="btn-prev" onclick="prevQuestion()">← Anterior</button>
+        <button class="btn btn-next" id="btn-next" onclick="nextQuestion()">Próxima →</button>
+        <button class="btn btn-finish hidden" id="btn-finish" onclick="finishTest()">Finalizar Teste</button>
+      </div>
+    </div>
+
+    <!-- Tela de Resultado -->
+    <div id="result" class="hidden">
+      <div class="result-card">
+        <div class="result-title">🎉 Seu Perfil DISC</div>
+        <p id="result-description">Seu perfil predominante é <strong id="primary-style">--</strong></p>
+        <div class="profile-badge" id="profile-badge">Perfil: --</div>
+        
+        <div class="disc-chart" id="disc-chart"></div>
+        
+        <div class="strengths">
+          <h4>💡 Seus Pontos Fortes:</h4>
+          <ul id="strengths-list"></ul>
+        </div>
+        
+        <button class="btn btn-primary" style="margin-top: 2rem;" onclick="location.href='index.html'">Voltar ao Início</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Questões DISC baseadas na metodologia dos seus PDFs
+    const questions = [
+      {
+        text: "Diante de desafios no trabalho, eu:",
+        options: [
+          { text: "Assumo o controle e tomo decisões rápidas", type: "D" },
+          { text: "Envolvo outras pessoas para resolver juntos", type: "I" },
+          { text: "Mantenho a calma e busco estabilidade", type: "S" },
+          { text: "Analiso todos os detalhes antes de agir", type: "C" }
+        ]
+      },
+      {
+        text: "Em reuniões, minha abordagem é:",
+        options: [
+          { text: "Vou direto ao ponto, foco em resultados", type: "D" },
+          { text: "Crio ambiente animado e colaborativo", type: "I" },
+          { text: "Ouço atentamente e apoio decisões", type: "S" },
+          { text: "Apresento dados e informações precisas", type: "C" }
+        ]
+      },
+      {
+        text: "Minha forma de resolver problemas:",
+        options: [
+          { text: "Direta e assertiva", type: "D" },
+          { text: "Criativa e otimista", type: "I" },
+          { text: "Paciente e metódica", type: "S" },
+          { text: "Sistemática e analítica", type: "C" }
+        ]
+      },
+      {
+        text: "O que mais me motiva profissionalmente:",
+        options: [
+          { text: "Alcançar metas desafiadoras", type: "D" },
+          { text: "Reconhecimento e interação social", type: "I" },
+          { text: "Estabilidade e harmonia na equipe", type: "S" },
+          { text: "Qualidade e precisão no trabalho", type: "C" }
+        ]
+      },
+      {
+        text: "Diante de conflitos, eu:",
+        options: [
+          { text: "Enfrento a situação de frente", type: "D" },
+          { text: "Tento persuadir e negociar", type: "I" },
+          { text: "Busco evitar e manter a paz", type: "S" },
+          { text: "Analiso os fatos objetivamente", type: "C" }
+        ]
+      },
+      {
+        text: "Meu ritmo de trabalho é:",
+        options: [
+          { text: "Rápido e intenso", type: "D" },
+          { text: "Dinâmico e variado", type: "I" },
+          { text: "Constante e estável", type: "S" },
+          { text: "Metódico e cuidadoso", type: "C" }
+        ]
+      },
+      {
+        text: "Prefiro trabalhar:",
+        options: [
+          { text: "Com autonomia e independência", type: "D" },
+          { text: "Em equipe e colaborando", type: "I" },
+          { text: "Em ambiente previsível", type: "S" },
+          { text: "Com procedimentos definidos", type: "C" }
+        ]
+      },
+      {
+        text: "Minha comunicação é:",
+        options: [
+          { text: "Direta e objetiva", type: "D" },
+          { text: "Entusiasmada e expressiva", type: "I" },
+          { text: "Amigável e paciente", type: "S" },
+          { text: "Precisa e técnica", type: "C" }
+        ]
+      },
+      {
+        text: "Diante de mudanças, eu:",
+        options: [
+          { text: "Adapto-me rapidamente", type: "D" },
+          { text: "Vejo como oportunidade", type: "I" },
+          { text: "Preciso de tempo para ajustar", type: "S" },
+          { text: "Avalio os impactos cuidadosamente", type: "C" }
+        ]
+      },
+      {
+        text: "Tomo decisões baseadas em:",
+        options: [
+          { text: "Resultados e eficiência", type: "D" },
+          { text: "Intuição e sentimentos", type: "I" },
+          { text: "Valores e impacto nas pessoas", type: "S" },
+          { text: "Dados e análise lógica", type: "C" }
+        ]
+      }
+    ];
+
+    let currentQuestion = 0;
+    let answers = [];
+    let timeLeft = 30 * 60; // 30 minutos em segundos
+    let timerInterval;
+
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', () => {
+      loadQuestion();
+      startTimer();
+    });
+
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        const mins = Math.floor(timeLeft / 60);
+        const secs = timeLeft % 60;
+        document.getElementById('timer').textContent = 
+          `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        
+        if (timeLeft <= 0) finishTest();
+      }, 1000);
+    }
+
+    function loadQuestion() {
+      const q = questions[currentQuestion];
+      document.getElementById('question-text').textContent = q.text;
+      
+      const optionsDiv = document.getElementById('options');
+      optionsDiv.innerHTML = '';
+      
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('div');
+        btn.className = 'option';
+        if (answers[currentQuestion] === idx) btn.classList.add('selected');
+        btn.innerHTML = `<span class="option-letter">${String.fromCharCode(65 + idx)})</span> ${opt.text}`;
+        btn.onclick = () => selectOption(idx);
+        optionsDiv.appendChild(btn);
+      });
+
+      // Atualizar progresso
+      const percent = Math.round(((currentQuestion + 1) / questions.length) * 100);
+      document.getElementById('progress-fill').style.width = `${percent}%`;
+      document.getElementById('progress-text').textContent = `Questão ${currentQuestion + 1} de ${questions.length}`;
+      document.getElementById('progress-percent').textContent = `${percent}%`;
+
+      // Atualizar botões
+      document.getElementById('btn-prev').disabled = currentQuestion === 0;
+      
+      if (currentQuestion === questions.length - 1) {
+        document.getElementById('btn-next').classList.add('hidden');
+        document.getElementById('btn-finish').classList.remove('hidden');
+      } else {
+        document.getElementById('btn-next').classList.remove('hidden');
+        document.getElementById('btn-finish').classList.add('hidden');
+        document.getElementById('btn-next').disabled = answers[currentQuestion] === undefined;
+      }
+    }
+
+    function selectOption(idx) {
+      answers[currentQuestion] = idx;
+      loadQuestion();
+    }
+
+    function prevQuestion() {
+      if (currentQuestion > 0) {
+        currentQuestion--;
+        loadQuestion();
+      }
+    }
+
+    function nextQuestion() {
+      if (currentQuestion < questions.length - 1 && answers[currentQuestion] !== undefined) {
+        currentQuestion++;
+        loadQuestion();
+      }
+    }
+
+    function finishTest() {
+      clearInterval(timerInterval);
+      
+      // Calcular resultado DISC
+      const scores = { D: 0, I: 0, S: 0, C: 0 };
+      answers.forEach((ansIdx, qIdx) => {
+        if (ansIdx !== undefined) {
+          const type = questions[qIdx].options[ansIdx].type;
+          scores[type]++;
+        }
+      });
+
+      const total = Object.values(scores).reduce((a, b) => a + b, 1);
+      const percentages = {
+        D: Math.round((scores.D / total) * 100),
+        I: Math.round((scores.I / total) * 100),
+        S: Math.round((scores.S / total) * 100),
+        C: Math.round((scores.C / total) * 100)
+      };
+
+      // Determinar perfil predominante
+      const sorted = Object.entries(percentages).sort((a, b) => b[1] - a[1]);
+      const primary = sorted[0][0];
+      const secondary = sorted[1][0];
+
+      // Exibir resultado
+      document.getElementById('test-screen').classList.add('hidden');
+      document.getElementById('result').classList.remove('hidden');
+      
+      document.getElementById('primary-style').textContent = getStyleName(primary);
+      document.getElementById('profile-badge').textContent = `Perfil: ${primary}${secondary}`;
+      document.getElementById('result-description').innerHTML = 
+        `Seu perfil predominante é <strong>${getStyleName(primary)}</strong> (${primary}) com influência de <strong>${getStyleName(secondary)}</strong> (${secondary}).`;
+
+      // Gráfico de barras
+      const chartDiv = document.getElementById('disc-chart');
+      chartDiv.innerHTML = '';
+      ['D', 'I', 'S', 'C'].forEach(letter => {
+        const bar = document.createElement('div');
+        bar.className = 'disc-bar';
+        bar.innerHTML = `
+          <div class="disc-bar-fill ${letter}" style="height: ${Math.max(percentages[letter], 5)}px;"></div>
+          <div class="disc-bar-label">${letter}</div>
+          <div class="disc-bar-value">${percentages[letter]}%</div>
+        `;
+        chartDiv.appendChild(bar);
+      });
+
+      // Pontos fortes
+      const strengths = {
+        D: ["Liderança natural", "Foco em resultados", "Tomada de decisão rápida", "Orientação para desafios"],
+        I: ["Comunicação eficaz", "Entusiasmo e energia", "Persuasão", "Criatividade"],
+        S: ["Paciência", "Lealdade", "Trabalho em equipe", "Estabilidade"],
+        C: ["Análise detalhada", "Precisão", "Organização", "Qualidade"]
+      };
+      
+      const strengthsList = document.getElementById('strengths-list');
+      strengthsList.innerHTML = '';
+      strengths[primary].forEach(s => {
+        const li = document.createElement('li');
+        li.textContent = s;
+        strengthsList.appendChild(li);
+      });
+    }
+
+    function getStyleName(letter) {
+      const names = { D: "Dominância", I: "Influência", S: "Estabilidade", C: "Conscienciosidade" };
+      return names[letter] || letter;
+    }
+  </script>
+</body>
+</html>
