@@ -7,66 +7,33 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { 
-      font-family: 'Inter', sans-serif; 
-      background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%); 
-      color: white; 
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .login-container {
-      background: white;
-      border-radius: 20px;
-      padding: 3rem;
-      max-width: 450px;
-      width: 90%;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-    }
-    .logo { text-align: center; margin-bottom: 2rem; }
-    .logo-icon { 
-      width: 60px; height: 60px; 
-      background: linear-gradient(135deg, #3b82f6, #1e40af); 
-      border-radius: 12px; 
-      display: flex; align-items: center; justify-content: center; 
-      color: white; font-weight: bold; font-size: 28px;
-      margin: 0 auto 1rem;
-    }
-    .logo h1 { color: #1e40af; font-size: 1.5rem; }
-    .logo p { color: #64748b; font-size: 0.9rem; }
+    body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%); color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .login-container { background: white; border-radius: 20px; padding: 3rem; max-width: 450px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+    .logo-area { text-align: center; margin-bottom: 2rem; }
+    .logo-area img { height: 80px; width: auto; margin-bottom: 1rem; }
+    .logo-area h1 { color: #1e40af; font-size: 1.6rem; }
+    .logo-area p { color: #64748b; font-size: 0.9rem; }
     .form-group { margin-bottom: 1.5rem; }
     .form-group label { display: block; margin-bottom: 0.5rem; color: #1e293b; font-weight: 600; }
-    .form-group input {
-      width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px;
-      font-size: 1rem; transition: border-color 0.3s;
-    }
+    .form-group input { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; }
     .form-group input:focus { outline: none; border-color: #3b82f6; }
-    .btn {
-      width: 100%; padding: 14px; border-radius: 10px; border: none;
-      background: linear-gradient(135deg, #3b82f6, #1e40af); color: white;
-      font-weight: 700; font-size: 1rem; cursor: pointer; transition: transform 0.3s;
-    }
+    .btn { width: 100%; padding: 14px; border-radius: 10px; border: none; background: linear-gradient(135deg, #3b82f6, #1e40af); color: white; font-weight: 700; font-size: 1rem; cursor: pointer; transition: transform 0.3s; }
     .btn:hover { transform: translateY(-2px); }
     .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-    .links { text-align: center; margin-top: 1.5rem; }
-    .links a { color: #3b82f6; text-decoration: none; font-size: 0.9rem; }
-    .links a:hover { text-decoration: underline; }
+    .user-type { display: flex; gap: 10px; margin-bottom: 1.5rem; }
+    .user-type button { flex: 1; padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; background: white; color: #64748b; cursor: pointer; transition: all 0.3s; }
+    .user-type button.active { border-color: #3b82f6; background: #eff6ff; color: #1e40af; font-weight: 600; }
     .alert { padding: 12px; border-radius: 8px; margin-bottom: 1rem; display: none; text-align: center; font-weight: 600; }
     .alert.error { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
     .alert.success { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
-    .user-type { display: flex; gap: 10px; margin-bottom: 1.5rem; }
-    .user-type button {
-      flex: 1; padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px;
-      background: white; color: #64748b; cursor: pointer; transition: all 0.3s;
-    }
-    .user-type button.active { border-color: #3b82f6; background: #eff6ff; color: #1e40af; font-weight: 600; }
+    .back-link { text-align: center; margin-top: 1.5rem; }
+    .back-link a { color: #3b82f6; text-decoration: none; font-size: 0.9rem; }
   </style>
 </head>
 <body>
   <div class="login-container">
-    <div class="logo">
-      <div class="logo-icon">V</div>
+    <div class="logo-area">
+      <img src="logo-vigorre.png" alt="Vigorre" onerror="this.outerHTML='<div style=\'font-size:40px;color:#1e40af;font-weight:bold;margin-bottom:10px\'>V</div>'">
       <h1>Vigorre</h1>
       <p>Inteligência e Gestão Estratégica</p>
     </div>
@@ -74,103 +41,59 @@
     <div class="alert" id="alert"></div>
 
     <div class="user-type">
-      <button type="button" class="active" onclick="setUserType('participant')">Participante</button>
+      <button type="button" class="active" onclick="setUserType('admin')">Administrador</button>
       <button type="button" onclick="setUserType('company')">Empresa</button>
-      <button type="button" onclick="setUserType('admin')">Administrador</button>
+      <button type="button" onclick="setUserType('participant')">Participante</button>
     </div>
 
     <form id="loginForm" onsubmit="handleLogin(event)">
       <div class="form-group">
-        <label for="email">Usuário ou E-mail</label>
-        <input type="text" id="email" required placeholder="admin">
+        <label>Usuário ou E-mail</label>
+        <input type="text" id="email" required placeholder="Digite seu acesso">
       </div>
       <div class="form-group">
-        <label for="password">Senha</label>
+        <label>Senha</label>
         <input type="password" id="password" required placeholder="••••••••">
       </div>
       <button type="submit" class="btn" id="loginBtn">Entrar</button>
     </form>
 
-    <div class="links">
-      <p><a href="index.html">← Voltar para início</a></p>
+    <div class="back-link">
+      <a href="index.html">← Voltar para o site</a>
     </div>
   </div>
 
   <script>
-    let userType = 'participant';
-
+    let userType = 'admin';
     function setUserType(type) {
       userType = type;
       document.querySelectorAll('.user-type button').forEach(btn => btn.classList.remove('active'));
       event.target.classList.add('active');
     }
-
-    function showAlert(message, type) {
+    function showAlert(msg, type) {
       const alert = document.getElementById('alert');
-      alert.textContent = message;
+      alert.textContent = msg;
       alert.className = `alert ${type}`;
       alert.style.display = 'block';
-      setTimeout(() => alert.style.display = 'none', 5000);
+      setTimeout(() => alert.style.display = 'none', 4000);
     }
-
     function handleLogin(e) {
       e.preventDefault();
-      const email = document.getElementById('email').value;
+      const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
       const btn = document.getElementById('loginBtn');
+      btn.disabled = true; btn.textContent = 'Verificando...';
 
-      btn.disabled = true;
-      btn.textContent = 'Entrando...';
-
-      // LOGIN DO ADMINISTRADOR
-      if (userType === 'admin' && email === 'admin' && password === 'amovin2026') {
-        localStorage.setItem('vigorre_current_user', JSON.stringify({ 
-          name: 'Administrador', 
-          role: 'admin',
-          email: 'admin'
-        }));
-        showAlert('✅ Login realizado com sucesso! Redirecionando...', 'success');
-        setTimeout(() => {
-          window.location.href = 'admin.html';
-        }, 1000);
-        return;
-      }
-
-      // LOGIN DE PARTICIPANTE
-      if (userType === 'participant') {
-        const users = JSON.parse(localStorage.getItem('vigorre_users') || '[]');
-        const user = users.find(u => u.email === email && u.password === password);
-        if (user) {
-          localStorage.setItem('vigorre_current_user', JSON.stringify(user));
-          showAlert('✅ Bem-vindo! Redirecionando...', 'success');
+      setTimeout(() => {
+        if (userType === 'admin' && email === 'admin' && password === 'amovin2026') {
+          localStorage.setItem('vigorre_current_user', JSON.stringify({ name: 'Administrador', role: 'admin' }));
+          showAlert('✅ Acesso liberado! Redirecionando...', 'success');
           setTimeout(() => window.location.href = 'admin.html', 1000);
         } else {
-          showAlert('❌ Usuário ou senha incorretos', 'error');
-          btn.disabled = false;
-          btn.textContent = 'Entrar';
+          showAlert('❌ Credenciais inválidas ou tipo de usuário incorreto', 'error');
+          btn.disabled = false; btn.textContent = 'Entrar';
         }
-        return;
-      }
-
-      // LOGIN DE EMPRESA
-      if (userType === 'company') {
-        const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
-        const company = companies.find(c => c.email === email && c.password === password);
-        if (company) {
-          localStorage.setItem('vigorre_current_company', JSON.stringify(company));
-          showAlert('✅ Bem-vindo! Redirecionando...', 'success');
-          setTimeout(() => window.location.href = 'admin.html', 1000);
-        } else {
-          showAlert('❌ Usuário ou senha incorretos', 'error');
-          btn.disabled = false;
-          btn.textContent = 'Entrar';
-        }
-        return;
-      }
-
-      showAlert('❌ Credenciais inválidas', 'error');
-      btn.disabled = false;
-      btn.textContent = 'Entrar';
+      }, 800);
     }
   </script>
 </body>
