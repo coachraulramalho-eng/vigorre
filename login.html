@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Vigorre</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Inter', sans-serif; 
+      background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%); 
+      color: white; 
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-container {
+      background: white;
+      border-radius: 20px;
+      padding: 3rem;
+      max-width: 450px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .logo { text-align: center; margin-bottom: 2rem; }
+    .logo-icon { 
+      width: 60px; height: 60px; 
+      background: linear-gradient(135deg, #3b82f6, #1e40af); 
+      border-radius: 12px; 
+      display: flex; align-items: center; justify-content: center; 
+      color: white; font-weight: bold; font-size: 28px;
+      margin: 0 auto 1rem;
+    }
+    .logo h1 { color: #1e40af; font-size: 1.5rem; }
+    .logo p { color: #64748b; font-size: 0.9rem; }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; color: #1e293b; font-weight: 600; }
+    .form-group input {
+      width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px;
+      font-size: 1rem; transition: border-color 0.3s;
+    }
+    .form-group input:focus { outline: none; border-color: #3b82f6; }
+    .btn {
+      width: 100%; padding: 14px; border-radius: 10px; border: none;
+      background: linear-gradient(135deg, #3b82f6, #1e40af); color: white;
+      font-weight: 700; font-size: 1rem; cursor: pointer; transition: transform 0.3s;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .links { text-align: center; margin-top: 1.5rem; }
+    .links a { color: #3b82f6; text-decoration: none; font-size: 0.9rem; }
+    .links a:hover { text-decoration: underline; }
+    .alert { padding: 12px; border-radius: 8px; margin-bottom: 1rem; display: none; }
+    .alert.error { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+    .alert.success { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+    .user-type { display: flex; gap: 10px; margin-bottom: 1.5rem; }
+    .user-type button {
+      flex: 1; padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px;
+      background: white; color: #64748b; cursor: pointer; transition: all 0.3s;
+    }
+    .user-type button.active { border-color: #3b82f6; background: #eff6ff; color: #1e40af; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="logo">
+      <div class="logo-icon">V</div>
+      <h1>Vigorre</h1>
+      <p>Inteligência e Gestão Estratégica</p>
+    </div>
+
+    <div class="alert" id="alert"></div>
+
+    <div class="user-type">
+      <button type="button" class="active" onclick="setUserType('participant')">Participante</button>
+      <button type="button" onclick="setUserType('company')">Empresa</button>
+      <button type="button" onclick="setUserType('admin')">Administrador</button>
+    </div>
+
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" required placeholder="seu@email.com">
+      </div>
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <input type="password" id="password" required placeholder="••••••••">
+      </div>
+      <button type="submit" class="btn" id="loginBtn">Entrar</button>
+    </form>
+
+    <div class="links">
+      <p><a href="cadastro-participante.html">Criar conta de participante</a></p>
+      <p><a href="cadastro-empresa.html">Cadastrar minha empresa</a></p>
+      <p><a href="index.html">← Voltar para início</a></p>
+    </div>
+  </div>
+
+  <script>
+    let userType = 'participant';
+
+    function setUserType(type) {
+      userType = type;
+      document.querySelectorAll('.user-type button').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    function showAlert(message, type) {
+      const alert = document.getElementById('alert');
+      alert.textContent = message;
+      alert.className = `alert ${type}`;
+      alert.style.display = 'block';
+      setTimeout(() => alert.style.display = 'none', 5000);
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const btn = document.getElementById('loginBtn');
+
+      btn.disabled = true;
+      btn.textContent = 'Entrando...';
+
+      // Simulação de login (em produção, conectar com Firebase)
+      setTimeout(() => {
+        if (userType === 'admin' && email === 'admin@vigorre.com' && password === 'admin123') {
+          showAlert('Login realizado com sucesso!', 'success');
+          setTimeout(() => window.location.href = 'admin.html', 1500);
+        } else if (userType === 'participant') {
+          // Verifica no localStorage
+          const users = JSON.parse(localStorage.getItem('vigorre_users') || '[]');
+          const user = users.find(u => u.email === email && u.password === password && u.type === 'participant');
+          if (user) {
+            localStorage.setItem('vigorre_current_user', JSON.stringify(user));
+            showAlert('Bem-vindo! Redirecionando...', 'success');
+            setTimeout(() => window.location.href = 'admin.html', 1500);
+          } else {
+            showAlert('E-mail ou senha incorretos', 'error');
+            btn.disabled = false;
+            btn.textContent = 'Entrar';
+          }
+        } else if (userType === 'company') {
+          const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+          const company = companies.find(c => c.email === email && c.password === password);
+          if (company) {
+            localStorage.setItem('vigorre_current_company', JSON.stringify(company));
+            showAlert('Bem-vindo! Redirecionando...', 'success');
+            setTimeout(() => window.location.href = 'admin.html', 1500);
+          } else {
+            showAlert('E-mail ou senha incorretos', 'error');
+            btn.disabled = false;
+            btn.textContent = 'Entrar';
+          }
+        } else {
+          showAlert('Credenciais inválidas', 'error');
+          btn.disabled = false;
+          btn.textContent = 'Entrar';
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>

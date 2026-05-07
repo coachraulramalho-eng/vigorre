@@ -1,45 +1,44 @@
-# Vigorre - Inteligência e Gestão Estratégica
+# Vigorre - Plataforma de Análise Comportamental
 
-Plataforma de avaliações comportamentais DISC, Inteligência Emocional e Valores Pessoais.
+Plataforma profissional para testes DISC, Inteligência Emocional e Valores Pessoais.
 
-## 🚀 Como publicar na Vercel (GRÁTIS)
+## 🚀 Como Publicar (Passo a Passo)
 
-### Passo 1: Criar conta no GitHub
+### Passo 1: Criar Conta no GitHub
 1. Acesse https://github.com
 2. Clique em "Sign up"
 3. Preencha e-mail, senha e nome de usuário
 4. Confirme seu e-mail
 
-### Passo 2: Criar repositório
-1. No GitHub, clique no ícone "+" no canto superior direito
+### Passo 2: Criar Repositório
+1. No GitHub, clique no "+" no canto superior direito
 2. Escolha "New repository"
-3. Nome: `vigorre`
+3. Nome: `vigorre-plataforma`
 4. Marque "Public"
 5. Clique em "Create repository"
 
-### Passo 3: Enviar arquivos
+### Passo 3: Enviar Arquivos
 1. Na página do repositório, clique em "uploading an existing file"
-2. Arraste os 3 arquivos: `index.html`, `teste-disc.html`, `README.md`
-3. Em "Commit changes", clique no botão verde "Commit changes"
+2. Arraste todos os arquivos HTML
+3. Em "Commit changes", clique em "Commit changes"
 
 ### Passo 4: Publicar na Vercel
 1. Acesse https://vercel.com
 2. Clique em "Sign Up" → "Continue with GitHub"
-3. Autorize a conexão
-4. Clique em "Add New..." → "Project"
-5. Encontre `vigorre` e clique em "Import"
-6. Clique em "Deploy"
-7. ✅ Pronto! Seu site está no ar!
+3. Clique em "Add New..." → "Project"
+4. Encontre `vigorre-plataforma` e clique em "Import"
+5. Clique em "Deploy"
+6. ✅ Pronto! Seu site está no ar!
 
 ## 📋 Funcionalidades
 
-✅ Página inicial profissional  
-✅ Teste DISC com 10 questões (baseado na metodologia Wiley/Everything DiSC®)  
-✅ Cronômetro de 30 minutos  
-✅ Cálculo automático do perfil (D, I, S, C)  
-✅ Gráfico visual dos resultados  
-✅ Lista de pontos fortes por perfil  
-✅ Design responsivo (funciona no celular)  
+✅ Teste DISC com 28 questões
+✅ Cronômetro de 30 minutos
+✅ Cálculo automático do perfil (D, I, S, C)
+✅ Gráfico visual dos resultados
+✅ Lista de pontos fortes por perfil
+✅ Design responsivo (mobile e desktop)
+✅ 100% gratuito
 
 ## 🎯 Sobre o Teste DISC
 
@@ -52,5 +51,4 @@ Baseado na metodologia de William Marston, o teste avalia 4 traços comportament
 
 ## 📧 Contato
 
-Desenvolvido para Vigorre - Inteligência e Gestão Estratégica  
-contato@vigorre.com.br
+Desenvolvido para Vigorre - Inteligência e Gestão Estratégica

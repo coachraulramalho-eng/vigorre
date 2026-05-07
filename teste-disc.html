@@ -4,54 +4,202 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Teste DISC - Vigorre</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; }
-    header { background: #1e40af; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
-    .logo { display: flex; align-items: center; gap: 10px; font-weight: bold; }
-    .logo-icon { width: 35px; height: 35px; background: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #1e40af; }
-    .timer { background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 20px; font-weight: 600; }
-    main { max-width: 700px; margin: 0 auto; padding: 30px 20px; }
-    .progress { margin-bottom: 2rem; }
-    .progress-bar { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
-    .progress-fill { height: 100%; background: #1e40af; width: 0%; transition: width 0.3s; }
-    .progress-text { display: flex; justify-content: space-between; margin-top: 5px; font-size: 0.9rem; color: #64748b; }
-    .question-card { background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
-    .question-text { font-size: 1.3rem; font-weight: 600; margin-bottom: 1.5rem; line-height: 1.4; }
-    .options { display: flex; flex-direction: column; gap: 12px; }
-    .option { padding: 15px; border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: 0.2s; text-align: left; }
-    .option:hover { border-color: #1e40af; background: #f0f9ff; }
-    .option.selected { border-color: #1e40af; background: #dbeafe; }
-    .option-letter { font-weight: bold; margin-right: 8px; color: #1e40af; }
-    .navigation { display: flex; justify-content: space-between; margin-top: 2rem; }
-    .btn { padding: 12px 24px; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; font-size: 1rem; transition: 0.2s; }
+    body { 
+      font-family: 'Inter', sans-serif; 
+      background: #f8fafc; 
+      color: #1e293b; 
+      min-height: 100vh;
+    }
+    header { 
+      background: linear-gradient(135deg, #1e3a8a, #0f172a); 
+      color: white; 
+      padding: 15px 20px; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; }
+    .logo-icon { 
+      width: 35px; 
+      height: 35px; 
+      background: white; 
+      border-radius: 8px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      color: #1e3a8a;
+      font-weight: bold;
+    }
+    .timer { 
+      background: rgba(255,255,255,0.15); 
+      padding: 10px 20px; 
+      border-radius: 25px; 
+      font-weight: 700;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .timer.warning { background: rgba(239, 68, 68, 0.3); animation: pulse 1s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+    main { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+    .progress { margin-bottom: 2rem; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .progress-bar { height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #1e40af); width: 0%; transition: width 0.5s ease; }
+    .progress-text { display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.9rem; color: #64748b; font-weight: 600; }
+    .question-card { 
+      background: white; 
+      border-radius: 20px; 
+      padding: 2.5rem; 
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08); 
+      margin-bottom: 2rem;
+      border: 1px solid #e2e8f0;
+    }
+    .question-number { 
+      display: inline-block; 
+      background: linear-gradient(135deg, #3b82f6, #1e40af); 
+      color: white; 
+      padding: 5px 15px; 
+      border-radius: 20px; 
+      font-size: 0.85rem; 
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .question-text { font-size: 1.4rem; font-weight: 600; margin-bottom: 2rem; line-height: 1.4; color: #1e293b; }
+    .options { display: flex; flex-direction: column; gap: 15px; }
+    .option { 
+      padding: 18px; 
+      border: 2px solid #e2e8f0; 
+      border-radius: 12px; 
+      cursor: pointer; 
+      transition: all 0.3s; 
+      text-align: left;
+      background: #f8fafc;
+      font-size: 1rem;
+    }
+    .option:hover { 
+      border-color: #3b82f6; 
+      background: #eff6ff;
+      transform: translateX(5px);
+    }
+    .option.selected { 
+      border-color: #1e40af; 
+      background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+      box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
+    }
+    .option-letter { 
+      font-weight: 700; 
+      margin-right: 12px; 
+      color: #1e40af;
+      background: white;
+      padding: 3px 10px;
+      border-radius: 6px;
+      display: inline-block;
+    }
+    .navigation { 
+      display: flex; 
+      justify-content: space-between; 
+      margin-top: 2rem;
+      gap: 1rem;
+    }
+    .btn { 
+      padding: 14px 32px; 
+      border-radius: 12px; 
+      border: none; 
+      cursor: pointer; 
+      font-weight: 700; 
+      font-size: 1rem; 
+      transition: all 0.3s;
+    }
     .btn-prev { background: #e2e8f0; color: #1e293b; }
     .btn-prev:hover { background: #cbd5e1; }
-    .btn-prev:disabled { opacity: 0.5; cursor: not-allowed; }
-    .btn-next { background: #1e40af; color: white; }
-    .btn-next:hover { background: #1d4ed8; }
-    .btn-next:disabled { opacity: 0.5; cursor: not-allowed; }
-    .btn-finish { background: #22c55e; color: white; }
-    .btn-finish:hover { background: #16a34a; }
+    .btn-prev:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-next { 
+      background: linear-gradient(135deg, #3b82f6, #1e40af); 
+      color: white;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+    .btn-next:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6); }
+    .btn-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+    .btn-finish { 
+      background: linear-gradient(135deg, #22c55e, #16a34a); 
+      color: white;
+      box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+    }
+    .btn-finish:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(34, 197, 94, 0.6); }
     .hidden { display: none; }
     #result { text-align: center; }
-    .result-card { background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-    .result-title { font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem; color: #1e40af; }
-    .disc-chart { display: flex; justify-content: center; gap: 15px; margin: 2rem 0; flex-wrap: wrap; }
+    .result-card { 
+      background: white; 
+      border-radius: 20px; 
+      padding: 3rem; 
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      margin-top: 2rem;
+    }
+    .result-title { font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: #1e40af; }
+    .result-subtitle { font-size: 1.2rem; color: #64748b; margin-bottom: 2rem; }
+    .disc-chart { 
+      display: flex; 
+      justify-content: center; 
+      gap: 20px; 
+      margin: 3rem 0;
+      flex-wrap: wrap;
+    }
     .disc-bar { text-align: center; }
-    .disc-bar-fill { width: 60px; background: #e2e8f0; border-radius: 8px 8px 0 0; position: relative; margin: 0 auto 8px; }
-    .disc-bar-fill.D { background: #dc2626; }
-    .disc-bar-fill.I { background: #3b82f6; }
-    .disc-bar-fill.S { background: #22c55e; }
-    .disc-bar-fill.C { background: #f59e0b; }
-    .disc-bar-label { font-weight: 600; }
-    .disc-bar-value { font-size: 0.9rem; color: #64748b; }
-    .profile-badge { display: inline-block; padding: 8px 16px; background: #1e40af; color: white; border-radius: 20px; font-weight: 600; margin: 1rem 0; }
-    .strengths { text-align: left; margin-top: 1.5rem; }
-    .strengths h4 { margin-bottom: 0.5rem; }
+    .disc-bar-fill { 
+      width: 70px; 
+      background: #e2e8f0; 
+      border-radius: 10px 10px 0 0; 
+      position: relative; 
+      margin: 0 auto 12px;
+      transition: height 1s ease;
+    }
+    .disc-bar-fill.D { background: linear-gradient(180deg, #dc2626, #b91c1c); }
+    .disc-bar-fill.I { background: linear-gradient(180deg, #3b82f6, #2563eb); }
+    .disc-bar-fill.S { background: linear-gradient(180deg, #22c55e, #16a34a); }
+    .disc-bar-fill.C { background: linear-gradient(180deg, #f59e0b, #d97706); }
+    .disc-bar-label { font-weight: 700; font-size: 1.1rem; color: #1e293b; }
+    .disc-bar-value { font-size: 1rem; color: #64748b; font-weight: 600; margin-top: 5px; }
+    .profile-badge { 
+      display: inline-block; 
+      padding: 12px 28px; 
+      background: linear-gradient(135deg, #1e40af, #3b82f6); 
+      color: white; 
+      border-radius: 25px; 
+      font-weight: 700; 
+      margin: 1.5rem 0;
+      font-size: 1.1rem;
+    }
+    .strengths { text-align: left; margin-top: 2rem; padding: 2rem; background: #f8fafc; border-radius: 15px; }
+    .strengths h4 { margin-bottom: 1rem; font-size: 1.3rem; color: #1e40af; }
     .strengths ul { list-style: none; padding-left: 0; }
-    .strengths li { padding: 4px 0; padding-left: 20px; position: relative; }
-    .strengths li:before { content: "✓"; position: absolute; left: 0; color: #22c55e; font-weight: bold; }
+    .strengths li { 
+      padding: 8px 0; 
+      padding-left: 30px; 
+      position: relative;
+      font-size: 1.05rem;
+    }
+    .strengths li:before { 
+      content: "✓"; 
+      position: absolute; 
+      left: 0; 
+      color: #22c55e; 
+      font-weight: bold;
+      font-size: 1.3rem;
+    }
+    @media (max-width: 600px) {
+      .question-card { padding: 1.5rem; }
+      .question-text { font-size: 1.2rem; }
+      .disc-chart { gap: 10px; }
+      .disc-bar-fill { width: 50px; }
+    }
   </style>
 </head>
 <body>
@@ -60,7 +208,10 @@
       <div class="logo-icon">V</div>
       <span>Vigorre - Teste DISC</span>
     </div>
-    <div class="timer" id="timer">30:00</div>
+    <div class="timer" id="timer">
+      <span>⏱️</span>
+      <span id="time-display">30:00</span>
+    </div>
   </header>
 
   <main>
@@ -71,12 +222,13 @@
           <div class="progress-fill" id="progress-fill"></div>
         </div>
         <div class="progress-text">
-          <span id="progress-text">Questão 1 de 10</span>
-          <span id="progress-percent">10%</span>
+          <span id="progress-text">Questão 1 de 28</span>
+          <span id="progress-percent">4%</span>
         </div>
       </div>
 
       <div class="question-card">
+        <span class="question-number" id="question-number">Questão 1</span>
         <div class="question-text" id="question-text">Carregando questão...</div>
         <div class="options" id="options"></div>
       </div>
@@ -84,7 +236,7 @@
       <div class="navigation">
         <button class="btn btn-prev" id="btn-prev" onclick="prevQuestion()">← Anterior</button>
         <button class="btn btn-next" id="btn-next" onclick="nextQuestion()">Próxima →</button>
-        <button class="btn btn-finish hidden" id="btn-finish" onclick="finishTest()">Finalizar Teste</button>
+        <button class="btn btn-finish hidden" id="btn-finish" onclick="finishTest()">Finalizar Teste ✓</button>
       </div>
     </div>
 
@@ -92,7 +244,7 @@
     <div id="result" class="hidden">
       <div class="result-card">
         <div class="result-title">🎉 Seu Perfil DISC</div>
-        <p id="result-description">Seu perfil predominante é <strong id="primary-style">--</strong></p>
+        <p class="result-subtitle" id="result-description">Analisando seus resultados...</p>
         <div class="profile-badge" id="profile-badge">Perfil: --</div>
         
         <div class="disc-chart" id="disc-chart"></div>
@@ -102,104 +254,182 @@
           <ul id="strengths-list"></ul>
         </div>
         
-        <button class="btn btn-primary" style="margin-top: 2rem;" onclick="location.href='index.html'">Voltar ao Início</button>
+        <button class="btn btn-primary" style="margin-top: 2rem;" onclick="window.location.href='index.html'">Voltar ao Início</button>
       </div>
     </div>
   </main>
 
   <script>
-    // Questões DISC baseadas na metodologia dos seus PDFs
+    // Questões DISC baseadas nos PDFs fornecidos
     const questions = [
-      {
-        text: "Diante de desafios no trabalho, eu:",
-        options: [
-          { text: "Assumo o controle e tomo decisões rápidas", type: "D" },
-          { text: "Envolvo outras pessoas para resolver juntos", type: "I" },
-          { text: "Mantenho a calma e busco estabilidade", type: "S" },
-          { text: "Analiso todos os detalhes antes de agir", type: "C" }
-        ]
-      },
-      {
-        text: "Em reuniões, minha abordagem é:",
-        options: [
-          { text: "Vou direto ao ponto, foco em resultados", type: "D" },
-          { text: "Crio ambiente animado e colaborativo", type: "I" },
-          { text: "Ouço atentamente e apoio decisões", type: "S" },
-          { text: "Apresento dados e informações precisas", type: "C" }
-        ]
-      },
-      {
-        text: "Minha forma de resolver problemas:",
-        options: [
-          { text: "Direta e assertiva", type: "D" },
-          { text: "Criativa e otimista", type: "I" },
-          { text: "Paciente e metódica", type: "S" },
-          { text: "Sistemática e analítica", type: "C" }
-        ]
-      },
-      {
-        text: "O que mais me motiva profissionalmente:",
-        options: [
-          { text: "Alcançar metas desafiadoras", type: "D" },
-          { text: "Reconhecimento e interação social", type: "I" },
-          { text: "Estabilidade e harmonia na equipe", type: "S" },
-          { text: "Qualidade e precisão no trabalho", type: "C" }
-        ]
-      },
-      {
-        text: "Diante de conflitos, eu:",
-        options: [
-          { text: "Enfrento a situação de frente", type: "D" },
-          { text: "Tento persuadir e negociar", type: "I" },
-          { text: "Busco evitar e manter a paz", type: "S" },
-          { text: "Analiso os fatos objetivamente", type: "C" }
-        ]
-      },
-      {
-        text: "Meu ritmo de trabalho é:",
-        options: [
-          { text: "Rápido e intenso", type: "D" },
-          { text: "Dinâmico e variado", type: "I" },
-          { text: "Constante e estável", type: "S" },
-          { text: "Metódico e cuidadoso", type: "C" }
-        ]
-      },
-      {
-        text: "Prefiro trabalhar:",
-        options: [
-          { text: "Com autonomia e independência", type: "D" },
-          { text: "Em equipe e colaborando", type: "I" },
-          { text: "Em ambiente previsível", type: "S" },
-          { text: "Com procedimentos definidos", type: "C" }
-        ]
-      },
-      {
-        text: "Minha comunicação é:",
-        options: [
-          { text: "Direta e objetiva", type: "D" },
-          { text: "Entusiasmada e expressiva", type: "I" },
-          { text: "Amigável e paciente", type: "S" },
-          { text: "Precisa e técnica", type: "C" }
-        ]
-      },
-      {
-        text: "Diante de mudanças, eu:",
-        options: [
-          { text: "Adapto-me rapidamente", type: "D" },
-          { text: "Vejo como oportunidade", type: "I" },
-          { text: "Preciso de tempo para ajustar", type: "S" },
-          { text: "Avalio os impactos cuidadosamente", type: "C" }
-        ]
-      },
-      {
-        text: "Tomo decisões baseadas em:",
-        options: [
-          { text: "Resultados e eficiência", type: "D" },
-          { text: "Intuição e sentimentos", type: "I" },
-          { text: "Valores e impacto nas pessoas", type: "S" },
-          { text: "Dados e análise lógica", type: "C" }
-        ]
-      }
+      { text: "Diante de desafios no trabalho, eu:", options: [
+        { text: "Assumo o controle e tomo decisões rápidas", type: "D" },
+        { text: "Envolvo outras pessoas para resolver juntos", type: "I" },
+        { text: "Mantenho a calma e busco estabilidade", type: "S" },
+        { text: "Analiso todos os detalhes antes de agir", type: "C" }
+      ]},
+      { text: "Em reuniões, minha abordagem é:", options: [
+        { text: "Vou direto ao ponto, foco em resultados", type: "D" },
+        { text: "Crio ambiente animado e colaborativo", type: "I" },
+        { text: "Ouço atentamente e apoio decisões", type: "S" },
+        { text: "Apresento dados e informações precisas", type: "C" }
+      ]},
+      { text: "Minha forma de resolver problemas:", options: [
+        { text: "Direta e assertiva", type: "D" },
+        { text: "Criativa e otimista", type: "I" },
+        { text: "Paciente e metódica", type: "S" },
+        { text: "Sistemática e analítica", type: "C" }
+      ]},
+      { text: "O que mais me motiva profissionalmente:", options: [
+        { text: "Alcançar metas desafiadoras", type: "D" },
+        { text: "Reconhecimento e interação social", type: "I" },
+        { text: "Estabilidade e harmonia na equipe", type: "S" },
+        { text: "Qualidade e precisão no trabalho", type: "C" }
+      ]},
+      { text: "Diante de conflitos, eu:", options: [
+        { text: "Enfrento a situação de frente", type: "D" },
+        { text: "Tento persuadir e negociar", type: "I" },
+        { text: "Busco evitar e manter a paz", type: "S" },
+        { text: "Analiso os fatos objetivamente", type: "C" }
+      ]},
+      { text: "Meu ritmo de trabalho é:", options: [
+        { text: "Rápido e intenso", type: "D" },
+        { text: "Dinâmico e variado", type: "I" },
+        { text: "Constante e estável", type: "S" },
+        { text: "Metódico e cuidadoso", type: "C" }
+      ]},
+      { text: "Prefiro trabalhar:", options: [
+        { text: "Com autonomia e independência", type: "D" },
+        { text: "Em equipe e colaborando", type: "I" },
+        { text: "Em ambiente previsível", type: "S" },
+        { text: "Com procedimentos definidos", type: "C" }
+      ]},
+      { text: "Minha comunicação é:", options: [
+        { text: "Direta e objetiva", type: "D" },
+        { text: "Entusiasmada e expressiva", type: "I" },
+        { text: "Amigável e paciente", type: "S" },
+        { text: "Precisa e técnica", type: "C" }
+      ]},
+      { text: "Diante de mudanças, eu:", options: [
+        { text: "Adapto-me rapidamente", type: "D" },
+        { text: "Vejo como oportunidade", type: "I" },
+        { text: "Preciso de tempo para ajustar", type: "S" },
+        { text: "Avalio os impactos cuidadosamente", type: "C" }
+      ]},
+      { text: "Tomo decisões baseadas em:", options: [
+        { text: "Resultados e eficiência", type: "D" },
+        { text: "Intuição e sentimentos", type: "I" },
+        { text: "Valores e impacto nas pessoas", type: "S" },
+        { text: "Dados e análise lógica", type: "C" }
+      ]},
+      { text: "Em projetos, foco em:", options: [
+        { text: "Alcançar objetivos rapidamente", type: "D" },
+        { text: "Inovação e criatividade", type: "I" },
+        { text: "Consistência e qualidade", type: "S" },
+        { text: "Precisão e detalhes", type: "C" }
+      ]},
+      { text: "Minha maior força é:", options: [
+        { text: "Liderança e determinação", type: "D" },
+        { text: "Comunicação e entusiasmo", type: "I" },
+        { text: "Lealdade e paciência", type: "S" },
+        { text: "Organização e precisão", type: "C" }
+      ]},
+      { text: "Prefiro receber feedback:", options: [
+        { text: "Direto e focado em resultados", type: "D" },
+        { text: "Positivo e encorajador", type: "I" },
+        { text: "Gentil e construtivo", type: "S" },
+        { text: "Técnico e detalhado", type: "C" }
+      ]},
+      { text: "Diante de prazos curtos:", options: [
+        { text: "Acelero e foco no essencial", type: "D" },
+        { text: "Mantenho o otimismo", type: "I" },
+        { text: "Trabalho de forma constante", type: "S" },
+        { text: "Planejo cuidadosamente", type: "C" }
+      ]},
+      { text: "Meu estilo de liderança é:", options: [
+        { text: "Autoritário e decisivo", type: "D" },
+        { text: "Inspirador e motivador", type: "I" },
+        { text: "Apoiador e colaborativo", type: "S" },
+        { text: "Técnico e estruturado", type: "C" }
+      ]},
+      { text: "Valorizo mais:", options: [
+        { text: "Poder e controle", type: "D" },
+        { text: "Reconhecimento social", type: "I" },
+        { text: "Segurança e estabilidade", type: "S" },
+        { text: "Exatidão e qualidade", type: "C" }
+      ]},
+      { text: "Em situações de pressão:", options: [
+        { text: "Torno-me mais assertivo", type: "D" },
+        { text: "Busco apoio em outros", type: "I" },
+        { text: "Mantenho a calma", type: "S" },
+        { text: "Foco nos procedimentos", type: "C" }
+      ]},
+      { text: "Prefiro ambientes:", options: [
+        { text: "Competitivos e desafiadores", type: "D" },
+        { text: "Sociais e dinâmicos", type: "I" },
+        { text: "Harmoniosos e estáveis", type: "S" },
+        { text: "Organizados e estruturados", type: "C" }
+      ]},
+      { text: "Minha maior preocupação é:", options: [
+        { text: "Alcançar resultados", type: "D" },
+        { text: "Manter relacionamentos", type: "I" },
+        { text: "Evitar conflitos", type: "S" },
+        { text: "Evitar erros", type: "C" }
+      ]},
+      { text: "Ao aprender algo novo:", options: [
+        { text: "Vou direto à prática", type: "D" },
+        { text: "Aprendo com outras pessoas", type: "I" },
+        { text: "Sigo um ritmo constante", type: "S" },
+        { text: "Estudo teoria primeiro", type: "C" }
+      ]},
+      { text: "Minha energia vem de:", options: [
+        { text: "Desafios e conquistas", type: "D" },
+        { text: "Interação social", type: "I" },
+        { text: "Rotina e estabilidade", type: "S" },
+        { text: "Conhecimento e precisão", type: "C" }
+      ]},
+      { text: "Diante de regras:", options: [
+        { text: "Questiono se não forem eficientes", type: "D" },
+        { text: "Adapto conforme necessário", type: "I" },
+        { text: "Sigo para manter harmonia", type: "S" },
+        { text: "Sigo rigorosamente", type: "C" }
+      ]},
+      { text: "Prefiro tarefas:", options: [
+        { text: "Desafiadoras e variadas", type: "D" },
+        { text: "Criativas e interativas", type: "I" },
+        { text: "Previsíveis e estáveis", type: "S" },
+        { text: "Técnicas e detalhadas", type: "C" }
+      ]},
+      { text: "Cometo erros quando:", options: [
+        { text: "Sou muito impulsivo", type: "D" },
+        { text: "Não presto atenção aos detalhes", type: "I" },
+        { text: "Demoro para decidir", type: "S" },
+        { text: "Analiso demais", type: "C" }
+      ]},
+      { text: "Sou percebido como:", options: [
+        { text: "Determinado e exigente", type: "D" },
+        { text: "Entusiasmado e sociável", type: "I" },
+        { text: "Paciente e confiável", type: "S" },
+        { text: "Preciso e reservado", type: "C" }
+      ]},
+      { text: "Minha fraqueza é:", options: [
+        { text: "Impaciência", type: "D" },
+        { text: "Desorganização", type: "I" },
+        { text: "Dificuldade em mudar", type: "S" },
+        { text: "Perfeccionismo", type: "C" }
+      ]},
+      { text: "Busco sempre:", options: [
+        { text: "Superar metas", type: "D" },
+        { text: "Inspirar outros", type: "I" },
+        { text: "Manter equilíbrio", type: "S" },
+        { text: "Excelência técnica", type: "C" }
+      ]},
+      { text: "No trabalho em equipe:", options: [
+        { text: "Assumo a liderança", type: "D" },
+        { text: "Motivo e animo o grupo", type: "I" },
+        { text: "Apoio e colaboro", type: "S" },
+        { text: "Garanto a qualidade", type: "C" }
+      ]}
     ];
 
     let currentQuestion = 0;
@@ -218,15 +448,23 @@
         timeLeft--;
         const mins = Math.floor(timeLeft / 60);
         const secs = timeLeft % 60;
-        document.getElementById('timer').textContent = 
+        document.getElementById('time-display').textContent = 
           `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         
-        if (timeLeft <= 0) finishTest();
+        if (timeLeft <= 300) { // Últimos 5 minutos
+          document.getElementById('timer').classList.add('warning');
+        }
+        
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          finishTest();
+        }
       }, 1000);
     }
 
     function loadQuestion() {
       const q = questions[currentQuestion];
+      document.getElementById('question-number').textContent = `Questão ${currentQuestion + 1}`;
       document.getElementById('question-text').textContent = q.text;
       
       const optionsDiv = document.getElementById('options');
@@ -308,7 +546,6 @@
       document.getElementById('test-screen').classList.add('hidden');
       document.getElementById('result').classList.remove('hidden');
       
-      document.getElementById('primary-style').textContent = getStyleName(primary);
       document.getElementById('profile-badge').textContent = `Perfil: ${primary}${secondary}`;
       document.getElementById('result-description').innerHTML = 
         `Seu perfil predominante é <strong>${getStyleName(primary)}</strong> (${primary}) com influência de <strong>${getStyleName(secondary)}</strong> (${secondary}).`;
@@ -320,7 +557,7 @@
         const bar = document.createElement('div');
         bar.className = 'disc-bar';
         bar.innerHTML = `
-          <div class="disc-bar-fill ${letter}" style="height: ${Math.max(percentages[letter], 5)}px;"></div>
+          <div class="disc-bar-fill ${letter}" style="height: ${Math.max(percentages[letter] * 2, 20)}px;"></div>
           <div class="disc-bar-label">${letter}</div>
           <div class="disc-bar-value">${percentages[letter]}%</div>
         `;
@@ -329,10 +566,10 @@
 
       // Pontos fortes
       const strengths = {
-        D: ["Liderança natural", "Foco em resultados", "Tomada de decisão rápida", "Orientação para desafios"],
-        I: ["Comunicação eficaz", "Entusiasmo e energia", "Persuasão", "Criatividade"],
-        S: ["Paciência", "Lealdade", "Trabalho em equipe", "Estabilidade"],
-        C: ["Análise detalhada", "Precisão", "Organização", "Qualidade"]
+        D: ["Liderança natural", "Foco em resultados", "Tomada de decisão rápida", "Orientação para desafios", "Assertividade"],
+        I: ["Comunicação eficaz", "Entusiasmo e energia", "Persuasão", "Criatividade", "Sociabilidade"],
+        S: ["Paciência", "Lealdade", "Trabalho em equipe", "Estabilidade", "Empatia"],
+        C: ["Análise detalhada", "Precisão", "Organização", "Qualidade", "Pensamento crítico"]
       };
       
       const strengthsList = document.getElementById('strengths-list');
