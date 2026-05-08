@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -6,59 +6,371 @@
   <title>Painel Administrativo - Vigorre</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
+    /* ============================================
+       RESET BÁSICO
+       ============================================ */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; }
-    .sidebar { position: fixed; left: 0; top: 0; height: 100vh; width: 260px; background: linear-gradient(180deg, #1e3a8a, #0f172a); color: white; padding: 1.5rem; display: flex; flex-direction: column; z-index: 50; }
-    .sidebar .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
-    .logo-img { width: 40px; height: auto; border-radius: 8px; }
-    .logo-text h2 { font-size: 1.2rem; font-weight: 700; }
-    .logo-text p { font-size: 0.7rem; opacity: 0.8; }
-    .nav-menu { list-style: none; flex: 1; }
-    .nav-menu li { margin-bottom: 0.5rem; }
-    .nav-menu a { display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: rgba(255,255,255,0.7); text-decoration: none; border-radius: 8px; transition: 0.3s; cursor: pointer; }
-    .nav-menu a:hover, .nav-menu a.active { background: rgba(255,255,255,0.1); color: white; border-left: 3px solid #3b82f6; }
-    .nav-menu a.danger { color: #fca5a5; margin-top: auto; }
-    .user-info { padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; }
-    .main { margin-left: 260px; padding: 2rem; min-height: 100vh; }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; background: white; padding: 1rem 1.5rem; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
-    .header h1 { font-size: 1.5rem; color: #1e40af; font-weight: 700; }
-    .card { background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 2px 5px rgba(0,0,0,0.03); overflow-x: auto; border: 1px solid #e2e8f0; }
-    .card h3 { margin-bottom: 1rem; color: #1e40af; display: flex; justify-content: space-between; align-items: center; font-size: 1.1rem; }
-    table { width: 100%; border-collapse: collapse; min-width: 600px; }
-    th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
-    th { background: #f8fafc; font-weight: 600; color: #475569; }
-    tr:last-child td { border-bottom: none; }
-    tr:hover { background: #f8fafc; }
-    .btn { padding: 8px 14px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; }
-    .btn-primary { background: #3b82f6; color: white; }
-    .btn-success { background: #22c55e; color: white; }
-    .btn-warning { background: #f59e0b; color: white; }
-    .btn-danger { background: #ef4444; color: white; }
-    .btn-secondary { background: #94a3b8; color: white; }
-    .btn-outline { background: transparent; border: 1px solid #cbd5e1; color: #475569; }
-    .btn:hover { opacity: 0.9; transform: translateY(-1px); }
-    .btn-sm { padding: 5px 10px; font-size: 0.75rem; }
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px); }
-    .modal.active { display: flex; }
-    .modal-content { background: white; border-radius: 16px; padding: 2rem; max-width: 700px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 1rem; }
-    .modal-close { background: none; border: none; font-size: 1.8rem; cursor: pointer; color: #94a3b8; line-height: 1; }
-    .modal-close:hover { color: #ef4444; }
-    .form-group { margin-bottom: 1rem; }
-    .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.9rem; color: #334155; }
-    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.95rem; transition: border-color 0.3s; }
-    .form-group input:focus, .form-group select:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .checkbox-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 5px; }
-    .checkbox-group label { display: flex; align-items: center; gap: 5px; font-weight: 400; font-size: 0.9rem; background: white; padding: 6px 10px; border-radius: 6px; border: 1px solid #e2e8f0; cursor: pointer; }
-    .checkbox-group input { width: auto; }
-    .toast { position: fixed; top: 20px; right: 20px; background: white; padding: 12px 20px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 10px; z-index: 2000; animation: slideIn 0.3s ease; border-left: 4px solid #22c55e; font-weight: 500; }
-    .toast.error { border-left-color: #ef4444; }
-    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-    @media (max-width: 768px) { .sidebar { width: 70px; padding: 1rem; } .sidebar .logo span, .nav-menu a span, .user-info { display: none; } .nav-menu a { justify-content: center; padding: 15px; } .main { margin-left: 70px; padding: 1rem; } .form-row { grid-template-columns: 1fr; } }
+    
+    /* ============================================
+       ESTILO DO CORPO
+       ============================================ */
+    body { 
+      font-family: 'Inter', sans-serif; 
+      background: #f8fafc; 
+      color: #1e293b; 
+    }
+    
+    /* ============================================
+       SIDEBAR
+       ============================================ */
+    .sidebar { 
+      position: fixed; 
+      left: 0; 
+      top: 0; 
+      height: 100vh; 
+      width: 260px; 
+      background: linear-gradient(180deg, #1e3a8a, #0f172a); 
+      color: white; 
+      padding: 1.5rem; 
+      display: flex; 
+      flex-direction: column; 
+      z-index: 50; 
+    }
+    .sidebar .logo { 
+      display: flex; 
+      align-items: center; 
+      gap: 10px; 
+      margin-bottom: 1.5rem; 
+      padding-bottom: 1rem; 
+      border-bottom: 1px solid rgba(255,255,255,0.1); 
+      cursor: pointer; 
+    }
+    .logo-img { 
+      width: 40px; 
+      height: auto; 
+      border-radius: 8px; 
+    }
+    .logo-text h2 { 
+      font-size: 1.2rem; 
+      font-weight: 700; 
+    }
+    .logo-text p { 
+      font-size: 0.7rem; 
+      opacity: 0.8; 
+    }
+    .nav-menu { 
+      list-style: none; 
+      flex: 1; 
+    }
+    .nav-menu li { 
+      margin-bottom: 0.5rem; 
+    }
+    .nav-menu a { 
+      display: flex; 
+      align-items: center; 
+      gap: 12px; 
+      padding: 12px 15px; 
+      color: rgba(255,255,255,0.7); 
+      text-decoration: none; 
+      border-radius: 8px; 
+      transition: 0.3s; 
+      cursor: pointer; 
+    }
+    .nav-menu a:hover, .nav-menu a.active { 
+      background: rgba(255,255,255,0.1); 
+      color: white; 
+      border-left: 3px solid #3b82f6; 
+    }
+    .nav-menu a.danger { 
+      color: #fca5a5; 
+      margin-top: auto; 
+    }
+    .user-info { 
+      padding-top: 1rem; 
+      border-top: 1px solid rgba(255,255,255,0.1); 
+      font-size: 0.85rem; 
+    }
+    
+    /* ============================================
+       MAIN CONTENT
+       ============================================ */
+    .main { 
+      margin-left: 260px; 
+      padding: 2rem; 
+      min-height: 100vh; 
+    }
+    .header { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      margin-bottom: 2rem; 
+      background: white; 
+      padding: 1rem 1.5rem; 
+      border-radius: 12px; 
+      box-shadow: 0 2px 5px rgba(0,0,0,0.03); 
+    }
+    .header h1 { 
+      font-size: 1.5rem; 
+      color: #1e40af; 
+      font-weight: 700; 
+    }
+    
+    /* ============================================
+       CARDS & TABLES
+       ============================================ */
+    .card { 
+      background: white; 
+      border-radius: 12px; 
+      padding: 1.5rem; 
+      margin-bottom: 1.5rem; 
+      box-shadow: 0 2px 5px rgba(0,0,0,0.03); 
+      overflow-x: auto; 
+      border: 1px solid #e2e8f0; 
+    }
+    .card h3 { 
+      margin-bottom: 1rem; 
+      color: #1e40af; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      font-size: 1.1rem; 
+    }
+    table { 
+      width: 100%; 
+      border-collapse: collapse; 
+      min-width: 600px; 
+    }
+    th, td { 
+      padding: 12px 15px; 
+      text-align: left; 
+      border-bottom: 1px solid #f1f5f9; 
+      font-size: 0.9rem; 
+    }
+    th { 
+      background: #f8fafc; 
+      font-weight: 600; 
+      color: #475569; 
+    }
+    tr:last-child td { 
+      border-bottom: none; 
+    }
+    tr:hover { 
+      background: #f8fafc; 
+    }
+    
+    /* ============================================
+       BUTTONS
+       ============================================ */
+    .btn { 
+      padding: 8px 14px; 
+      border-radius: 8px; 
+      border: none; 
+      cursor: pointer; 
+      font-weight: 600; 
+      font-size: 0.85rem; 
+      transition: 0.2s; 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 6px; 
+    }
+    .btn-primary { 
+      background: #3b82f6; 
+      color: white; 
+    }
+    .btn-success { 
+      background: #22c55e; 
+      color: white; 
+    }
+    .btn-warning { 
+      background: #f59e0b; 
+      color: white; 
+    }
+    .btn-danger { 
+      background: #ef4444; 
+      color: white; 
+    }
+    .btn-secondary { 
+      background: #94a3b8; 
+      color: white; 
+    }
+    .btn-outline { 
+      background: transparent; 
+      border: 1px solid #cbd5e1; 
+      color: #475569; 
+    }
+    .btn:hover { 
+      opacity: 0.9; 
+      transform: translateY(-1px); 
+    }
+    .btn-sm { 
+      padding: 5px 10px; 
+      font-size: 0.75rem; 
+    }
+    
+    /* ============================================
+       MODALS
+       ============================================ */
+    .modal { 
+      display: none; 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
+      background: rgba(0,0,0,0.5); 
+      align-items: center; 
+      justify-content: center; 
+      z-index: 1000; 
+      backdrop-filter: blur(4px); 
+    }
+    .modal.active { 
+      display: flex; 
+    }
+    .modal-content { 
+      background: white; 
+      border-radius: 16px; 
+      padding: 2rem; 
+      max-width: 700px; 
+      width: 90%; 
+      max-height: 90vh; 
+      overflow-y: auto; 
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2); 
+    }
+    .modal-header { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      margin-bottom: 1.5rem; 
+      border-bottom: 2px solid #f1f5f9; 
+      padding-bottom: 1rem; 
+    }
+    .modal-close { 
+      background: none; 
+      border: none; 
+      font-size: 1.8rem; 
+      cursor: pointer; 
+      color: #94a3b8; 
+      line-height: 1; 
+    }
+    .modal-close:hover { 
+      color: #ef4444; 
+    }
+    
+    /* ============================================
+       FORMS
+       ============================================ */
+    .form-group { 
+      margin-bottom: 1rem; 
+    }
+    .form-group label { 
+      display: block; 
+      margin-bottom: 0.4rem; 
+      font-weight: 600; 
+      font-size: 0.9rem; 
+      color: #334155; 
+    }
+    .form-group input, .form-group select, .form-group textarea { 
+      width: 100%; 
+      padding: 10px; 
+      border: 1px solid #e2e8f0; 
+      border-radius: 8px; 
+      font-size: 0.95rem; 
+      transition: border-color 0.3s; 
+    }
+    .form-group input:focus, .form-group select:focus { 
+      outline: none; 
+      border-color: #3b82f6; 
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); 
+    }
+    .form-row { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 1rem; 
+    }
+    .checkbox-group { 
+      display: flex; 
+      gap: 10px; 
+      flex-wrap: wrap; 
+      margin-top: 5px; 
+    }
+    .checkbox-group label { 
+      display: flex; 
+      align-items: center; 
+      gap: 5px; 
+      font-weight: 400; 
+      font-size: 0.9rem; 
+      background: white; 
+      padding: 6px 10px; 
+      border-radius: 6px; 
+      border: 1px solid #e2e8f0; 
+      cursor: pointer; 
+    }
+    .checkbox-group input { 
+      width: auto; 
+    }
+    
+    /* ============================================
+       TOAST NOTIFICATIONS
+       ============================================ */
+    .toast { 
+      position: fixed; 
+      top: 20px; 
+      right: 20px; 
+      background: white; 
+      padding: 12px 20px; 
+      border-radius: 8px; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15); 
+      display: flex; 
+      align-items: center; 
+      gap: 10px; 
+      z-index: 2000; 
+      animation: slideIn 0.3s ease; 
+      border-left: 4px solid #22c55e; 
+      font-weight: 500; 
+    }
+    .toast.error { 
+      border-left-color: #ef4444; 
+    }
+    @keyframes slideIn { 
+      from { transform: translateX(100%); opacity: 0; } 
+      to { transform: translateX(0); opacity: 1; } 
+    }
+    
+    /* ============================================
+       DETAILS VIEW
+       ============================================ */
+    .details-section { 
+      display: none; 
+      background: white; 
+      border-radius: 12px; 
+      padding: 1.5rem; 
+      margin-top: 1rem; 
+      border: 1px solid #e2e8f0; 
+    }
+    .details-header { 
+      display: flex; 
+      justify-content: space-between; 
+      margin-bottom: 1rem; 
+      padding-bottom: 1rem; 
+      border-bottom: 1px solid #f1f5f9; 
+    }
+    
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 768px) { 
+      .sidebar { width: 70px; padding: 1rem; } 
+      .sidebar .logo span, .nav-menu a span, .user-info { display: none; } 
+      .nav-menu a { justify-content: center; padding: 15px; } 
+      .main { margin-left: 70px; padding: 1rem; } 
+      .form-row { grid-template-columns: 1fr; } 
+    }
   </style>
 </head>
 <body>
+  <!-- ============================================
+       SIDEBAR COM LOGO
+       ============================================ -->
   <aside class="sidebar">
     <div class="logo" onclick="window.location.href='index.html'">
       <img src="logo-vigorre.png" class="logo-img" onerror="this.outerHTML='<div style=\'width:35px;height:35px;background:#fff;color:#1e40af;display:flex;align-items:center;justify-content:center;border-radius:8px;font-weight:bold;font-size:18px\'>V</div>'">
@@ -80,12 +392,18 @@
     </div>
   </aside>
 
+  <!-- ============================================
+       MAIN CONTENT
+       ============================================ -->
   <main class="main">
     <div class="header">
       <h1 id="pageTitle">Dashboard</h1>
       <div id="headerActions"></div>
     </div>
 
+    <!-- ============================================
+         DASHBOARD
+         ============================================ -->
     <section id="dashboard">
       <div class="card">
         <h3>Bem-vindo ao Painel Vigorre</h3>
@@ -93,49 +411,89 @@
       </div>
     </section>
 
+    <!-- ============================================
+         STAFF VIGORRE
+         ============================================ -->
     <section id="staff" style="display:none;">
       <div class="card">
         <h3>Staff Vigorre <button class="btn btn-primary" onclick="openModal('staffModal')">+ Novo Funcionário</button></h3>
         <table>
-          <thead><tr><th>Nome Completo</th><th>Email</th><th>WhatsApp</th><th>Login</th><th>Ambiente de Acesso</th><th>Ações</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Nome Completo</th>
+              <th>Email</th>
+              <th>WhatsApp</th>
+              <th>Login</th>
+              <th>Ambiente de Acesso</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
           <tbody id="staffTableBody"></tbody>
         </table>
       </div>
     </section>
 
+    <!-- ============================================
+         EMPRESAS
+         ============================================ -->
     <section id="companies" style="display:none;">
+      <!-- Lista Principal -->
       <div class="card" id="companyListView">
         <h3>Empresas Cadastradas <button class="btn btn-primary" onclick="openModal('compModal')">+ Nova Empresa</button></h3>
         <table>
-          <thead><tr><th>Empresa</th><th>CNPJ</th><th>Responsável</th><th>Contato</th><th>Ações</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Empresa</th>
+              <th>CNPJ</th>
+              <th>Responsável</th>
+              <th>Contato</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
           <tbody id="companiesTableBody"></tbody>
         </table>
       </div>
 
+      <!-- Detalhes da Empresa (Vagas + Participantes) -->
       <div id="companyDetails" class="details-section">
         <div class="details-header">
           <h3 id="detailCompanyTitle">Detalhes da Empresa</h3>
           <button class="btn btn-secondary" onclick="closeCompanyDetails()">← Voltar para Lista</button>
         </div>
         
+        <!-- Cadastro de Vaga e Perfil da Vaga -->
         <div style="background:#f0f9ff; padding:15px; border-radius:8px; margin-bottom:20px; border:1px solid #bae6fd;">
           <h4 style="color:#0369a1; margin-bottom:10px;">📝 Cadastrar Vaga e Perfil da Vaga</h4>
           <div class="form-row" style="grid-template-columns: 1fr 1fr auto;">
-            <div class="form-group" style="margin-bottom:0;"><input type="text" id="jobName" placeholder="Nome da Vaga"></div>
-            <div class="form-group" style="margin-bottom:0;"><input type="text" id="jobProfile" placeholder="Perfil Desejado (Ex: DISC D, Liderança)"></div>
+            <div class="form-group" style="margin-bottom:0;">
+              <input type="text" id="jobName" placeholder="Nome da Vaga">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <input type="text" id="jobProfile" placeholder="Perfil Desejado (Ex: DISC D, Liderança)">
+            </div>
             <button class="btn btn-primary" onclick="saveJob()">Salvar Vaga</button>
           </div>
           <div id="jobsList" style="margin-top:10px;"></div>
         </div>
 
+        <!-- Lista de Participantes Vinculados -->
         <h4 style="margin-bottom:10px; color:#1e40af;">👥 Participantes Vinculados</h4>
         <table style="margin-top:10px;">
-          <thead><tr><th>Nome</th><th>Email</th><th>Ações</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
           <tbody id="employeesTableBody"></tbody>
         </table>
       </div>
     </section>
 
+    <!-- ============================================
+         PARTICIPANTES
+         ============================================ -->
     <section id="participants" style="display:none;">
       <div class="card">
         <h3>Gestão de Participantes <button class="btn btn-primary" onclick="openModal('partModal')">+ Novo Participante</button></h3>
@@ -155,22 +513,43 @@
     </section>
   </main>
 
-  <!-- MODAL STAFF -->
+  <!-- ============================================
+       MODAL STAFF
+       ============================================ -->
   <div class="modal" id="staffModal">
     <div class="modal-content">
-      <div class="modal-header"><h3 id="staffModalTitle">Novo Funcionário Vigorre</h3><button class="modal-close" onclick="closeModal('staffModal')">×</button></div>
+      <div class="modal-header">
+        <h3 id="staffModalTitle">Novo Funcionário Vigorre</h3>
+        <button class="modal-close" onclick="closeModal('staffModal')">×</button>
+      </div>
       <form onsubmit="saveStaff(event)">
         <input type="hidden" id="sId">
-        <div class="form-group"><label>Nome Completo *</label><input type="text" id="sName" required></div>
-        <div class="form-row">
-          <div class="form-group"><label>Email *</label><input type="email" id="sEmail" required></div>
-          <div class="form-group"><label>WhatsApp/Telefone *</label><input type="tel" id="sPhone" required></div>
+        <div class="form-group">
+          <label>Nome Completo *</label>
+          <input type="text" id="sName" required>
         </div>
         <div class="form-row">
-          <div class="form-group"><label>Login de Acesso *</label><input type="text" id="sLogin" required></div>
-          <div class="form-group"><label>Senha *</label><input type="text" id="sPass" required></div>
+          <div class="form-group">
+            <label>Email *</label>
+            <input type="email" id="sEmail" required>
+          </div>
+          <div class="form-group">
+            <label>WhatsApp/Telefone *</label>
+            <input type="tel" id="sPhone" required>
+          </div>
         </div>
-        <div class="form-group"><label>Ambiente de Acesso *</label>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Login de Acesso *</label>
+            <input type="text" id="sLogin" required>
+          </div>
+          <div class="form-group">
+            <label>Senha *</label>
+            <input type="text" id="sPass" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Ambiente de Acesso *</label>
           <select id="sRole" required>
             <option value="admin">Administrador</option>
             <option value="participant">Participante</option>
@@ -181,52 +560,113 @@
     </div>
   </div>
 
-  <!-- MODAL EMPRESA -->
+  <!-- ============================================
+       MODAL EMPRESA
+       ============================================ -->
   <div class="modal" id="compModal">
     <div class="modal-content">
-      <div class="modal-header"><h3 id="compTitle">Nova Empresa</h3><button class="modal-close" onclick="closeModal('compModal')">×</button></div>
+      <div class="modal-header">
+        <h3 id="compTitle">Nova Empresa</h3>
+        <button class="modal-close" onclick="closeModal('compModal')">×</button>
+      </div>
       <form onsubmit="saveCompany(event)">
         <input type="hidden" id="cId">
-        <div class="form-group"><label>Nome da Empresa *</label><input type="text" id="cName" required></div>
-        <div class="form-row">
-          <div class="form-group"><label>CNPJ *</label><input type="text" id="cCnpj" required></div>
-          <div class="form-group"><label>Responsável *</label><input type="text" id="cResp" required></div>
+        <div class="form-group">
+          <label>Nome da Empresa *</label>
+          <input type="text" id="cName" required>
         </div>
         <div class="form-row">
-          <div class="form-group"><label>Contato/WhatsApp</label><input type="tel" id="cPhone"></div>
-          <div class="form-group"><label>Email Corporativo</label><input type="email" id="cEmail"></div>
+          <div class="form-group">
+            <label>CNPJ *</label>
+            <input type="text" id="cCnpj" required>
+          </div>
+          <div class="form-group">
+            <label>Responsável *</label>
+            <input type="text" id="cResp" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Contato/WhatsApp</label>
+            <input type="tel" id="cPhone">
+          </div>
+          <div class="form-group">
+            <label>Email Corporativo</label>
+            <input type="email" id="cEmail">
+          </div>
         </div>
         <button type="submit" class="btn btn-primary" style="width:100%;padding:12px;">Salvar Empresa</button>
       </form>
     </div>
   </div>
 
-  <!-- MODAL PARTICIPANTE -->
+  <!-- ============================================
+       MODAL PARTICIPANTE
+       ============================================ -->
   <div class="modal" id="partModal">
     <div class="modal-content">
-      <div class="modal-header"><h3 id="partTitle">Novo Participante</h3><button class="modal-close" onclick="closeModal('partModal')">×</button></div>
+      <div class="modal-header">
+        <h3 id="partTitle">Novo Participante</h3>
+        <button class="modal-close" onclick="closeModal('partModal')">×</button>
+      </div>
       <form onsubmit="saveParticipant(event)">
         <input type="hidden" id="pId">
-        <div class="form-group"><label>Nome Completo *</label><input type="text" id="pName" required></div>
-        <div class="form-row">
-          <div class="form-group"><label>Telefone/WhatsApp *</label><input type="tel" id="pPhone" required></div>
-          <div class="form-group"><label>Email *</label><input type="email" id="pEmail" required></div>
+        <div class="form-group">
+          <label>Nome Completo *</label>
+          <input type="text" id="pName" required>
         </div>
-        <div class="form-group"><label>Vincular à Empresa</label><select id="pComp"><option value="">Independente</option></select></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Telefone/WhatsApp *</label>
+            <input type="tel" id="pPhone" required>
+          </div>
+          <div class="form-group">
+            <label>Email *</label>
+            <input type="email" id="pEmail" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Vincular à Empresa</label>
+          <select id="pComp">
+            <option value="">Independente</option>
+          </select>
+        </div>
+        
+        <!-- Credenciais de Acesso -->
         <div style="background:#f8fafc; padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid #e2e8f0;">
           <h4 style="margin-bottom:10px; color:#1e40af; font-size:0.95rem;">🔑 Credenciais de Acesso para o Teste</h4>
           <div class="form-row">
-            <div class="form-group"><label>Usuário de Login *</label><input type="text" id="pUser" required></div>
-            <div class="form-group"><label>Senha Temporária *</label><input type="text" id="pPass" required></div>
+            <div class="form-group">
+              <label>Usuário de Login *</label>
+              <input type="text" id="pUser" required>
+            </div>
+            <div class="form-group">
+              <label>Senha Temporária *</label>
+              <input type="text" id="pPass" required>
+            </div>
           </div>
-          <div class="form-group"><label>Validade da Senha</label><input type="date" id="pExp"></div>
+          <div class="form-group">
+            <label>Validade da Senha</label>
+            <input type="date" id="pExp">
+          </div>
         </div>
+
+        <!-- Seleção de Testes -->
         <div class="form-group">
           <label>Testes que serão Liberados</label>
           <div class="checkbox-group">
-            <label><input type="checkbox" class="test-check" value="DISC" checked> Teste DISC</label>
-            <label><input type="checkbox" class="test-check" value="IE"> Inteligência Emocional</label>
-            <label><input type="checkbox" class="test-check" value="Valores"> Valores Pessoais</label>
+            <label>
+              <input type="checkbox" class="test-check" value="DISC" checked> 
+              Teste DISC
+            </label>
+            <label>
+              <input type="checkbox" class="test-check" value="IE"> 
+              Inteligência Emocional
+            </label>
+            <label>
+              <input type="checkbox" class="test-check" value="Valores"> 
+              Valores Pessoais
+            </label>
           </div>
         </div>
         <button type="submit" class="btn btn-primary" style="width:100%;padding:12px;">Salvar Participante</button>
@@ -234,10 +674,15 @@
     </div>
   </div>
 
-  <!-- MODAL RELATÓRIO -->
+  <!-- ============================================
+       MODAL RELATÓRIO
+       ============================================ -->
   <div class="modal" id="reportModal">
     <div class="modal-content">
-      <div class="modal-header"><h3>Gerar Relatório</h3><button class="modal-close" onclick="closeModal('reportModal')">×</button></div>
+      <div class="modal-header">
+        <h3>Gerar Relatório</h3>
+        <button class="modal-close" onclick="closeModal('reportModal')">×</button>
+      </div>
       <p>Participante: <strong id="reportTargetName"></strong></p>
       <div class="form-group" style="margin-top:15px;">
         <label>Tipo de Relatório</label>
@@ -259,8 +704,42 @@
     </div>
   </div>
 
+  <!-- ============================================
+       MODAL LIBERAR TESTES
+       ============================================ -->
+  <div class="modal" id="testModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Liberar Testes</h3>
+        <button class="modal-close" onclick="closeModal('testModal')">×</button>
+      </div>
+      <p style="margin-bottom:15px;">Participante: <strong id="testModalName"></strong></p>
+      <input type="hidden" id="testModalId">
+      <div class="form-group">
+        <label>Selecione os testes para liberar:</label>
+        <div class="checkbox-group">
+          <label>
+            <input type="checkbox" class="test-check" value="DISC"> 
+            Teste DISC
+          </label>
+          <label>
+            <input type="checkbox" class="test-check" value="IE"> 
+            Inteligência Emocional
+          </label>
+          <label>
+            <input type="checkbox" class="test-check" value="Valores"> 
+            Valores Pessoais
+          </label>
+        </div>
+      </div>
+      <button onclick="confirmTestRelease()" class="btn btn-success" style="width:100%;padding:12px;margin-top:15px;">✅ Confirmar Liberação</button>
+    </div>
+  </div>
+
   <script>
-    // ✅ BANCO DE DADOS LOCAL - CHAVES PADRONIZADAS PARA BATER COM LOGIN.HTML
+    // ============================================
+    // BANCO DE DADOS LOCAL - CHAVES PADRONIZADAS
+    // ============================================
     let DB = {
       staff: JSON.parse(localStorage.getItem('vigorre_staff') || '[]'),
       companies: JSON.parse(localStorage.getItem('vigorre_companies') || '[]'),
@@ -270,8 +749,10 @@
     };
     let currentCompanyId = null;
 
+    // ============================================
+    // FUNÇÃO: Salvar dados no localStorage
+    // ============================================
     function saveDB() {
-      // ✅ SALVA COM AS MESMAS CHAVES QUE O LOGIN PROCURA
       localStorage.setItem('vigorre_staff', JSON.stringify(DB.staff));
       localStorage.setItem('vigorre_companies', JSON.stringify(DB.companies));
       localStorage.setItem('vigorre_participants', JSON.stringify(DB.participants));
@@ -280,8 +761,17 @@
       renderAll();
     }
 
+    // ============================================
+    // INICIALIZAÇÃO
+    // ============================================
     document.addEventListener('DOMContentLoaded', () => {
-      if(!JSON.parse(localStorage.getItem('vigorre_current_user')||'{}').role) window.location.href='login.html';
+      // Verificar autenticação
+      const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+      if (!currentUser.role || (currentUser.role !== 'admin' && currentUser.role !== 'staff')) {
+        window.location.href = 'login.html';
+        return;
+      }
+      document.getElementById('userName').textContent = currentUser.name;
       renderAll();
     });
 
@@ -291,63 +781,120 @@
       renderParticipants();
     }
 
+    // ============================================
+    // NAVEGAÇÃO ENTRE SEÇÕES
+    // ============================================
     function showSection(id) {
-      document.querySelectorAll('main section').forEach(s => s.style.display='none');
-      document.getElementById(id).style.display='block';
+      document.querySelectorAll('main section').forEach(s => s.style.display = 'none');
+      document.getElementById(id).style.display = 'block';
       document.querySelectorAll('.nav-menu a').forEach(a => a.classList.remove('active'));
       event.target.closest('a').classList.add('active');
-      const titles = { dashboard: 'Dashboard', staff: 'Staff Vigorre', companies: 'Empresas', participants: 'Participantes' };
+      const titles = { 
+        dashboard: 'Dashboard', 
+        staff: 'Staff Vigorre', 
+        companies: 'Empresas', 
+        participants: 'Participantes' 
+      };
       document.getElementById('pageTitle').textContent = titles[id] || id;
-      if(id !== 'companies') closeCompanyDetails();
+      if (id !== 'companies') closeCompanyDetails();
+      if (id === 'staff') renderStaff();
+      if (id === 'companies') renderCompanies();
+      if (id === 'participants') renderParticipants();
     }
 
-    function openModal(id) { document.getElementById(id).classList.add('active'); updateSelects(); }
-    function closeModal(id) { document.getElementById(id).classList.remove('active'); document.querySelectorAll('form').forEach(f => f.reset()); document.querySelectorAll('input[type="hidden"]').forEach(i => i.value=''); }
+    function openModal(id) { 
+      document.getElementById(id).classList.add('active'); 
+      updateSelects(); 
+    }
+    function closeModal(id) { 
+      document.getElementById(id).classList.remove('active'); 
+      document.querySelectorAll('form').forEach(f => f.reset()); 
+      document.querySelectorAll('input[type="hidden"]').forEach(i => i.value = ''); 
+    }
 
-    // === STAFF ===
+    // ============================================
+    // STAFF VIGORRE - RENDERIZAR
+    // ============================================
     function renderStaff() {
-      document.getElementById('staffTableBody').innerHTML = DB.staff.map(s => `
+      const tbody = document.getElementById('staffTableBody');
+      if (DB.staff.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#94a3b8;">Nenhum funcionário cadastrado</td></tr>';
+        return;
+      }
+      tbody.innerHTML = DB.staff.map(s => `
         <tr>
           <td><strong>${s.name}</strong></td>
           <td>${s.email}</td>
           <td>${s.phone}</td>
           <td>${s.login}</td>
-          <td><span class="badge" style="background:${s.role==='admin'?'#dbeafe':'#dcfce7'}; color:${s.role==='admin'?'#1e40af':'#166534'}">${s.role==='admin'?'Administrador':'Participante'}</span></td>
+          <td>
+            <span class="badge" style="background:${s.role === 'admin' ? '#dbeafe' : '#dcfce7'}; color:${s.role === 'admin' ? '#1e40af' : '#166534'}; padding:4px 8px; border-radius:6px; font-size:0.8rem;">
+              ${s.role === 'admin' ? 'Administrador' : 'Participante'}
+            </span>
+          </td>
           <td>
             <button class="btn btn-warning btn-sm" onclick="editStaff('${s.id}')">✏️ Editar</button>
             <button class="btn btn-danger btn-sm" onclick="deleteItem('staff','${s.id}')">🗑️ Excluir</button>
           </td>
-        </tr>`).join('') || '<tr><td colspan="6" style="text-align:center;color:#94a3b8;">Nenhum funcionário cadastrado</td></tr>';
+        </tr>
+      `).join('');
     }
 
+    // ============================================
+    // STAFF VIGORRE - SALVAR
+    // ============================================
     function saveStaff(e) {
       e.preventDefault();
       const id = document.getElementById('sId').value || Date.now().toString();
       const data = {
-        id, name: document.getElementById('sName').value, email: document.getElementById('sEmail').value,
-        phone: document.getElementById('sPhone').value, login: document.getElementById('sLogin').value,
-        pass: document.getElementById('sPass').value, role: document.getElementById('sRole').value
+        id, 
+        name: document.getElementById('sName').value, 
+        email: document.getElementById('sEmail').value.toLowerCase(),
+        phone: document.getElementById('sPhone').value, 
+        login: document.getElementById('sLogin').value.toLowerCase(),
+        password: document.getElementById('sPass').value, 
+        role: document.getElementById('sRole').value
       };
       const idx = DB.staff.findIndex(x => x.id === id);
-      if(idx > -1) DB.staff[idx] = data; else DB.staff.push(data);
-      saveDB(); closeModal('staffModal'); showToast('Funcionário salvo com sucesso!');
+      if (idx > -1) {
+        DB.staff[idx] = data;
+      } else {
+        DB.staff.push(data);
+      }
+      saveDB(); 
+      closeModal('staffModal'); 
+      showToast('Funcionário salvo com sucesso!');
     }
 
+    // ============================================
+    // STAFF VIGORRE - EDITAR
+    // ============================================
     function editStaff(id) {
-      const s = DB.staff.find(x => x.id === id); if(!s) return;
-      document.getElementById('sId').value = s.id; document.getElementById('sName').value = s.name;
-      document.getElementById('sEmail').value = s.email; document.getElementById('sPhone').value = s.phone;
-      document.getElementById('sLogin').value = s.login; document.getElementById('sPass').value = s.pass;
+      const s = DB.staff.find(x => x.id === id); 
+      if (!s) return;
+      document.getElementById('sId').value = s.id; 
+      document.getElementById('sName').value = s.name;
+      document.getElementById('sEmail').value = s.email; 
+      document.getElementById('sPhone').value = s.phone;
+      document.getElementById('sLogin').value = s.login; 
+      document.getElementById('sPass').value = s.password;
       document.getElementById('sRole').value = s.role;
       document.getElementById('staffModalTitle').textContent = 'Editar Funcionário';
       openModal('staffModal');
     }
 
-    // === EMPRESAS ===
+    // ============================================
+    // EMPRESAS - RENDERIZAR
+    // ============================================
     function renderCompanies() {
-      document.getElementById('companiesTableBody').innerHTML = DB.companies.map(c => `
+      const tbody = document.getElementById('companiesTableBody');
+      if (DB.companies.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;">Nenhuma empresa cadastrada</td></tr>';
+        return;
+      }
+      tbody.innerHTML = DB.companies.map(c => `
         <tr>
-          <td><strong>${c.name}</strong><br><small>${c.email || ''}</small></td>
+          <td><strong>${c.name}</strong><br><small style="color:#64748b;">${c.email || ''}</small></td>
           <td>${c.cnpj || '-'}</td>
           <td>${c.resp}</td>
           <td>${c.phone || '-'}</td>
@@ -356,27 +903,54 @@
             <button class="btn btn-warning btn-sm" onclick="editCompany('${c.id}')">✏️ Editar</button>
             <button class="btn btn-danger btn-sm" onclick="deleteItem('companies','${c.id}')">🗑️ Excluir</button>
           </td>
-        </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:#94a3b8;">Nenhuma empresa cadastrada</td></tr>';
+        </tr>
+      `).join('');
     }
 
+    // ============================================
+    // EMPRESAS - SALVAR
+    // ============================================
     function saveCompany(e) {
       e.preventDefault();
       const id = document.getElementById('cId').value || Date.now().toString();
-      const data = { id, name: document.getElementById('cName').value, cnpj: document.getElementById('cCnpj').value, resp: document.getElementById('cResp').value, email: document.getElementById('cEmail').value, phone: document.getElementById('cPhone').value };
+      const data = { 
+        id, 
+        name: document.getElementById('cName').value, 
+        cnpj: document.getElementById('cCnpj').value, 
+        resp: document.getElementById('cResp').value, 
+        email: document.getElementById('cEmail').value.toLowerCase(), 
+        phone: document.getElementById('cPhone').value 
+      };
       const idx = DB.companies.findIndex(x => x.id === id);
-      if(idx > -1) DB.companies[idx] = data; else DB.companies.push(data);
-      saveDB(); closeModal('compModal'); showToast('Empresa salva com sucesso!');
+      if (idx > -1) {
+        DB.companies[idx] = data;
+      } else {
+        DB.companies.push(data);
+      }
+      saveDB(); 
+      closeModal('compModal'); 
+      showToast('Empresa salva com sucesso!');
     }
 
+    // ============================================
+    // EMPRESAS - EDITAR
+    // ============================================
     function editCompany(id) {
-      const c = DB.companies.find(x => x.id === id); if(!c) return;
-      document.getElementById('cId').value = c.id; document.getElementById('cName').value = c.name;
-      document.getElementById('cCnpj').value = c.cnpj||''; document.getElementById('cResp').value = c.resp;
-      document.getElementById('cEmail').value = c.email||''; document.getElementById('cPhone').value = c.phone||'';
+      const c = DB.companies.find(x => x.id === id); 
+      if (!c) return;
+      document.getElementById('cId').value = c.id; 
+      document.getElementById('cName').value = c.name;
+      document.getElementById('cCnpj').value = c.cnpj || ''; 
+      document.getElementById('cResp').value = c.resp;
+      document.getElementById('cEmail').value = c.email || ''; 
+      document.getElementById('cPhone').value = c.phone || '';
       document.getElementById('compTitle').textContent = 'Editar Empresa';
       openModal('compModal');
     }
 
+    // ============================================
+    // EMPRESAS - VER DETALHES
+    // ============================================
     function viewCompany(cid) {
       currentCompanyId = cid;
       const c = DB.companies.find(x => x.id === cid);
@@ -393,34 +967,63 @@
       currentCompanyId = null;
     }
 
+    // ============================================
+    // VAGAS - SALVAR
+    // ============================================
     function saveJob() {
       const name = document.getElementById('jobName').value;
       const profile = document.getElementById('jobProfile').value;
-      if(!name) return showToast('Digite o nome da vaga', 'error');
-      DB.jobs.push({ id: Date.now().toString(), compId: currentCompanyId, name, profile });
-      saveDB(); renderJobs();
-      document.getElementById('jobName').value = ''; document.getElementById('jobProfile').value = '';
+      if (!name) return showToast('Digite o nome da vaga', 'error');
+      DB.jobs.push({ 
+        id: Date.now().toString(), 
+        compId: currentCompanyId, 
+        name, 
+        profile 
+      });
+      saveDB(); 
+      renderJobs();
+      document.getElementById('jobName').value = ''; 
+      document.getElementById('jobProfile').value = '';
       showToast('Vaga e perfil cadastrados!');
     }
 
+    // ============================================
+    // VAGAS - RENDERIZAR
+    // ============================================
     function renderJobs() {
       const list = document.getElementById('jobsList');
       const jobs = DB.jobs.filter(j => j.compId === currentCompanyId);
+      if (jobs.length === 0) {
+        list.innerHTML = '<div style="padding:10px; color:#94a3b8; font-size:0.9rem;">Nenhuma vaga cadastrada ainda.</div>';
+        return;
+      }
       list.innerHTML = jobs.map(j => `
         <div style="background:white; padding:10px; margin-top:8px; border-radius:6px; display:flex; justify-content:space-between; align-items:center; border:1px solid #e2e8f0;">
-          <div><strong style="color:#1e40af;">${j.name}</strong><br><small style="color:#64748b;">Perfil: ${j.profile || 'Não definido'}</small></div>
+          <div>
+            <strong style="color:#1e40af;">${j.name}</strong><br>
+            <small style="color:#64748b;">Perfil: ${j.profile || 'Não definido'}</small>
+          </div>
           <button class="btn btn-danger btn-sm" onclick="deleteJob('${j.id}')">X</button>
-        </div>`).join('') || '<div style="padding:10px; color:#94a3b8; font-size:0.9rem;">Nenhuma vaga cadastrada ainda.</div>';
+        </div>
+      `).join('');
     }
 
     function deleteJob(jid) {
       DB.jobs = DB.jobs.filter(j => j.id !== jid);
-      saveDB(); renderJobs();
+      saveDB(); 
+      renderJobs();
     }
 
+    // ============================================
+    // PARTICIPANTES VINCULADOS - RENDERIZAR
+    // ============================================
     function renderLinkedParticipants() {
       const tbody = document.getElementById('employeesTableBody');
       const emps = DB.participants.filter(p => p.compId === currentCompanyId);
+      if (emps.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#94a3b8;">Nenhum participante vinculado.</td></tr>';
+        return;
+      }
       tbody.innerHTML = emps.map(p => `
         <tr>
           <td>${p.name}</td>
@@ -429,97 +1032,197 @@
             <button class="btn btn-success btn-sm" onclick="openReportModal('${p.id}', '${p.name}')">📧 Enviar Relatório Completo</button>
             <button class="btn btn-warning btn-sm" onclick="openReportModal('${p.id}', '${p.name}')">📜 Enviar Laudo Comportamental</button>
           </td>
-        </tr>`).join('') || '<tr><td colspan="3" style="text-align:center;color:#94a3b8;">Nenhum participante vinculado.</td></tr>';
+        </tr>
+      `).join('');
     }
 
-    // === PARTICIPANTES ===
+    // ============================================
+    // PARTICIPANTES - RENDERIZAR
+    // ============================================
     function renderParticipants() {
-      document.getElementById('participantsTableBody').innerHTML = DB.participants.map(p => {
+      const tbody = document.getElementById('participantsTableBody');
+      if (DB.participants.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;">Nenhum participante cadastrado</td></tr>';
+        return;
+      }
+      tbody.innerHTML = DB.participants.map(p => {
         const comp = DB.companies.find(c => c.id === p.compId);
-        const tests = (p.tests || []).map(t => `<span class="badge" style="background:#e0e7ff; color:#3730a3; margin-right:4px;">${t}</span>`).join('') || '<span style="color:#ef4444;font-size:0.8rem;">Nenhum</span>';
-        return `<tr>
-          <td><strong>${p.name}</strong></td>
-          <td>${p.email}<br><small style="color:#64748b;">Tel: ${p.phone}</small></td>
-          <td style="font-family:monospace; font-size:0.85rem; background:#f1f5f9; padding:8px; border-radius:6px;">
-            U: ${p.user || '-'}<br>S: ${p.pass || '-'}<br>V: ${p.exp || '-'}
-          </td>
-          <td>${tests}</td>
-          <td>
-            <button class="btn btn-warning btn-sm" onclick="editParticipant('${p.id}')">✏️ Editar</button>
-            <button class="btn btn-primary btn-sm" onclick="resendTest('${p.id}')">📧 Reenviar Teste</button>
-            <button class="btn btn-danger btn-sm" onclick="deleteItem('participants','${p.id}')">🗑️ Excluir</button>
-          </td>
-        </tr>`;
-      }).join('') || '<tr><td colspan="5" style="text-align:center;color:#94a3b8;">Nenhum participante cadastrado</td></tr>';
+        const tests = (p.tests || []).map(t => 
+          `<span class="badge" style="background:#e0e7ff; color:#3730a3; margin-right:4px; padding:2px 6px; border-radius:4px; font-size:0.75rem;">${t}</span>`
+        ).join('') || '<span style="color:#ef4444;font-size:0.8rem;">Nenhum</span>';
+        return `
+          <tr>
+            <td><strong>${p.name}</strong></td>
+            <td>${p.email}<br><small style="color:#64748b;">Tel: ${p.phone}</small></td>
+            <td style="font-family:monospace; font-size:0.85rem; background:#f1f5f9; padding:8px; border-radius:6px;">
+              U: ${p.user || '-'}<br>S: ${p.pass || '-'}<br>V: ${p.exp || '-'}
+            </td>
+            <td>${tests}</td>
+            <td>
+              <button class="btn btn-warning btn-sm" onclick="editParticipant('${p.id}')">✏️ Editar</button>
+              <button class="btn btn-primary btn-sm" onclick="resendTest('${p.id}')">📧 Reenviar Teste</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteItem('participants','${p.id}')">🗑️ Excluir</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
     }
 
+    // ============================================
+    // PARTICIPANTES - SALVAR
+    // ============================================
     function saveParticipant(e) {
       e.preventDefault();
       const id = document.getElementById('pId').value || Date.now().toString();
       const tests = Array.from(document.querySelectorAll('.test-check:checked')).map(cb => cb.value);
       const data = { 
-        id, name: document.getElementById('pName').value, phone: document.getElementById('pPhone').value, 
-        email: document.getElementById('pEmail').value, compId: document.getElementById('pComp').value, 
-        user: document.getElementById('pUser').value, pass: document.getElementById('pPass').value, 
-        exp: document.getElementById('pExp').value, tests: tests 
+        id, 
+        name: document.getElementById('pName').value, 
+        phone: document.getElementById('pPhone').value, 
+        email: document.getElementById('pEmail').value.toLowerCase(), 
+        compId: document.getElementById('pComp').value, 
+        user: document.getElementById('pUser').value.toLowerCase(), 
+        pass: document.getElementById('pPass').value, 
+        exp: document.getElementById('pExp').value, 
+        tests: tests,
+        assignedTests: tests,
+        completedTests: []
       };
       const idx = DB.participants.findIndex(x => x.id === id);
-      if(idx > -1) DB.participants[idx] = {...DB.participants[idx], ...data}; else DB.participants.push(data);
-      saveDB(); closeModal('partModal'); showToast('Participante salvo com sucesso!');
+      if (idx > -1) {
+        DB.participants[idx] = {...DB.participants[idx], ...data};
+      } else {
+        DB.participants.push(data);
+      }
+      saveDB(); 
+      closeModal('partModal'); 
+      showToast('Participante salvo com sucesso!');
     }
 
+    // ============================================
+    // PARTICIPANTES - EDITAR
+    // ============================================
     function editParticipant(id) {
-      const p = DB.participants.find(x => x.id === id); if(!p) return;
-      document.getElementById('pId').value = p.id; document.getElementById('pName').value = p.name;
-      document.getElementById('pPhone').value = p.phone; document.getElementById('pEmail').value = p.email;
-      document.getElementById('pComp').value = p.compId || ''; document.getElementById('pUser').value = p.user || '';
-      document.getElementById('pPass').value = p.pass || ''; document.getElementById('pExp').value = p.exp || '';
-      document.querySelectorAll('.test-check').forEach(cb => cb.checked = p.tests && p.tests.includes(cb.value));
+      const p = DB.participants.find(x => x.id === id); 
+      if (!p) return;
+      document.getElementById('pId').value = p.id; 
+      document.getElementById('pName').value = p.name;
+      document.getElementById('pPhone').value = p.phone; 
+      document.getElementById('pEmail').value = p.email;
+      document.getElementById('pComp').value = p.compId || ''; 
+      document.getElementById('pUser').value = p.user || '';
+      document.getElementById('pPass').value = p.pass || ''; 
+      document.getElementById('pExp').value = p.exp || '';
+      document.querySelectorAll('.test-check').forEach(cb => 
+        cb.checked = p.tests && p.tests.includes(cb.value)
+      );
       document.getElementById('partTitle').textContent = 'Editar Participante';
       openModal('partModal');
     }
 
     function resendTest(id) {
       const p = DB.participants.find(x => x.id === id);
-      if(p) showToast(`Credenciais e testes reenviados para ${p.email}`, 'success');
+      if (p) showToast(`Credenciais e testes reenviados para ${p.email}`, 'success');
     }
 
-    // === RELATÓRIOS ===
+    // ============================================
+    // LIBERAR TESTES - ABRIR MODAL
+    // ============================================
+    function openTestModal(pid) {
+      const p = DB.participants.find(x => x.id === pid);
+      if (!p) return;
+      document.getElementById('testModalName').textContent = p.name;
+      document.getElementById('testModalId').value = pid;
+      document.querySelectorAll('#testModal .test-check').forEach(cb => {
+        cb.checked = p.assignedTests && p.assignedTests.includes(cb.value);
+      });
+      openModal('testModal');
+    }
+
+    // ============================================
+    // LIBERAR TESTES - CONFIRMAR
+    // ============================================
+    function confirmTestRelease() {
+      const pid = document.getElementById('testModalId').value;
+      const selected = Array.from(document.querySelectorAll('#testModal .test-check:checked')).map(cb => cb.value);
+      const idx = DB.participants.findIndex(x => x.id === pid);
+      if (idx > -1) {
+        DB.participants[idx].assignedTests = selected;
+        DB.participants[idx].tests = selected;
+        saveDB();
+        closeModal('testModal');
+        showToast(`Testes liberados com sucesso para ${DB.participants[idx].name}!`);
+      }
+    }
+
+    // ============================================
+    // RELATÓRIOS - ABRIR MODAL
+    // ============================================
     function openReportModal(pid, name) {
       document.getElementById('reportTargetName').textContent = name;
       currentCompanyId = pid;
       openModal('reportModal');
     }
 
+    // ============================================
+    // RELATÓRIOS - GERAR
+    // ============================================
     function generateReport() {
       const type = document.getElementById('reportTypeSelect').value;
       const test = document.getElementById('reportTestSelect').value;
       const p = DB.participants.find(x => x.id === currentCompanyId);
-      if(!p) return;
-      DB.reports.push({ id: Date.now().toString(), participantId: p.id, name: p.name, type, test, date: new Date().toLocaleString('pt-BR') });
-      saveDB(); closeModal('reportModal');
+      if (!p) return;
+      DB.reports.push({ 
+        id: Date.now().toString(), 
+        participantId: p.id, 
+        name: p.name, 
+        type, 
+        test, 
+        date: new Date().toLocaleString('pt-BR') 
+      });
+      saveDB(); 
+      closeModal('reportModal');
       showToast(`✅ Relatório ${type.toUpperCase()} (${test}) gerado e enviado para ${p.email}`);
     }
 
+    // ============================================
+    // ATUALIZAR SELECTS
+    // ============================================
     function updateSelects() {
       const pSel = document.getElementById('pComp');
-      if(pSel) pSel.innerHTML = '<option value="">Independente</option>' + DB.companies.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+      if (pSel) {
+        pSel.innerHTML = '<option value="">Independente</option>' + 
+          DB.companies.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+      }
     }
 
+    // ============================================
+    // EXCLUIR ITEM GENÉRICO
+    // ============================================
     function deleteItem(collection, id) {
-      if(!confirm('Tem certeza que deseja excluir este item?')) return;
+      if (!confirm('Tem certeza que deseja excluir este item?')) return;
       DB[collection] = DB[collection].filter(x => x.id !== id);
-      saveDB(); showToast('Item excluído com sucesso!');
+      saveDB(); 
+      showToast('Item excluído com sucesso!');
     }
 
-    function showToast(msg, type='success') {
+    // ============================================
+    // TOAST NOTIFICATIONS
+    // ============================================
+    function showToast(msg, type = 'success') {
       const t = document.createElement('div'); 
-      t.className = `toast ${type==='error'?'error':''}`; 
-      t.innerHTML = `<span>${type==='success'?'✅':'❌'}</span><span>${msg}</span>`;
+      t.className = `toast ${type === 'error' ? 'error' : ''}`; 
+      t.innerHTML = `<span>${type === 'success' ? '✅' : '❌'}</span><span>${msg}</span>`;
       document.body.appendChild(t); 
-      setTimeout(() => { t.style.opacity='0'; setTimeout(()=>t.remove(),300); }, 3000);
+      setTimeout(() => { 
+        t.style.opacity = '0'; 
+        setTimeout(() => t.remove(), 300); 
+      }, 3000);
     }
 
+    // ============================================
+    // LOGOUT
+    // ============================================
     function logout() {
       localStorage.removeItem('vigorre_current_user');
       window.location.href = 'login.html';
