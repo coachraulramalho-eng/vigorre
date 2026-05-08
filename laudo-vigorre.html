@@ -3,374 +3,1236 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Valores Pessoais - Vigorre</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; }
-    header { background: linear-gradient(135deg, #1e3a8a, #0f172a); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; }
-    .logo-icon { width: 35px; height: 35px; background: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #1e3a8a; font-weight: bold; }
-    .timer { background: rgba(255,255,255,0.15); padding: 10px 20px; border-radius: 25px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-    .timer.warning { background: rgba(239, 68, 68, 0.3); animation: pulse 1s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
-    main { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
-    .progress { margin-bottom: 2rem; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    .progress-bar { height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; }
-    .progress-fill { height: 100%; background: linear-gradient(90deg, #8b5cf6, #7c3aed); width: 0%; transition: width 0.5s ease; }
-    .progress-text { display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.9rem; color: #64748b; font-weight: 600; }
-    .question-card { background: white; border-radius: 20px; padding: 2.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 2rem; }
-    .question-number { display: inline-block; background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; }
-    .question-text { font-size: 1.3rem; font-weight: 600; margin-bottom: 2rem; line-height: 1.4; }
-    .value-options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-    .value-option { padding: 18px; border: 2px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.3s; text-align: left; background: #f8fafc; }
-    .value-option:hover { border-color: #8b5cf6; background: #f5f3ff; transform: translateY(-2px); }
-    .value-option.selected { border-color: #7c3aed; background: linear-gradient(135deg, #ede9fe, #ddd6fe); box-shadow: 0 2px 10px rgba(139, 92, 246, 0.3); }
-    .value-name { font-weight: 700; color: #1e40af; margin-bottom: 5px; }
-    .value-desc { font-size: 0.9rem; color: #64748b; }
-    .navigation { display: flex; justify-content: space-between; margin-top: 2rem; gap: 1rem; }
-    .btn { padding: 14px 32px; border-radius: 12px; border: none; cursor: pointer; font-weight: 700; font-size: 1rem; transition: all 0.3s; }
-    .btn-prev { background: #e2e8f0; color: #1e293b; }
-    .btn-prev:hover { background: #cbd5e1; }
-    .btn-prev:disabled { opacity: 0.4; cursor: not-allowed; }
-    .btn-next { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; }
-    .btn-next:hover { transform: translateY(-2px); }
-    .btn-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-    .btn-finish { background: linear-gradient(135deg, #3b82f6, #1e40af); color: white; }
-    .hidden { display: none; }
-    #result { text-align: center; }
-    .result-card { background: white; border-radius: 20px; padding: 3rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin-top: 2rem; }
-    .result-title { font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: #7c3aed; }
-    .top-values { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 2rem 0; }
-    .value-badge { padding: 12px 24px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; border-radius: 25px; font-weight: 600; }
-    .all-values { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0; text-align: left; }
-    .value-item { background: #f8fafc; padding: 1rem; border-radius: 12px; }
-    .value-label { font-weight: 600; color: #1e293b; }
-    .value-bar { height: 8px; background: #e2e8f0; border-radius: 4px; margin: 8px 0; overflow: hidden; }
-    .value-fill { height: 100%; background: linear-gradient(90deg, #8b5cf6, #7c3aed); border-radius: 4px; }
-    .value-percent { font-size: 0.9rem; color: #64748b; font-weight: 600; }
-  </style>
-</head>
-<body>
-  <header>
-    <div class="logo"><div class="logo-icon">V</div><span>Vigorre - Valores Pessoais</span></div>
-    <div class="timer" id="timer"><span>⏱️</span><span id="time-display">20:00</span></div>
-  </header>
-
-  <main>
-    <div id="test-screen">
-      <div class="progress">
-        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-        <div class="progress-text"><span id="progress-text">Questão 1 de 30</span><span id="progress-percent">3%</span></div>
-      </div>
-
-      <div class="question-card">
-        <span class="question-number" id="question-number">Questão 1</span>
-        <div class="question-text" id="question-text">Carregando...</div>
-        <div class="value-options" id="value-options"></div>
-      </div>
-
-      <div class="navigation">
-        <button class="btn btn-prev" id="btn-prev" onclick="prevQuestion()">← Anterior</button>
-        <button class="btn btn-next" id="btn-next" onclick="nextQuestion()">Próxima →</button>
-        <button class="btn btn-finish hidden" id="btn-finish" onclick="finishTest()">Finalizar Teste ✓</button>
-      </div>
-    </div>
-
-    <div id="result" class="hidden">
-      <div class="result-card">
-        <div class="result-title">💎 Seus Valores Pessoais</div>
-        <p id="result-description">Analisando seus valores fundamentais...</p>
-        <div class="top-values" id="top-values"></div>
-        <div class="all-values" id="all-values"></div>
-        <button class="btn btn-primary" style="margin-top: 2rem;" onclick="window.location.href='index.html'">Voltar ao Início</button>
-      </div>
-    </div>
-  </main>
-
+  <title>Laudo Comportamental Vigorre</title>
+  
+  <!-- Tailwind CSS & Chart.js -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind Config -->
   <script>
-    // Questões baseadas na teoria de Schwartz
-    const questions = [
-      { text: "Para mim, é importante:", values: [
-        { name: "Realização", desc: "Alcançar sucesso pessoal" },
-        { name: "Poder", desc: "Ter autoridade e status" },
-        { name: "Segurança", desc: "Manter estabilidade" },
-        { name: "Conformidade", desc: "Seguir regras sociais" }
-      ]},
-      { text: "No trabalho, valorizo:", values: [
-        { name: "Criatividade", desc: "Inovar e criar" },
-        { name: "Independência", desc: "Ter autonomia" },
-        { name: "Colaboração", desc: "Trabalhar em equipe" },
-        { name: "Excelência", desc: "Buscar qualidade" }
-      ]},
-      { text: "Nas relações pessoais:", values: [
-        { name: "Lealdade", desc: "Ser fiel" },
-        { name: "Honestidade", desc: "Ser sincero" },
-        { name: "Respeito", desc: "Valorizar o outro" },
-        { name: "Empatia", desc: "Compreender sentimentos" }
-      ]},
-      { text: "Na vida, busco:", values: [
-        { name: "Liberdade", desc: "Ter escolhas" },
-        { name: "Aventura", desc: "Viver experiências" },
-        { name: "Estabilidade", desc: "Ter segurança" },
-        { name: "Crescimento", desc: "Evoluir constantemente" }
-      ]},
-      { text: "É fundamental para mim:", values: [
-        { name: "Justiça", desc: "Agir com equidade" },
-        { name: "Responsabilidade", desc: "Cumprir obrigações" },
-        { name: "Generosidade", desc: "Ajudar outros" },
-        { name: "Ambição", desc: "Alcançar metas" }
-      ]},
-      { text: "Admiro pessoas que são:", values: [
-        { name: "Coragem", desc: "Enfrentam desafios" },
-        { name: "Sabedoria", desc: "Têm conhecimento" },
-        { name: "Bondade", desc: "São compassivas" },
-        { name: "Disciplina", desc: "São organizadas" }
-      ]},
-      { text: "Minhas decisões são baseadas em:", values: [
-        { name: "Lógica", desc: "Razão e análise" },
-        { name: "Valores", desc: "Princípios pessoais" },
-        { name: "Emoções", desc: "Sentimentos" },
-        { name: "Resultados", desc: "Consequências práticas" }
-      ]},
-      { text: "O sucesso significa:", values: [
-        { name: "Reconhecimento", desc: "Ser valorizado" },
-        { name: "Realização", desc: "Alcançar objetivos" },
-        { name: "Felicidade", desc: "Bem-estar" },
-        { name: "Impacto", desc: "Fazer diferença" }
-      ]},
-      { text: "Prefiro ambientes:", values: [
-        { name: "Competitivos", desc: "Desafiadores" },
-        { name: "Cooperativos", desc: "Colaborativos" },
-        { name: "Estáveis", desc: "Previsíveis" },
-        { name: "Dinâmicos", desc: "Variados" }
-      ]},
-      { text: "Valorizo mais:", values: [
-        { name: "Tradição", desc: "Costumes e cultura" },
-        { name: "Inovação", desc: "Mudança e progresso" },
-        { name: "Família", desc: "Relações familiares" },
-        { name: "Carreira", desc: "Desenvolvimento profissional" }
-      ]},
-      { text: "É importante que:", values: [
-        { name: "Seja ouvido", desc: "Minha opinião importe" },
-        { name: "Seja útil", desc: "Contribua positivamente" },
-        { name: "Seja respeitado", desc: "Receba consideração" },
-        { name: "Seja livre", desc: "Tenha autonomia" }
-      ]},
-      { text: "Busco constantemente:", values: [
-        { name: "Aprendizado", desc: "Conhecimento novo" },
-        { name: "Prazer", desc: "Experiências agradáveis" },
-        { name: "Paz interior", desc: "Tranquilidade" },
-        { name: "Desafios", desc: "Superação" }
-      ]},
-      { text: "Minha motivação vem de:", values: [
-        { name: "Conquistas", desc: "Alcançar metas" },
-        { name: "Relacionamentos", desc: "Conexões humanas" },
-        { name: "Propósito", desc: "Significado" },
-        { name: "Reconhecimento", desc: "Aprovação" }
-      ]},
-      { text: "Valorizo a:", values: [
-        { name: "Eficiência", desc: "Fazer bem feito" },
-        { name: "Criatividade", desc: "Inovação" },
-        { name: "Harmonia", desc: "Equilíbrio" },
-        { name: "Justiça", desc: "Equidade" }
-      ]},
-      { text: "É essencial:", values: [
-        { name: "Autenticidade", desc: "Ser verdadeiro" },
-        { name: "Competência", desc: "Ter habilidades" },
-        { name: "Amor", desc: "Receber afeto" },
-        { name: "Independência", desc: "Ter liberdade" }
-      ]},
-      { text: "Prefiro:", values: [
-        { name: "Liderar", desc: "Comandar" },
-        { name: "Colaborar", desc: "Trabalhar junto" },
-        { name: "Apoiar", desc: "Ajudar" },
-        { name: "Executar", desc: "Realizar" }
-      ]},
-      { text: "Acredito em:", values: [
-        { name: "Mudança", desc: "Transformação" },
-        { name: "Estabilidade", desc: "Constância" },
-        { name: "Progresso", desc: "Evolução" },
-        { name: "Tradição", desc: "Permanência" }
-      ]},
-      { text: "Minha prioridade é:", values: [
-        { name: "Trabalho", desc: "Carreira" },
-        { name: "Família", desc: "Relações pessoais" },
-        { name: "Saúde", desc: "Bem-estar" },
-        { name: "Crescimento", desc: "Desenvolvimento" }
-      ]},
-      { text: "Valorizo pessoas:", values: [
-        { name: "Competentes", desc: "Habilidosas" },
-        { name: "Éticas", desc: "Íntegras" },
-        { name: "Amigáveis", desc: "Simpáticas" },
-        { name: "Criativas", desc: "Inovadoras" }
-      ]},
-      { text: "O que me define:", values: [
-        { name: "Determinação", desc: "Foco" },
-        { name: "Empatia", desc: "Compreensão" },
-        { name: "Criatividade", desc: "Inovação" },
-        { name: "Lealdade", desc: "Fidelidade" }
-      ]},
-      { text: "É importante ter:", values: [
-        { name: "Segurança financeira", desc: "Estabilidade" },
-        { name: "Liberdade de escolha", desc: "Autonomia" },
-        { name: "Relacionamentos", desc: "Conexões" },
-        { name: "Realização pessoal", desc: "Sucesso" }
-      ]},
-      { text: "Busco:", values: [
-        { name: "Excelência", desc: "Qualidade" },
-        { name: "Diversão", desc: "Alegria" },
-        { name: "Sabedoria", desc: "Conhecimento" },
-        { name: "Poder", desc: "Influência" }
-      ]},
-      { text: "Valorizo:", values: [
-        { name: "Honestidade", desc: "Verdade" },
-        { name: "Ambição", desc: "Sucesso" },
-        { name: "Generosidade", desc: "Doação" },
-        { name: "Disciplina", desc: "Organização" }
-      ]},
-      { text: "É fundamental:", values: [
-        { name: "Respeitar outros", desc: "Consideração" },
-        { name: "Ser respeitado", desc: "Reconhecimento" },
-        { name: "Ajudar sociedade", desc: "Contribuição" },
-        { name: "Crescer pessoal", desc: "Evolução" }
-      ]},
-      { text: "Prefiro viver:", values: [
-        { name: "Com paixão", desc: "Intensidade" },
-        { name: "Com prudência", desc: "Cautela" },
-        { name: "Com alegria", desc: "Otimismo" },
-        { name: "Com propósito", desc: "Significado" }
-      ]},
-      { text: "Valorizo a:", values: [
-        { name: "Diversidade", desc: "Variedade" },
-        { name: "Unidade", desc: "Harmonia" },
-        { name: "Competição", desc: "Rivalidade" },
-        { name: "Cooperação", desc: "Colaboração" }
-      ]},
-      { text: "É importante:", values: [
-        { name: "Ser lembrado", desc: "Legado" },
-        { name: "Ser feliz", desc: "Bem-estar" },
-        { name: "Ser útil", desc: "Serviço" },
-        { name: "Ser livre", desc: "Autonomia" }
-      ]},
-      { text: "Busco constantemente:", values: [
-        { name: "Melhorar", desc: "Evolução" },
-        { name: "Aproveitar", desc: "Prazer" },
-        { name: "Contribuir", desc: "Impacto" },
-        { name: "Conquistar", desc: "Sucesso" }
-      ]},
-      { text: "Valorizo mais:", values: [
-        { name: "Qualidade", desc: "Excelência" },
-        { name: "Quantidade", desc: "Volume" },
-        { name: "Velocidade", desc: "Rapidez" },
-        { name: "Precisão", desc: "Exatidão" }
-      ]},
-      { text: "Minha filosofia é:", values: [
-        { name: "Carpe Diem", desc: "Aproveitar o momento" },
-        { name: "Devagar e sempre", desc: "Constância" },
-        { name: "Otimismo", desc: "Positividade" },
-        { name: "Realismo", desc: "Praticidade" }
-      ]}
-    ];
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: {
+              dark: '#0F172A',
+              purple: '#7C3AED',
+              blue: '#1D4ED8',
+              cyan: '#06B6D4',
+              emerald: '#10B981',
+              amber: '#F59E0B',
+              rose: '#F43F5E'
+            }
+          }
+        }
+      }
+    }
+  </script>
 
-    let currentQuestion = 0;
-    let answers = [];
-    let timeLeft = 20 * 60;
-    let timerInterval;
-
-    document.addEventListener('DOMContentLoaded', () => {
-      loadQuestion();
-      startTimer();
-    });
-
-    function startTimer() {
-      timerInterval = setInterval(() => {
-        timeLeft--;
-        const mins = Math.floor(timeLeft / 60);
-        const secs = timeLeft % 60;
-        document.getElementById('time-display').textContent = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
-        if (timeLeft <= 300) document.getElementById('timer').classList.add('warning');
-        if (timeLeft <= 0) { clearInterval(timerInterval); finishTest(); }
-      }, 1000);
+  <style>
+    /* ============================================
+       BASE & RESET
+       ============================================ */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Inter', sans-serif; 
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%); 
+      color: #F8FAFC; 
+      min-height: 100vh; 
+      line-height: 1.6;
     }
 
-    function loadQuestion() {
-      const q = questions[currentQuestion];
-      document.getElementById('question-number').textContent = `Questão ${currentQuestion + 1}`;
-      document.getElementById('question-text').textContent = q.text;
-      
-      const container = document.getElementById('value-options');
-      container.innerHTML = '';
-      const currentAns = answers[currentQuestion] || [];
-      
-      q.values.forEach((val, idx) => {
-        const div = document.createElement('div');
-        div.className = 'value-option' + (currentAns.includes(idx) ? ' selected' : '');
-        div.innerHTML = `<div class="value-name">${val.name}</div><div class="value-desc">${val.desc}</div>`;
-        div.onclick = () => toggleValue(idx);
-        container.appendChild(div);
-      });
+    /* ============================================
+       GLASSMORPHISM & PREMIUM EFFECTS
+       ============================================ */
+    .glass { 
+      background: rgba(30, 41, 59, 0.7); 
+      backdrop-filter: blur(12px); 
+      -webkit-backdrop-filter: blur(12px); 
+      border: 1px solid rgba(255, 255, 255, 0.1); 
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); 
+    }
+    .glass-card { 
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95)); 
+      backdrop-filter: blur(20px); 
+      border: 1px solid rgba(255, 255, 255, 0.08); 
+      border-radius: 20px; 
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4); 
+    }
+    .gradient-text { 
+      background: linear-gradient(135deg, #60A5FA, #A78BFA, #22D3EE); 
+      -webkit-background-clip: text; 
+      -webkit-text-fill-color: transparent; 
+      background-clip: text; 
+    }
+    .gradient-border { position: relative; border-radius: 16px; }
+    .gradient-border::before {
+      content: ''; position: absolute; inset: -2px; border-radius: 18px;
+      background: linear-gradient(135deg, #1D4ED8, #7C3AED, #06B6D4);
+      z-index: -1; opacity: 0.6; filter: blur(8px);
+    }
 
-      const percent = Math.round(((currentQuestion + 1) / questions.length) * 100);
-      document.getElementById('progress-fill').style.width = `${percent}%`;
-      document.getElementById('progress-text').textContent = `Questão ${currentQuestion + 1} de ${questions.length}`;
-      document.getElementById('progress-percent').textContent = `${percent}%`;
+    /* ============================================
+       BUTTONS & INTERACTIONS
+       ============================================ */
+    .btn-primary { 
+      background: linear-gradient(135deg, #1D4ED8, #7C3AED); 
+      transition: all 0.3s ease; position: relative; overflow: hidden; 
+    }
+    .btn-primary::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, #7C3AED, #06B6D4);
+      opacity: 0; transition: opacity 0.3s ease;
+    }
+    .btn-primary:hover::before { opacity: 1; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(124, 58, 237, 0.4); }
+    
+    .btn-secondary {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: all 0.3s ease;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.2); transform: translateY(-1px); }
 
-      document.getElementById('btn-prev').disabled = currentQuestion === 0;
-      if (currentQuestion === questions.length - 1) {
-        document.getElementById('btn-next').classList.add('hidden');
-        document.getElementById('btn-finish').classList.remove('hidden');
-      } else {
-        document.getElementById('btn-next').classList.remove('hidden');
-        document.getElementById('btn-finish').classList.add('hidden');
-        document.getElementById('btn-next').disabled = !answers[currentQuestion] || answers[currentQuestion].length === 0;
+    /* ============================================
+       PROGRESS & CHARTS
+       ============================================ */
+    .progress-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
+    .progress-fill { 
+      height: 100%; background: linear-gradient(90deg, #1D4ED8, #7C3AED, #06B6D4); 
+      transition: width 0.4s ease; position: relative; 
+    }
+    .progress-fill::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shimmer 2s infinite;
+    }
+    @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+    /* ============================================
+       LAUDO SECTIONS
+       ============================================ */
+    .laudo-section { 
+      padding: 2rem; margin-bottom: 2rem; 
+      border-radius: 16px; background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .section-title {
+      position: relative; padding-bottom: 12px; margin-bottom: 1.5rem;
+      border-bottom: 2px solid rgba(255,255,255,0.1);
+    }
+    .section-title::after {
+      content: ''; position: absolute; bottom: -2px; left: 0;
+      width: 60px; height: 3px;
+      background: linear-gradient(90deg, #1D4ED8, #7C3AED);
+      border-radius: 2px;
+    }
+
+    /* ============================================
+       CARDS & METRICS
+       ============================================ */
+    .metric-card {
+      padding: 1rem; border-radius: 12px;
+      background: rgba(255,255,255,0.05);
+      border-left: 4px solid #1D4ED8;
+      margin-bottom: 1rem;
+    }
+    .metric-card.high { border-left-color: #10B981; }
+    .metric-card.medium { border-left-color: #F59E0B; }
+    .metric-card.low { border-left-color: #F43F5E; }
+
+    .badge {
+      padding: 4px 12px; border-radius: 100px;
+      font-size: 0.75rem; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+    .badge-disc-d { background: rgba(239, 68, 68, 0.2); color: #FCA5A5; }
+    .badge-disc-i { background: rgba(59, 130, 246, 0.2); color: #93C5FD; }
+    .badge-disc-s { background: rgba(16, 185, 129, 0.2); color: #86EFAC; }
+    .badge-disc-c { background: rgba(124, 58, 237, 0.2); color: #C4B5FD; }
+
+    /* ============================================
+       PRINT OPTIMIZATION
+       ============================================ */
+    @media print {
+      body { background: white; color: #111; }
+      .no-print { display: none !important; }
+      .glass, .glass-card { 
+        background: white !important; 
+        border: 1px solid #ccc !important; 
+        box-shadow: none !important; 
+        backdrop-filter: none !important; 
+      }
+      .gradient-text { -webkit-text-fill-color: #1D4ED8 !important; }
+      .laudo-container { max-width: 100%; padding: 20px; }
+      .page-break { page-break-before: always; }
+    }
+
+    /* ============================================
+       ANIMATIONS
+       ============================================ */
+    .fade-in { animation: fadeIn 0.5s ease-out; }
+    .slide-up { animation: slideUp 0.4s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0F172A; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- ============================================
+       HEADER / CONTROLS (NO PRINT)
+       ============================================ -->
+  <header class="glass border-b border-white/10 sticky top-0 z-50 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center font-bold text-white">V</div>
+        <div>
+          <h1 class="font-bold text-lg">Vigorre</h1>
+          <p class="text-xs text-gray-400">Laudo Comportamental</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="window.print()" class="btn-secondary px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+          Imprimir
+        </button>
+        <button onclick="exportPDF()" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          Exportar PDF
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================
+       LAUDO CONTAINER (PRINTABLE)
+       ============================================ -->
+  <main class="max-w-5xl mx-auto px-4 py-8 laudo-container" id="laudoContent">
+    
+    <!-- CAPA PREMIUM -->
+    <div class="glass-card p-8 mb-8 text-center slide-up">
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center mx-auto mb-4">
+        <span class="text-2xl font-bold text-white">V</span>
+      </div>
+      <h1 class="text-2xl md:text-3xl font-bold mb-2">LAUDO COMPORTAMENTAL VIGORRE</h1>
+      <p class="text-gray-400 mb-6">Análise Integrada de Perfil Comportamental, Inteligência Emocional e Motivadores Humanos</p>
+      
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+        <div class="glass p-3 rounded-lg">
+          <p class="text-gray-400 text-xs">Participante</p>
+          <p class="font-semibold" id="participantName">Carregando...</p>
+        </div>
+        <div class="glass p-3 rounded-lg">
+          <p class="text-gray-400 text-xs">Data da Avaliação</p>
+          <p class="font-semibold" id="evaluationDate">-</p>
+        </div>
+        <div class="glass p-3 rounded-lg">
+          <p class="text-gray-400 text-xs">Código do Laudo</p>
+          <p class="font-semibold" id="laudoCode">VIG-2024-001</p>
+        </div>
+        <div class="glass p-3 rounded-lg">
+          <p class="text-gray-400 text-xs">Empresa Vinculada</p>
+          <p class="font-semibold" id="companyName">Independente</p>
+        </div>
+      </div>
+      
+      <div id="jobInfo" class="mt-4 glass p-3 rounded-lg hidden">
+        <p class="text-gray-400 text-xs mb-1">Vaga Vinculada</p>
+        <p class="font-semibold" id="jobName">-</p>
+        <p class="text-xs text-brand-emerald mt-1" id="compatibilityBadge">Compatibilidade: --%</p>
+      </div>
+    </div>
+
+    <!-- 1. RESUMO EXECUTIVO -->
+    <section class="laudo-section slide-up">
+      <h2 class="section-title text-xl font-bold">1. Resumo Executivo</h2>
+      <div id="executiveSummary">
+        <!-- Preenchido via JavaScript -->
+      </div>
+    </section>
+
+    <!-- 2. PERFIL COMPORTAMENTAL DISC -->
+    <section id="discSection" class="laudo-section slide-up hidden">
+      <h2 class="section-title text-xl font-bold">2. Perfil Comportamental DISC</h2>
+      <div id="discContent">
+        <!-- Preenchido via JavaScript -->
+      </div>
+    </section>
+
+    <!-- 3. INTELIGÊNCIA EMOCIONAL -->
+    <section id="ieSection" class="laudo-section slide-up hidden">
+      <h2 class="section-title text-xl font-bold">3. Inteligência Emocional</h2>
+      <div id="ieContent">
+        <!-- Preenchido via JavaScript -->
+      </div>
+    </section>
+
+    <!-- 4. VALORES PESSOAIS -->
+    <section id="valuesSection" class="laudo-section slide-up hidden">
+      <h2 class="section-title text-xl font-bold">4. Valores Pessoais e Motivadores</h2>
+      <div id="valuesContent">
+        <!-- Preenchido via JavaScript -->
+      </div>
+    </section>
+
+    <!-- 5. ANÁLISE INTEGRADA VIGORRE -->
+    <section id="integratedSection" class="laudo-section slide-up hidden">
+      <h2 class="section-title text-xl font-bold">5. Análise Integrada Vigorre</h2>
+      <div id="integratedContent">
+        <!-- Preenchido via JavaScript -->
+      </div>
+    </section>
+
+    <!-- 6. COMPATIBILIDADE COM A VAGA -->
+    <section id="compatibilitySection" class="laudo-section slide-up hidden">
+      <h2 class="section-title text-xl font-bold">6. Compatibilidade com a Vaga</h2>
+      <div id="compatibilityContent">
+        <!-- Preenchido via JavaScript -->
+      </div>
+    </section>
+
+    <!-- 7. RECOMENDAÇÕES EXECUTIVAS -->
+    <section class="laudo-section slide-up">
+      <h2 class="section-title text-xl font-bold">7. Recomendações Executivas</h2>
+      <div id="recommendationsContent">
+        <!-- Preenchido via JavaScript -->
+      </div>
+    </section>
+
+    <!-- 8. ORIENTAÇÕES AO PARTICIPANTE -->
+    <section class="laudo-section slide-up">
+      <h2 class="section-title text-xl font-bold">8. Plano de Desenvolvimento</h2>
+      <div id="developmentContent">
+        <!-- Preenchido via JavaScript -->
+      </div>
+    </section>
+
+    <!-- FRASE FINAL -->
+    <div class="glass-card p-8 text-center slide-up mb-8">
+      <blockquote class="text-lg italic text-gray-300 mb-4">
+        "<span id="finalQuote">O comportamento direciona decisões, e decisões constroem resultados.</span>"
+      </blockquote>
+      <p class="text-sm text-gray-400">— Vigorre People Analytics</p>
+    </div>
+
+    <!-- RODAPÉ -->
+    <footer class="text-center text-xs text-gray-500 py-8 border-t border-white/10">
+      <p>Laudo gerado automaticamente pela plataforma Vigorre People Analytics</p>
+      <p class="mt-1">© 2024 Vigorre. Uso exclusivo para fins de desenvolvimento profissional e análise corporativa.</p>
+      <p class="mt-1 text-gray-600">Código: <span id="footerCode">VIG-2024-001</span> | Emitido em: <span id="footerDate">-</span></p>
+    </footer>
+
+  </main>
+
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden">
+    <div class="text-center">
+      <div class="relative w-20 h-20 mx-auto mb-4">
+        <div class="absolute inset-0 rounded-full border-4 border-white/10"></div>
+        <div class="absolute inset-0 rounded-full border-4 border-t-brand-cyan border-r-brand-purple border-b-transparent border-l-transparent animate-spin"></div>
+      </div>
+      <p class="text-gray-300">Gerando laudo profissional...</p>
+    </div>
+  </div>
+
+  <script>
+    // ============================================
+    // ESTADO E DADOS
+    // ============================================
+    const AppState = {
+      participant: null,
+      company: null,
+      job: null,
+      discResults: null,
+      ieResults: null,
+      valuesResults: null,
+      completedTests: []
+    };
+
+    // Banco de interpretações DISC
+    const DISC_INTERPRETATIONS = {
+      D: {
+        name: 'Dominância',
+        color: '#EF4444',
+        traits: ['Direto', 'Decisivo', 'Orientado a resultados', 'Assertivo'],
+        communication: 'Comunica-se de forma direta e objetiva, preferindo ir direto ao ponto. Valoriza clareza e eficiência.',
+        leadership: 'Lidera com foco em resultados, tomando decisões rápidas e assumindo responsabilidades.',
+        decision: 'Decisões baseadas em impacto e velocidade. Avalia riscos de forma pragmática.',
+        pressure: 'Sob pressão, mantém foco e acelera a execução. Pode tornar-se mais direto e exigente.',
+        strengths: ['Liderança natural', 'Tomada de decisão rápida', 'Foco em resultados', 'Coragem para assumir riscos'],
+        watchouts: ['Pode ser percebido como impaciente', 'Tendência a ignorar detalhes', 'Pode negligenciar o impacto emocional']
+      },
+      I: {
+        name: 'Influência',
+        color: '#3B82F6',
+        traits: ['Comunicativo', 'Persuasivo', 'Sociável', 'Entusiasta'],
+        communication: 'Comunica-se com entusiasmo e empatia, criando conexões genuínas. Usa histórias para engajar.',
+        leadership: 'Lidera inspirando e motivando pessoas. Cria ambientes colaborativos e valoriza o reconhecimento.',
+        decision: 'Decisões consideram impacto nas pessoas. Valoriza consenso e engajamento.',
+        pressure: 'Sob pressão, mantém otimismo e busca soluções colaborativas.',
+        strengths: ['Excelente comunicação', 'Capacidade de motivar equipes', 'Networking natural', 'Criatividade'],
+        watchouts: ['Pode priorizar relacionamentos sobre prazos', 'Tendência a ser otimista demais', 'Pode dispersar foco']
+      },
+      S: {
+        name: 'Estabilidade',
+        color: '#10B981',
+        traits: ['Paciente', 'Empático', 'Equilibrado', 'Colaborativo'],
+        communication: 'Comunica-se com calma e empatia, priorizando entendimento mútuo. Evita confrontos.',
+        leadership: 'Lidera servindo e apoiando a equipe. Cria ambientes seguros e valoriza a colaboração.',
+        decision: 'Decisões consideram impacto nas pessoas e estabilidade. Prefere avaliar com calma.',
+        pressure: 'Sob pressão, busca apoio e divide responsabilidades. Pode precisar de tempo para processar.',
+        strengths: ['Excelente escuta', 'Constância e confiabilidade', 'Habilidade em manter harmonia', 'Empatia'],
+        watchouts: ['Pode resistir a mudanças rápidas', 'Tendência a evitar conflitos', 'Pode ter dificuldade em priorizar']
+      },
+      C: {
+        name: 'Conformidade',
+        color: '#7C3AED',
+        traits: ['Analítico', 'Detalhista', 'Organizado', 'Preciso'],
+        communication: 'Comunica-se com precisão e base em fatos. Prefere clareza, dados e estrutura.',
+        leadership: 'Lidera através de processos claros e padrões de qualidade. Valoriza competência.',
+        decision: 'Decisões baseadas em análise detalhada e dados. Avalia riscos minuciosamente.',
+        pressure: 'Sob pressão, organiza prioridades e segue planos. Pode precisar de estrutura para manter eficiência.',
+        strengths: ['Excelência na análise', 'Precisão e atenção a detalhes', 'Planejamento estruturado', 'Pensamento lógico'],
+        watchouts: ['Pode demorar para decidir por buscar perfeição', 'Tendência a ser crítico demais', 'Pode ter dificuldade em ambientes dinâmicos']
+      }
+    };
+
+    // Banco de interpretações de Inteligência Emocional
+    const IE_INTERPRETATIONS = {
+      autoconsciencia: {
+        name: 'Autoconsciência',
+        high: 'Excelente capacidade de reconhecer emoções e gatilhos. Consegue identificar padrões emocionais com precisão.',
+        medium: 'Boa capacidade de reconhecer emoções, com espaço para desenvolver maior precisão na identificação de gatilhos.',
+        low: 'Pode beneficiar-se de práticas de reflexão para aumentar a consciência sobre suas emoções e reações.'
+      },
+      autocontrole: {
+        name: 'Autocontrole',
+        high: 'Excelente capacidade de regular emoções sob pressão. Mantém clareza e compostura em situações desafiadoras.',
+        medium: 'Boa capacidade de autocontrole, com oportunidades para desenvolver técnicas de regulação emocional.',
+        low: 'Pode beneficiar-se de estratégias para gerenciar impulsos e manter equilíbrio em momentos de estresse.'
+      },
+      empatia: {
+        name: 'Empatia',
+        high: 'Excelente capacidade de compreender as emoções alheias. Adapta comunicação com sensibilidade e inteligência.',
+        medium: 'Boa capacidade empática, com espaço para desenvolver escuta ativa e compreensão mais profunda.',
+        low: 'Pode beneficiar-se de práticas para desenvolver maior sensibilidade às necessidades emocionais dos outros.'
+      },
+      resiliencia: {
+        name: 'Resiliência',
+        high: 'Excelente capacidade de recuperação emocional. Transforma desafios em oportunidades de crescimento.',
+        medium: 'Boa resiliência, com oportunidades para fortalecer estratégias de enfrentamento de adversidades.',
+        low: 'Pode beneficiar-se de técnicas para desenvolver maior tolerância à frustração e recuperação emocional.'
+      },
+      social: {
+        name: 'Inteligência Social',
+        high: 'Excelente habilidade de navegar dinâmicas sociais. Constrói relacionamentos com autenticidade e influência.',
+        medium: 'Boa inteligência social, com espaço para desenvolver networking estratégico e influência positiva.',
+        low: 'Pode beneficiar-se de práticas para desenvolver maior consciência das dinâmicas interpessoais.'
+      }
+    };
+
+    // Banco de interpretações de Valores
+    const VALUES_INTERPRETATIONS = {
+      realizacao: { name: 'Realização', desc: 'Busca por crescimento, performance e conquista de metas.' },
+      seguranca: { name: 'Segurança', desc: 'Necessidade de estabilidade, previsibilidade e proteção.' },
+      relacionamento: { name: 'Relacionamento', desc: 'Importância dada às conexões humanas e colaboração.' },
+      autonomia: { name: 'Autonomia', desc: 'Necessidade de liberdade, independência e flexibilidade.' },
+      proposito: { name: 'Propósito', desc: 'Busca por significado, contribuição e impacto social.' },
+      reconhecimento: { name: 'Reconhecimento', desc: 'Necessidade de valorização, status e visibilidade.' },
+      inovacao: { name: 'Inovação', desc: 'Interesse por criatividade, mudanças e evolução constante.' },
+      equilibrio: { name: 'Equilíbrio', desc: 'Busca por qualidade de vida e estabilidade emocional.' }
+    };
+
+    // Frases finais impactantes
+    const FINAL_QUOTES = [
+      "O comportamento direciona decisões, e decisões constroem resultados.",
+      "Autoconhecimento é a base da alta performance profissional.",
+      "Pessoas alinhadas ao ambiente produzem resultados extraordinários.",
+      "Inteligência emocional transforma potencial em performance consistente.",
+      "Valores definem direção; comportamento define trajetória."
+    ];
+
+    // ============================================
+    // INICIALIZAÇÃO
+    // ============================================
+    document.addEventListener('DOMContentLoaded', async () => {
+      showLoading();
+      
+      try {
+        await initializeLaudo();
+        generateLaudo();
+      } catch (error) {
+        console.error('Erro ao gerar laudo:', error);
+        alert('Erro ao carregar dados do laudo. Verifique se os testes foram concluídos.');
+        window.location.href = 'login.html';
+      }
+      
+      hideLoading();
+    });
+
+    function showLoading() {
+      document.getElementById('loadingOverlay').classList.remove('hidden');
+    }
+
+    function hideLoading() {
+      document.getElementById('loadingOverlay').classList.add('hidden');
+    }
+
+    async function initializeLaudo() {
+      // Obter dados da sessão
+      const session = JSON.parse(localStorage.getItem('vigorre_current_user'));
+      if (!session || !session.id) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // Buscar participante
+      const allParticipants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+      AppState.participant = allParticipants.find(p => p.id === session.id);
+      if (!AppState.participant) {
+        throw new Error('Participante não encontrado');
+      }
+
+      // Buscar empresa vinculada
+      if (AppState.participant.compId) {
+        const allCompanies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+        AppState.company = allCompanies.find(c => c.id === AppState.participant.compId);
+      }
+
+      // Buscar vaga vinculada (se houver)
+      if (AppState.company) {
+        const allJobs = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]');
+        AppState.job = allJobs.find(j => j.compId === AppState.company.id);
+      }
+
+      // Detectar testes concluídos
+      const completed = AppState.participant.completedTests || [];
+      AppState.completedTests = completed;
+      
+      // Carregar resultados simulados (em produção, viriam do backend)
+      if (completed.includes('DISC')) {
+        AppState.discResults = generateDiscResults();
+      }
+      if (completed.includes('IE')) {
+        AppState.ieResults = generateIEResults();
+      }
+      if (completed.includes('Valores')) {
+        AppState.valuesResults = generateValuesResults();
+      }
+
+      // Atualizar informações do cabeçalho
+      updateHeaderInfo();
+    }
+
+    function updateHeaderInfo() {
+      document.getElementById('participantName').textContent = AppState.participant.name;
+      document.getElementById('evaluationDate').textContent = new Date().toLocaleDateString('pt-BR');
+      document.getElementById('footerDate').textContent = new Date().toLocaleString('pt-BR');
+      
+      if (AppState.company) {
+        document.getElementById('companyName').textContent = AppState.company.name;
+      }
+      
+      if (AppState.job) {
+        document.getElementById('jobInfo').classList.remove('hidden');
+        document.getElementById('jobName').textContent = AppState.job.name;
+        const compat = calculateJobCompatibility();
+        document.getElementById('compatibilityBadge').textContent = `Compatibilidade: ${compat}%`;
       }
     }
 
-    function toggleValue(idx) {
-      if (!answers[currentQuestion]) answers[currentQuestion] = [];
-      const pos = answers[currentQuestion].indexOf(idx);
-      if (pos > -1) answers[currentQuestion].splice(pos, 1);
-      else answers[currentQuestion].push(idx);
-      loadQuestion();
+    // ============================================
+    // GERAÇÃO DE RESULTADOS SIMULADOS
+    // ============================================
+    function generateDiscResults() {
+      // Gera resultados aleatórios para demonstração
+      const scores = {
+        D: Math.floor(Math.random() * 40) + 10,
+        I: Math.floor(Math.random() * 40) + 10,
+        S: Math.floor(Math.random() * 40) + 10,
+        C: Math.floor(Math.random() * 40) + 10
+      };
+      const total = Object.values(scores).reduce((a,b) => a+b, 0);
+      const percentages = {};
+      Object.keys(scores).forEach(k => {
+        percentages[k] = Math.round((scores[k] / total) * 100);
+      });
+      return { scores, percentages };
     }
 
-    function prevQuestion() { if (currentQuestion > 0) { currentQuestion--; loadQuestion(); } }
-    function nextQuestion() { if (currentQuestion < questions.length - 1 && answers[currentQuestion] && answers[currentQuestion].length > 0) { currentQuestion++; loadQuestion(); } }
+    function generateIEResults() {
+      return {
+        autoconsciencia: Math.floor(Math.random() * 40) + 60,
+        autocontrole: Math.floor(Math.random() * 40) + 60,
+        empatia: Math.floor(Math.random() * 40) + 60,
+        resiliencia: Math.floor(Math.random() * 40) + 60,
+        social: Math.floor(Math.random() * 40) + 60
+      };
+    }
 
-    function finishTest() {
-      clearInterval(timerInterval);
+    function generateValuesResults() {
+      const values = ['realizacao', 'seguranca', 'relacionamento', 'autonomia', 'proposito', 'reconhecimento', 'inovacao', 'equilibrio'];
+      const results = {};
+      values.forEach(v => {
+        results[v] = Math.floor(Math.random() * 100);
+      });
+      return results;
+    }
+
+    // ============================================
+    // GERAÇÃO PRINCIPAL DO LAUDO
+    // ============================================
+    function generateLaudo() {
+      // Mostrar seções conforme testes realizados
+      if (AppState.completedTests.includes('DISC')) {
+        document.getElementById('discSection').classList.remove('hidden');
+        renderDiscSection();
+      }
+      if (AppState.completedTests.includes('IE')) {
+        document.getElementById('ieSection').classList.remove('hidden');
+        renderIESection();
+      }
+      if (AppState.completedTests.includes('Valores')) {
+        document.getElementById('valuesSection').classList.remove('hidden');
+        renderValuesSection();
+      }
       
-      const valuesMap = {};
-      answers.forEach((ans, qIdx) => {
-        if (ans) {
-          ans.forEach(valIdx => {
-            const valName = questions[qIdx].values[valIdx].name;
-            valuesMap[valName] = (valuesMap[valName] || 0) + 1;
-          });
+      // Seção integrada se houver 2+ testes
+      if (AppState.completedTests.length >= 2) {
+        document.getElementById('integratedSection').classList.remove('hidden');
+        renderIntegratedSection();
+      }
+      
+      // Compatibilidade se houver vaga
+      if (AppState.job) {
+        document.getElementById('compatibilitySection').classList.remove('hidden');
+        renderCompatibilitySection();
+      }
+      
+      // Resumo e recomendações sempre
+      renderExecutiveSummary();
+      renderRecommendations();
+      renderDevelopmentPlan();
+      
+      // Frase final aleatória
+      document.getElementById('finalQuote').textContent = FINAL_QUOTES[Math.floor(Math.random() * FINAL_QUOTES.length)];
+      document.getElementById('footerCode').textContent = `VIG-${new Date().getFullYear()}-${Math.floor(Math.random() * 9000) + 1000}`;
+    }
+
+    // ============================================
+    // RENDERIZAÇÃO: RESUMO EXECUTIVO
+    // ============================================
+    function renderExecutiveSummary() {
+      const container = document.getElementById('executiveSummary');
+      
+      let summary = '<div class="grid md:grid-cols-2 gap-4">';
+      
+      // Perfil predominante
+      if (AppState.discResults) {
+        const dominant = Object.entries(AppState.discResults.percentages).sort((a,b) => b[1] - a[1])[0];
+        const profile = DISC_INTERPRETATIONS[dominant[0]];
+        summary += `
+          <div class="metric-card high">
+            <p class="text-xs text-gray-400 mb-1">Perfil Predominante</p>
+            <p class="font-semibold text-lg">${profile.name}</p>
+            <p class="text-sm text-gray-300 mt-1">${profile.traits.join(' • ')}</p>
+          </div>
+        `;
+      }
+      
+      // QE geral
+      if (AppState.ieResults) {
+        const avgQE = Math.round(Object.values(AppState.ieResults).reduce((a,b) => a+b, 0) / 5);
+        summary += `
+          <div class="metric-card ${avgQE > 70 ? 'high' : avgQE > 50 ? 'medium' : 'low'}">
+            <p class="text-xs text-gray-400 mb-1">Índice QE Geral</p>
+            <p class="font-semibold text-2xl">${avgQE}%</p>
+            <p class="text-sm text-gray-300 mt-1">${avgQE > 70 ? 'Alta inteligência emocional' : avgQE > 50 ? 'Inteligência emocional em desenvolvimento' : 'Oportunidades de desenvolvimento emocional'}</p>
+          </div>
+        `;
+      }
+      
+      // Valores principais
+      if (AppState.valuesResults) {
+        const topValues = Object.entries(AppState.valuesResults).sort((a,b) => b[1] - a[1]).slice(0, 2);
+        summary += `
+          <div class="metric-card">
+            <p class="text-xs text-gray-400 mb-1">Valores Centrais</p>
+            <p class="font-semibold">${topValues.map(v => VALUES_INTERPRETATIONS[v[0]].name).join(' • ')}</p>
+          </div>
+        `;
+      }
+      
+      // Compatibilidade com vaga
+      if (AppState.job) {
+        const compat = calculateJobCompatibility();
+        summary += `
+          <div class="metric-card ${compat > 70 ? 'high' : compat > 50 ? 'medium' : 'low'}">
+            <p class="text-xs text-gray-400 mb-1">Aderência à Vaga</p>
+            <p class="font-semibold text-2xl">${compat}%</p>
+            <p class="text-sm text-gray-300 mt-1">${compat > 70 ? 'Alto potencial de sucesso na função' : compat > 50 ? 'Potencial com desenvolvimento direcionado' : 'Requer avaliação complementar'}</p>
+          </div>
+        `;
+      }
+      
+      summary += '</div>';
+      
+      // Pontos fortes e desenvolvimento
+      summary += '<div class="mt-6 grid md:grid-cols-2 gap-4">';
+      
+      const strengths = [];
+      const developments = [];
+      
+      if (AppState.discResults) {
+        const dominant = Object.entries(AppState.discResults.percentages).sort((a,b) => b[1] - a[1])[0];
+        const profile = DISC_INTERPRETATIONS[dominant[0]];
+        strengths.push(...profile.strengths.slice(0, 2));
+        developments.push(...profile.watchouts.slice(0, 2));
+      }
+      
+      if (AppState.ieResults) {
+        const avg = Object.values(AppState.ieResults).reduce((a,b) => a+b, 0) / 5;
+        if (avg > 70) strengths.push('Gestão emocional eficaz');
+        else developments.push('Desenvolvimento de regulação emocional');
+      }
+      
+      summary += `
+        <div>
+          <h4 class="font-semibold mb-2 flex items-center gap-2"><span class="text-brand-emerald">✓</span> Principais Forças</h4>
+          <ul class="space-y-1 text-sm text-gray-300">
+            ${strengths.slice(0, 4).map(s => `<li>• ${s}</li>`).join('')}
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-2 flex items-center gap-2"><span class="text-brand-amber">⚡</span> Oportunidades de Desenvolvimento</h4>
+          <ul class="space-y-1 text-sm text-gray-300">
+            ${developments.slice(0, 4).map(d => `<li>• ${d}</li>`).join('')}
+          </ul>
+        </div>
+      `;
+      
+      summary += '</div>';
+      container.innerHTML = summary;
+    }
+
+    // ============================================
+    // RENDERIZAÇÃO: DISC
+    // ============================================
+    function renderDiscSection() {
+      const container = document.getElementById('discContent');
+      const results = AppState.discResults;
+      const dominant = Object.entries(results.percentages).sort((a,b) => b[1] - a[1])[0];
+      const profile = DISC_INTERPRETATIONS[dominant[0]];
+      
+      let content = `
+        <div class="grid md:grid-cols-3 gap-6 mb-6">
+          <div class="md:col-span-2">
+            <canvas id="discRadarChart" class="w-full h-64"></canvas>
+          </div>
+          <div class="space-y-3">
+            ${['D','I','S','C'].map(letter => {
+              const p = results.percentages[letter];
+              const pProfile = DISC_INTERPRETATIONS[letter];
+              return `
+                <div class="glass p-3 rounded-lg">
+                  <div class="flex justify-between items-center mb-1">
+                    <span class="font-semibold">${pProfile.name}</span>
+                    <span class="badge badge-disc-${letter.toLowerCase()}">${p}%</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${p}%; background: ${pProfile.color}"></div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-semibold mb-3">Interpretações Comportamentais</h4>
+            <div class="space-y-3">
+              <div class="metric-card">
+                <p class="text-xs text-gray-400 mb-1">Comunicação</p>
+                <p class="text-sm">${profile.communication}</p>
+              </div>
+              <div class="metric-card">
+                <p class="text-xs text-gray-400 mb-1">Liderança</p>
+                <p class="text-sm">${profile.leadership}</p>
+              </div>
+              <div class="metric-card">
+                <p class="text-xs text-gray-400 mb-1">Tomada de Decisão</p>
+                <p class="text-sm">${profile.decision}</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-3">Pontos de Atenção</h4>
+            <ul class="space-y-2 text-sm text-gray-300">
+              ${profile.watchouts.map(w => `<li class="flex gap-2"><span class="text-brand-rose">•</span> ${w}</li>`).join('')}
+            </ul>
+          </div>
+        </div>
+      `;
+      
+      container.innerHTML = content;
+      
+      // Renderizar gráfico após DOM update
+      setTimeout(() => renderDiscChart(results.percentages), 100);
+    }
+
+    function renderDiscChart(percentages) {
+      const ctx = document.getElementById('discRadarChart');
+      if (!ctx) return;
+      
+      new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: ['Dominância', 'Influência', 'Estabilidade', 'Conformidade'],
+          datasets: [{
+            label: 'Perfil',
+            data: [percentages.D, percentages.I, percentages.S, percentages.C],
+            backgroundColor: 'rgba(124, 58, 237, 0.2)',
+            borderColor: '#7C3AED',
+            borderWidth: 2,
+            pointBackgroundColor: '#7C3AED'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            r: {
+              angleLines: { color: 'rgba(255,255,255,0.1)' },
+              grid: { color: 'rgba(255,255,255,0.1)' },
+              pointLabels: { color: '#94A3B8', font: {size: 11} },
+              ticks: { display: false, backdropColor: 'transparent' }
+            }
+          },
+          plugins: { legend: { display: false } }
         }
       });
+    }
 
-      const values = Object.entries(valuesMap)
-        .map(([name, score]) => ({ name, score: Math.round((score / questions.length) * 100) }))
-        .sort((a, b) => b.score - a.score);
-
-      const top5 = values.slice(0, 5);
-
-      document.getElementById('test-screen').classList.add('hidden');
-      document.getElementById('result').classList.remove('hidden');
+    // ============================================
+    // RENDERIZAÇÃO: INTELIGÊNCIA EMOCIONAL
+    // ============================================
+    function renderIESection() {
+      const container = document.getElementById('ieContent');
+      const results = AppState.ieResults;
+      const avgQE = Math.round(Object.values(results).reduce((a,b) => a+b, 0) / 5);
       
-      document.getElementById('top-values').innerHTML = top5.map(v => 
-        `<div class="value-badge">${v.name}</div>`
-      ).join('');
+      let content = `
+        <div class="grid md:grid-cols-3 gap-6 mb-6">
+          <div class="md:col-span-2">
+            <canvas id="ieRadarChart" class="w-full h-64"></canvas>
+          </div>
+          <div class="text-center">
+            <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-brand-emerald to-brand-cyan flex items-center justify-center mb-3">
+              <span class="text-3xl font-bold text-white">${avgQE}%</span>
+            </div>
+            <p class="text-sm text-gray-400">Índice QE Geral</p>
+            <p class="text-xs text-brand-emerald mt-1">${avgQE > 70 ? 'Alta' : avgQE > 50 ? 'Média' : 'Em Desenvolvimento'}</p>
+          </div>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-semibold mb-3">Dimensões Emocionais</h4>
+            ${Object.entries(results).map(([key, value]) => {
+              const interp = IE_INTERPRETATIONS[key];
+              const level = value > 70 ? 'high' : value > 50 ? 'medium' : 'low';
+              const desc = value > 70 ? interp.high : value > 50 ? interp.medium : interp.low;
+              return `
+                <div class="metric-card ${level} mb-3">
+                  <div class="flex justify-between items-center mb-1">
+                    <span class="font-semibold">${interp.name}</span>
+                    <span class="text-sm font-bold">${value}%</span>
+                  </div>
+                  <p class="text-xs text-gray-400">${desc}</p>
+                </div>
+              `;
+            }).join('')}
+          </div>
+          <div>
+            <h4 class="font-semibold mb-3">Orientações de Desenvolvimento</h4>
+            <ul class="space-y-2 text-sm text-gray-300">
+              ${Object.entries(results).filter(([_, v]) => v < 70).slice(0, 4).map(([key]) => {
+                const interp = IE_INTERPRETATIONS[key];
+                return `<li class="flex gap-2"><span class="text-brand-amber">→</span> Desenvolver ${interp.name.toLowerCase()}: práticas de ${key === 'autocontrole' ? 'respiração e pausa estratégica' : key === 'empatia' ? 'escuta ativa' : 'reflexão e autoconsciência'}</li>`;
+              }).join('') || '<li class="text-gray-400">Todas as dimensões em nível adequado</li>'}
+            </ul>
+          </div>
+        </div>
+      `;
+      
+      container.innerHTML = content;
+      setTimeout(() => renderIEChart(results), 100);
+    }
 
-      document.getElementById('all-values').innerHTML = values.map(v => 
-        `<div class="value-item">
-          <div class="value-label">${v.name}</div>
-          <div class="value-bar"><div class="value-fill" style="width: ${v.score}%"></div></div>
-          <div class="value-percent">${v.score}%</div>
-        </div>`
-      ).join('');
+    function renderIEChart(results) {
+      const ctx = document.getElementById('ieRadarChart');
+      if (!ctx) return;
+      
+      new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: ['Autoconsciência', 'Autocontrole', 'Empatia', 'Resiliência', 'Inteligência Social'],
+          datasets: [{
+            label: 'QE',
+            data: Object.values(results),
+            backgroundColor: 'rgba(16, 185, 129, 0.2)',
+            borderColor: '#10B981',
+            borderWidth: 2,
+            pointBackgroundColor: '#10B981'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            r: {
+              min: 0,
+              max: 100,
+              angleLines: { color: 'rgba(255,255,255,0.1)' },
+              grid: { color: 'rgba(255,255,255,0.1)' },
+              pointLabels: { color: '#94A3B8', font: {size: 10} },
+              ticks: { display: false, backdropColor: 'transparent' }
+            }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+    }
+
+    // ============================================
+    // RENDERIZAÇÃO: VALORES PESSOAIS
+    // ============================================
+    function renderValuesSection() {
+      const container = document.getElementById('valuesContent');
+      const results = AppState.valuesResults;
+      const topValues = Object.entries(results).sort((a,b) => b[1] - a[1]).slice(0, 3);
+      
+      let content = `
+        <div class="grid md:grid-cols-2 gap-6 mb-6">
+          <div>
+            <h4 class="font-semibold mb-3">Valores Predominantes</h4>
+            ${topValues.map(([key, value]) => {
+              const v = VALUES_INTERPRETATIONS[key];
+              return `
+                <div class="metric-card mb-3">
+                  <div class="flex justify-between items-center mb-1">
+                    <span class="font-semibold">${v.name}</span>
+                    <span class="text-sm font-bold">${value}%</span>
+                  </div>
+                  <p class="text-xs text-gray-400">${v.desc}</p>
+                  <div class="progress-bar mt-2">
+                    <div class="progress-fill" style="width: ${value}%"></div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+          <div>
+            <h4 class="font-semibold mb-3">Ambiente Ideal de Trabalho</h4>
+            <div class="glass p-4 rounded-lg space-y-2 text-sm text-gray-300">
+              <p>• ${topValues[0][0] === 'autonomia' ? 'Autonomia e liberdade para propor soluções' : topValues[0][0] === 'relacionamento' ? 'Ambiente colaborativo e de apoio mútuo' : topValues[0][0] === 'proposito' ? 'Missão clara e impacto social visível' : 'Metas desafiadoras e reconhecimento por resultados'}</p>
+              <p>• ${topValues[1][0] === 'inovacao' ? 'Espaço para experimentação e aprendizado' : topValues[1][0] === 'seguranca' ? 'Processos claros e estabilidade organizacional' : 'Cultura de feedback e desenvolvimento contínuo'}</p>
+              <p>• Liderança que valoriza ${topValues[0][0] === 'reconhecimento' ? 'visibilidade e mérito' : topValues[0][0] === 'equilibrio' ? 'bem-estar e limites saudáveis' : 'contribuição e impacto'}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="font-semibold mb-3">Compatibilidade Cultural</h4>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            ${['realizacao', 'proposito', 'inovacao', 'relacionamento'].map(key => {
+              const v = VALUES_INTERPRETATIONS[key];
+              const score = results[key];
+              const color = score > 70 ? 'text-brand-emerald' : score > 50 ? 'text-brand-amber' : 'text-brand-rose';
+              return `
+                <div class="glass p-3 rounded-lg text-center">
+                  <p class="text-xs text-gray-400 mb-1">${v.name}</p>
+                  <p class="font-bold ${color}">${score}%</p>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+      
+      container.innerHTML = content;
+    }
+
+    // ============================================
+    // RENDERIZAÇÃO: ANÁLISE INTEGRADA
+    // ============================================
+    function renderIntegratedSection() {
+      const container = document.getElementById('integratedContent');
+      
+      // Cruzamento inteligente de dados
+      let profile = 'Profissional equilibrado';
+      let leadership = 'Estilo adaptativo';
+      let execution = 'Execução consistente';
+      
+      if (AppState.discResults && AppState.ieResults) {
+        const discDominant = Object.entries(AppState.discResults.percentages).sort((a,b) => b[1] - a[1])[0][0];
+        const avgQE = Object.values(AppState.ieResults).reduce((a,b) => a+b, 0) / 5;
+        
+        if (discDominant === 'D' && avgQE > 70) {
+          profile = 'Líder estratégico de alta performance';
+          leadership = 'Liderança decisiva com inteligência emocional';
+          execution = 'Execução rápida com gestão de pessoas';
+        } else if (discDominant === 'I' && avgQE > 70) {
+          profile = 'Influenciador relacional';
+          leadership = 'Liderança inspiradora e colaborativa';
+          execution = 'Execução através de engajamento';
+        } else if (discDominant === 'S' && avgQE > 70) {
+          profile = 'Estabilizador de equipes';
+          leadership = 'Liderança servidora e empática';
+          execution = 'Execução consistente com foco em pessoas';
+        } else if (discDominant === 'C' && avgQE > 70) {
+          profile = 'Estrategista analítico';
+          leadership = 'Liderança baseada em dados e processos';
+          execution = 'Execução precisa com qualidade';
+        }
+      }
+      
+      let content = `
+        <div class="grid md:grid-cols-3 gap-4 mb-6">
+          <div class="glass-card p-4 text-center">
+            <p class="text-xs text-gray-400 mb-1">Perfil Profissional Integrado</p>
+            <p class="font-semibold">${profile}</p>
+          </div>
+          <div class="glass-card p-4 text-center">
+            <p class="text-xs text-gray-400 mb-1">Estilo de Liderança</p>
+            <p class="font-semibold">${leadership}</p>
+          </div>
+          <div class="glass-card p-4 text-center">
+            <p class="text-xs text-gray-400 mb-1">Capacidade de Execução</p>
+            <p class="font-semibold">${execution}</p>
+          </div>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-semibold mb-3">Potencial Estratégico</h4>
+            <ul class="space-y-2 text-sm text-gray-300">
+              <li class="flex gap-2"><span class="text-brand-emerald">✓</span> ${AppState.discResults?.percentages.D > 30 ? 'Visão de longo prazo e foco em resultados' : 'Capacidade de planejamento e análise estratégica'}</li>
+              <li class="flex gap-2"><span class="text-brand-emerald">✓</span> ${AppState.ieResults?.resiliencia > 70 ? 'Resiliência para desafios complexos' : 'Adaptabilidade a mudanças organizacionais'}</li>
+              <li class="flex gap-2"><span class="text-brand-emerald">✓</span> ${AppState.valuesResults?.proposito > 70 ? 'Alinhamento com propósito organizacional' : 'Comprometimento com valores da empresa'}</li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-3">Inteligência Relacional</h4>
+            <ul class="space-y-2 text-sm text-gray-300">
+              <li class="flex gap-2"><span class="text-brand-emerald">✓</span> ${AppState.ieResults?.empatia > 70 ? 'Empatia para construir confiança' : 'Capacidade de escuta e compreensão'}</li>
+              <li class="flex gap-2"><span class="text-brand-emerald">✓</span> ${AppState.discResults?.percentages.I > 30 ? 'Habilidade de influência e persuasão' : 'Comunicação clara e objetiva'}</li>
+              <li class="flex gap-2"><span class="text-brand-emerald">✓</span> ${AppState.ieResults?.social > 70 ? 'Navegação eficaz de dinâmicas sociais' : 'Construção de redes de apoio'}</li>
+            </ul>
+          </div>
+        </div>
+      `;
+      
+      container.innerHTML = content;
+    }
+
+    // ============================================
+    // RENDERIZAÇÃO: COMPATIBILIDADE COM VAGA
+    // ============================================
+    function calculateJobCompatibility() {
+      // Cálculo simplificado para demonstração
+      let score = 75; // Base
+      
+      if (AppState.discResults && AppState.job?.profile) {
+        const dominant = Object.entries(AppState.discResults.percentages).sort((a,b) => b[1] - a[1])[0][0];
+        if (dominant === AppState.job.profile) score += 15;
+        else score -= 10;
+      }
+      
+      if (AppState.ieResults) {
+        const avgQE = Object.values(AppState.ieResults).reduce((a,b) => a+b, 0) / 5;
+        if (avgQE > 70) score += 10;
+        else if (avgQE < 50) score -= 10;
+      }
+      
+      return Math.min(100, Math.max(0, score));
+    }
+
+    function renderCompatibilitySection() {
+      const container = document.getElementById('compatibilityContent');
+      const compat = calculateJobCompatibility();
+      
+      let content = `
+        <div class="text-center mb-6">
+          <div class="w-40 h-40 mx-auto rounded-full bg-gradient-to-br ${compat > 70 ? 'from-brand-emerald to-brand-cyan' : compat > 50 ? 'from-brand-amber to-brand-orange' : 'from-brand-rose to-brand-red'} flex items-center justify-center mb-3">
+            <span class="text-4xl font-bold text-white">${compat}%</span>
+          </div>
+          <p class="text-lg font-semibold">${compat > 70 ? 'Alta Compatibilidade' : compat > 50 ? 'Compatibilidade Moderada' : 'Compatibilidade a Desenvolver'}</p>
+          <p class="text-sm text-gray-400">Índice de aderência comportamental à vaga</p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-semibold mb-3">Pontos de Forte Aderência</h4>
+            <ul class="space-y-2 text-sm text-gray-300">
+              <li class="flex gap-2"><span class="text-brand-emerald">✓</span> ${AppState.discResults?.percentages.D > 30 ? 'Perfil orientado a resultados' : 'Capacidade analítica e planejamento'}</li>
+              <li class="flex gap-2"><span class="text-brand-emerald">✓</span> ${AppState.ieResults?.autocontrole > 70 ? 'Gestão emocional sob pressão' : 'Adaptabilidade a mudanças'}</li>
+              <li class="flex gap-2"><span class="text-brand-emerald">✓</span> ${AppState.valuesResults?.realizacao > 70 ? 'Motivação por conquistas' : 'Alinhamento com cultura organizacional'}</li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-3">Oportunidades de Desenvolvimento</h4>
+            <ul class="space-y-2 text-sm text-gray-300">
+              <li class="flex gap-2"><span class="text-brand-amber">→</span> ${AppState.discResults?.percentages.S > 30 ? 'Desenvolver agilidade em mudanças' : 'Fortalecer assertividade em decisões'}</li>
+              <li class="flex gap-2"><span class="text-brand-amber">→</span> ${AppState.ieResults?.resiliencia < 70 ? 'Estratégias de recuperação emocional' : 'Gestão de expectativas em cenários incertos'}</li>
+              <li class="flex gap-2"><span class="text-brand-amber">→</span> ${AppState.valuesResults?.autonomia < 50 ? 'Desenvolver proatividade' : 'Alinhar expectativas de crescimento'}</li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="mt-6 glass p-4 rounded-lg">
+          <h4 class="font-semibold mb-2">Recomendação para RH</h4>
+          <p class="text-sm text-gray-300">
+            ${compat > 80 ? 'Candidato com alto potencial de sucesso. Recomenda-se avançar no processo com foco em onboarding cultural.' : 
+              compat > 60 ? 'Candidato com bom potencial. Recomenda-se plano de desenvolvimento inicial focado em [área específica] para acelerar adaptação.' : 
+              'Candidato com gaps significativos. Recomenda-se avaliação complementar ou direcionamento para vaga com perfil mais alinhado.'}
+          </p>
+        </div>
+      `;
+      
+      container.innerHTML = content;
+    }
+
+    // ============================================
+    // RENDERIZAÇÃO: RECOMENDAÇÕES
+    // ============================================
+    function renderRecommendations() {
+      const container = document.getElementById('recommendationsContent');
+      
+      let content = `
+        <div class="grid md:grid-cols-3 gap-4">
+          <div class="glass p-4 rounded-lg">
+            <h4 class="font-semibold mb-2 flex items-center gap-2"><span class="text-brand-blue">👥</span> Para o RH</h4>
+            <ul class="space-y-1 text-sm text-gray-300">
+              <li>• Utilizar este laudo no onboarding para personalizar integração</li>
+              <li>• Considerar perfil no planejamento de desenvolvimento</li>
+              <li>• Compartilhar insights com gestor direto</li>
+            </ul>
+          </div>
+          <div class="glass p-4 rounded-lg">
+            <h4 class="font-semibold mb-2 flex items-center gap-2"><span class="text-brand-purple">👔</span> Para o Gestor</h4>
+            <ul class="space-y-1 text-sm text-gray-300">
+              <li>• Adaptar estilo de comunicação ao perfil do colaborador</li>
+              <li>• Oferecer feedback alinhado aos motivadores identificados</li>
+              <li>• Delegar tarefas que aproveitem pontos fortes</li>
+            </ul>
+          </div>
+          <div class="glass p-4 rounded-lg">
+            <h4 class="font-semibold mb-2 flex items-center gap-2"><span class="text-brand-cyan">📈</span> Para Desenvolvimento</h4>
+            <ul class="space-y-1 text-sm text-gray-300">
+              <li>• Criar PDI com foco nas oportunidades identificadas</li>
+              <li>• Sugerir treinamentos específicos por dimensão</li>
+              <li>• Acompanhar evolução em revisões periódicas</li>
+            </ul>
+          </div>
+        </div>
+      `;
+      
+      container.innerHTML = content;
+    }
+
+    // ============================================
+    // RENDERIZAÇÃO: PLANO DE DESENVOLVIMENTO
+    // ============================================
+    function renderDevelopmentPlan() {
+      const container = document.getElementById('developmentContent');
+      
+      let content = `
+        <div class="space-y-4">
+          <div class="glass p-4 rounded-lg">
+            <h4 class="font-semibold mb-2">Competências para Fortalecer</h4>
+            <ul class="space-y-2 text-sm text-gray-300">
+              <li class="flex gap-2"><span class="text-brand-emerald">→</span> <strong>Autoconsciência:</strong> Praticar reflexão diária de 5 minutos sobre decisões e emoções</li>
+              <li class="flex gap-2"><span class="text-brand-emerald">→</span> <strong>Comunicação:</strong> Buscar feedback estruturado mensal com pares e gestor</li>
+              <li class="flex gap-2"><span class="text-brand-emerald">→</span> <strong>Gestão de Pressão:</strong> Desenvolver técnica de pausa estratégica (respiração 4-7-8)</li>
+            </ul>
+          </div>
+          
+          <div class="glass p-4 rounded-lg">
+            <h4 class="font-semibold mb-2">Ações Práticas para os Próximos 90 Dias</h4>
+            <ol class="space-y-2 text-sm text-gray-300 list-decimal list-inside">
+              <li>Agendar sessão de feedback com gestor para alinhar expectativas</li>
+              <li>Participar de treinamento em inteligência emocional ou comunicação</li>
+              <li>Estabelecer 1 meta de desenvolvimento comportamental mensurável</li>
+              <li>Praticar escuta ativa em 3 reuniões por semana</li>
+            </ol>
+          </div>
+          
+          <div class="glass p-4 rounded-lg">
+            <h4 class="font-semibold mb-2">Indicadores de Sucesso</h4>
+            <ul class="space-y-1 text-sm text-gray-300">
+              <li>• Feedback positivo de colegas sobre comunicação</li>
+              <li>• Maior clareza na tomada de decisões sob pressão</li>
+              <li>• Progresso em metas de desenvolvimento no PDI</li>
+              <li>• Aumento de engajamento em projetos desafiadores</li>
+            </ul>
+          </div>
+        </div>
+      `;
+      
+      container.innerHTML = content;
+    }
+
+    // ============================================
+    // EXPORTAÇÃO PDF
+    // ============================================
+    function exportPDF() {
+      showLoading();
+      
+      const element = document.getElementById('laudoContent');
+      const opt = {
+        margin: 10,
+        filename: `Laudo-Vigorre-${AppState.participant?.name.replace(/\s+/g, '-')}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+      
+      // Aguardar renderização dos gráficos
+      setTimeout(() => {
+        html2pdf().set(opt).from(element).save().then(() => {
+          hideLoading();
+          showToast('✅ Laudo exportado com sucesso!');
+        }).catch(err => {
+          console.error('Erro ao exportar PDF:', err);
+          hideLoading();
+          alert('Erro ao exportar PDF. Tente usar a opção "Imprimir" e salvar como PDF.');
+        });
+      }, 500);
+    }
+
+    function showToast(msg) {
+      const toast = document.createElement('div');
+      toast.className = 'fixed top-4 right-4 glass px-4 py-3 rounded-lg z-50 flex items-center gap-2 animate-fade-in';
+      toast.innerHTML = `<span>✅</span><span>${msg}</span>`;
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
     }
   </script>
 </body>
