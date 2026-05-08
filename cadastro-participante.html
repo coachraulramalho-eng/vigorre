@@ -6,7 +6,14 @@
   <title>Minha Área - Vigorre</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
+    /* ============================================
+       RESET BÁSICO
+       ============================================ */
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    /* ============================================
+       ESTILO DO CORPO
+       ============================================ */
     body { 
       font-family: 'Inter', sans-serif; 
       background: #f8fafc; 
@@ -14,6 +21,9 @@
       min-height: 100vh; 
     }
     
+    /* ============================================
+       CABEÇALHO
+       ============================================ */
     header { 
       background: linear-gradient(135deg, #1e3a8a, #0f172a); 
       color: white; 
@@ -52,12 +62,18 @@
       background: rgba(255,255,255,0.3); 
     }
     
+    /* ============================================
+       CONTEÚDO PRINCIPAL
+       ============================================ */
     main { 
       max-width: 900px; 
       margin: 0 auto; 
       padding: 40px 20px; 
     }
     
+    /* ============================================
+       CARDS
+       ============================================ */
     .card { 
       background: white; 
       border-radius: 16px; 
@@ -74,6 +90,9 @@
       gap: 10px; 
     }
     
+    /* ============================================
+       GRID DE INFORMAÇÕES
+       ============================================ */
     .info-grid { 
       display: grid; 
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
@@ -98,6 +117,9 @@
       font-weight: 500; 
     }
     
+    /* ============================================
+       GRID DE TESTES
+       ============================================ */
     .tests-grid { 
       display: grid; 
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
@@ -141,6 +163,9 @@
       font-weight: 700; 
     }
     
+    /* ============================================
+       BOTÕES
+       ============================================ */
     .btn-start { 
       width: 100%; 
       padding: 12px; 
@@ -165,6 +190,9 @@
       box-shadow: none; 
     }
     
+    /* ============================================
+       ESTADO VAZIO
+       ============================================ */
     .empty-state { 
       text-align: center; 
       padding: 3rem; 
@@ -177,6 +205,9 @@
   </style>
 </head>
 <body>
+  <!-- ============================================
+       CABEÇALHO COM LOGO E BOTÃO DE SAÍDA
+       ============================================ -->
   <header>
     <div class="logo">
       <div class="logo-icon">V</div>
@@ -185,8 +216,11 @@
     <button class="btn-logout" onclick="logout()">Sair do Sistema</button>
   </header>
 
+  <!-- ============================================
+       CONTEÚDO PRINCIPAL
+       ============================================ -->
   <main>
-    <!-- Informações Pessoais -->
+    <!-- Card de Informações Pessoais -->
     <div class="card">
       <h2>👤 Seus Dados</h2>
       <div class="info-grid" id="personalInfo">
@@ -194,7 +228,7 @@
       </div>
     </div>
 
-    <!-- Testes Liberados -->
+    <!-- Card de Testes Liberados -->
     <div class="card">
       <h2>📝 Testes Liberados</h2>
       <div class="tests-grid" id="testsContainer">
@@ -205,33 +239,46 @@
 
   <script>
     // ============================================
-    // VERIFICAÇÃO DE SESSÃO
+    // VARIÁVEIS GLOBAIS
     // ============================================
+    
+    // Obtém a sessão do usuário logado do localStorage
     const session = JSON.parse(localStorage.getItem('vigorre_current_user'));
     
+    // ============================================
+    // VERIFICAÇÃO DE SESSÃO - SEGURANÇA
+    // ============================================
+    // Se não houver sessão ou ID, redireciona para login
     if (!session || !session.id) {
       window.location.href = 'login.html';
     }
 
     // ============================================
-    // BUSCAR DADOS DO PARTICIPANTE
+    // BUSCAR DADOS DO PARTICIPANTE NO LOCALSTORAGE
     // ============================================
+    // Obtém a lista completa de participantes
     const allParticipants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+    
+    // Encontra o participante com o ID da sessão atual
     const participant = allParticipants.find(p => p.id === session.id);
 
+    // Se não encontrar o participante, exibe erro e faz logout
     if (!participant) {
       alert('Erro ao carregar perfil. Faça login novamente.');
       logout();
     }
 
     // ============================================
-    // RENDERIZAR INFORMAÇÕES PESSOAIS
+    // FUNÇÃO: RENDERIZAR INFORMAÇÕES PESSOAIS
     // ============================================
     function renderPersonalInfo() {
       const container = document.getElementById('personalInfo');
+      
+      // Busca a lista de empresas para exibir o nome da empresa vinculada
       const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
       const company = companies.find(c => c.id === participant.compId);
       
+      // Monta o HTML com os dados do participante
       container.innerHTML = `
         <div class="info-item">
           <label>Nome Completo</label>
@@ -261,20 +308,20 @@
     }
 
     // ============================================
-    // RENDERIZAR TESTES
+    // FUNÇÃO: RENDERIZAR TESTES LIBERADOS
     // ============================================
     function renderTests() {
       const container = document.getElementById('testsContainer');
       container.innerHTML = '';
 
-      // Lista completa de testes disponíveis
+      // Lista completa de testes disponíveis no sistema
       const testsList = [
         { id: 'disc', name: 'Teste DISC', icon: '📊', url: 'teste-disc.html' },
         { id: 'ie', name: 'Inteligência Emocional', icon: '🧠', url: 'teste-ie.html' },
         { id: 'valores', name: 'Valores Pessoais', icon: '💎', url: 'teste-valores.html' }
       ];
 
-      // Garantir que os arrays existam
+      // Garantir que os arrays de testes existam no objeto do participante
       if (!participant.assignedTests) {
         participant.assignedTests = [];
       }
@@ -282,33 +329,52 @@
         participant.completedTests = [];
       }
 
+      // Flag para verificar se há algum teste para exibir
       let hasAnyTest = false;
 
+      // Percorre cada teste disponível
       testsList.forEach(test => {
+        // Verifica se o teste foi liberado para este participante
         const isAssigned = participant.assignedTests.includes(test.id);
+        
+        // Verifica se o teste já foi concluído pelo participante
         const isCompleted = participant.completedTests.includes(test.id);
 
+        // Só exibe o card se o teste foi liberado para o participante
         if (isAssigned) {
           hasAnyTest = true;
+          
+          // Cria o elemento do card do teste
           const card = document.createElement('div');
           card.className = `test-card ${isCompleted ? 'completed' : ''}`;
           
+          // Define o texto de status conforme o estado do teste
           const statusText = isCompleted ? '✅ Teste Realizado' : '⏳ Disponível para Iniciar';
           const statusClass = isCompleted ? 'realizado' : '';
+          
+          // Define o texto do botão conforme o estado
           const btnText = isCompleted ? 'Concluído' : 'Iniciar Teste';
+          
+          // Define se o botão deve estar desabilitado
           const isDisabled = isCompleted ? 'disabled' : '';
+          
+          // Define a ação de clique apenas se o teste não estiver concluído
           const clickAction = isCompleted ? '' : `onclick="startTest('${test.url}')"`;
 
+          // Monta o HTML interno do card
           card.innerHTML = `
             <div class="test-icon">${test.icon}</div>
             <div class="test-title">${test.name}</div>
             <div class="test-status ${statusClass}">${statusText}</div>
             <button class="btn-start" ${isDisabled} ${clickAction}>${btnText}</button>
           `;
+          
+          // Adiciona o card ao container
           container.appendChild(card);
         }
       });
 
+      // Se não houver nenhum teste liberado, exibe mensagem de estado vazio
       if (!hasAnyTest) {
         container.innerHTML = `
           <div class="empty-state" style="grid-column: 1 / -1;">
@@ -320,35 +386,81 @@
     }
 
     // ============================================
-    // FUNÇÃO PARA INICIAR TESTE
+    // FUNÇÃO: INICIAR TESTE
     // ============================================
     function startTest(url) {
+      // Redireciona para a URL do teste selecionado
       window.location.href = url;
     }
 
     // ============================================
-    // FUNÇÃO DE LOGOUT
+    // FUNÇÃO: FINALIZAR TESTE E MARCAR COMO CONCLUÍDO
+    // ============================================
+    function finalizarTesteERedirecionar(testId) {
+      // Busca a lista atualizada de participantes
+      const allParticipants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+      
+      // Encontra o índice do participante atual na lista
+      const idx = allParticipants.findIndex(p => p.id === session.id);
+
+      // Se encontrar o participante
+      if (idx > -1) {
+        // Garante que o array de testes concluídos exista
+        if (!allParticipants[idx].completedTests) {
+          allParticipants[idx].completedTests = [];
+        }
+        
+        // Marca o teste como concluído se ainda não estiver
+        if (!allParticipants[idx].completedTests.includes(testId)) {
+          allParticipants[idx].completedTests.push(testId);
+        }
+        
+        // Salva a lista atualizada no localStorage
+        localStorage.setItem('vigorre_participants', JSON.stringify(allParticipants));
+      }
+
+      // Redireciona de volta para o painel do participante
+      window.location.href = 'cadastro-participante.html';
+    }
+
+    // ============================================
+    // FUNÇÃO: LOGOUT
     // ============================================
     function logout() {
+      // Remove a sessão do localStorage
       localStorage.removeItem('vigorre_current_user');
+      
+      // Redireciona para a página de login
       window.location.href = 'login.html';
     }
 
     // ============================================
-    // INICIALIZAÇÃO
+    // INICIALIZAÇÃO DA PÁGINA
     // ============================================
+    // Renderiza as informações pessoais ao carregar a página
     renderPersonalInfo();
+    
+    // Renderiza os testes liberados ao carregar a página
     renderTests();
 
     // ============================================
-    // ATUALIZAÇÃO AUTOMÁTICA (LISTEN STORAGE)
+    // LISTENER PARA ATUALIZAÇÃO EM TEMPO REAL
     // ============================================
+    // Escuta mudanças no localStorage para atualizar os testes automaticamente
     window.addEventListener('storage', () => {
+      // Busca a lista atualizada de participantes
       const updated = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+      
+      // Encontra o participante atual na lista atualizada
       const fresh = updated.find(p => p.id === session.id);
+      
+      // Se encontrar o participante atualizado
       if (fresh) {
+        // Atualiza os arrays de testes com os dados mais recentes
         participant.assignedTests = fresh.assignedTests || [];
         participant.completedTests = fresh.completedTests || [];
+        
+        // Re-renderiza os testes para refletir as mudanças
         renderTests();
       }
     });
