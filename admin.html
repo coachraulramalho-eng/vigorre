@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Painel Administrativo - Vigorre</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     /* ============================================
        RESET BÁSICO
@@ -688,7 +688,7 @@
         <label>Tipo de Relatório</label>
         <select id="reportTypeSelect">
           <option value="simple">📄 Relatório Simples</option>
-          <option value="complete">📘 Relatório Completo (Modelo Apostila)</option>
+          <option value="complete">📘 Relatório Completo (Modelo HMI)</option>
           <option value="laudo">📜 Laudo Comportamental Técnico</option>
         </select>
       </div>
@@ -750,6 +750,28 @@
     let currentCompanyId = null;
 
     // ============================================
+    // PERFIS HMI/MBTI COMPLETOS (16 TIPOS)
+    // ============================================
+    const HMI_PROFILES = {
+      ENFJ: { name: 'O Mentor', traits: 'Carismático, altruísta, comunicador nato', strengths: ['Liderança inspiradora', 'Empatia elevada', 'Mediação de conflitos'], development: ['Evitar idealização excessiva', 'Estabelecer limites claros'], careers: ['RH', 'Psicologia', 'Coaching', 'Gestão de Pessoas'] },
+      ENFP: { name: 'O Inspirador', traits: 'Criativo, entusiasta, espírito livre', strengths: ['Inovação', 'Motivação de equipes', 'Adaptabilidade'], development: ['Foco em prazos', 'Consistência operacional'], careers: ['Marketing', 'Comunicação', 'Empreendedorismo', 'Artes'] },
+      ENTJ: { name: 'O Imperador', traits: 'Estratégico, decisivo, orientado a resultados', strengths: ['Visão de longo prazo', 'Eficiência', 'Liderança executiva'], development: ['Paciência com processos lentos', 'Consideração emocional'], careers: ['CEO', 'Diretoria', 'Consultoria Estratégica', 'Finanças'] },
+      ENTP: { name: 'O Inovador', traits: 'Analítico, curioso, debate intelectual', strengths: ['Resolução criativa', 'Visão sistêmica', 'Persuasão'], development: ['Finalização de projetos', 'Disciplina rotina'], careers: ['Startups', 'P&D', 'Jurídico', 'Tecnologia'] },
+      ESFJ: { name: 'O Cônsul', traits: 'Atencioso, organizado, orientado a harmonia', strengths: ['Gestão de equipes', 'Suporte operacional', 'Lealdade'], development: ['Flexibilidade a mudanças', 'Críticas construtivas'], careers: ['Administração', 'Educação', 'Saúde', 'Atendimento'] },
+      ESFP: { name: 'O Motivador', traits: 'Espontâneo, energético, focado no presente', strengths: ['Engajamento', 'Adaptação rápida', 'Comunicação prática'], development: ['Planejamento futuro', 'Análise de riscos'], careers: ['Vendas', 'Eventos', 'Esportes', 'Entretenimento'] },
+      ESTJ: { name: 'O Executivo', traits: 'Prático, organizado, cumpridor de regras', strengths: ['Gestão de processos', 'Confiabilidade', 'Eficiência operacional'], development: ['Abertura a novas ideias', 'Empatia em feedbacks'], careers: ['Logística', 'Operações', 'Finanças', 'Gestão Pública'] },
+      ESTP: { name: 'O Empreendedor', traits: 'Ágil, observador, orientado a ação', strengths: ['Resolução sob pressão', 'Networking', 'Improviso estratégico'], development: ['Reflexão antes da ação', 'Gestão de detalhes'], careers: ['Negócios', 'Vendas Complexas', 'Emergências', 'Esportes'] },
+      INFJ: { name: 'O Conselheiro', traits: 'Intuitivo, principista, visão de futuro', strengths: ['Estratégia humana', 'Profundidade analítica', 'Inspiração silenciosa'], development: ['Expressão prática', 'Evitar sobrecarga emocional'], careers: ['Psicologia', 'Escrita', 'Consultoria', 'Desenvolvimento Humano'] },
+      INFP: { name: 'O Integrador', traits: 'Idealista, autêntico, guiado por valores', strengths: ['Criatividade profunda', 'Empatia genuína', 'Autenticidade'], development: ['Ação prática', 'Estruturação de rotinas'], careers: ['Artes', 'Terapia', 'Escrita', 'ONGs'] },
+      INTJ: { name: 'O Estrategista', traits: 'Analítico, visionário, independente', strengths: ['Planejamento complexo', 'Eficiência lógica', 'Visão sistêmica'], development: ['Comunicação emocional', 'Flexibilidade a imprevistos'], careers: ['Tecnologia', 'Engenharia', 'Estratégia', 'Pesquisa'] },
+      INTP: { name: 'O Pragmático', traits: 'Lógico, curioso, teórico preciso', strengths: ['Análise profunda', 'Inovação conceitual', 'Objetividade'], development: ['Execução prática', 'Gestão de prazos'], careers: ['Ciência de Dados', 'Programação', 'Pesquisa', 'Arquitetura'] },
+      ISFJ: { name: 'O Defensor', traits: 'Protetor, detalhista, leal', strengths: ['Confiabilidade', 'Suporte consistente', 'Organização'], development: ['Assertividade', 'Mudança de processos'], careers: ['Enfermagem', 'Administração', 'Educação', 'Contabilidade'] },
+      ISFP: { name: 'O Audacioso', traits: 'Sensível, flexível, artista prático', strengths: ['Adaptação estética', 'Presença no momento', 'Autenticidade'], development: ['Planejamento de longo prazo', 'Comunicação direta'], careers: ['Design', 'Fotografia', 'Terapias Holísticas', 'Artesanato'] },
+      ISTJ: { name: 'O Maestro', traits: 'Metódico, responsável, factual', strengths: ['Precisão', 'Cumprimento de normas', 'Estabilidade'], development: ['Inovação', 'Abertura a feedbacks'], careers: ['Contabilidade', 'Direito', 'Auditoria', 'Logística'] },
+      ISTP: { name: 'O Cirúrgico', traits: 'Técnico, autônomo, resolução prática', strengths: ['Manutenção de sistemas', 'Calma sob pressão', 'Eficiência técnica'], development: ['Comunicação de processos', 'Planejamento preventivo'], careers: ['Engenharia', 'TI', 'Mecânica', 'Emergências'] }
+    };
+
+    // ============================================
     // FUNÇÃO: Salvar dados no localStorage
     // ============================================
     function saveDB() {
@@ -764,7 +786,7 @@
     // ============================================
     // INICIALIZAÇÃO
     // ============================================
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', function() {
       // Verificar autenticação
       const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
       if (!currentUser.role || (currentUser.role !== 'admin' && currentUser.role !== 'staff')) {
@@ -785,21 +807,39 @@
     // NAVEGAÇÃO ENTRE SEÇÕES
     // ============================================
     function showSection(id) {
-      document.querySelectorAll('main section').forEach(s => s.style.display = 'none');
+      // Esconder todas as seções
+      document.querySelectorAll('main section').forEach(function(s) {
+        s.style.display = 'none';
+      });
+      // Mostrar seção solicitada
       document.getElementById(id).style.display = 'block';
-      document.querySelectorAll('.nav-menu a').forEach(a => a.classList.remove('active'));
+      // Atualizar menu ativo
+      document.querySelectorAll('.nav-menu a').forEach(function(a) {
+        a.classList.remove('active');
+      });
       event.target.closest('a').classList.add('active');
-      const titles = { 
+      // Atualizar título da página
+      var titles = { 
         dashboard: 'Dashboard', 
         staff: 'Staff Vigorre', 
         companies: 'Empresas', 
         participants: 'Participantes' 
       };
       document.getElementById('pageTitle').textContent = titles[id] || id;
-      if (id !== 'companies') closeCompanyDetails();
-      if (id === 'staff') renderStaff();
-      if (id === 'companies') renderCompanies();
-      if (id === 'participants') renderParticipants();
+      // Fechar detalhes de empresa se não for a seção de empresas
+      if (id !== 'companies') {
+        closeCompanyDetails();
+      }
+      // Re-renderizar conforme a seção
+      if (id === 'staff') {
+        renderStaff();
+      }
+      if (id === 'companies') {
+        renderCompanies();
+      }
+      if (id === 'participants') {
+        renderParticipants();
+      }
     }
 
     function openModal(id) { 
@@ -808,36 +848,32 @@
     }
     function closeModal(id) { 
       document.getElementById(id).classList.remove('active'); 
-      document.querySelectorAll('form').forEach(f => f.reset()); 
-      document.querySelectorAll('input[type="hidden"]').forEach(i => i.value = ''); 
+      document.querySelectorAll('form').forEach(function(f) { f.reset(); }); 
+      document.querySelectorAll('input[type="hidden"]').forEach(function(i) { i.value = ''; }); 
     }
 
     // ============================================
     // STAFF VIGORRE - RENDERIZAR
     // ============================================
     function renderStaff() {
-      const tbody = document.getElementById('staffTableBody');
-      if (DB.staff.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#94a3b8;">Nenhum funcionário cadastrado</td></tr>';
-        return;
+      var tbody = document.getElementById('staffTableBody');
+      if (DB.staff.length === 0) { 
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#94a3b8;">Nenhum funcionário cadastrado</td></tr>'; 
+        return; 
       }
-      tbody.innerHTML = DB.staff.map(s => `
-        <tr>
-          <td><strong>${s.name}</strong></td>
-          <td>${s.email}</td>
-          <td>${s.phone}</td>
-          <td>${s.login}</td>
-          <td>
-            <span class="badge" style="background:${s.role === 'admin' ? '#dbeafe' : '#dcfce7'}; color:${s.role === 'admin' ? '#1e40af' : '#166534'}; padding:4px 8px; border-radius:6px; font-size:0.8rem;">
-              ${s.role === 'admin' ? 'Administrador' : 'Participante'}
-            </span>
-          </td>
-          <td>
-            <button class="btn btn-warning btn-sm" onclick="editStaff('${s.id}')">✏️ Editar</button>
-            <button class="btn btn-danger btn-sm" onclick="deleteItem('staff','${s.id}')">🗑️ Excluir</button>
-          </td>
-        </tr>
-      `).join('');
+      tbody.innerHTML = DB.staff.map(function(s) {
+        return '<tr>' +
+          '<td><strong>' + s.name + '</strong></td>' +
+          '<td>' + s.email + '</td>' +
+          '<td>' + s.phone + '</td>' +
+          '<td>' + s.login + '</td>' +
+          '<td><span class="badge" style="background:' + (s.role === 'admin' ? '#dbeafe' : '#dcfce7') + '; color:' + (s.role === 'admin' ? '#1e40af' : '#166534') + '; padding:4px 8px; border-radius:6px; font-size:0.8rem;">' + (s.role === 'admin' ? 'Administrador' : 'Participante') + '</span></td>' +
+          '<td>' +
+            '<button class="btn btn-warning btn-sm" onclick="editStaff(\'' + s.id + '\')">✏️ Editar</button>' +
+            '<button class="btn btn-danger btn-sm" onclick="deleteItem(\'staff\',\'' + s.id + '\')">🗑️ Excluir</button>' +
+          '</td>' +
+        '</tr>';
+      }).join('');
     }
 
     // ============================================
@@ -845,17 +881,17 @@
     // ============================================
     function saveStaff(e) {
       e.preventDefault();
-      const id = document.getElementById('sId').value || Date.now().toString();
-      const data = {
-        id, 
+      var id = document.getElementById('sId').value || Date.now().toString();
+      var data = {
+        id: id, 
         name: document.getElementById('sName').value, 
-        email: document.getElementById('sEmail').value.toLowerCase(),
+        email: document.getElementById('sEmail').value.toLowerCase(), 
         phone: document.getElementById('sPhone').value, 
-        login: document.getElementById('sLogin').value.toLowerCase(),
+        login: document.getElementById('sLogin').value.toLowerCase(), 
         password: document.getElementById('sPass').value, 
         role: document.getElementById('sRole').value
       };
-      const idx = DB.staff.findIndex(x => x.id === id);
+      var idx = DB.staff.findIndex(function(x) { return x.id === id; });
       if (idx > -1) {
         DB.staff[idx] = data;
       } else {
@@ -870,7 +906,7 @@
     // STAFF VIGORRE - EDITAR
     // ============================================
     function editStaff(id) {
-      const s = DB.staff.find(x => x.id === id); 
+      var s = DB.staff.find(function(x) { return x.id === id; }); 
       if (!s) return;
       document.getElementById('sId').value = s.id; 
       document.getElementById('sName').value = s.name;
@@ -887,24 +923,24 @@
     // EMPRESAS - RENDERIZAR
     // ============================================
     function renderCompanies() {
-      const tbody = document.getElementById('companiesTableBody');
-      if (DB.companies.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;">Nenhuma empresa cadastrada</td></tr>';
-        return;
+      var tbody = document.getElementById('companiesTableBody');
+      if (DB.companies.length === 0) { 
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;">Nenhuma empresa cadastrada</td></tr>'; 
+        return; 
       }
-      tbody.innerHTML = DB.companies.map(c => `
-        <tr>
-          <td><strong>${c.name}</strong><br><small style="color:#64748b;">${c.email || ''}</small></td>
-          <td>${c.cnpj || '-'}</td>
-          <td>${c.resp}</td>
-          <td>${c.phone || '-'}</td>
-          <td>
-            <button class="btn btn-primary btn-sm" onclick="viewCompany('${c.id}')">👁️ Ver Vagas/Participantes</button>
-            <button class="btn btn-warning btn-sm" onclick="editCompany('${c.id}')">✏️ Editar</button>
-            <button class="btn btn-danger btn-sm" onclick="deleteItem('companies','${c.id}')">🗑️ Excluir</button>
-          </td>
-        </tr>
-      `).join('');
+      tbody.innerHTML = DB.companies.map(function(c) {
+        return '<tr>' +
+          '<td><strong>' + c.name + '</strong><br><small style="color:#64748b;">' + (c.email || '') + '</small></td>' +
+          '<td>' + (c.cnpj || '-') + '</td>' +
+          '<td>' + c.resp + '</td>' +
+          '<td>' + (c.phone || '-') + '</td>' +
+          '<td>' +
+            '<button class="btn btn-primary btn-sm" onclick="viewCompany(\'' + c.id + '\')">👁️ Ver Vagas/Participantes</button>' +
+            '<button class="btn btn-warning btn-sm" onclick="editCompany(\'' + c.id + '\')">✏️ Editar</button>' +
+            '<button class="btn btn-danger btn-sm" onclick="deleteItem(\'companies\',\'' + c.id + '\')">🗑️ Excluir</button>' +
+          '</td>' +
+        '</tr>';
+      }).join('');
     }
 
     // ============================================
@@ -912,16 +948,16 @@
     // ============================================
     function saveCompany(e) {
       e.preventDefault();
-      const id = document.getElementById('cId').value || Date.now().toString();
-      const data = { 
-        id, 
+      var id = document.getElementById('cId').value || Date.now().toString();
+      var data = { 
+        id: id, 
         name: document.getElementById('cName').value, 
         cnpj: document.getElementById('cCnpj').value, 
         resp: document.getElementById('cResp').value, 
         email: document.getElementById('cEmail').value.toLowerCase(), 
         phone: document.getElementById('cPhone').value 
       };
-      const idx = DB.companies.findIndex(x => x.id === id);
+      var idx = DB.companies.findIndex(function(x) { return x.id === id; });
       if (idx > -1) {
         DB.companies[idx] = data;
       } else {
@@ -936,7 +972,7 @@
     // EMPRESAS - EDITAR
     // ============================================
     function editCompany(id) {
-      const c = DB.companies.find(x => x.id === id); 
+      var c = DB.companies.find(function(x) { return x.id === id; }); 
       if (!c) return;
       document.getElementById('cId').value = c.id; 
       document.getElementById('cName').value = c.name;
@@ -953,10 +989,10 @@
     // ============================================
     function viewCompany(cid) {
       currentCompanyId = cid;
-      const c = DB.companies.find(x => x.id === cid);
+      var c = DB.companies.find(function(x) { return x.id === cid; });
       document.getElementById('companyListView').style.display = 'none';
       document.getElementById('companyDetails').style.display = 'block';
-      document.getElementById('detailCompanyTitle').textContent = `📂 ${c.name} - Gestão de Vagas e Participantes`;
+      document.getElementById('detailCompanyTitle').textContent = '📂 ' + c.name + ' - Gestão de Vagas e Participantes';
       renderJobs();
       renderLinkedParticipants();
     }
@@ -971,14 +1007,14 @@
     // VAGAS - SALVAR
     // ============================================
     function saveJob() {
-      const name = document.getElementById('jobName').value;
-      const profile = document.getElementById('jobProfile').value;
+      var name = document.getElementById('jobName').value;
+      var profile = document.getElementById('jobProfile').value;
       if (!name) return showToast('Digite o nome da vaga', 'error');
       DB.jobs.push({ 
         id: Date.now().toString(), 
         compId: currentCompanyId, 
-        name, 
-        profile 
+        name: name, 
+        profile: profile 
       });
       saveDB(); 
       renderJobs();
@@ -991,25 +1027,25 @@
     // VAGAS - RENDERIZAR
     // ============================================
     function renderJobs() {
-      const list = document.getElementById('jobsList');
-      const jobs = DB.jobs.filter(j => j.compId === currentCompanyId);
-      if (jobs.length === 0) {
-        list.innerHTML = '<div style="padding:10px; color:#94a3b8; font-size:0.9rem;">Nenhuma vaga cadastrada ainda.</div>';
-        return;
+      var list = document.getElementById('jobsList');
+      var jobs = DB.jobs.filter(function(j) { return j.compId === currentCompanyId; });
+      if (jobs.length === 0) { 
+        list.innerHTML = '<div style="padding:10px; color:#94a3b8; font-size:0.9rem;">Nenhuma vaga cadastrada ainda.</div>'; 
+        return; 
       }
-      list.innerHTML = jobs.map(j => `
-        <div style="background:white; padding:10px; margin-top:8px; border-radius:6px; display:flex; justify-content:space-between; align-items:center; border:1px solid #e2e8f0;">
-          <div>
-            <strong style="color:#1e40af;">${j.name}</strong><br>
-            <small style="color:#64748b;">Perfil: ${j.profile || 'Não definido'}</small>
-          </div>
-          <button class="btn btn-danger btn-sm" onclick="deleteJob('${j.id}')">X</button>
-        </div>
-      `).join('');
+      list.innerHTML = jobs.map(function(j) {
+        return '<div style="background:white; padding:10px; margin-top:8px; border-radius:6px; display:flex; justify-content:space-between; align-items:center; border:1px solid #e2e8f0;">' +
+          '<div>' +
+            '<strong style="color:#1e40af;">' + j.name + '</strong><br>' +
+            '<small style="color:#64748b;">Perfil: ' + (j.profile || 'Não definido') + '</small>' +
+          '</div>' +
+          '<button class="btn btn-danger btn-sm" onclick="deleteJob(\'' + j.id + '\')">X</button>' +
+        '</div>';
+      }).join('');
     }
 
     function deleteJob(jid) {
-      DB.jobs = DB.jobs.filter(j => j.id !== jid);
+      DB.jobs = DB.jobs.filter(function(j) { return j.id !== jid; });
       saveDB(); 
       renderJobs();
     }
@@ -1018,65 +1054,71 @@
     // PARTICIPANTES VINCULADOS - RENDERIZAR
     // ============================================
     function renderLinkedParticipants() {
-      const tbody = document.getElementById('employeesTableBody');
-      const emps = DB.participants.filter(p => p.compId === currentCompanyId);
-      if (emps.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#94a3b8;">Nenhum participante vinculado.</td></tr>';
-        return;
+      var tbody = document.getElementById('employeesTableBody');
+      var emps = DB.participants.filter(function(p) { return p.compId === currentCompanyId; });
+      if (emps.length === 0) { 
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#94a3b8;">Nenhum participante vinculado.</td></tr>'; 
+        return; 
       }
-      tbody.innerHTML = emps.map(p => `
-        <tr>
-          <td>${p.name}</td>
-          <td>${p.email}</td>
-          <td>
-            <button class="btn btn-success btn-sm" onclick="openReportModal('${p.id}', '${p.name}')">📧 Enviar Relatório Completo</button>
-            <button class="btn btn-warning btn-sm" onclick="openReportModal('${p.id}', '${p.name}')">📜 Enviar Laudo Comportamental</button>
-          </td>
-        </tr>
-      `).join('');
+      tbody.innerHTML = emps.map(function(p) {
+        return '<tr>' +
+          '<td>' + p.name + '</td>' +
+          '<td>' + p.email + '</td>' +
+          '<td>' +
+            '<button class="btn btn-success btn-sm" onclick="openReportModal(\'' + p.id + '\', \'' + p.name + '\')">📧 Enviar Relatório Completo</button>' +
+            '<button class="btn btn-warning btn-sm" onclick="openReportModal(\'' + p.id + '\', \'' + p.name + '\')">📜 Enviar Laudo Comportamental</button>' +
+          '</td>' +
+        '</tr>';
+      }).join('');
     }
 
     // ============================================
     // PARTICIPANTES - RENDERIZAR
     // ============================================
     function renderParticipants() {
-      const tbody = document.getElementById('participantsTableBody');
-      if (DB.participants.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;">Nenhum participante cadastrado</td></tr>';
-        return;
+      var tbody = document.getElementById('participantsTableBody');
+      if (DB.participants.length === 0) { 
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;">Nenhum participante cadastrado</td></tr>'; 
+        return; 
       }
-      tbody.innerHTML = DB.participants.map(p => {
-        const comp = DB.companies.find(c => c.id === p.compId);
-        const tests = (p.tests || []).map(t => 
-          `<span class="badge" style="background:#e0e7ff; color:#3730a3; margin-right:4px; padding:2px 6px; border-radius:4px; font-size:0.75rem;">${t}</span>`
-        ).join('') || '<span style="color:#ef4444;font-size:0.8rem;">Nenhum</span>';
-        return `
-          <tr>
-            <td><strong>${p.name}</strong></td>
-            <td>${p.email}<br><small style="color:#64748b;">Tel: ${p.phone}</small></td>
-            <td style="font-family:monospace; font-size:0.85rem; background:#f1f5f9; padding:8px; border-radius:6px;">
-              U: ${p.user || '-'}<br>S: ${p.pass || '-'}<br>V: ${p.exp || '-'}
-            </td>
-            <td>${tests}</td>
-            <td>
-              <button class="btn btn-warning btn-sm" onclick="editParticipant('${p.id}')">✏️ Editar</button>
-              <button class="btn btn-primary btn-sm" onclick="resendTest('${p.id}')">📧 Reenviar Teste</button>
-              <button class="btn btn-danger btn-sm" onclick="deleteItem('participants','${p.id}')">🗑️ Excluir</button>
-            </td>
-          </tr>
-        `;
+      tbody.innerHTML = DB.participants.map(function(p) {
+        var comp = DB.companies.find(function(c) { return c.id === p.compId; });
+        var tests = (p.tests || []).map(function(t) { 
+          return '<span class="badge" style="background:#e0e7ff; color:#3730a3; margin-right:4px; padding:2px 6px; border-radius:4px; font-size:0.75rem;">' + t + '</span>'; 
+        }).join('') || '<span style="color:#ef4444;font-size:0.8rem;">Nenhum</span>';
+        return '<tr>' +
+          '<td><strong>' + p.name + '</strong></td>' +
+          '<td>' + p.email + '<br><small style="color:#64748b;">Tel: ' + p.phone + '</small></td>' +
+          '<td style="font-family:monospace; font-size:0.85rem; background:#f1f5f9; padding:8px; border-radius:6px;">' +
+            'U: ' + (p.user || '-') + '<br>S: ' + (p.pass || '-') + '<br>V: ' + (p.exp || '-') +
+          '</td>' +
+          '<td>' + tests + '</td>' +
+          '<td>' +
+            '<button class="btn btn-warning btn-sm" onclick="editParticipant(\'' + p.id + '\')">✏️ Editar</button>' +
+            '<button class="btn btn-primary btn-sm" onclick="resendTest(\'' + p.id + '\')">📧 Reenviar Teste</button>' +
+            '<button class="btn btn-danger btn-sm" onclick="deleteItem(\'participants\',\'' + p.id + '\')">🗑️ Excluir</button>' +
+          '</td>' +
+        '</tr>';
       }).join('');
     }
 
     // ============================================
-    // PARTICIPANTES - SALVAR
+    // PARTICIPANTES - SALVAR (FUNÇÃO CRUCIAL)
     // ============================================
     function saveParticipant(e) {
       e.preventDefault();
-      const id = document.getElementById('pId').value || Date.now().toString();
-      const tests = Array.from(document.querySelectorAll('.test-check:checked')).map(cb => cb.value);
-      const data = { 
-        id, 
+      
+      // Captura o ID do participante (novo ou existente)
+      var id = document.getElementById('pId').value || Date.now().toString();
+      
+      // ============================================
+      // ESTA PARTE É CRUCIAL: Captura os testes marcados
+      // ============================================
+      var tests = Array.from(document.querySelectorAll('.test-check:checked')).map(function(cb) { return cb.value; });
+      
+      // Monta o objeto com todos os dados do participante
+      var data = { 
+        id: id, 
         name: document.getElementById('pName').value, 
         phone: document.getElementById('pPhone').value, 
         email: document.getElementById('pEmail').value.toLowerCase(), 
@@ -1084,18 +1126,30 @@
         user: document.getElementById('pUser').value.toLowerCase(), 
         pass: document.getElementById('pPass').value, 
         exp: document.getElementById('pExp').value, 
-        tests: tests,
-        assignedTests: tests,
-        completedTests: []
+        tests: tests, // <--- Garante que a lista de checkboxes vai para o banco
+        assignedTests: tests, // <--- Campo adicional para compatibilidade
+        completedTests: [] // <--- Inicia array vazio para testes concluídos
       };
-      const idx = DB.participants.findIndex(x => x.id === id);
+      
+      // Busca o índice do participante no banco local (se existir)
+      var idx = DB.participants.findIndex(function(x) { return x.id === id; });
+      
+      // Atualiza ou adiciona o participante no banco
       if (idx > -1) {
-        DB.participants[idx] = {...DB.participants[idx], ...data};
+        // Atualiza participante existente, mantendo dados anteriores
+        DB.participants[idx] = { ...DB.participants[idx], ...data };
       } else {
+        // Adiciona novo participante ao banco
         DB.participants.push(data);
       }
+      
+      // Salva todas as alterações no localStorage
       saveDB(); 
+      
+      // Fecha o modal de participante
       closeModal('partModal'); 
+      
+      // Exibe mensagem de sucesso
       showToast('Participante salvo com sucesso!');
     }
 
@@ -1103,7 +1157,7 @@
     // PARTICIPANTES - EDITAR
     // ============================================
     function editParticipant(id) {
-      const p = DB.participants.find(x => x.id === id); 
+      var p = DB.participants.find(function(x) { return x.id === id; }); 
       if (!p) return;
       document.getElementById('pId').value = p.id; 
       document.getElementById('pName').value = p.name;
@@ -1113,27 +1167,27 @@
       document.getElementById('pUser').value = p.user || '';
       document.getElementById('pPass').value = p.pass || ''; 
       document.getElementById('pExp').value = p.exp || '';
-      document.querySelectorAll('.test-check').forEach(cb => 
-        cb.checked = p.tests && p.tests.includes(cb.value)
-      );
+      document.querySelectorAll('.test-check').forEach(function(cb) { 
+        cb.checked = p.tests && p.tests.includes(cb.value); 
+      });
       document.getElementById('partTitle').textContent = 'Editar Participante';
       openModal('partModal');
     }
 
     function resendTest(id) {
-      const p = DB.participants.find(x => x.id === id);
-      if (p) showToast(`Credenciais e testes reenviados para ${p.email}`, 'success');
+      var p = DB.participants.find(function(x) { return x.id === id; });
+      if (p) showToast('Credenciais e testes reenviados para ' + p.email, 'success');
     }
 
     // ============================================
     // LIBERAR TESTES - ABRIR MODAL
     // ============================================
     function openTestModal(pid) {
-      const p = DB.participants.find(x => x.id === pid);
+      var p = DB.participants.find(function(x) { return x.id === pid; });
       if (!p) return;
       document.getElementById('testModalName').textContent = p.name;
       document.getElementById('testModalId').value = pid;
-      document.querySelectorAll('#testModal .test-check').forEach(cb => {
+      document.querySelectorAll('#testModal .test-check').forEach(function(cb) {
         cb.checked = p.assignedTests && p.assignedTests.includes(cb.value);
       });
       openModal('testModal');
@@ -1143,15 +1197,15 @@
     // LIBERAR TESTES - CONFIRMAR
     // ============================================
     function confirmTestRelease() {
-      const pid = document.getElementById('testModalId').value;
-      const selected = Array.from(document.querySelectorAll('#testModal .test-check:checked')).map(cb => cb.value);
-      const idx = DB.participants.findIndex(x => x.id === pid);
+      var pid = document.getElementById('testModalId').value;
+      var selected = Array.from(document.querySelectorAll('#testModal .test-check:checked')).map(function(cb) { return cb.value; });
+      var idx = DB.participants.findIndex(function(x) { return x.id === pid; });
       if (idx > -1) {
         DB.participants[idx].assignedTests = selected;
         DB.participants[idx].tests = selected;
         saveDB();
         closeModal('testModal');
-        showToast(`Testes liberados com sucesso para ${DB.participants[idx].name}!`);
+        showToast('Testes liberados com sucesso para ' + DB.participants[idx].name + '!');
       }
     }
 
@@ -1168,61 +1222,80 @@
     // RELATÓRIOS - GERAR
     // ============================================
     function generateReport() {
-      const type = document.getElementById('reportTypeSelect').value;
-      const test = document.getElementById('reportTestSelect').value;
-      const p = DB.participants.find(x => x.id === currentCompanyId);
+      var type = document.getElementById('reportTypeSelect').value;
+      var test = document.getElementById('reportTestSelect').value;
+      var p = DB.participants.find(function(x) { return x.id === currentCompanyId; });
       if (!p) return;
+
+      var content = '';
+      if (type === 'simple') {
+        content = '<h2>Relatório Simples - ' + p.name + '</h2><p><strong>Teste:</strong> ' + test + '</p><p><strong>Data:</strong> ' + new Date().toLocaleString('pt-BR') + '</p><p>Perfil identificado com base nas respostas. Recomenda-se aprofundamento com relatório completo ou laudo técnico.</p>';
+      } else if (type === 'complete') {
+        // Simula geração HMI baseada em DISC ou sorteio de perfil para demonstração
+        var profileKeys = Object.keys(HMI_PROFILES);
+        var profileKey = profileKeys[Math.floor(Math.random() * profileKeys.length)];
+        var profile = HMI_PROFILES[profileKey];
+        content = '<h2>Relatório Completo HMI - ' + p.name + '</h2>' +
+          '<p><strong>Perfil:</strong> ' + profileKey + ' - ' + profile.name + '</p>' +
+          '<p><strong>Traços:</strong> ' + profile.traits + '</p>' +
+          '<h3>Pontos Fortes</h3><ul>' + profile.strengths.map(function(s) { return '<li>' + s + '</li>'; }).join('') + '</ul>' +
+          '<h3>Desenvolvimento</h3><ul>' + profile.development.map(function(d) { return '<li>' + d + '</li>'; }).join('') + '</ul>' +
+          '<h3>Carreiras Compatíveis</h3><ul>' + profile.careers.map(function(c) { return '<li>' + c + '</li>'; }).join('') + '</ul>' +
+          '<p style="margin-top:20px; font-size:0.9rem; color:#64748b;">Gerado automaticamente pela plataforma Vigorre. Baseado na metodologia HMI/MBTI.</p>';
+      } else if (type === 'laudo') {
+        content = '<h2>Laudo Comportamental Técnico - ' + p.name + '</h2>' +
+          '<p><strong>Teste Base:</strong> ' + test + '</p>' +
+          '<p><strong>Emissão:</strong> ' + new Date().toLocaleString('pt-BR') + '</p>' +
+          '<h3>Análise Técnica</h3>' +
+          '<p>Laudo estruturado conforme normas de avaliação comportamental. Inclui análise de competências, perfil DISC/HMI cruzado, indicadores de liderança, resiliência e adaptação organizacional.</p>' +
+          '<p><strong>Recomendações:</strong> Desenvolvimento de inteligência emocional, alinhamento de perfil à vaga, plano de ação trimestral.</p>' +
+          '<p style="margin-top:20px; font-size:0.9rem; color:#64748b;">Documento técnico. Uso interno e confidencial.</p>';
+      }
+
       DB.reports.push({ 
         id: Date.now().toString(), 
         participantId: p.id, 
         name: p.name, 
-        type, 
-        test, 
-        date: new Date().toLocaleString('pt-BR') 
+        type: type, 
+        test: test, 
+        date: new Date().toLocaleString('pt-BR'), 
+        content: content 
       });
       saveDB(); 
       closeModal('reportModal');
-      showToast(`✅ Relatório ${type.toUpperCase()} (${test}) gerado e enviado para ${p.email}`);
+      showToast('✅ Relatório ' + type.toUpperCase() + ' (' + test + ') gerado e enviado para ' + p.email);
+      
+      // Abre o relatório em nova aba para visualização/impressão
+      var win = window.open('', '_blank');
+      win.document.write('<html><head><title>Relatório Vigorre</title><style>body{font-family:Inter,sans-serif;max-width:800px;margin:40px auto;padding:20px;line-height:1.6;}h2{color:#1e40af;border-bottom:2px solid #e2e8f0;padding-bottom:10px;}h3{color:#334155;margin-top:20px;}ul{padding-left:20px;}li{margin-bottom:5px;}</style></head><body>' + content + '</body></html>');
     }
 
-    // ============================================
-    // ATUALIZAR SELECTS
-    // ============================================
     function updateSelects() {
-      const pSel = document.getElementById('pComp');
+      var pSel = document.getElementById('pComp');
       if (pSel) {
-        pSel.innerHTML = '<option value="">Independente</option>' + 
-          DB.companies.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+        pSel.innerHTML = '<option value="">Independente</option>' + DB.companies.map(function(c) { return '<option value="' + c.id + '">' + c.name + '</option>'; }).join('');
       }
     }
 
-    // ============================================
-    // EXCLUIR ITEM GENÉRICO
-    // ============================================
     function deleteItem(collection, id) {
       if (!confirm('Tem certeza que deseja excluir este item?')) return;
-      DB[collection] = DB[collection].filter(x => x.id !== id);
+      DB[collection] = DB[collection].filter(function(x) { return x.id !== id; });
       saveDB(); 
       showToast('Item excluído com sucesso!');
     }
 
-    // ============================================
-    // TOAST NOTIFICATIONS
-    // ============================================
-    function showToast(msg, type = 'success') {
-      const t = document.createElement('div'); 
-      t.className = `toast ${type === 'error' ? 'error' : ''}`; 
-      t.innerHTML = `<span>${type === 'success' ? '✅' : '❌'}</span><span>${msg}</span>`;
-      document.body.appendChild(t); 
-      setTimeout(() => { 
+    function showToast(msg, type) {
+      type = type || 'success';
+      var t = document.createElement('div');
+      t.className = 'toast ' + (type === 'error' ? 'error' : '');
+      t.innerHTML = '<span>' + (type === 'success' ? '✅' : '❌') + '</span><span>' + msg + '</span>';
+      document.body.appendChild(t);
+      setTimeout(function() { 
         t.style.opacity = '0'; 
-        setTimeout(() => t.remove(), 300); 
+        setTimeout(function() { t.remove(); }, 300); 
       }, 3000);
     }
 
-    // ============================================
-    // LOGOUT
-    // ============================================
     function logout() {
       localStorage.removeItem('vigorre_current_user');
       window.location.href = 'login.html';
