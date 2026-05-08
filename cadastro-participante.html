@@ -315,16 +315,29 @@
       container.innerHTML = '';
 
       // Lista completa de testes disponíveis no sistema
+      // IDs devem bater EXATAMENTE com os valores salvos no admin.html
       const testsList = [
-        { id: 'disc', name: 'Teste DISC', icon: '📊', url: 'teste-disc.html' },
-        { id: 'ie', name: 'Inteligência Emocional', icon: '🧠', url: 'teste-ie.html' },
-        { id: 'valores', name: 'Valores Pessoais', icon: '💎', url: 'teste-valores.html' }
+        { id: 'DISC', name: 'Teste DISC', icon: '📊', url: 'teste-disc.html' },
+        { id: 'IE', name: 'Inteligência Emocional', icon: '🧠', url: 'teste-ie.html' },
+        { id: 'Valores', name: 'Valores Pessoais', icon: '💎', url: 'teste-valores.html' }
       ];
 
-      // Garantir que os arrays de testes existam no objeto do participante
-      if (!participant.assignedTests) {
-        participant.assignedTests = [];
+      // ============================================
+      // CORREÇÃO CRÍTICA: Normalizar os arrays de testes
+      // O admin.html salva em 'tests', mas também usamos 'assignedTests' como fallback
+      // ============================================
+      
+      // Se o participante não tem o array 'tests', cria vazio
+      if (!participant.tests) {
+        participant.tests = [];
       }
+      
+      // Se não tem 'assignedTests', usa 'tests' como fallback
+      if (!participant.assignedTests) {
+        participant.assignedTests = [...participant.tests];
+      }
+      
+      // Se não tem 'completedTests', cria vazio
       if (!participant.completedTests) {
         participant.completedTests = [];
       }
@@ -332,10 +345,16 @@
       // Flag para verificar se há algum teste para exibir
       let hasAnyTest = false;
 
-      // Percorre cada teste disponível
+      // Percorre cada teste disponível no sistema
       testsList.forEach(test => {
-        // Verifica se o teste foi liberado para este participante
-        const isAssigned = participant.assignedTests.includes(test.id);
+        // ============================================
+        // VERIFICAÇÃO DE TESTE LIBERADO
+        // Verifica em DOIS campos para garantir compatibilidade:
+        // 1. 'tests' (campo principal salvo pelo admin)
+        // 2. 'assignedTests' (fallback para compatibilidade)
+        // ============================================
+        const isAssigned = participant.tests.includes(test.id) || 
+                          participant.assignedTests.includes(test.id);
         
         // Verifica se o teste já foi concluído pelo participante
         const isCompleted = participant.completedTests.includes(test.id);
@@ -395,6 +414,8 @@
 
     // ============================================
     // FUNÇÃO: FINALIZAR TESTE E MARCAR COMO CONCLUÍDO
+    // Esta função deve ser chamada nos arquivos de teste (teste-disc.html, etc.)
+    // ao clicar no botão "Finalizar"
     // ============================================
     function finalizarTesteERedirecionar(testId) {
       // Busca a lista atualizada de participantes
@@ -411,6 +432,7 @@
         }
         
         // Marca o teste como concluído se ainda não estiver
+        // Verifica se o ID já está no array antes de adicionar
         if (!allParticipants[idx].completedTests.includes(testId)) {
           allParticipants[idx].completedTests.push(testId);
         }
@@ -447,6 +469,7 @@
     // LISTENER PARA ATUALIZAÇÃO EM TEMPO REAL
     // ============================================
     // Escuta mudanças no localStorage para atualizar os testes automaticamente
+    // Isso é útil quando o admin libera um novo teste enquanto o participante está logado
     window.addEventListener('storage', () => {
       // Busca a lista atualizada de participantes
       const updated = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
@@ -457,7 +480,9 @@
       // Se encontrar o participante atualizado
       if (fresh) {
         // Atualiza os arrays de testes com os dados mais recentes
-        participant.assignedTests = fresh.assignedTests || [];
+        // Mantém compatibilidade com ambos os campos
+        participant.tests = fresh.tests || [];
+        participant.assignedTests = fresh.assignedTests || [...participant.tests];
         participant.completedTests = fresh.completedTests || [];
         
         // Re-renderiza os testes para refletir as mudanças
