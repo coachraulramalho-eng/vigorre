@@ -6,10 +6,14 @@
   <title>Login - Vigorre</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    /* Reset básico */
+    /* ============================================
+       RESET BÁSICO
+       ============================================ */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
-    /* Estilo do corpo */
+    /* ============================================
+       ESTILO DO CORPO
+       ============================================ */
     body { 
       font-family: 'Inter', sans-serif; 
       background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%); 
@@ -21,7 +25,9 @@
       padding: 20px; 
     }
     
-    /* Container principal do login */
+    /* ============================================
+       CONTAINER PRINCIPAL DO LOGIN
+       ============================================ */
     .login-container { 
       background: white; 
       border-radius: 20px; 
@@ -32,7 +38,9 @@
       color: #1e293b; 
     }
     
-    /* Área do logo */
+    /* ============================================
+       ÁREA DO LOGO
+       ============================================ */
     .logo-area { 
       text-align: center; 
       margin-bottom: 1.5rem; 
@@ -52,7 +60,9 @@
       font-size: 0.85rem; 
     }
     
-    /* Seletor de ambiente (Participante/Admin) */
+    /* ============================================
+       SELETOR DE AMBIENTE (PARTICIPANTE/ADMIN)
+       ============================================ */
     .env-selector { 
       display: grid; 
       grid-template-columns: 1fr 1fr; 
@@ -86,7 +96,9 @@
       box-shadow: 0 4px 12px rgba(30, 64, 175, 0.15); 
     }
     
-    /* Grupos de formulário */
+    /* ============================================
+       GRUPOS DE FORMULÁRIO
+       ============================================ */
     .form-group { 
       margin-bottom: 1.2rem; 
       position: relative; 
@@ -112,7 +124,9 @@
       border-color: #3b82f6; 
     }
     
-    /* Botão de visualizar senha */
+    /* ============================================
+       BOTÃO DE VISUALIZAR SENHA
+       ============================================ */
     .toggle-pass { 
       position: absolute; 
       right: 12px; 
@@ -125,7 +139,9 @@
       color: #1e40af; 
     }
     
-    /* Botão principal */
+    /* ============================================
+       BOTÃO PRINCIPAL
+       ============================================ */
     .btn { 
       width: 100%; 
       padding: 14px; 
@@ -148,7 +164,9 @@
       transform: none; 
     }
     
-    /* Alertas */
+    /* ============================================
+       ALERTAS
+       ============================================ */
     .alert { 
       padding: 10px; 
       border-radius: 8px; 
@@ -169,7 +187,9 @@
       border: 1px solid #bbf7d0; 
     }
     
-    /* Links */
+    /* ============================================
+       LINKS
+       ============================================ */
     .links { 
       display: flex; 
       justify-content: space-between; 
@@ -188,14 +208,18 @@
 <body>
   <div class="login-container">
     
-    <!-- LOGO E TÍTULO -->
+    <!-- ============================================
+         LOGO E TÍTULO
+         ============================================ -->
     <div class="logo-area">
       <img src="logo-vigorre.png" alt="Vigorre" onerror="this.outerHTML='<div style=\'font-size:32px;color:#1e40af;font-weight:bold;margin-bottom:8px\'>V</div>'">
       <h1>Vigorre</h1>
       <p>Inteligência e Gestão Estratégica</p>
     </div>
 
-    <!-- SELETOR DE AMBIENTE: PARTICIPANTE OU ADMINISTRADOR -->
+    <!-- ============================================
+         SELETOR DE AMBIENTE: PARTICIPANTE OU ADMINISTRADOR
+         ============================================ -->
     <div class="env-selector">
       <button type="button" class="env-btn" onclick="setEnv('participant')">
         <span>👤</span> Participante
@@ -205,10 +229,14 @@
       </button>
     </div>
 
-    <!-- ÁREA DE ALERTAS -->
+    <!-- ============================================
+         ÁREA DE ALERTAS
+         ============================================ -->
     <div class="alert" id="alert"></div>
 
-    <!-- FORMULÁRIO DE LOGIN -->
+    <!-- ============================================
+         FORMULÁRIO DE LOGIN
+         ============================================ -->
     <form id="loginForm" onsubmit="handleLogin(event)">
       
       <!-- Campo de Usuário ou E-mail -->
@@ -228,7 +256,9 @@
       <button type="submit" class="btn" id="loginBtn">Entrar</button>
     </form>
 
-    <!-- LINKS AUXILIARES -->
+    <!-- ============================================
+         LINKS AUXILIARES
+         ============================================ -->
     <div class="links">
       <a href="#" onclick="forgotPassword()">Esqueceu a senha?</a>
       <a href="index.html">← Voltar ao site</a>
@@ -326,7 +356,7 @@
       e.preventDefault(); // Impede recarregamento da página
       
       // Captura os valores dos campos
-      const input = document.getElementById('email').value.trim();
+      const input = document.getElementById('email').value.trim().toLowerCase();
       const pass = document.getElementById('password').value;
       const btn = document.getElementById('loginBtn');
       
@@ -342,9 +372,11 @@
         // ========================================
         if (currentEnv === 'admin' && input === 'admin' && pass === 'amovin2026') {
           localStorage.setItem('vigorre_current_user', JSON.stringify({
+            id: 'admin',
             name: 'Administrador',
+            email: 'admin@vigorre.com',
             role: 'admin',
-            env: 'default'
+            type: 'admin'
           }));
           showAlert('✅ Login realizado!', 'success');
           setTimeout(() => {
@@ -356,50 +388,52 @@
         // ========================================
         // 2. LOGIN STAFF VIGORRE (BANCO LOCAL)
         // ========================================
-        const staff = JSON.parse(localStorage.getItem('vigorre_staff') || '[]');
-        const staffUser = staff.find(s => 
-          (s.login?.toLowerCase() === input.toLowerCase() || 
-           s.email?.toLowerCase() === input.toLowerCase()) && 
-          s.password === pass && 
-          s.role === currentEnv
-        );
-        
-        if (staffUser) {
-          localStorage.setItem('vigorre_current_user', JSON.stringify({
-            id: staffUser.id,
-            name: staffUser.name,
-            role: staffUser.role,
-            env: 'staff'
-          }));
-          showAlert('✅ Login realizado!', 'success');
-          setTimeout(() => {
-            window.location.href = 'admin.html';
-          }, 1000);
-          return;
+        if (currentEnv === 'admin') {
+          const staff = JSON.parse(localStorage.getItem('vigorre_staff') || '[]');
+          const staffUser = staff.find(s => 
+            ((s.login && s.login.toLowerCase() === input) || 
+             (s.email && s.email.toLowerCase() === input)) && 
+            s.password === pass
+          );
+          
+          if (staffUser) {
+            localStorage.setItem('vigorre_current_user', JSON.stringify({
+              id: staffUser.id,
+              name: staffUser.name,
+              email: staffUser.email,
+              role: staffUser.role || 'admin',
+              type: 'staff'
+            }));
+            showAlert('✅ Login realizado!', 'success');
+            setTimeout(() => {
+              window.location.href = 'admin.html';
+            }, 1000);
+            return;
+          }
         }
 
         // ========================================
         // 3. LOGIN PARTICIPANTE (BANCO LOCAL)
         // ========================================
         if (currentEnv === 'participant') {
-          const parts = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-          const part = parts.find(p => 
-            (p.user?.toLowerCase() === input.toLowerCase() || 
-             p.email?.toLowerCase() === input.toLowerCase()) && 
+          const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+          const participant = participants.find(p => 
+            ((p.user && p.user.toLowerCase() === input) || 
+             (p.email && p.email.toLowerCase() === input)) && 
             p.pass === pass
           );
           
-          if (part) {
+          if (participant) {
             localStorage.setItem('vigorre_current_user', JSON.stringify({
-              id: part.id,
-              name: part.name,
+              id: participant.id,
+              name: participant.name,
+              email: participant.email,
               role: 'participant',
-              env: 'participant'
+              type: 'participant'
             }));
-            showAlert('✅ Bem-vindo, ' + part.name.split(' ')[0] + '!', 'success');
+            showAlert('✅ Bem-vindo, ' + participant.name.split(' ')[0] + '!', 'success');
             setTimeout(() => {
               // Redireciona para a tela do participante
-              // Pode ser 'participante.html' ou 'cadastro-participante.html' conforme seu arquivo
               window.location.href = 'cadastro-participante.html';
             }, 1000);
             return;
@@ -409,7 +443,7 @@
         // ========================================
         // 4. CREDENCIAIS INVÁLIDAS
         // ========================================
-        showAlert('❌ Credenciais inválidas ou ambiente incorreto', 'error');
+        showAlert('❌ Credenciais inválidas ou ambiente incorreto. Verifique usuário e senha.', 'error');
         btn.disabled = false;
         btn.textContent = 'Entrar';
         
