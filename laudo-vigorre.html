@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valores Pessoais - Vigorre</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; }
+    header { background: linear-gradient(135deg, #1e3a8a, #0f172a); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+    .logo-icon { width: 35px; height: 35px; background: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #1e3a8a; font-weight: bold; }
+    .timer { background: rgba(255,255,255,0.15); padding: 10px 20px; border-radius: 25px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .timer.warning { background: rgba(239, 68, 68, 0.3); animation: pulse 1s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+    main { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+    .progress { margin-bottom: 2rem; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .progress-bar { height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #8b5cf6, #7c3aed); width: 0%; transition: width 0.5s ease; }
+    .progress-text { display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.9rem; color: #64748b; font-weight: 600; }
+    .question-card { background: white; border-radius: 20px; padding: 2.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 2rem; }
+    .question-number { display: inline-block; background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; }
+    .question-text { font-size: 1.3rem; font-weight: 600; margin-bottom: 2rem; line-height: 1.4; }
+    .value-options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .value-option { padding: 18px; border: 2px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.3s; text-align: left; background: #f8fafc; }
+    .value-option:hover { border-color: #8b5cf6; background: #f5f3ff; transform: translateY(-2px); }
+    .value-option.selected { border-color: #7c3aed; background: linear-gradient(135deg, #ede9fe, #ddd6fe); box-shadow: 0 2px 10px rgba(139, 92, 246, 0.3); }
+    .value-name { font-weight: 700; color: #1e40af; margin-bottom: 5px; }
+    .value-desc { font-size: 0.9rem; color: #64748b; }
+    .navigation { display: flex; justify-content: space-between; margin-top: 2rem; gap: 1rem; }
+    .btn { padding: 14px 32px; border-radius: 12px; border: none; cursor: pointer; font-weight: 700; font-size: 1rem; transition: all 0.3s; }
+    .btn-prev { background: #e2e8f0; color: #1e293b; }
+    .btn-prev:hover { background: #cbd5e1; }
+    .btn-prev:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-next { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; }
+    .btn-next:hover { transform: translateY(-2px); }
+    .btn-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+    .btn-finish { background: linear-gradient(135deg, #3b82f6, #1e40af); color: white; }
+    .hidden { display: none; }
+    #result { text-align: center; }
+    .result-card { background: white; border-radius: 20px; padding: 3rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin-top: 2rem; }
+    .result-title { font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: #7c3aed; }
+    .top-values { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 2rem 0; }
+    .value-badge { padding: 12px 24px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; border-radius: 25px; font-weight: 600; }
+    .all-values { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0; text-align: left; }
+    .value-item { background: #f8fafc; padding: 1rem; border-radius: 12px; }
+    .value-label { font-weight: 600; color: #1e293b; }
+    .value-bar { height: 8px; background: #e2e8f0; border-radius: 4px; margin: 8px 0; overflow: hidden; }
+    .value-fill { height: 100%; background: linear-gradient(90deg, #8b5cf6, #7c3aed); border-radius: 4px; }
+    .value-percent { font-size: 0.9rem; color: #64748b; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo"><div class="logo-icon">V</div><span>Vigorre - Valores Pessoais</span></div>
+    <div class="timer" id="timer"><span>⏱️</span><span id="time-display">20:00</span></div>
+  </header>
+
+  <main>
+    <div id="test-screen">
+      <div class="progress">
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+        <div class="progress-text"><span id="progress-text">Questão 1 de 30</span><span id="progress-percent">3%</span></div>
+      </div>
+
+      <div class="question-card">
+        <span class="question-number" id="question-number">Questão 1</span>
+        <div class="question-text" id="question-text">Carregando...</div>
+        <div class="value-options" id="value-options"></div>
+      </div>
+
+      <div class="navigation">
+        <button class="btn btn-prev" id="btn-prev" onclick="prevQuestion()">← Anterior</button>
+        <button class="btn btn-next" id="btn-next" onclick="nextQuestion()">Próxima →</button>
+        <button class="btn btn-finish hidden" id="btn-finish" onclick="finishTest()">Finalizar Teste ✓</button>
+      </div>
+    </div>
+
+    <div id="result" class="hidden">
+      <div class="result-card">
+        <div class="result-title">💎 Seus Valores Pessoais</div>
+        <p id="result-description">Analisando seus valores fundamentais...</p>
+        <div class="top-values" id="top-values"></div>
+        <div class="all-values" id="all-values"></div>
+        <button class="btn btn-primary" style="margin-top: 2rem;" onclick="window.location.href='index.html'">Voltar ao Início</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Questões baseadas na teoria de Schwartz
+    const questions = [
+      { text: "Para mim, é importante:", values: [
+        { name: "Realização", desc: "Alcançar sucesso pessoal" },
+        { name: "Poder", desc: "Ter autoridade e status" },
+        { name: "Segurança", desc: "Manter estabilidade" },
+        { name: "Conformidade", desc: "Seguir regras sociais" }
+      ]},
+      { text: "No trabalho, valorizo:", values: [
+        { name: "Criatividade", desc: "Inovar e criar" },
+        { name: "Independência", desc: "Ter autonomia" },
+        { name: "Colaboração", desc: "Trabalhar em equipe" },
+        { name: "Excelência", desc: "Buscar qualidade" }
+      ]},
+      { text: "Nas relações pessoais:", values: [
+        { name: "Lealdade", desc: "Ser fiel" },
+        { name: "Honestidade", desc: "Ser sincero" },
+        { name: "Respeito", desc: "Valorizar o outro" },
+        { name: "Empatia", desc: "Compreender sentimentos" }
+      ]},
+      { text: "Na vida, busco:", values: [
+        { name: "Liberdade", desc: "Ter escolhas" },
+        { name: "Aventura", desc: "Viver experiências" },
+        { name: "Estabilidade", desc: "Ter segurança" },
+        { name: "Crescimento", desc: "Evoluir constantemente" }
+      ]},
+      { text: "É fundamental para mim:", values: [
+        { name: "Justiça", desc: "Agir com equidade" },
+        { name: "Responsabilidade", desc: "Cumprir obrigações" },
+        { name: "Generosidade", desc: "Ajudar outros" },
+        { name: "Ambição", desc: "Alcançar metas" }
+      ]},
+      { text: "Admiro pessoas que são:", values: [
+        { name: "Coragem", desc: "Enfrentam desafios" },
+        { name: "Sabedoria", desc: "Têm conhecimento" },
+        { name: "Bondade", desc: "São compassivas" },
+        { name: "Disciplina", desc: "São organizadas" }
+      ]},
+      { text: "Minhas decisões são baseadas em:", values: [
+        { name: "Lógica", desc: "Razão e análise" },
+        { name: "Valores", desc: "Princípios pessoais" },
+        { name: "Emoções", desc: "Sentimentos" },
+        { name: "Resultados", desc: "Consequências práticas" }
+      ]},
+      { text: "O sucesso significa:", values: [
+        { name: "Reconhecimento", desc: "Ser valorizado" },
+        { name: "Realização", desc: "Alcançar objetivos" },
+        { name: "Felicidade", desc: "Bem-estar" },
+        { name: "Impacto", desc: "Fazer diferença" }
+      ]},
+      { text: "Prefiro ambientes:", values: [
+        { name: "Competitivos", desc: "Desafiadores" },
+        { name: "Cooperativos", desc: "Colaborativos" },
+        { name: "Estáveis", desc: "Previsíveis" },
+        { name: "Dinâmicos", desc: "Variados" }
+      ]},
+      { text: "Valorizo mais:", values: [
+        { name: "Tradição", desc: "Costumes e cultura" },
+        { name: "Inovação", desc: "Mudança e progresso" },
+        { name: "Família", desc: "Relações familiares" },
+        { name: "Carreira", desc: "Desenvolvimento profissional" }
+      ]},
+      { text: "É importante que:", values: [
+        { name: "Seja ouvido", desc: "Minha opinião importe" },
+        { name: "Seja útil", desc: "Contribua positivamente" },
+        { name: "Seja respeitado", desc: "Receba consideração" },
+        { name: "Seja livre", desc: "Tenha autonomia" }
+      ]},
+      { text: "Busco constantemente:", values: [
+        { name: "Aprendizado", desc: "Conhecimento novo" },
+        { name: "Prazer", desc: "Experiências agradáveis" },
+        { name: "Paz interior", desc: "Tranquilidade" },
+        { name: "Desafios", desc: "Superação" }
+      ]},
+      { text: "Minha motivação vem de:", values: [
+        { name: "Conquistas", desc: "Alcançar metas" },
+        { name: "Relacionamentos", desc: "Conexões humanas" },
+        { name: "Propósito", desc: "Significado" },
+        { name: "Reconhecimento", desc: "Aprovação" }
+      ]},
+      { text: "Valorizo a:", values: [
+        { name: "Eficiência", desc: "Fazer bem feito" },
+        { name: "Criatividade", desc: "Inovação" },
+        { name: "Harmonia", desc: "Equilíbrio" },
+        { name: "Justiça", desc: "Equidade" }
+      ]},
+      { text: "É essencial:", values: [
+        { name: "Autenticidade", desc: "Ser verdadeiro" },
+        { name: "Competência", desc: "Ter habilidades" },
+        { name: "Amor", desc: "Receber afeto" },
+        { name: "Independência", desc: "Ter liberdade" }
+      ]},
+      { text: "Prefiro:", values: [
+        { name: "Liderar", desc: "Comandar" },
+        { name: "Colaborar", desc: "Trabalhar junto" },
+        { name: "Apoiar", desc: "Ajudar" },
+        { name: "Executar", desc: "Realizar" }
+      ]},
+      { text: "Acredito em:", values: [
+        { name: "Mudança", desc: "Transformação" },
+        { name: "Estabilidade", desc: "Constância" },
+        { name: "Progresso", desc: "Evolução" },
+        { name: "Tradição", desc: "Permanência" }
+      ]},
+      { text: "Minha prioridade é:", values: [
+        { name: "Trabalho", desc: "Carreira" },
+        { name: "Família", desc: "Relações pessoais" },
+        { name: "Saúde", desc: "Bem-estar" },
+        { name: "Crescimento", desc: "Desenvolvimento" }
+      ]},
+      { text: "Valorizo pessoas:", values: [
+        { name: "Competentes", desc: "Habilidosas" },
+        { name: "Éticas", desc: "Íntegras" },
+        { name: "Amigáveis", desc: "Simpáticas" },
+        { name: "Criativas", desc: "Inovadoras" }
+      ]},
+      { text: "O que me define:", values: [
+        { name: "Determinação", desc: "Foco" },
+        { name: "Empatia", desc: "Compreensão" },
+        { name: "Criatividade", desc: "Inovação" },
+        { name: "Lealdade", desc: "Fidelidade" }
+      ]},
+      { text: "É importante ter:", values: [
+        { name: "Segurança financeira", desc: "Estabilidade" },
+        { name: "Liberdade de escolha", desc: "Autonomia" },
+        { name: "Relacionamentos", desc: "Conexões" },
+        { name: "Realização pessoal", desc: "Sucesso" }
+      ]},
+      { text: "Busco:", values: [
+        { name: "Excelência", desc: "Qualidade" },
+        { name: "Diversão", desc: "Alegria" },
+        { name: "Sabedoria", desc: "Conhecimento" },
+        { name: "Poder", desc: "Influência" }
+      ]},
+      { text: "Valorizo:", values: [
+        { name: "Honestidade", desc: "Verdade" },
+        { name: "Ambição", desc: "Sucesso" },
+        { name: "Generosidade", desc: "Doação" },
+        { name: "Disciplina", desc: "Organização" }
+      ]},
+      { text: "É fundamental:", values: [
+        { name: "Respeitar outros", desc: "Consideração" },
+        { name: "Ser respeitado", desc: "Reconhecimento" },
+        { name: "Ajudar sociedade", desc: "Contribuição" },
+        { name: "Crescer pessoal", desc: "Evolução" }
+      ]},
+      { text: "Prefiro viver:", values: [
+        { name: "Com paixão", desc: "Intensidade" },
+        { name: "Com prudência", desc: "Cautela" },
+        { name: "Com alegria", desc: "Otimismo" },
+        { name: "Com propósito", desc: "Significado" }
+      ]},
+      { text: "Valorizo a:", values: [
+        { name: "Diversidade", desc: "Variedade" },
+        { name: "Unidade", desc: "Harmonia" },
+        { name: "Competição", desc: "Rivalidade" },
+        { name: "Cooperação", desc: "Colaboração" }
+      ]},
+      { text: "É importante:", values: [
+        { name: "Ser lembrado", desc: "Legado" },
+        { name: "Ser feliz", desc: "Bem-estar" },
+        { name: "Ser útil", desc: "Serviço" },
+        { name: "Ser livre", desc: "Autonomia" }
+      ]},
+      { text: "Busco constantemente:", values: [
+        { name: "Melhorar", desc: "Evolução" },
+        { name: "Aproveitar", desc: "Prazer" },
+        { name: "Contribuir", desc: "Impacto" },
+        { name: "Conquistar", desc: "Sucesso" }
+      ]},
+      { text: "Valorizo mais:", values: [
+        { name: "Qualidade", desc: "Excelência" },
+        { name: "Quantidade", desc: "Volume" },
+        { name: "Velocidade", desc: "Rapidez" },
+        { name: "Precisão", desc: "Exatidão" }
+      ]},
+      { text: "Minha filosofia é:", values: [
+        { name: "Carpe Diem", desc: "Aproveitar o momento" },
+        { name: "Devagar e sempre", desc: "Constância" },
+        { name: "Otimismo", desc: "Positividade" },
+        { name: "Realismo", desc: "Praticidade" }
+      ]}
+    ];
+
+    let currentQuestion = 0;
+    let answers = [];
+    let timeLeft = 20 * 60;
+    let timerInterval;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadQuestion();
+      startTimer();
+    });
+
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        const mins = Math.floor(timeLeft / 60);
+        const secs = timeLeft % 60;
+        document.getElementById('time-display').textContent = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+        if (timeLeft <= 300) document.getElementById('timer').classList.add('warning');
+        if (timeLeft <= 0) { clearInterval(timerInterval); finishTest(); }
+      }, 1000);
+    }
+
+    function loadQuestion() {
+      const q = questions[currentQuestion];
+      document.getElementById('question-number').textContent = `Questão ${currentQuestion + 1}`;
+      document.getElementById('question-text').textContent = q.text;
+      
+      const container = document.getElementById('value-options');
+      container.innerHTML = '';
+      const currentAns = answers[currentQuestion] || [];
+      
+      q.values.forEach((val, idx) => {
+        const div = document.createElement('div');
+        div.className = 'value-option' + (currentAns.includes(idx) ? ' selected' : '');
+        div.innerHTML = `<div class="value-name">${val.name}</div><div class="value-desc">${val.desc}</div>`;
+        div.onclick = () => toggleValue(idx);
+        container.appendChild(div);
+      });
+
+      const percent = Math.round(((currentQuestion + 1) / questions.length) * 100);
+      document.getElementById('progress-fill').style.width = `${percent}%`;
+      document.getElementById('progress-text').textContent = `Questão ${currentQuestion + 1} de ${questions.length}`;
+      document.getElementById('progress-percent').textContent = `${percent}%`;
+
+      document.getElementById('btn-prev').disabled = currentQuestion === 0;
+      if (currentQuestion === questions.length - 1) {
+        document.getElementById('btn-next').classList.add('hidden');
+        document.getElementById('btn-finish').classList.remove('hidden');
+      } else {
+        document.getElementById('btn-next').classList.remove('hidden');
+        document.getElementById('btn-finish').classList.add('hidden');
+        document.getElementById('btn-next').disabled = !answers[currentQuestion] || answers[currentQuestion].length === 0;
+      }
+    }
+
+    function toggleValue(idx) {
+      if (!answers[currentQuestion]) answers[currentQuestion] = [];
+      const pos = answers[currentQuestion].indexOf(idx);
+      if (pos > -1) answers[currentQuestion].splice(pos, 1);
+      else answers[currentQuestion].push(idx);
+      loadQuestion();
+    }
+
+    function prevQuestion() { if (currentQuestion > 0) { currentQuestion--; loadQuestion(); } }
+    function nextQuestion() { if (currentQuestion < questions.length - 1 && answers[currentQuestion] && answers[currentQuestion].length > 0) { currentQuestion++; loadQuestion(); } }
+
+    function finishTest() {
+      clearInterval(timerInterval);
+      
+      const valuesMap = {};
+      answers.forEach((ans, qIdx) => {
+        if (ans) {
+          ans.forEach(valIdx => {
+            const valName = questions[qIdx].values[valIdx].name;
+            valuesMap[valName] = (valuesMap[valName] || 0) + 1;
+          });
+        }
+      });
+
+      const values = Object.entries(valuesMap)
+        .map(([name, score]) => ({ name, score: Math.round((score / questions.length) * 100) }))
+        .sort((a, b) => b.score - a.score);
+
+      const top5 = values.slice(0, 5);
+
+      document.getElementById('test-screen').classList.add('hidden');
+      document.getElementById('result').classList.remove('hidden');
+      
+      document.getElementById('top-values').innerHTML = top5.map(v => 
+        `<div class="value-badge">${v.name}</div>`
+      ).join('');
+
+      document.getElementById('all-values').innerHTML = values.map(v => 
+        `<div class="value-item">
+          <div class="value-label">${v.name}</div>
+          <div class="value-bar"><div class="value-fill" style="width: ${v.score}%"></div></div>
+          <div class="value-percent">${v.score}%</div>
+        </div>`
+      ).join('');
+    }
+  </script>
+</body>
+</html>
