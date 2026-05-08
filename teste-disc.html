@@ -3,108 +3,1758 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Teste DISC - Vigorre</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <style>
-    /* Estilos mantidos do teste original */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; }
-    header { background: linear-gradient(135deg, #1e3a8a, #0f172a); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
-    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; }
-    .logo-icon { width: 35px; height: 35px; background: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #1e3a8a; font-weight: bold; }
-    main { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
-    .instructions-box { background: white; border-radius: 20px; padding: 3rem; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center; }
-    .instructions-box h2 { color: #1e40af; margin-bottom: 1.5rem; }
-    .instructions-box p { font-size: 1.1rem; line-height: 1.8; color: #475569; margin-bottom: 2rem; text-align: left; background: #f0f9ff; padding: 1.5rem; border-radius: 12px; border-left: 5px solid #3b82f6; }
-    .btn-start { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; padding: 16px 40px; border: none; border-radius: 12px; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: transform 0.3s; }
-    .btn-start:hover { transform: translateY(-3px); }
-    .test-screen { display: none; }
-    .question-card { background: white; border-radius: 20px; padding: 2.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 2rem; }
-    .options { display: flex; flex-direction: column; gap: 15px; }
-    .option { padding: 18px; border: 2px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.3s; background: #f8fafc; }
-    .option:hover { border-color: #3b82f6; background: #eff6ff; }
-    .option.selected { border-color: #1e40af; background: #dbeafe; }
-    .navigation { display: flex; justify-content: space-between; margin-top: 2rem; }
-    .btn { padding: 14px 32px; border-radius: 12px; border: none; cursor: pointer; font-weight: 700; font-size: 1rem; }
-    .btn-next { background: #1e40af; color: white; }
-    .btn-finish { background: #22c55e; color: white; }
-    .hidden { display: none; }
-    #result { display: none; text-align: center; }
-    .result-card { background: white; border-radius: 20px; padding: 3rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-  </style>
-</head>
-<body>
-  <header>
-    <div class="logo"><div class="logo-icon">V</div><span>Vigorre - Teste DISC</span></div>
-    <div style="font-size:0.9rem;" id="userNameDisplay">Participante</div>
-  </header>
-  <main>
-    <div id="instructions" class="instructions-box">
-      <h2>📋 Instruções</h2>
-      <p>Para realizar o teste DISC de maneira eficaz, busque um ambiente tranquilo. Não há limite de tempo. Leia com calma e escolha a opção que melhor descreve seu comportamento natural.</p>
-      <button class="btn-start" onclick="startTest()">🚀 Iniciar Teste</button>
-    </div>
-    <div id="test-screen" class="test-screen">
-      <div class="question-card">
-        <span class="question-number" id="question-number">Questão 1</span>
-        <div class="question-text" id="question-text">Carregando...</div>
-        <div class="options" id="options"></div>
-      </div>
-      <div class="navigation">
-        <button class="btn btn-next" id="btn-next" onclick="nextQuestion()">Próxima →</button>
-        <button class="btn btn-finish hidden" id="btn-finish" onclick="finishTest()">Finalizar Teste ✓</button>
-      </div>
-    </div>
-    <div id="result">
-      <div class="result-card">
-        <h2>🎉 Teste Concluído!</h2>
-        <p style="margin:1rem 0; font-size:1.1rem;">Seu resultado foi processado com sucesso.</p>
-        <div style="background:#f0fdf4; padding:1rem; border-radius:8px; border:1px solid #bbf7d0; margin:2rem 0;">
-          <p><strong>📧 E-mail Enviado:</strong><br>Seu relatório simples do teste DISC foi enviado para o seu e-mail cadastrado.</p>
-        </div>
-        <button class="btn" style="background:#ef4444; color:white;" onclick="logout()">Sair</button>
-      </div>
-    </div>
-  </main>
+  <title>Assessment DISC | Vigorre People Analytics</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Configuração Tailwind -->
   <script>
-    const questions = [
-      { text: "Diante de desafios no trabalho, eu:", options: [{ text: "Assumo o controle", type: "D" }, { text: "Envolvo outros", type: "I" }, { text: "Mantenho a calma", type: "S" }, { text: "Analiso detalhes", type: "C" }] },
-      { text: "Em reuniões, minha abordagem é:", options: [{ text: "Direta ao ponto", type: "D" }, { text: "Animada", type: "I" }, { text: "Atenta e ouvinte", type: "S" }, { text: "Técnica e precisa", type: "C" }] },
-      // ... Adicione mais perguntas conforme necessário
-    ];
-    let currentQuestion = 0; let answers = [];
-
-    function startTest() { 
-      document.getElementById('instructions').style.display = 'none'; 
-      document.getElementById('test-screen').style.display = 'block'; 
-      loadQuestion(); 
-    }
-    function loadQuestion() {
-      const q = questions[currentQuestion];
-      document.getElementById('question-number').textContent = `Questão ${currentQuestion + 1}`;
-      document.getElementById('question-text').textContent = q.text;
-      const container = document.getElementById('options'); container.innerHTML = '';
-      q.options.forEach((opt, idx) => {
-        const div = document.createElement('div'); div.className = 'option' + (answers[currentQuestion] === idx ? ' selected' : '');
-        div.textContent = opt.text; div.onclick = () => { answers[currentQuestion] = idx; loadQuestion(); };
-        container.appendChild(div);
-      });
-      if (currentQuestion === questions.length - 1) { 
-        document.getElementById('btn-next').classList.add('hidden'); 
-        document.getElementById('btn-finish').classList.remove('hidden'); 
-      } else { 
-        document.getElementById('btn-next').classList.remove('hidden'); 
-        document.getElementById('btn-finish').classList.add('hidden'); 
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              900: '#0F172A',
+              800: '#1E293B',
+              700: '#334155',
+              600: '#475569',
+              500: '#64748B',
+            },
+            brand: {
+              blue: '#1D4ED8',
+              purple: '#7C3AED',
+              cyan: '#06B6D4',
+              emerald: '#10B981',
+            }
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.5s ease-out',
+            'slide-up': 'slideUp 0.4s ease-out',
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' },
+            },
+            slideUp: {
+              '0%': { opacity: '0', transform: 'translateY(20px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            }
+          }
+        }
       }
     }
-    function nextQuestion() { if (currentQuestion < questions.length - 1 && answers[currentQuestion] !== undefined) { currentQuestion++; loadQuestion(); } }
-    function finishTest() {
-      // Salvar resultado (Simulação)
-      localStorage.setItem('vigorre_last_disc_result', JSON.stringify({primary:'D', secondary:'C'}));
-      document.getElementById('test-screen').style.display = 'none';
-      document.getElementById('result').style.display = 'block';
+  </script>
+  
+  <style>
+    /* ============================================
+       RESET E BASE
+       ============================================ */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body { 
+      font-family: 'Inter', sans-serif; 
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%); 
+      color: #F8FAFC; 
+      min-height: 100vh; 
+      line-height: 1.6;
     }
-    function logout() { localStorage.removeItem('vigorre_current_user'); window.location.href='login.html'; }
+    
+    /* ============================================
+       GLASSMORPHISM & EFEITOS PREMIUM
+       ============================================ */
+    .glass {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    
+    .glass-card {
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+    
+    .gradient-text {
+      background: linear-gradient(135deg, #60A5FA, #A78BFA, #22D3EE);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .gradient-border {
+      position: relative;
+      border-radius: 16px;
+    }
+    .gradient-border::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #1D4ED8, #7C3AED, #06B6D4);
+      z-index: -1;
+      opacity: 0.6;
+      filter: blur(8px);
+    }
+    
+    /* ============================================
+       ANIMAÇÕES E MICROINTERAÇÕES
+       ============================================ */
+    .animate-on-scroll {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .animate-on-scroll.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .hover-lift {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .hover-lift:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+    
+    .pulse-ring {
+      position: relative;
+    }
+    .pulse-ring::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: inherit;
+      border: 2px solid transparent;
+      border-top-color: #06B6D4;
+      border-right-color: #7C3AED;
+      animation: spin 2s linear infinite;
+      opacity: 0.6;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* ============================================
+       COMPONENTES DO TESTE
+       ============================================ */
+    .question-card {
+      transition: all 0.3s ease;
+      border-left: 4px solid transparent;
+    }
+    .question-card.active {
+      border-left-color: #06B6D4;
+      background: rgba(6, 182, 212, 0.05);
+    }
+    
+    .rank-item {
+      cursor: grab;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .rank-item:active {
+      cursor: grabbing;
+    }
+    .rank-item.dragging {
+      opacity: 0.8;
+      transform: scale(1.02);
+      z-index: 10;
+    }
+    
+    .rank-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+    }
+    .rank-1 { background: linear-gradient(135deg, #10B981, #059669); color: white; }
+    .rank-2 { background: linear-gradient(135deg, #3B82F6, #2563EB); color: white; }
+    .rank-3 { background: linear-gradient(135deg, #F59E0B, #D97706); color: white; }
+    .rank-4 { background: linear-gradient(135deg, #EF4444, #DC2626); color: white; }
+    
+    .progress-bar {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #1D4ED8, #7C3AED, #06B6D4);
+      border-radius: 3px;
+      transition: width 0.4s ease;
+      position: relative;
+    }
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shimmer 2s infinite;
+    }
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    
+    /* ============================================
+       DASHBOARD DE RESULTADOS
+       ============================================ */
+    .disc-chart-container {
+      position: relative;
+      height: 300px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    
+    .profile-badge {
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .profile-d { background: rgba(239, 68, 68, 0.2); color: #FCA5A5; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .profile-i { background: rgba(59, 130, 246, 0.2); color: #93C5FD; border: 1px solid rgba(59, 130, 246, 0.3); }
+    .profile-s { background: rgba(16, 185, 129, 0.2); color: #86EFAC; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .profile-c { background: rgba(124, 58, 237, 0.2); color: #C4B5FD; border: 1px solid rgba(124, 58, 237, 0.3); }
+    
+    .insight-card {
+      border-left: 4px solid;
+      transition: all 0.3s ease;
+    }
+    .insight-card:hover {
+      transform: translateX(4px);
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .insight-d { border-left-color: #EF4444; }
+    .insight-i { border-left-color: #3B82F6; }
+    .insight-s { border-left-color: #10B981; }
+    .insight-c { border-left-color: #7C3AED; }
+    
+    /* ============================================
+       RESPONSIVIDADE
+       ============================================ */
+    @media (max-width: 768px) {
+      .rank-item {
+        padding: 12px;
+      }
+      .disc-chart-container {
+        height: 250px;
+      }
+    }
+    
+    /* ============================================
+       UTILITÁRIOS
+       ============================================ */
+    .text-gradient {
+      background: linear-gradient(135deg, #60A5FA, #A78BFA, #22D3EE);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #1D4ED8, #7C3AED);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #7C3AED, #06B6D4);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .btn-primary:hover::before {
+      opacity: 1;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(124, 58, 237, 0.4);
+    }
+    
+    .section-title {
+      position: relative;
+      padding-bottom: 12px;
+    }
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #1D4ED8, #7C3AED);
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body class="antialiased">
+  
+  <!-- ============================================
+       LANDING PAGE / HERO SECTION
+       ============================================ -->
+  <div id="landingPage" class="min-h-screen flex flex-col">
+    
+    <!-- Header -->
+    <header class="glass border-b border-white/10 sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center font-bold text-white">
+              V
+            </div>
+            <div>
+              <h1 class="font-bold text-lg">Vigorre</h1>
+              <p class="text-xs text-gray-400">People Analytics</p>
+            </div>
+          </div>
+          <nav class="hidden md:flex items-center gap-6">
+            <a href="#" class="text-sm text-gray-300 hover:text-white transition">Metodologia</a>
+            <a href="#" class="text-sm text-gray-300 hover:text-white transition">Recursos</a>
+            <a href="#" class="text-sm text-gray-300 hover:text-white transition">Empresas</a>
+            <button onclick="startTest()" class="btn-primary px-5 py-2 rounded-xl text-sm font-medium text-white">
+              Iniciar Avaliação
+            </button>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <main class="flex-1 flex items-center justify-center px-4 py-12">
+      <div class="max-w-4xl mx-auto text-center animate-on-scroll">
+        
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6">
+          <span class="w-2 h-2 rounded-full bg-brand-cyan animate-pulse"></span>
+          <span class="text-sm text-gray-300">Assessment DISC Corporativo Premium</span>
+        </div>
+        
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+          Assessment <span class="gradient-text">DISC Inteligente</span><br>
+          para Alta Performance
+        </h1>
+        
+        <p class="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+          Mapeie comportamentos, identifique talentos e desenvolva equipes com inteligência comportamental baseada na metodologia DISC validada globalmente.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+          <button onclick="startTest()" class="btn-primary px-8 py-4 rounded-xl font-semibold text-white text-lg w-full sm:w-auto">
+            Iniciar Avaliação Gratuita
+          </button>
+          <button class="px-8 py-4 rounded-xl font-medium text-gray-300 border border-white/20 hover:border-white/40 transition w-full sm:w-auto">
+            Ver Demonstração
+          </button>
+        </div>
+        
+        <!-- Benefícios -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
+          <div class="glass-card p-4 hover-lift">
+            <div class="text-2xl mb-2">🎯</div>
+            <h3 class="font-semibold text-sm">Perfil Profissional</h3>
+          </div>
+          <div class="glass-card p-4 hover-lift">
+            <div class="text-2xl mb-2">📊</div>
+            <h3 class="font-semibold text-sm">People Analytics</h3>
+          </div>
+          <div class="glass-card p-4 hover-lift">
+            <div class="text-2xl mb-2">👥</div>
+            <h3 class="font-semibold text-sm">Gestão de Equipes</h3>
+          </div>
+          <div class="glass-card p-4 hover-lift">
+            <div class="text-2xl mb-2">🚀</div>
+            <h3 class="font-semibold text-sm">Desenvolvimento</h3>
+          </div>
+        </div>
+        
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass border-t border-white/10 py-6">
+      <div class="max-w-7xl mx-auto px-4 text-center text-sm text-gray-400">
+        <p>© 2024 Vigorre People Analytics. Metodologia DISC validada internacionalmente.</p>
+      </div>
+    </footer>
+    
+  </div>
+
+  <!-- ============================================
+       TELA DE INSTRUÇÕES DO TESTE
+       ============================================ -->
+  <div id="instructionsPage" class="hidden min-h-screen flex items-center justify-center px-4 py-12">
+    <div class="max-w-2xl mx-auto">
+      
+      <div class="glass-card p-8 animate-on-scroll">
+        
+        <div class="text-center mb-8">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center mx-auto mb-4">
+            <span class="text-2xl">🧠</span>
+          </div>
+          <h2 class="text-2xl font-bold mb-2">Assessment DISC</h2>
+          <p class="text-gray-400">Análise Comportamental Profissional</p>
+        </div>
+        
+        <div class="space-y-4 mb-8 text-gray-300">
+          <p>
+            Este assessment foi desenvolvido com base na metodologia <strong>DISC</strong>, uma das ferramentas mais utilizadas globalmente para análise comportamental, desenvolvimento profissional e gestão de talentos.
+          </p>
+          <p>
+            A avaliação identifica padrões naturais de comportamento relacionados a liderança, tomada de decisão, comunicação, estabilidade emocional e relacionamento interpessoal.
+          </p>
+        </div>
+        
+        <div class="glass p-5 rounded-xl mb-8">
+          <h3 class="font-semibold mb-3 flex items-center gap-2">
+            <span class="text-brand-cyan">ⓘ</span>
+            Instruções Importantes
+          </h3>
+          <ul class="space-y-2 text-sm text-gray-300">
+            <li class="flex items-start gap-2">
+              <span class="text-brand-emerald mt-0.5">✓</span>
+              <span>Não existem respostas certas ou erradas</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-brand-emerald mt-0.5">✓</span>
+              <span>Seja totalmente sincero em suas respostas</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-brand-emerald mt-0.5">✓</span>
+              <span>Responda conforme seu comportamento natural, não o ideal</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-brand-emerald mt-0.5">✓</span>
+              <span>O teste não possui limite de tempo</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-brand-emerald mt-0.5">✓</span>
+              <span>Para cada pergunta, ranqueie as 4 características da MAIS para a MENOS aderente</span>
+            </li>
+          </ul>
+        </div>
+        
+        <div class="flex gap-3">
+          <button onclick="goBack()" class="flex-1 px-4 py-3 rounded-xl font-medium text-gray-300 border border-white/20 hover:border-white/40 transition">
+            Voltar
+          </button>
+          <button onclick="startAssessment()" class="flex-1 btn-primary px-4 py-3 rounded-xl font-semibold text-white">
+            Entendi, Iniciar Teste
+          </button>
+        </div>
+        
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- ============================================
+       TELA DO TESTE - PERGUNTAS
+       ============================================ -->
+  <div id="testPage" class="hidden min-h-screen flex flex-col">
+    
+    <!-- Header do Teste -->
+    <header class="glass border-b border-white/10 px-4 py-3 sticky top-0 z-40">
+      <div class="max-w-4xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <button onclick="confirmExit()" class="p-2 rounded-lg hover:bg-white/10 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+          </button>
+          <div>
+            <h2 class="font-semibold">Assessment DISC</h2>
+            <p class="text-xs text-gray-400">Pergunta <span id="currentQuestion">1</span> de 25</p>
+          </div>
+        </div>
+        <div class="w-48">
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 4%"></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Área da Pergunta -->
+    <main class="flex-1 flex items-center justify-center px-4 py-8">
+      <div class="max-w-3xl mx-auto w-full">
+        
+        <div id="questionContainer" class="glass-card p-6 md:p-8 animate-on-scroll">
+          
+          <!-- Contexto da Pergunta -->
+          <div class="mb-6">
+            <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-blue/20 text-brand-blue text-xs font-medium mb-3">
+              <span id="questionCategory">Liderança</span>
+            </span>
+            <h3 class="text-xl md:text-2xl font-semibold" id="questionText">
+              Quando enfrento um desafio importante no trabalho...
+            </h3>
+          </div>
+          
+          <!-- Instruções de Ranqueamento -->
+          <div class="glass p-4 rounded-xl mb-6">
+            <p class="text-sm text-gray-300">
+              <strong class="text-white">Instrução:</strong> Arraste as características abaixo para ordená-las da <span class="text-brand-emerald">MAIS parecida com você</span> (topo) para a <span class="text-brand-red">MENOS parecida com você</span> (base).
+            </p>
+          </div>
+          
+          <!-- Lista de Ranqueamento (Drag & Drop) -->
+          <div id="rankList" class="space-y-3 mb-8">
+            <!-- Itens serão inseridos via JavaScript -->
+          </div>
+          
+          <!-- Botões de Navegação -->
+          <div class="flex gap-3">
+            <button id="prevBtn" onclick="prevQuestion()" class="flex-1 px-4 py-3 rounded-xl font-medium text-gray-300 border border-white/20 hover:border-white/40 transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+              Anterior
+            </button>
+            <button id="nextBtn" onclick="nextQuestion()" class="flex-1 btn-primary px-4 py-3 rounded-xl font-semibold text-white">
+              Próxima Pergunta
+            </button>
+          </div>
+          
+        </div>
+        
+      </div>
+    </main>
+    
+  </div>
+
+  <!-- ============================================
+       TELA DE CARREGAMENTO DE RESULTADOS
+       ============================================ -->
+  <div id="loadingResults" class="hidden min-h-screen flex items-center justify-center px-4">
+    <div class="text-center animate-on-scroll">
+      
+      <div class="relative w-24 h-24 mx-auto mb-6">
+        <div class="absolute inset-0 rounded-full border-4 border-white/10"></div>
+        <div class="absolute inset-0 rounded-full border-4 border-t-brand-cyan border-r-brand-purple border-b-transparent border-l-transparent animate-spin"></div>
+        <div class="absolute inset-4 rounded-full bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center">
+          <span class="text-2xl">📊</span>
+        </div>
+      </div>
+      
+      <h3 class="text-xl font-semibold mb-2">Analisando seu Perfil</h3>
+      <p class="text-gray-400 mb-6">Processando suas respostas com algoritmo DISC...</p>
+      
+      <div class="w-64 mx-auto">
+        <div class="progress-bar">
+          <div class="progress-fill" id="loadingProgress" style="width: 0%"></div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- ============================================
+       DASHBOARD DE RESULTADOS
+       ============================================ -->
+  <div id="resultsPage" class="hidden min-h-screen">
+    
+    <!-- Header de Resultados -->
+    <header class="glass border-b border-white/10 px-4 py-4 sticky top-0 z-40">
+      <div class="max-w-6xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <button onclick="resetTest()" class="p-2 rounded-lg hover:bg-white/10 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+          </button>
+          <div>
+            <h2 class="font-semibold">Resultado da Análise</h2>
+            <p class="text-xs text-gray-400">Assessment DISC Completo</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="exportPDF()" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-300 border border-white/20 hover:border-white/40 transition flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+            </svg>
+            Exportar PDF
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Conteúdo de Resultados -->
+    <main class="max-w-6xl mx-auto px-4 py-8">
+      
+      <!-- Header do Perfil -->
+      <div class="glass-card p-6 md:p-8 mb-6 animate-on-scroll">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-3 mb-2">
+              <h1 class="text-2xl md:text-3xl font-bold">Seu Perfil Comportamental</h1>
+              <span id="profileBadge" class="profile-badge profile-d">
+                <span id="profileLetter">D</span>
+                <span id="profileName">Dominância</span>
+              </span>
+            </div>
+            <p class="text-gray-400">
+              Baseado em 25 perguntas de análise comportamental
+            </p>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="text-center">
+              <div class="text-3xl font-bold gradient-text" id="dominantPercent">68%</div>
+              <div class="text-xs text-gray-400">Perfil Predominante</div>
+            </div>
+            <div class="w-px h-12 bg-white/10"></div>
+            <div class="text-center">
+              <div class="text-3xl font-bold" id="secondaryPercent">24%</div>
+              <div class="text-xs text-gray-400">Perfil Secundário</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráficos DISC -->
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        
+        <!-- Gráfico Radar -->
+        <div class="glass-card p-6 animate-on-scroll">
+          <h3 class="font-semibold mb-4 section-title">Distribuição DISC</h3>
+          <div class="disc-chart-container">
+            <canvas id="radarChart"></canvas>
+          </div>
+        </div>
+        
+        <!-- Gráfico de Barras -->
+        <div class="glass-card p-6 animate-on-scroll">
+          <h3 class="font-semibold mb-4 section-title">Intensidade por Fator</h3>
+          <div class="h-64">
+            <canvas id="barChart"></canvas>
+          </div>
+        </div>
+        
+      </div>
+
+      <!-- Análise Detalhada -->
+      <div class="glass-card p-6 md:p-8 mb-6 animate-on-scroll">
+        <h3 class="font-semibold mb-6 section-title">Análise Comportamental Detalhada</h3>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+          
+          <!-- Comunicação -->
+          <div class="insight-card insight-d p-4 rounded-xl">
+            <h4 class="font-medium mb-2 flex items-center gap-2">
+              <span class="text-brand-red">💬</span>
+              Estilo de Comunicação
+            </h4>
+            <p class="text-sm text-gray-300" id="communicationInsight">
+              Você comunica-se de forma direta e objetiva, preferindo ir direto ao ponto. Valoriza clareza e eficiência nas interações profissionais.
+            </p>
+          </div>
+          
+          <!-- Liderança -->
+          <div class="insight-card insight-d p-4 rounded-xl">
+            <h4 class="font-medium mb-2 flex items-center gap-2">
+              <span class="text-brand-red">👑</span>
+              Estilo de Liderança
+            </h4>
+            <p class="text-sm text-gray-300" id="leadershipInsight">
+              Lidera com foco em resultados, tomando decisões rápidas e assumindo responsabilidades. Motiva equipes através de desafios e metas claras.
+            </p>
+          </div>
+          
+          <!-- Tomada de Decisão -->
+          <div class="insight-card insight-c p-4 rounded-xl">
+            <h4 class="font-medium mb-2 flex items-center gap-2">
+              <span class="text-brand-purple">🎯</span>
+              Tomada de Decisão
+            </h4>
+            <p class="text-sm text-gray-300" id="decisionInsight">
+              Baseia decisões em dados e análise lógica. Prefere avaliar informações completas antes de agir, buscando precisão e minimizar riscos.
+            </p>
+          </div>
+          
+          <!-- Sob Pressão -->
+          <div class="insight-card insight-i p-4 rounded-xl">
+            <h4 class="font-medium mb-2 flex items-center gap-2">
+              <span class="text-brand-blue">⚡</span>
+              Comportamento Sob Pressão
+            </h4>
+            <p class="text-sm text-gray-300" id="pressureInsight">
+              Mantém energia e otimismo mesmo em situações desafiadoras. Usa a comunicação para engajar outros e encontrar soluções colaborativas.
+            </p>
+          </div>
+          
+        </div>
+      </div>
+
+      <!-- Pontos Fortes e de Atenção -->
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        
+        <!-- Pontos Fortes -->
+        <div class="glass-card p-6 animate-on-scroll">
+          <h3 class="font-semibold mb-4 section-title">Pontos Fortes</h3>
+          <ul class="space-y-3" id="strengthsList">
+            <!-- Inserido via JS -->
+          </ul>
+        </div>
+        
+        <!-- Pontos de Atenção -->
+        <div class="glass-card p-6 animate-on-scroll">
+          <h3 class="font-semibold mb-4 section-title">Pontos de Desenvolvimento</h3>
+          <ul class="space-y-3" id="developmentList">
+            <!-- Inserido via JS -->
+          </ul>
+        </div>
+        
+      </div>
+
+      <!-- Sugestões de Carreira -->
+      <div class="glass-card p-6 md:p-8 mb-6 animate-on-scroll">
+        <h3 class="font-semibold mb-6 section-title">Áreas e Carreiras Compatíveis</h3>
+        <div class="flex flex-wrap gap-2" id="careerSuggestions">
+          <!-- Inserido via JS -->
+        </div>
+      </div>
+
+      <!-- Insights Inteligentes -->
+      <div class="glass-card p-6 md:p-8 animate-on-scroll">
+        <h3 class="font-semibold mb-6 section-title">Insights Estratégicos</h3>
+        <div class="grid md:grid-cols-3 gap-4" id="smartInsights">
+          <!-- Inserido via JS -->
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Footer de Resultados -->
+    <footer class="glass border-t border-white/10 py-6 mt-8">
+      <div class="max-w-6xl mx-auto px-4 text-center text-sm text-gray-400">
+        <p class="mb-2">Este relatório foi gerado automaticamente pela plataforma Vigorre People Analytics.</p>
+        <p>Metodologia DISC © Vigorre. Para uso profissional e desenvolvimento de equipes.</p>
+      </div>
+    </footer>
+    
+  </div>
+
+  <!-- ============================================
+       JAVASCRIPT - LÓGICA COMPLETA
+       ============================================ -->
+  <script>
+    // ============================================
+    // ESTADO GLOBAL DA APLICAÇÃO
+    // ============================================
+    const AppState = {
+      currentView: 'landing',
+      currentQuestionIndex: 0,
+      answers: [],
+      discScores: { D: 0, I: 0, S: 0, C: 0 },
+      questions: []
+    };
+
+    // ============================================
+    // BANCO DE PERGUNTAS DISC (25 QUESTÕES)
+    // Cada pergunta tem 4 opções: D, I, S, C
+    // ============================================
+    const DISC_QUESTIONS = [
+      {
+        id: 1,
+        category: 'Liderança',
+        text: 'Quando enfrento um desafio importante no trabalho...',
+        options: [
+          { text: 'Assumo o controle e busco soluções rápidas', type: 'D' },
+          { text: 'Envolvo a equipe e busco consenso', type: 'I' },
+          { text: 'Analiso cuidadosamente antes de agir', type: 'C' },
+          { text: 'Mantenho a calma e apoio quem precisa', type: 'S' }
+        ]
+      },
+      {
+        id: 2,
+        category: 'Comunicação',
+        text: 'Em reuniões de equipe, minha postura natural é...',
+        options: [
+          { text: 'Direta e focada em resultados', type: 'D' },
+          { text: 'Entusiasta e motivadora', type: 'I' },
+          { text: 'Equilibrada e acolhedora', type: 'S' },
+          { text: 'Precisa e baseada em dados', type: 'C' }
+        ]
+      },
+      {
+        id: 3,
+        category: 'Tomada de Decisão',
+        text: 'Ao tomar uma decisão importante, priorizo...',
+        options: [
+          { text: 'Velocidade e impacto nos resultados', type: 'D' },
+          { text: 'O impacto nas pessoas e no clima', type: 'I' },
+          { text: 'Estabilidade e segurança da escolha', type: 'S' },
+          { text: 'Análise detalhada e precisão', type: 'C' }
+        ]
+      },
+      {
+        id: 4,
+        category: 'Conflitos',
+        text: 'Diante de um conflito profissional, eu...',
+        options: [
+          { text: 'Enfrento a situação de frente para resolver', type: 'D' },
+          { text: 'Busco mediar e restaurar a harmonia', type: 'I' },
+          { text: 'Evito confronto e busco entendimento', type: 'S' },
+          { text: 'Analiso os fatos antes de me posicionar', type: 'C' }
+        ]
+      },
+      {
+        id: 5,
+        category: 'Produtividade',
+        text: 'Para ser produtivo, preciso de...',
+        options: [
+          { text: 'Autonomia e liberdade para agir', type: 'D' },
+          { text: 'Ambiente dinâmico e colaborativo', type: 'I' },
+          { text: 'Rotina estável e previsível', type: 'S' },
+          { text: 'Processos claros e bem definidos', type: 'C' }
+        ]
+      },
+      {
+        id: 6,
+        category: 'Mudanças',
+        text: 'Quando há mudanças organizacionais, eu...',
+        options: [
+          { text: 'Vejo como oportunidade e ajo rápido', type: 'D' },
+          { text: 'Me adapto e ajudo outros a se adaptarem', type: 'I' },
+          { text: 'Preciso de tempo para me ajustar', type: 'S' },
+          { text: 'Analiso impactos antes de me envolver', type: 'C' }
+        ]
+      },
+      {
+        id: 7,
+        category: 'Relacionamento',
+        text: 'No relacionamento com colegas, valorizo...',
+        options: [
+          { text: 'Respeito e eficiência', type: 'D' },
+          { text: 'Conexão e bom clima', type: 'I' },
+          { text: 'Confiança e lealdade', type: 'S' },
+          { text: 'Competência e profissionalismo', type: 'C' }
+        ]
+      },
+      {
+        id: 8,
+        category: 'Pressão',
+        text: 'Sob pressão e prazos curtos, eu...',
+        options: [
+          { text: 'Foco no essencial e entrego rápido', type: 'D' },
+          { text: 'Mantenho o ânimo e engajo a equipe', type: 'I' },
+          { text: 'Busco apoio e divido responsabilidades', type: 'S' },
+          { text: 'Organizo prioridades e sigo o plano', type: 'C' }
+        ]
+      },
+      {
+        id: 9,
+        category: 'Inovação',
+        text: 'Diante de novas ideias e projetos, eu...',
+        options: [
+          { text: 'Quero testar e implementar logo', type: 'D' },
+          { text: 'Me entusiasmo e compartilho com outros', type: 'I' },
+          { text: 'Prefiro avaliar antes de me comprometer', type: 'S' },
+          { text: 'Analiso viabilidade e riscos detalhadamente', type: 'C' }
+        ]
+      },
+      {
+        id: 10,
+        category: 'Feedback',
+        text: 'Ao receber feedback, minha reação é...',
+        options: [
+          { text: 'Foco no que posso melhorar para resultados', type: 'D' },
+          { text: 'Agradeço e busco entender a perspectiva', type: 'I' },
+          { text: 'Refleto com calma e busco equilíbrio', type: 'S' },
+          { text: 'Analiso os pontos com objetividade', type: 'C' }
+        ]
+      },
+      {
+        id: 11,
+        category: 'Planejamento',
+        text: 'Ao planejar uma tarefa complexa, eu...',
+        options: [
+          { text: 'Defino metas claras e prazos agressivos', type: 'D' },
+          { text: 'Envolvo pessoas e busco ideias criativas', type: 'I' },
+          { text: 'Estabeleço etapas seguras e realistas', type: 'S' },
+          { text: 'Detalho processos e antecipo obstáculos', type: 'C' }
+        ]
+      },
+      {
+        id: 12,
+        category: 'Vendas/Negociação',
+        text: 'Em uma negociação, minha abordagem é...',
+        options: [
+          { text: 'Direta, focada em fechar o acordo', type: 'D' },
+          { text: 'Persuasiva, criando conexão e entusiasmo', type: 'I' },
+          { text: 'Paciente, buscando entendimento mútuo', type: 'S' },
+          { text: 'Analítica, baseada em dados e lógica', type: 'C' }
+        ]
+      },
+      {
+        id: 13,
+        category: 'Trabalho em Equipe',
+        text: 'Em equipes, meu papel natural é...',
+        options: [
+          { text: 'Liderar e direcionar para resultados', type: 'D' },
+          { text: 'Motivar e integrar os membros', type: 'I' },
+          { text: 'Apoiar e manter a harmonia', type: 'S' },
+          { text: 'Organizar e garantir qualidade', type: 'C' }
+        ]
+      },
+      {
+        id: 14,
+        category: 'Erros',
+        text: 'Quando cometo um erro profissional, eu...',
+        options: [
+          { text: 'Assumo e foco em corrigir rapidamente', type: 'D' },
+          { text: 'Comunico e busco aprendizado coletivo', type: 'I' },
+          { text: 'Refleto e busco não repetir', type: 'S' },
+          { text: 'Analiso causas para evitar recorrência', type: 'C' }
+        ]
+      },
+      {
+        id: 15,
+        category: 'Rotina',
+        text: 'Em relação à rotina de trabalho, prefiro...',
+        options: [
+          { text: 'Variedade e novos desafios constantes', type: 'D' },
+          { text: 'Dinamismo e interação com pessoas', type: 'I' },
+          { text: 'Estabilidade e previsibilidade', type: 'S' },
+          { text: 'Estrutura e processos bem definidos', type: 'C' }
+        ]
+      },
+      {
+        id: 16,
+        category: 'Competitividade',
+        text: 'Em ambientes competitivos, eu...',
+        options: [
+          { text: 'Busco vencer e superar metas', type: 'D' },
+          { text: 'Me motivo pelo reconhecimento', type: 'I' },
+          { text: 'Foco na colaboração, não na competição', type: 'S' },
+          { text: 'Busco excelência técnica e precisão', type: 'C' }
+        ]
+      },
+      {
+        id: 17,
+        category: 'Detalhes',
+        text: 'Ao lidar com detalhes em um projeto, eu...',
+        options: [
+          { text: 'Foco no macro e delego os detalhes', type: 'D' },
+          { text: 'Confio na equipe para os detalhes', type: 'I' },
+          { text: 'Sigo o processo com cuidado', type: 'S' },
+          { text: 'Reviso minuciosamente cada ponto', type: 'C' }
+        ]
+      },
+      {
+        id: 18,
+        category: 'Empatia',
+        text: 'Ao lidar com alguém em dificuldade, eu...',
+        options: [
+          { text: 'Ofereço soluções práticas para resolver', type: 'D' },
+          { text: 'Ofereço apoio emocional e escuta', type: 'I' },
+          { text: 'Ofereço presença e paciência', type: 'S' },
+          { text: 'Ofereço análise e orientação técnica', type: 'C' }
+        ]
+      },
+      {
+        id: 19,
+        category: 'Riscos',
+        text: 'Diante de riscos calculados, eu...',
+        options: [
+          { text: 'Assumo se o retorno for significativo', type: 'D' },
+          { text: 'Avalio o impacto nas pessoas envolvidas', type: 'I' },
+          { text: 'Prefiro segurança e evito riscos', type: 'S' },
+          { text: 'Analiso dados antes de decidir', type: 'C' }
+        ]
+      },
+      {
+        id: 20,
+        category: 'Reconhecimento',
+        text: 'O que mais me motiva profissionalmente é...',
+        options: [
+          { text: 'Resultados visíveis e conquistas', type: 'D' },
+          { text: 'Reconhecimento e admiração', type: 'I' },
+          { text: 'Estabilidade e segurança', type: 'S' },
+          { text: 'Excelência e precisão no trabalho', type: 'C' }
+        ]
+      },
+      {
+        id: 21,
+        category: 'Prazos',
+        text: 'Ao lidar com prazos apertados, eu...',
+        options: [
+          { text: 'Acelero e foco no essencial', type: 'D' },
+          { text: 'Mobilizo a equipe com energia', type: 'I' },
+          { text: 'Organizo e divido para cumprir', type: 'S' },
+          { text: 'Planejo cada etapa para não errar', type: 'C' }
+        ]
+      },
+      {
+        id: 22,
+        category: 'Criatividade',
+        text: 'Para resolver problemas criativamente, eu...',
+        options: [
+          { text: 'Testo ideias rapidamente na prática', type: 'D' },
+          { text: 'Brainstorm com outras pessoas', type: 'I' },
+          { text: 'Refleto e busco soluções equilibradas', type: 'S' },
+          { text: 'Pesquiso e analiso alternativas', type: 'C' }
+        ]
+      },
+      {
+        id: 23,
+        category: 'Autoridade',
+        text: 'Diante de autoridades ou superiores, eu...',
+        options: [
+          { text: 'Sou direto e foco em resultados', type: 'D' },
+          { text: 'Sou comunicativo e busco conexão', type: 'I' },
+          { text: 'Sou respeitoso e busco harmonia', type: 'S' },
+          { text: 'Sou preciso e baseado em fatos', type: 'C' }
+        ]
+      },
+      {
+        id: 24,
+        category: 'Aprendizado',
+        text: 'Meu estilo preferido de aprendizado é...',
+        options: [
+          { text: 'Prático, aprendo fazendo', type: 'D' },
+          { text: 'Social, aprendo trocando com outros', type: 'I' },
+          { text: 'Gradual, aprendo com consistência', type: 'S' },
+          { text: 'Estruturado, aprendo com método', type: 'C' }
+        ]
+      },
+      {
+        id: 25,
+        category: 'Sucesso',
+        text: 'Para mim, sucesso profissional significa...',
+        options: [
+          { text: 'Alcançar metas desafiadoras', type: 'D' },
+          { text: 'Ser reconhecido e influente', type: 'I' },
+          { text: 'Ter equilíbrio e relações saudáveis', type: 'S' },
+          { text: 'Entregar excelência e precisão', type: 'C' }
+        ]
+      }
+    ];
+
+    // ============================================
+    // PERFIS DISC - DADOS COMPLETOS
+    // ============================================
+    const DISC_PROFILES = {
+      D: {
+        name: 'Dominância',
+        color: '#EF4444',
+        gradient: 'from-red-500 to-red-700',
+        badge: 'profile-d',
+        characteristics: [
+          'Competitivo', 'Direto', 'Rápido', 'Estratégico', 'Executor',
+          'Decisivo', 'Ousado', 'Focado em resultados', 'Assertivo', 'Independente'
+        ],
+        strengths: [
+          'Liderança natural em situações desafiadoras',
+          'Tomada de decisão rápida e corajosa',
+          'Foco intenso em resultados e metas',
+          'Capacidade de assumir responsabilidades',
+          'Visão estratégica e orientação para ação'
+        ],
+        development: [
+          'Pode ser percebido como impaciente ou autoritário',
+          'Tendência a ignorar detalhes em prol da velocidade',
+          'Pode negligenciar o impacto emocional nas pessoas',
+          'Dificuldade em delegar e confiar em processos',
+          'Pode ser muito direto em situações que exigem diplomacia'
+        ],
+        careers: [
+          'Executivo / CEO', 'Empreendedor', 'Gestor de Projetos',
+          'Vendas Complexas', 'Consultoria Estratégica', 'Desenvolvimento de Negócios',
+          'Operações', 'Turnaround', 'Startups'
+        ],
+        insights: {
+          communication: 'Comunica-se de forma direta e objetiva, preferindo ir direto ao ponto. Valoriza clareza e eficiência nas interações profissionais.',
+          leadership: 'Lidera com foco em resultados, tomando decisões rápidas e assumindo responsabilidades. Motiva equipes através de desafios e metas claras.',
+          decision: 'Decisões baseadas em impacto e velocidade. Avalia riscos de forma pragmática e age com determinação.',
+          pressure: 'Sob pressão, mantém foco e acelera a execução. Pode tornar-se mais direto e exigente com prazos.'
+        }
+      },
+      I: {
+        name: 'Influência',
+        color: '#3B82F6',
+        gradient: 'from-blue-500 to-blue-700',
+        badge: 'profile-i',
+        characteristics: [
+          'Comunicativo', 'Persuasivo', 'Sociável', 'Otimista', 'Entusiasta',
+          'Carismático', 'Colaborativo', 'Inspirador', 'Networking', 'Criativo'
+        ],
+        strengths: [
+          'Excelente habilidade de comunicação e persuasão',
+          'Capacidade de motivar e engajar equipes',
+          'Networking natural e construção de relacionamentos',
+          'Criatividade e pensamento fora da caixa',
+          'Adaptabilidade em ambientes dinâmicos'
+        ],
+        development: [
+          'Pode priorizar relacionamentos em detrimento de prazos',
+          'Tendência a ser otimista demais em avaliações de risco',
+          'Pode dispersar foco com muitas ideias simultâneas',
+          'Dificuldade com tarefas repetitivas ou muito detalhadas',
+          'Pode evitar confrontos necessários para manter harmonia'
+        ],
+        careers: [
+          'Vendas', 'Marketing', 'Recursos Humanos', 'Treinamento',
+          'Relações Públicas', 'Atendimento ao Cliente', 'Mediação',
+          'Eventos', 'Comunicação Corporativa', 'Desenvolvimento de Pessoas'
+        ],
+        insights: {
+          communication: 'Comunica-se com entusiasmo e empatia, criando conexões genuínas. Usa histórias e exemplos para engajar e persuadir.',
+          leadership: 'Lidera inspirando e motivando pessoas. Cria ambientes colaborativos e valoriza o reconhecimento e o clima positivo.',
+          decision: 'Decisões consideram impacto nas pessoas e oportunidades de crescimento. Valoriza consenso e engajamento.',
+          pressure: 'Sob pressão, mantém otimismo e busca soluções colaborativas. Pode dispersar energia se não houver direção clara.'
+        }
+      },
+      S: {
+        name: 'Estabilidade',
+        color: '#10B981',
+        gradient: 'from-emerald-500 to-emerald-700',
+        badge: 'profile-s',
+        characteristics: [
+          'Paciente', 'Empático', 'Equilibrado', 'Colaborativo', 'Leal',
+          'Estável', 'Apoiador', 'Confiável', 'Harmonioso', 'Consistente'
+        ],
+        strengths: [
+          'Excelente capacidade de escuta e apoio',
+          'Constância e confiabilidade em entregas',
+          'Habilidade em manter harmonia em equipes',
+          'Paciência para processos de longo prazo',
+          'Empatia e inteligência emocional'
+        ],
+        development: [
+          'Pode resistir a mudanças rápidas ou disruptivas',
+          'Tendência a evitar conflitos mesmo quando necessário',
+          'Pode ter dificuldade em priorizar em meio a múltiplas demandas',
+          'Dificuldade em dizer "não" e estabelecer limites',
+          'Pode demorar para tomar decisões por buscar consenso'
+        ],
+        careers: [
+          'Suporte ao Cliente', 'Recursos Humanos', 'Enfermagem', 'Educação',
+          'Assistência Social', 'Administração', 'Coordenação de Equipes',
+          'Atendimento', 'Mediação de Conflitos', 'Gestão de Relacionamento'
+        ],
+        insights: {
+          communication: 'Comunica-se com calma e empatia, priorizando entendimento mútuo. Evita confrontos e busca harmonia nas interações.',
+          leadership: 'Lidera servindo e apoiando a equipe. Cria ambientes seguros e valoriza a colaboração e o bem-estar coletivo.',
+          decision: 'Decisões consideram impacto nas pessoas e estabilidade. Prefere avaliar com calma e buscar consenso antes de agir.',
+          pressure: 'Sob pressão, busca apoio e divide responsabilidades. Pode precisar de tempo para processar mudanças abruptas.'
+        }
+      },
+      C: {
+        name: 'Conformidade',
+        color: '#7C3AED',
+        gradient: 'from-purple-500 to-purple-700',
+        badge: 'profile-c',
+        characteristics: [
+          'Analítico', 'Detalhista', 'Organizado', 'Preciso', 'Metódico',
+          'Sistemático', 'Qualidade', 'Planejador', 'Objetivo', 'Cauteloso'
+        ],
+        strengths: [
+          'Excelência na análise de dados e informações',
+          'Precisão e atenção a detalhes críticos',
+          'Planejamento estruturado e antecipação de riscos',
+          'Compromisso com qualidade e padrões',
+          'Pensamento lógico e resolução de problemas complexos'
+        ],
+        development: [
+          'Pode demorar para decidir por buscar perfeição',
+          'Tendência a ser crítico demais com erros próprios e alheios',
+          'Pode ter dificuldade em ambientes muito dinâmicos ou ambíguos',
+          'Dificuldade em delegar por preocupação com qualidade',
+          'Pode ser percebido como distante ou muito formal'
+        ],
+        careers: [
+          'Engenharia', 'TI / Desenvolvimento', 'Finanças', 'Auditoria',
+          'Pesquisa', 'Qualidade', 'Compliance', 'Análise de Dados',
+          'Contabilidade', 'Planejamento Estratégico', 'Gestão de Processos'
+        ],
+        insights: {
+          communication: 'Comunica-se com precisão e base em fatos. Prefere clareza, dados e estrutura nas interações profissionais.',
+          leadership: 'Lidera através de processos claros e padrões de qualidade. Valoriza competência, planejamento e execução precisa.',
+          decision: 'Decisões baseadas em análise detalhada e dados. Avalia riscos minuciosamente antes de agir.',
+          pressure: 'Sob pressão, organiza prioridades e segue planos. Pode precisar de estrutura para manter eficiência.'
+        }
+      }
+    };
+
+    // ============================================
+    // INICIALIZAÇÃO DA APLICAÇÃO
+    // ============================================
+    document.addEventListener('DOMContentLoaded', () => {
+      // Copiar perguntas para o estado
+      AppState.questions = JSON.parse(JSON.stringify(DISC_QUESTIONS));
+      
+      // Inicializar respostas vazias
+      AppState.answers = new Array(25).fill(null);
+      
+      // Configurar observers para animações
+      setupScrollAnimations();
+      
+      // Carregar progresso salvo se existir
+      loadProgress();
+    });
+
+    // ============================================
+    // ANIMAÇÕES DE SCROLL
+    // ============================================
+    function setupScrollAnimations() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1 });
+      
+      document.querySelectorAll('.animate-on-scroll').forEach(el => {
+        observer.observe(el);
+      });
+    }
+
+    // ============================================
+    // NAVEGAÇÃO ENTRE TELAS
+    // ============================================
+    function showView(viewId) {
+      // Esconder todas as views
+      ['landingPage', 'instructionsPage', 'testPage', 'loadingResults', 'resultsPage'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+      
+      // Mostrar view solicitada
+      document.getElementById(viewId).classList.remove('hidden');
+      
+      // Atualizar estado
+      AppState.currentView = viewId;
+      
+      // Scroll para topo
+      window.scrollTo(0, 0);
+    }
+
+    function startTest() {
+      showView('instructionsPage');
+    }
+
+    function goBack() {
+      showView('landingPage');
+    }
+
+    function startAssessment() {
+      // Resetar estado do teste
+      AppState.currentQuestionIndex = 0;
+      AppState.answers = new Array(25).fill(null);
+      AppState.discScores = { D: 0, I: 0, S: 0, C: 0 };
+      
+      // Carregar primeira pergunta
+      renderQuestion();
+      
+      // Mostrar tela do teste
+      showView('testPage');
+      
+      // Salvar progresso inicial
+      saveProgress();
+    }
+
+    function confirmExit() {
+      if (confirm('Deseja realmente sair do teste? Seu progresso será perdido.')) {
+        showView('landingPage');
+      }
+    }
+
+    function resetTest() {
+      if (confirm('Deseja refazer o teste? Seus resultados atuais serão perdidos.')) {
+        startAssessment();
+      }
+    }
+
+    // ============================================
+    // RENDERIZAÇÃO DE PERGUNTAS
+    // ============================================
+    function renderQuestion() {
+      const question = AppState.questions[AppState.currentQuestionIndex];
+      const container = document.getElementById('questionContainer');
+      
+      // Atualizar informações da pergunta
+      document.getElementById('currentQuestion').textContent = AppState.currentQuestionIndex + 1;
+      document.getElementById('questionCategory').textContent = question.category;
+      document.getElementById('questionText').textContent = question.text;
+      
+      // Atualizar barra de progresso
+      const progress = ((AppState.currentQuestionIndex + 1) / 25) * 100;
+      document.getElementById('progressFill').style.width = `${progress}%`;
+      
+      // Atualizar botões
+      document.getElementById('prevBtn').disabled = AppState.currentQuestionIndex === 0;
+      document.getElementById('nextBtn').textContent = 
+        AppState.currentQuestionIndex === 24 ? 'Ver Resultados' : 'Próxima Pergunta';
+      
+      // Renderizar lista de ranqueamento
+      renderRankList(question.options);
+      
+      // Animar entrada
+      container.style.opacity = '0';
+      container.style.transform = 'translateY(20px)';
+      setTimeout(() => {
+        container.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+        container.style.opacity = '1';
+        container.style.transform = 'translateY(0)';
+      }, 50);
+    }
+
+    function renderRankList(options) {
+      const list = document.getElementById('rankList');
+      list.innerHTML = '';
+      
+      // Embaralhar opções para cada pergunta
+      const shuffled = [...options].sort(() => Math.random() - 0.5);
+      
+      shuffled.forEach((option, index) => {
+        const item = document.createElement('div');
+        item.className = 'rank-item glass p-4 rounded-xl flex items-center gap-4';
+        item.draggable = true;
+        item.dataset.type = option.type;
+        item.dataset.index = index;
+        
+        item.innerHTML = `
+          <div class="rank-badge rank-${index + 1}" id="badge-${index}">${index + 1}º</div>
+          <div class="flex-1">
+            <p class="font-medium">${option.text}</p>
+            <span class="text-xs text-gray-400">Tipo: ${option.type}</span>
+          </div>
+          <div class="text-gray-400">⋮⋮</div>
+        `;
+        
+        // Eventos de drag and drop
+        item.addEventListener('dragstart', handleDragStart);
+        item.addEventListener('dragover', handleDragOver);
+        item.addEventListener('drop', handleDrop);
+        item.addEventListener('dragend', handleDragEnd);
+        
+        list.appendChild(item);
+      });
+      
+      // Carregar resposta salva se existir
+      if (AppState.answers[AppState.currentQuestionIndex]) {
+        applySavedRanking(AppState.answers[AppState.currentQuestionIndex]);
+      }
+    }
+
+    function applySavedRanking(savedOrder) {
+      const list = document.getElementById('rankList');
+      const items = Array.from(list.children);
+      
+      // Reordenar conforme resposta salva
+      savedOrder.forEach((type, newIndex) => {
+        const item = items.find(el => el.dataset.type === type);
+        if (item) {
+          list.appendChild(item);
+          updateRankBadge(item, newIndex + 1);
+        }
+      });
+    }
+
+    function updateRankBadge(item, rank) {
+      const badge = item.querySelector('.rank-badge');
+      badge.className = `rank-badge rank-${rank}`;
+      badge.textContent = `${rank}º`;
+    }
+
+    // ============================================
+    // DRAG AND DROP - RANQUEAMENTO
+    // ============================================
+    let draggedItem = null;
+
+    function handleDragStart(e) {
+      draggedItem = this;
+      this.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/html', this.innerHTML);
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      return false;
+    }
+
+    function handleDrop(e) {
+      e.stopPropagation();
+      
+      if (draggedItem !== this) {
+        const list = document.getElementById('rankList');
+        const items = Array.from(list.children);
+        
+        // Obter índices
+        const draggedIndex = items.indexOf(draggedItem);
+        const targetIndex = items.indexOf(this);
+        
+        // Reordenar no DOM
+        if (draggedIndex < targetIndex) {
+          list.insertBefore(draggedItem, this.nextSibling);
+        } else {
+          list.insertBefore(draggedItem, this);
+        }
+        
+        // Atualizar badges
+        updateAllBadges();
+        
+        // Salvar resposta
+        saveCurrentAnswer();
+      }
+      
+      return false;
+    }
+
+    function handleDragEnd() {
+      this.classList.remove('dragging');
+      draggedItem = null;
+    }
+
+    function updateAllBadges() {
+      const list = document.getElementById('rankList');
+      const items = Array.from(list.children);
+      
+      items.forEach((item, index) => {
+        updateRankBadge(item, index + 1);
+      });
+    }
+
+    // ============================================
+    // SALVAR E CARREGAR RESPOSTAS
+    // ============================================
+    function saveCurrentAnswer() {
+      const list = document.getElementById('rankList');
+      const items = Array.from(list.children);
+      
+      // Criar array ordenado por posição
+      const ranking = items.map(item => item.dataset.type);
+      
+      // Salvar no estado
+      AppState.answers[AppState.currentQuestionIndex] = ranking;
+      
+      // Salvar no localStorage
+      saveProgress();
+    }
+
+    function saveProgress() {
+      const progress = {
+        currentQuestion: AppState.currentQuestionIndex,
+        answers: AppState.answers,
+        timestamp: Date.now()
+      };
+      localStorage.setItem('disc_assessment_progress', JSON.stringify(progress));
+    }
+
+    function loadProgress() {
+      const saved = localStorage.getItem('disc_assessment_progress');
+      if (saved) {
+        try {
+          const progress = JSON.parse(saved);
+          // Verificar se o progresso é recente (últimas 24h)
+          if (Date.now() - progress.timestamp < 24 * 60 * 60 * 1000) {
+            AppState.currentQuestionIndex = progress.currentQuestion;
+            AppState.answers = progress.answers;
+            return true;
+          }
+        } catch (e) {
+          console.error('Erro ao carregar progresso:', e);
+        }
+      }
+      return false;
+    }
+
+    // ============================================
+    // NAVEGAÇÃO NO TESTE
+    // ============================================
+    function prevQuestion() {
+      if (AppState.currentQuestionIndex > 0) {
+        // Salvar resposta atual antes de mudar
+        saveCurrentAnswer();
+        
+        AppState.currentQuestionIndex--;
+        renderQuestion();
+        saveProgress();
+      }
+    }
+
+    function nextQuestion() {
+      // Salvar resposta atual
+      saveCurrentAnswer();
+      
+      // Verificar se todas as opções foram ranqueadas
+      const list = document.getElementById('rankList');
+      if (list.children.length !== 4) {
+        alert('Por favor, ranqueie todas as 4 características antes de continuar.');
+        return;
+      }
+      
+      if (AppState.currentQuestionIndex < 24) {
+        AppState.currentQuestionIndex++;
+        renderQuestion();
+        saveProgress();
+      } else {
+        // Finalizar teste
+        calculateResults();
+        showLoadingResults();
+      }
+    }
+
+    // ============================================
+    // CÁLCULO DOS RESULTADOS DISC
+    // ============================================
+    function calculateResults() {
+      // Resetar scores
+      AppState.discScores = { D: 0, I: 0, S: 0, C: 0 };
+      
+      // Processar cada resposta
+      AppState.answers.forEach((ranking, questionIndex) => {
+        if (ranking && ranking.length === 4) {
+          // Pontuação: 1º = 4pts, 2º = 3pts, 3º = 2pts, 4º = 1pt
+          ranking.forEach((type, position) => {
+            const points = 4 - position;
+            AppState.discScores[type] += points;
+          });
+        }
+      });
+      
+      // Calcular totais e percentuais
+      const total = Object.values(AppState.discScores).reduce((a, b) => a + b, 0);
+      
+      return {
+        scores: AppState.discScores,
+        percentages: {
+          D: Math.round((AppState.discScores.D / total) * 100),
+          I: Math.round((AppState.discScores.I / total) * 100),
+          S: Math.round((AppState.discScores.S / total) * 100),
+          C: Math.round((AppState.discScores.C / total) * 100)
+        },
+        total: total
+      };
+    }
+
+    function showLoadingResults() {
+      showView('loadingResults');
+      
+      // Animar barra de loading
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += Math.random() * 15;
+        if (progress >= 100) {
+          progress = 100;
+          clearInterval(interval);
+          setTimeout(showResults, 500);
+        }
+        document.getElementById('loadingProgress').style.width = `${Math.min(progress, 100)}%`;
+      }, 200);
+    }
+
+    // ============================================
+    // EXIBIÇÃO DE RESULTADOS
+    // ============================================
+    function showResults() {
+      const results = calculateResults();
+      
+      // Identificar perfil predominante e secundário
+      const sorted = Object.entries(results.percentages)
+        .sort((a, b) => b[1] - a[1]);
+      
+      const [dominant, secondary] = sorted;
+      
+      // Atualizar header do perfil
+      const dominantProfile = DISC_PROFILES[dominant[0]];
+      document.getElementById('profileBadge').className = `profile-badge ${dominantProfile.badge}`;
+      document.getElementById('profileLetter').textContent = dominant[0];
+      document.getElementById('profileName').textContent = dominantProfile.name;
+      document.getElementById('dominantPercent').textContent = `${dominant[1]}%`;
+      document.getElementById('secondaryPercent').textContent = `${secondary[1]}%`;
+      
+      // Renderizar gráficos
+      renderCharts(results.percentages);
+      
+      // Renderizar insights
+      renderInsights(dominant[0], secondary[0], results.percentages);
+      
+      // Mostrar página de resultados
+      showView('resultsPage');
+      
+      // Remover progresso salvo
+      localStorage.removeItem('disc_assessment_progress');
+    }
+
+    function renderCharts(percentages) {
+      // Gráfico Radar
+      const radarCtx = document.getElementById('radarChart').getContext('2d');
+      new Chart(radarCtx, {
+        type: 'radar',
+        data: {
+          labels: ['Dominância', 'Influência', 'Estabilidade', 'Conformidade'],
+          datasets: [{
+            label: 'Seu Perfil',
+            data: [percentages.D, percentages.I, percentages.S, percentages.C],
+            backgroundColor: 'rgba(124, 58, 237, 0.2)',
+            borderColor: '#7C3AED',
+            borderWidth: 3,
+            pointBackgroundColor: '#7C3AED',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: '#7C3AED'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            r: {
+              angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
+              grid: { color: 'rgba(255, 255, 255, 0.1)' },
+              pointLabels: { color: '#F8FAFC', font: { size: 11 } },
+              ticks: { display: false, backdropColor: 'transparent' }
+            }
+          },
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+      
+      // Gráfico de Barras
+      const barCtx = document.getElementById('barChart').getContext('2d');
+      new Chart(barCtx, {
+        type: 'bar',
+        data: {
+          labels: ['D', 'I', 'S', 'C'],
+          datasets: [{
+            label: 'Intensidade',
+            data: [percentages.D, percentages.I, percentages.S, percentages.C],
+            backgroundColor: [
+              'rgba(239, 68, 68, 0.8)',
+              'rgba(59, 130, 246, 0.8)',
+              'rgba(16, 185, 129, 0.8)',
+              'rgba(124, 58, 237, 0.8)'
+            ],
+            borderColor: [
+              '#EF4444',
+              '#3B82F6',
+              '#10B981',
+              '#7C3AED'
+            ],
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+              grid: { color: 'rgba(255, 255, 255, 0.1)' },
+              ticks: { color: '#94A3B8' }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { color: '#F8FAFC', font: { weight: 'bold' } }
+            }
+          },
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+    }
+
+    function renderInsights(dominant, secondary, percentages) {
+      const profile = DISC_PROFILES[dominant];
+      
+      // Atualizar insights principais
+      document.getElementById('communicationInsight').textContent = profile.insights.communication;
+      document.getElementById('leadershipInsight').textContent = profile.insights.leadership;
+      document.getElementById('decisionInsight').textContent = profile.insights.decision;
+      document.getElementById('pressureInsight').textContent = profile.insights.pressure;
+      
+      // Pontos fortes
+      const strengthsList = document.getElementById('strengthsList');
+      strengthsList.innerHTML = profile.strengths.map(strength => `
+        <li class="flex items-start gap-2 text-sm text-gray-300">
+          <span class="text-brand-emerald mt-0.5">✓</span>
+          <span>${strength}</span>
+        </li>
+      `).join('');
+      
+      // Pontos de desenvolvimento
+      const devList = document.getElementById('developmentList');
+      devList.innerHTML = profile.development.map(point => `
+        <li class="flex items-start gap-2 text-sm text-gray-300">
+          <span class="text-brand-red mt-0.5">•</span>
+          <span>${point}</span>
+        </li>
+      `).join('');
+      
+      // Sugestões de carreira
+      const careers = document.getElementById('careerSuggestions');
+      careers.innerHTML = profile.careers.map(career => `
+        <span class="px-3 py-1.5 rounded-full text-xs font-medium glass border border-white/10 hover:border-white/30 transition cursor-default">
+          ${career}
+        </span>
+      `).join('');
+      
+      // Insights inteligentes
+      const insights = document.getElementById('smartInsights');
+      const smartInsights = [
+        {
+          icon: '🎯',
+          title: 'Ambiente Ideal',
+          text: 'Ambientes dinâmicos com autonomia para tomar decisões e foco em resultados.'
+        },
+        {
+          icon: '👥',
+          title: 'Estilo de Colaboração',
+          text: 'Trabalha melhor com equipes que valorizam objetividade e eficiência.'
+        },
+        {
+          icon: '🚀',
+          title: 'Potencial de Crescimento',
+          text: 'Desenvolver habilidades de escuta ativa pode ampliar sua influência.'
+        }
+      ];
+      
+      insights.innerHTML = smartInsights.map(insight => `
+        <div class="glass p-4 rounded-xl">
+          <div class="text-2xl mb-2">${insight.icon}</div>
+          <h4 class="font-medium text-sm mb-1">${insight.title}</h4>
+          <p class="text-xs text-gray-400">${insight.text}</p>
+        </div>
+      `).join('');
+    }
+
+    // ============================================
+    // EXPORTAÇÃO PDF (SIMULAÇÃO)
+    // ============================================
+    function exportPDF() {
+      alert('📄 Funcionalidade de exportação PDF:\n\nEm uma implementação real, esta função geraria um relatório profissional em PDF com:\n\n• Gráficos em alta resolução\n• Análise completa do perfil\n• Recomendações personalizadas\n• Identidade visual da empresa\n\nPara esta demonstração, use Ctrl+P para imprimir a página.');
+    }
+
   </script>
 </body>
 </html>
