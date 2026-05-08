@@ -1501,7 +1501,7 @@
     function handleDrop(e) {
       e.stopPropagation();
       
-      if (draggedItem !== this) {
+      if (draggedItem !== this && draggedItem && this.parentNode === draggedItem.parentNode) {
         const list = document.getElementById('rankList');
         const items = Array.from(list.children);
         
@@ -1509,17 +1509,19 @@
         const draggedIndex = items.indexOf(draggedItem);
         const targetIndex = items.indexOf(this);
         
-        // Reordenar no DOM
+        // Reordenar no DOM de forma confiável
         if (draggedIndex < targetIndex) {
-          list.insertBefore(draggedItem, this.nextSibling);
+          // Arrastando para baixo: inserir após o alvo
+          this.parentNode.insertBefore(draggedItem, this.nextSibling);
         } else {
-          list.insertBefore(draggedItem, this);
+          // Arrastando para cima: inserir antes do alvo
+          this.parentNode.insertBefore(draggedItem, this);
         }
         
-        // Atualizar badges
+        // Atualizar badges visualmente
         updateAllBadges();
         
-        // Salvar resposta
+        // Salvar resposta IMEDIATAMENTE
         saveCurrentAnswer();
       }
       
@@ -1547,8 +1549,13 @@
       const list = document.getElementById('rankList');
       const items = Array.from(list.children);
       
-      // Criar array ordenado por posição
-      const ranking = items.map(item => item.dataset.type);
+      // CORREÇÃO: Capturar a ordem REAL baseada na posição visual (topo = índice 0)
+      // Cada item tem dataset.type com 'D', 'I', 'S' ou 'C'
+      const ranking = [];
+      items.forEach((item, visualIndex) => {
+        // visualIndex 0 = topo (1º lugar = 4 pontos), visualIndex 3 = base (4º lugar = 1 ponto)
+        ranking.push(item.dataset.type);
+      });
       
       // Salvar no estado
       AppState.answers[AppState.currentQuestionIndex] = ranking;
