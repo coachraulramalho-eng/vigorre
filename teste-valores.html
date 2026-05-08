@@ -3,375 +3,878 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Valores Pessoais - Vigorre</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <title>Avaliação de Valores Pessoais | Vigorre People Analytics</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: { dark: '#0F172A', purple: '#7C3AED', blue: '#1D4ED8', cyan: '#06B6D4' }
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
+    /* ============================================
+       BASE & RESET
+       ============================================ */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; }
-    header { background: linear-gradient(135deg, #1e3a8a, #0f172a); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; }
-    .logo-icon { width: 35px; height: 35px; background: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #1e3a8a; font-weight: bold; }
-    .timer { background: rgba(255,255,255,0.15); padding: 10px 20px; border-radius: 25px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-    .timer.warning { background: rgba(239, 68, 68, 0.3); animation: pulse 1s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
-    main { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
-    .progress { margin-bottom: 2rem; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    .progress-bar { height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; }
-    .progress-fill { height: 100%; background: linear-gradient(90deg, #8b5cf6, #7c3aed); width: 0%; transition: width 0.5s ease; }
-    .progress-text { display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.9rem; color: #64748b; font-weight: 600; }
-    .question-card { background: white; border-radius: 20px; padding: 2.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 2rem; }
-    .question-number { display: inline-block; background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; }
-    .question-text { font-size: 1.3rem; font-weight: 600; margin-bottom: 2rem; line-height: 1.4; }
-    .value-options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-    .value-option { padding: 18px; border: 2px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.3s; text-align: left; background: #f8fafc; }
-    .value-option:hover { border-color: #8b5cf6; background: #f5f3ff; transform: translateY(-2px); }
-    .value-option.selected { border-color: #7c3aed; background: linear-gradient(135deg, #ede9fe, #ddd6fe); box-shadow: 0 2px 10px rgba(139, 92, 246, 0.3); }
-    .value-name { font-weight: 700; color: #1e40af; margin-bottom: 5px; }
-    .value-desc { font-size: 0.9rem; color: #64748b; }
-    .navigation { display: flex; justify-content: space-between; margin-top: 2rem; gap: 1rem; }
-    .btn { padding: 14px 32px; border-radius: 12px; border: none; cursor: pointer; font-weight: 700; font-size: 1rem; transition: all 0.3s; }
-    .btn-prev { background: #e2e8f0; color: #1e293b; }
-    .btn-prev:hover { background: #cbd5e1; }
-    .btn-prev:disabled { opacity: 0.4; cursor: not-allowed; }
-    .btn-next { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; }
-    .btn-next:hover { transform: translateY(-2px); }
-    .btn-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-    .btn-finish { background: linear-gradient(135deg, #3b82f6, #1e40af); color: white; }
-    .hidden { display: none; }
-    #result { text-align: center; }
-    .result-card { background: white; border-radius: 20px; padding: 3rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin-top: 2rem; }
-    .result-title { font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: #7c3aed; }
-    .top-values { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 2rem 0; }
-    .value-badge { padding: 12px 24px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; border-radius: 25px; font-weight: 600; }
-    .all-values { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0; text-align: left; }
-    .value-item { background: #f8fafc; padding: 1rem; border-radius: 12px; }
-    .value-label { font-weight: 600; color: #1e293b; }
-    .value-bar { height: 8px; background: #e2e8f0; border-radius: 4px; margin: 8px 0; overflow: hidden; }
-    .value-fill { height: 100%; background: linear-gradient(90deg, #8b5cf6, #7c3aed); border-radius: 4px; }
-    .value-percent { font-size: 0.9rem; color: #64748b; font-weight: 600; }
+    body { 
+      font-family: 'Inter', sans-serif; 
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%); 
+      color: #F8FAFC; 
+      min-height: 100vh; 
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ============================================
+       GLASSMORPHISM & PREMIUM EFFECTS
+       ============================================ */
+    .glass {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    .glass-card {
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #60A5FA, #A78BFA, #22D3EE);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gradient-border::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #1D4ED8, #7C3AED, #06B6D4);
+      z-index: -1;
+      opacity: 0.6;
+      filter: blur(8px);
+    }
+
+    /* ============================================
+       ANIMATIONS & MICROINTERACTIONS
+       ============================================ */
+    .fade-in { animation: fadeIn 0.5s ease-out; }
+    .slide-up { animation: slideUp 0.4s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .hover-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .hover-lift:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); }
+
+    /* ============================================
+       RANKING UI
+       ============================================ */
+    .rank-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.875rem;
+      transition: all 0.2s ease; cursor: pointer;
+      border: 2px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.05);
+    }
+    .rank-btn:hover { border-color: #7C3AED; background: rgba(124, 58, 237, 0.2); }
+    .rank-btn.assigned { background: #7C3AED; border-color: #7C3AED; color: white; }
+    
+    .option-card {
+      padding: 16px; border-radius: 12px;
+      border: 2px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.03);
+      transition: all 0.2s ease; cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .option-card:hover { border-color: #3B82F6; background: rgba(59, 130, 246, 0.1); }
+    .option-card.selected { border-color: #10B981; background: rgba(16, 185, 129, 0.15); }
+
+    /* ============================================
+       PROGRESS & LOADING
+       ============================================ */
+    .progress-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #1D4ED8, #7C3AED, #06B6D4); transition: width 0.4s ease; }
+    
+    /* ============================================
+       PRINT STYLES
+       ============================================ */
+    @media print {
+      body { background: white; color: #111; }
+      .no-print, header, .btn-primary, .btn-secondary { display: none !important; }
+      .glass-card, .glass { background: white; border: 1px solid #ccc; box-shadow: none; backdrop-filter: none; }
+      .gradient-text { -webkit-text-fill-color: #1D4ED8; }
+      .results-view { padding: 20px; }
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0F172A; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
   </style>
 </head>
-<body>
-  <header>
-    <div class="logo"><div class="logo-icon">V</div><span>Vigorre - Valores Pessoais</span></div>
-    <div class="timer" id="timer"><span>⏱️</span><span id="time-display">20:00</span></div>
-  </header>
+<body class="antialiased">
 
-  <main>
-    <div id="test-screen">
-      <div class="progress">
-        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-        <div class="progress-text"><span id="progress-text">Questão 1 de 30</span><span id="progress-percent">3%</span></div>
+  <!-- ============================================
+       LANDING PAGE
+       ============================================ -->
+  <div id="landingView" class="min-h-screen flex flex-col">
+    <header class="glass border-b border-white/10 sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center font-bold text-white">V</div>
+          <div><h1 class="font-bold text-lg">Vigorre</h1><p class="text-xs text-gray-400">People Analytics</p></div>
+        </div>
+        <nav class="hidden md:flex items-center gap-6">
+          <a href="#" class="text-sm text-gray-300 hover:text-white transition">Metodologia</a>
+          <a href="#" class="text-sm text-gray-300 hover:text-white transition">Recursos</a>
+          <button onclick="showView('instructionsView')" class="bg-gradient-to-r from-brand-blue to-brand-purple px-5 py-2 rounded-xl text-sm font-medium text-white hover:opacity-90 transition">Iniciar Avaliação</button>
+        </nav>
       </div>
+    </header>
 
-      <div class="question-card">
-        <span class="question-number" id="question-number">Questão 1</span>
-        <div class="question-text" id="question-text">Carregando...</div>
-        <div class="value-options" id="value-options"></div>
+    <main class="flex-1 flex items-center justify-center px-4 py-12">
+      <div class="max-w-4xl mx-auto text-center fade-in">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6">
+          <span class="w-2 h-2 rounded-full bg-brand-cyan animate-pulse"></span>
+          <span class="text-sm text-gray-300">Assessment Premium de Valores & Motivadores</span>
+        </div>
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">Avaliação de <span class="gradient-text">Valores Pessoais</span><br>e Motivadores Humanos</h1>
+        <p class="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto">Descubra os princípios que direcionam suas decisões, comportamentos, relacionamentos e trajetória profissional.</p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+          <button onclick="showView('instructionsView')" class="bg-gradient-to-r from-brand-blue to-brand-purple px-8 py-4 rounded-xl font-semibold text-white text-lg w-full sm:w-auto hover:opacity-90 transition">Iniciar Avaliação Gratuita</button>
+          <button class="px-8 py-4 rounded-xl font-medium text-gray-300 border border-white/20 hover:border-white/40 transition w-full sm:w-auto">Ver Demonstração</button>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
+          <div class="glass-card p-4 hover-lift"><div class="text-2xl mb-2">🎯</div><h3 class="font-semibold text-sm">Propósito Profissional</h3></div>
+          <div class="glass-card p-4 hover-lift"><div class="text-2xl mb-2">🏢</div><h3 class="font-semibold text-sm">Cultura Organizacional</h3></div>
+          <div class="glass-card p-4 hover-lift"><div class="text-2xl mb-2">💡</div><h3 class="font-semibold text-sm">Motivadores Humanos</h3></div>
+          <div class="glass-card p-4 hover-lift"><div class="text-2xl mb-2">🤝</div><h3 class="font-semibold text-sm">Compatibilidade Cultural</h3></div>
+        </div>
       </div>
+    </main>
 
-      <div class="navigation">
-        <button class="btn btn-prev" id="btn-prev" onclick="prevQuestion()">← Anterior</button>
-        <button class="btn btn-next" id="btn-next" onclick="nextQuestion()">Próxima →</button>
-        <button class="btn btn-finish hidden" id="btn-finish" onclick="finishTest()">Finalizar Teste ✓</button>
+    <footer class="glass border-t border-white/10 py-6">
+      <div class="max-w-7xl mx-auto px-4 text-center text-sm text-gray-400">
+        <p>© 2024 Vigorre People Analytics. Metodologia validada em psicologia organizacional.</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ============================================
+       INSTRUCTIONS VIEW
+       ============================================ -->
+  <div id="instructionsView" class="hidden min-h-screen flex items-center justify-center px-4 py-12">
+    <div class="max-w-2xl mx-auto glass-card p-8 slide-up">
+      <div class="text-center mb-8">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center mx-auto mb-4"><span class="text-2xl">💎</span></div>
+        <h2 class="text-2xl font-bold mb-2">Teste de Valores Pessoais e Motivadores</h2>
+        <p class="text-gray-400">Análise Estratégica de Alinhamento Cultural</p>
+      </div>
+      <div class="space-y-4 mb-8 text-gray-300">
+        <p>Esta avaliação foi desenvolvida com base em metodologias modernas de análise de valores humanos, motivadores internos e alinhamento cultural utilizadas em recrutamento estratégico, liderança e desenvolvimento executivo.</p>
+        <p>O objetivo é identificar os princípios que mais influenciam suas decisões, comportamentos, motivação, relacionamentos, carreira e visão de sucesso.</p>
+      </div>
+      <div class="glass p-5 rounded-xl mb-8">
+        <h3 class="font-semibold mb-3 flex items-center gap-2"><span class="text-brand-cyan">ⓘ</span> Instruções Importantes</h3>
+        <ul class="space-y-2 text-sm text-gray-300">
+          <li class="flex items-start gap-2"><span class="text-brand-emerald mt-0.5">✓</span><span>Não existem respostas certas ou erradas</span></li>
+          <li class="flex items-start gap-2"><span class="text-brand-emerald mt-0.5">✓</span><span>Seja totalmente sincero consigo mesmo</span></li>
+          <li class="flex items-start gap-2"><span class="text-brand-emerald mt-0.5">✓</span><span>Para cada situação, ranqueie as 4 alternativas da MAIS para a MENOS importante</span></li>
+          <li class="flex items-start gap-2"><span class="text-brand-emerald mt-0.5">✓</span><span>O teste não possui tempo limite</span></li>
+          <li class="flex items-start gap-2"><span class="text-brand-emerald mt-0.5">✓</span><span>Responda de acordo com sua essência, não com o "ideal"</span></li>
+        </ul>
+      </div>
+      <div class="flex gap-3">
+        <button onclick="showView('landingView')" class="flex-1 px-4 py-3 rounded-xl font-medium text-gray-300 border border-white/20 hover:border-white/40 transition">Voltar</button>
+        <button onclick="startAssessment()" class="flex-1 bg-gradient-to-r from-brand-blue to-brand-purple px-4 py-3 rounded-xl font-semibold text-white hover:opacity-90 transition">Entendi, Iniciar Teste</button>
       </div>
     </div>
+  </div>
 
-    <div id="result" class="hidden">
-      <div class="result-card">
-        <div class="result-title">💎 Seus Valores Pessoais</div>
-        <p id="result-description">Analisando seus valores fundamentais...</p>
-        <div class="top-values" id="top-values"></div>
-        <div class="all-values" id="all-values"></div>
-        <button class="btn btn-primary" style="margin-top: 2rem;" onclick="window.location.href='index.html'">Voltar ao Início</button>
+  <!-- ============================================
+       TEST VIEW
+       ============================================ -->
+  <div id="testView" class="hidden min-h-screen flex flex-col">
+    <header class="glass border-b border-white/10 px-4 py-3 sticky top-0 z-40 no-print">
+      <div class="max-w-4xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <button onclick="confirmExit()" class="p-2 rounded-lg hover:bg-white/10 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg></button>
+          <div><h2 class="font-semibold">Avaliação de Valores</h2><p class="text-xs text-gray-400">Pergunta <span id="currentQ">1</span> de 30</p></div>
+        </div>
+        <div class="w-48"><div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 3.33%"></div></div></div>
       </div>
+    </header>
+
+    <main class="flex-1 flex items-center justify-center px-4 py-8">
+      <div class="max-w-3xl mx-auto w-full">
+        <div id="questionContainer" class="glass-card p-6 md:p-8 slide-up">
+          <div class="mb-6">
+            <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-blue/20 text-brand-blue text-xs font-medium mb-3" id="qTheme">Realização</span>
+            <h3 class="text-xl md:text-2xl font-semibold" id="qText">Carregando situação...</h3>
+          </div>
+          
+          <div class="glass p-4 rounded-xl mb-6">
+            <p class="text-sm text-gray-300"><strong class="text-white">Instrução:</strong> Toque nos números 1º, 2º, 3º, 4º para atribuir a importância de cada alternativa. Não é permitido repetir posições.</p>
+          </div>
+
+          <div id="optionsContainer" class="space-y-3 mb-8">
+            <!-- Options injected via JS -->
+          </div>
+
+          <div class="flex gap-3 no-print">
+            <button id="prevBtn" onclick="prevQuestion()" class="flex-1 px-4 py-3 rounded-xl font-medium text-gray-300 border border-white/20 hover:border-white/40 transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>Anterior</button>
+            <button id="nextBtn" onclick="nextQuestion()" class="flex-1 bg-gradient-to-r from-brand-blue to-brand-purple px-4 py-3 rounded-xl font-semibold text-white hover:opacity-90 transition">Próxima Pergunta</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ============================================
+       LOADING VIEW
+       ============================================ -->
+  <div id="loadingView" class="hidden min-h-screen flex items-center justify-center px-4">
+    <div class="text-center slide-up">
+      <div class="relative w-24 h-24 mx-auto mb-6">
+        <div class="absolute inset-0 rounded-full border-4 border-white/10"></div>
+        <div class="absolute inset-0 rounded-full border-4 border-t-brand-cyan border-r-brand-purple border-b-transparent border-l-transparent animate-spin"></div>
+        <div class="absolute inset-4 rounded-full bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center"><span class="text-2xl">💎</span></div>
+      </div>
+      <h3 class="text-xl font-semibold mb-2">Analisando seu Perfil Motivacional</h3>
+      <p class="text-gray-400 mb-6">Processando suas respostas com algoritmo de values alignment...</p>
+      <div class="w-64 mx-auto"><div class="progress-bar"><div class="progress-fill" id="loadingProgress" style="width: 0%"></div></div></div>
     </div>
-  </main>
+  </div>
+
+  <!-- ============================================
+       RESULTS VIEW (EXECUTIVE DASHBOARD)
+       ============================================ -->
+  <div id="resultsView" class="hidden min-h-screen">
+    <header class="glass border-b border-white/10 px-4 py-4 sticky top-0 z-40 no-print">
+      <div class="max-w-6xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <button onclick="resetTest()" class="p-2 rounded-lg hover:bg-white/10 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg></button>
+          <div><h2 class="font-semibold">Resultado da Avaliação</h2><p class="text-xs text-gray-400">Valores Pessoais & Motivadores</p></div>
+        </div>
+        <div class="flex items-center gap-2 no-print">
+          <button onclick="window.print()" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-300 border border-white/20 hover:border-white/40 transition flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Exportar PDF
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-8 results-view">
+      <!-- Header Perfil -->
+      <div class="glass-card p-6 md:p-8 mb-6 slide-up">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-3 mb-2">
+              <h1 class="text-2xl md:text-3xl font-bold">Seu Perfil de Valores</h1>
+              <span id="profileBadge" class="px-3 py-1 rounded-full text-sm font-semibold bg-brand-purple/20 text-brand-purple border border-brand-purple/30">Realizador Estratégico</span>
+            </div>
+            <p class="text-gray-400">Baseado em 30 cenários de análise motivacional profunda</p>
+          </div>
+          <div class="flex items-center gap-6">
+            <div class="text-center"><div class="text-3xl font-bold gradient-text" id="motivationIndex">87%</div><div class="text-xs text-gray-400 mt-1">Índice Motivacional</div></div>
+            <div class="w-px h-16 bg-white/10"></div>
+            <div class="text-center"><div class="text-3xl font-bold" id="culturalFit">Alto</div><div class="text-xs text-gray-400 mt-1">Compatibilidade Cultural</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráficos -->
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <div class="glass-card p-6 slide-up">
+          <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">Radar de Valores</h3>
+          <div class="h-72"><canvas id="radarChart"></canvas></div>
+        </div>
+        <div class="glass-card p-6 slide-up">
+          <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">Intensidade por Dimensão</h3>
+          <div class="h-72"><canvas id="barChart"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Análise Detalhada -->
+      <div class="glass-card p-6 md:p-8 mb-6 slide-up">
+        <h3 class="font-semibold mb-6 border-b border-white/10 pb-2">Análise Estratégica de Motivadores</h3>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="p-4 rounded-xl bg-white/5 border-l-4 border-brand-blue">
+            <h4 class="font-medium mb-2 text-brand-blue">Ambiente Ideal de Trabalho</h4>
+            <p class="text-sm text-gray-300" id="envAnalysis">Ambientes que ofereçam autonomia para inovação, com metas claras e reconhecimento por resultados tangíveis. Cultura focada em performance e crescimento contínuo.</p>
+          </div>
+          <div class="p-4 rounded-xl bg-white/5 border-l-4 border-brand-purple">
+            <h4 class="font-medium mb-2 text-brand-purple">Estilo de Liderança Compatível</h4>
+            <p class="text-sm text-gray-300" id="leadAnalysis">Liderança orientada a resultados, que delega confiança, fornece feedback direto e valoriza a eficiência e a independência na execução das tarefas.</p>
+          </div>
+          <div class="p-4 rounded-xl bg-white/5 border-l-4 border-brand-cyan">
+            <h4 class="font-medium mb-2 text-brand-cyan">Fatores de Engajamento</h4>
+            <p class="text-sm text-gray-300" id="engageAnalysis">Desafios intelectuais, liberdade para propor soluções, métricas de sucesso claras e oportunidades de aceleração de carreira.</p>
+          </div>
+          <div class="p-4 rounded-xl bg-white/5 border-l-4 border-brand-emerald">
+            <h4 class="font-medium mb-2 text-brand-emerald">Fatores de Desmotivação</h4>
+            <p class="text-sm text-gray-300" id="demotivateAnalysis">Microgerenciamento, burocracia excessiva, falta de reconhecimento por entregas de alto impacto e ambientes estagnados sem evolução.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Orientações & Sugestões -->
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <div class="glass-card p-6 slide-up">
+          <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">Orientações Estratégicas</h3>
+          <ul class="space-y-3 text-sm text-gray-300" id="strategicOrientations">
+            <!-- JS Injected -->
+          </ul>
+        </div>
+        <div class="glass-card p-6 slide-up">
+          <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">Áreas Profissionais Aderentes</h3>
+          <div class="flex flex-wrap gap-2" id="careerSuggestions">
+            <!-- JS Injected -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Frase Impactante -->
+      <div class="glass-card p-8 text-center slide-up mb-8">
+        <blockquote class="text-xl italic text-gray-300 mb-4">"<span id="impactQuote">Seus valores definem suas escolhas, e suas escolhas definem seu futuro. Quando estão alinhados ao ambiente, a performance se torna natural.</span>"</blockquote>
+        <p class="text-sm text-gray-400">— Vigorre People Analytics</p>
+      </div>
+    </main>
+  </div>
 
   <script>
-    // Questões baseadas na teoria de Schwartz
+    // ============================================
+    // ESTADO GLOBAL
+    // ============================================
+    const AppState = {
+      currentQ: 0,
+      answers: [], // Cada item é um array de 4 dimensões na ordem 1º, 2º, 3º, 4º
+      dimensions: { realizacao: 0, seguranca: 0, relacionamento: 0, autonomia: 0, proposito: 0, reconhecimento: 0, inovacao: 0, equilibrio: 0 },
+      maxPoints: 120 // 30 perguntas * 4 pontos
+    };
+
+    // ============================================
+    // BANCO DE PERGUNTAS (30 QUESTÕES)
+    // ============================================
     const questions = [
-      { text: "Para mim, é importante:", values: [
-        { name: "Realização", desc: "Alcançar sucesso pessoal" },
-        { name: "Poder", desc: "Ter autoridade e status" },
-        { name: "Segurança", desc: "Manter estabilidade" },
-        { name: "Conformidade", desc: "Seguir regras sociais" }
+      { id: 1, theme: "Realização", text: "Ao receber uma nova responsabilidade no trabalho, minha prioridade imediata é:", options: [
+        { text: "Definir metas desafiadoras e alcançar resultados visíveis", dim: "realizacao" },
+        { text: "Garantir que o processo seja seguro e livre de riscos", dim: "seguranca" },
+        { text: "Manter um clima colaborativo com a equipe", dim: "relacionamento" },
+        { text: "Ter liberdade para executar do meu jeito", dim: "autonomia" }
       ]},
-      { text: "No trabalho, valorizo:", values: [
-        { name: "Criatividade", desc: "Inovar e criar" },
-        { name: "Independência", desc: "Ter autonomia" },
-        { name: "Colaboração", desc: "Trabalhar em equipe" },
-        { name: "Excelência", desc: "Buscar qualidade" }
+      { id: 2, theme: "Propósito", text: "O que mais me motiva a continuar em uma empresa a longo prazo?", options: [
+        { text: "Sentir que meu trabalho tem impacto real e significado", dim: "proposito" },
+        { text: "Reconhecimento público e status na organização", dim: "reconhecimento" },
+        { text: "Oportunidade de inovar e criar coisas novas", dim: "inovacao" },
+        { text: "Equilíbrio saudável entre vida pessoal e profissional", dim: "equilibrio" }
       ]},
-      { text: "Nas relações pessoais:", values: [
-        { name: "Lealdade", desc: "Ser fiel" },
-        { name: "Honestidade", desc: "Ser sincero" },
-        { name: "Respeito", desc: "Valorizar o outro" },
-        { name: "Empatia", desc: "Compreender sentimentos" }
+      { id: 3, theme: "Segurança", text: "Diante de uma reestruturação organizacional, meu maior receio é:", options: [
+        { text: "Perder estabilidade e previsibilidade financeira", dim: "seguranca" },
+        { text: "Não ter espaço para crescer e conquistar novos patamares", dim: "realizacao" },
+        { text: "Perder conexões importantes e suporte da equipe", dim: "relacionamento" },
+        { text: "Ser excessivamente monitorado e perder independência", dim: "autonomia" }
       ]},
-      { text: "Na vida, busco:", values: [
-        { name: "Liberdade", desc: "Ter escolhas" },
-        { name: "Aventura", desc: "Viver experiências" },
-        { name: "Estabilidade", desc: "Ter segurança" },
-        { name: "Crescimento", desc: "Evoluir constantemente" }
+      { id: 4, theme: "Autonomia", text: "No meu dia a dia profissional, o que é inegociável para minha satisfação?", options: [
+        { text: "Flexibilidade de horários e método de trabalho", dim: "autonomia" },
+        { text: "Clareza de papéis e processos bem definidos", dim: "seguranca" },
+        { text: "Celebrar conquistas e ser valorizado por elas", dim: "reconhecimento" },
+        { text: "Contribuir para uma causa maior que o lucro", dim: "proposito" }
       ]},
-      { text: "É fundamental para mim:", values: [
-        { name: "Justiça", desc: "Agir com equidade" },
-        { name: "Responsabilidade", desc: "Cumprir obrigações" },
-        { name: "Generosidade", desc: "Ajudar outros" },
-        { name: "Ambição", desc: "Alcançar metas" }
+      { id: 5, theme: "Reconhecimento", text: "Quando entrego um projeto de alta performance, espero que:", options: [
+        { text: "Meu esforço seja visibilizado e recompensado formalmente", dim: "reconhecimento" },
+        { text: "A empresa ofereça mais desafios e crescimento", dim: "realizacao" },
+        { text: "A equipe compartilhe da celebração e do crédito", dim: "relacionamento" },
+        { text: "Seja dado espaço para testar novas abordagens no próximo", dim: "inovacao" }
       ]},
-      { text: "Admiro pessoas que são:", values: [
-        { name: "Coragem", desc: "Enfrentam desafios" },
-        { name: "Sabedoria", desc: "Têm conhecimento" },
-        { name: "Bondade", desc: "São compassivas" },
-        { name: "Disciplina", desc: "São organizadas" }
+      { id: 6, theme: "Inovação", text: "Diante de um problema complexo, minha tendência natural é:", options: [
+        { text: "Pensar fora da caixa e propor soluções disruptivas", dim: "inovacao" },
+        { text: "Buscar dados e seguir o método comprovado", dim: "seguranca" },
+        { text: "Conversar com outros para entender diferentes perspectivas", dim: "relacionamento" },
+        { text: "Focar no que trará o maior retorno mensurável", dim: "realizacao" }
       ]},
-      { text: "Minhas decisões são baseadas em:", values: [
-        { name: "Lógica", desc: "Razão e análise" },
-        { name: "Valores", desc: "Princípios pessoais" },
-        { name: "Emoções", desc: "Sentimentos" },
-        { name: "Resultados", desc: "Consequências práticas" }
+      { id: 7, theme: "Equilíbrio", text: "O conceito de 'sucesso' para mim está diretamente ligado a:", options: [
+        { text: "Ter saúde mental, tempo para família e paz interior", dim: "equilibrio" },
+        { text: "Alcançar posições de destaque e influência", dim: "reconhecimento" },
+        { text: "Liberdade geográfica e financeira", dim: "autonomia" },
+        { text: "Deixar um legado positivo e transformador", dim: "proposito" }
       ]},
-      { text: "O sucesso significa:", values: [
-        { name: "Reconhecimento", desc: "Ser valorizado" },
-        { name: "Realização", desc: "Alcançar objetivos" },
-        { name: "Felicidade", desc: "Bem-estar" },
-        { name: "Impacto", desc: "Fazer diferença" }
+      { id: 8, theme: "Relacionamento", text: "Em um conflito de ideias, valorizo mais:", options: [
+        { text: "Preservar a harmonia e o respeito mútuo", dim: "relacionamento" },
+        { text: "Chegar à verdade técnica e lógica rapidamente", dim: "inovacao" },
+        { text: "Garantir que a decisão traga segurança jurídica/financeira", dim: "seguranca" },
+        { text: "Avançar rápido para não perder a janela de oportunidade", dim: "realizacao" }
       ]},
-      { text: "Prefiro ambientes:", values: [
-        { name: "Competitivos", desc: "Desafiadores" },
-        { name: "Cooperativos", desc: "Colaborativos" },
-        { name: "Estáveis", desc: "Previsíveis" },
-        { name: "Dinâmicos", desc: "Variados" }
+      { id: 9, theme: "Realização", text: "O que me faz sentir verdadeiramente realizado(a) no trabalho?", options: [
+        { text: "Superar expectativas e bater metas agressivas", dim: "realizacao" },
+        { text: "Ter autonomia para tomar minhas próprias decisões", dim: "autonomia" },
+        { text: "Ser referência e inspiração para outros", dim: "reconhecimento" },
+        { text: "Saber que meu trabalho melhora a vida das pessoas", dim: "proposito" }
       ]},
-      { text: "Valorizo mais:", values: [
-        { name: "Tradição", desc: "Costumes e cultura" },
-        { name: "Inovação", desc: "Mudança e progresso" },
-        { name: "Família", desc: "Relações familiares" },
-        { name: "Carreira", desc: "Desenvolvimento profissional" }
+      { id: 10, theme: "Segurança", text: "Ao aceitar uma nova proposta, analiso primeiro:", options: [
+        { text: "Benefícios, plano de carreira e estabilidade do contrato", dim: "seguranca" },
+        { text: "Potencial de ganho variável e bônus por performance", dim: "realizacao" },
+        { text: "Cultura da empresa e qualidade do time", dim: "relacionamento" },
+        { text: "Possibilidade de home office e horários flexíveis", dim: "autonomia" }
       ]},
-      { text: "É importante que:", values: [
-        { name: "Seja ouvido", desc: "Minha opinião importe" },
-        { name: "Seja útil", desc: "Contribua positivamente" },
-        { name: "Seja respeitado", desc: "Receba consideração" },
-        { name: "Seja livre", desc: "Tenha autonomia" }
+      { id: 11, theme: "Propósito", text: "Minha motivação intrínseca vem de:", options: [
+        { text: "Resolver problemas que afetam a sociedade ou comunidade", dim: "proposito" },
+        { text: "Aprender constantemente e dominar novas competências", dim: "inovacao" },
+        { text: "Construir uma rede sólida de parceiros e amigos", dim: "relacionamento" },
+        { text: "Alcançar independência financeira e lifestyle desejado", dim: "equilibrio" }
       ]},
-      { text: "Busco constantemente:", values: [
-        { name: "Aprendizado", desc: "Conhecimento novo" },
-        { name: "Prazer", desc: "Experiências agradáveis" },
-        { name: "Paz interior", desc: "Tranquilidade" },
-        { name: "Desafios", desc: "Superação" }
+      { id: 12, theme: "Autonomia", text: "Meu estilo de trabalho ideal é aquele onde:", options: [
+        { text: "Posso gerenciar meu tempo e entregas sem supervisão constante", dim: "autonomia" },
+        { text: "Existe um manual claro e processos padronizados", dim: "seguranca" },
+        { text: "Há feedbacks frequentes e acompanhamento de perto", dim: "reconhecimento" },
+        { text: "Posso colaborar intensamente e co-criar com outros", dim: "relacionamento" }
       ]},
-      { text: "Minha motivação vem de:", values: [
-        { name: "Conquistas", desc: "Alcançar metas" },
-        { name: "Relacionamentos", desc: "Conexões humanas" },
-        { name: "Propósito", desc: "Significado" },
-        { name: "Reconhecimento", desc: "Aprovação" }
+      { id: 13, theme: "Reconhecimento", text: "O que mais me irrita em um ambiente corporativo?", options: [
+        { text: "Falta de mérito e crédito sendo dado a quem não produziu", dim: "reconhecimento" },
+        { text: "Burocracia que trava a velocidade e a inovação", dim: "inovacao" },
+        { text: "Instabilidade constante e trocas frequentes de liderança", dim: "seguranca" },
+        { text: "Falta de propósito e trabalho apenas por trabalho", dim: "proposito" }
       ]},
-      { text: "Valorizo a:", values: [
-        { name: "Eficiência", desc: "Fazer bem feito" },
-        { name: "Criatividade", desc: "Inovação" },
-        { name: "Harmonia", desc: "Equilíbrio" },
-        { name: "Justiça", desc: "Equidade" }
+      { id: 14, theme: "Inovação", text: "Diante de uma mudança de mercado, minha reação é:", options: [
+        { text: "Buscar novas tecnologias e modelos de negócio", dim: "inovacao" },
+        { text: "Reforçar o que já funciona bem e proteger o core", dim: "seguranca" },
+        { text: "Manter a equipe unida e motivada durante a transição", dim: "relacionamento" },
+        { text: "Aproveitar a crise para escalar resultados rapidamente", dim: "realizacao" }
       ]},
-      { text: "É essencial:", values: [
-        { name: "Autenticidade", desc: "Ser verdadeiro" },
-        { name: "Competência", desc: "Ter habilidades" },
-        { name: "Amor", desc: "Receber afeto" },
-        { name: "Independência", desc: "Ter liberdade" }
+      { id: 15, theme: "Equilíbrio", text: "Para manter alta performance a longo prazo, preciso de:", options: [
+        { text: "Pausas estratégicas, hobbies e tempo de qualidade offline", dim: "equilibrio" },
+        { text: "Desafios crescentes e evolução constante de cargo", dim: "realizacao" },
+        { text: "Espaço para experimentar e errar sem punição", dim: "inovacao" },
+        { text: "Reconhecimento tangível e crescimento salarial", dim: "reconhecimento" }
       ]},
-      { text: "Prefiro:", values: [
-        { name: "Liderar", desc: "Comandar" },
-        { name: "Colaborar", desc: "Trabalhar junto" },
-        { name: "Apoiar", desc: "Ajudar" },
-        { name: "Executar", desc: "Realizar" }
+      { id: 16, theme: "Relacionamento", text: "Na construção da minha carreira, priorizo:", options: [
+        { text: "Cultivar relacionamentos genuínos e de confiança", dim: "relacionamento" },
+        { text: "Desenvolver habilidades técnicas raras e valiosas", dim: "inovacao" },
+        { text: "Garantir estabilidade e segurança patrimonial", dim: "seguranca" },
+        { text: "Ter liberdade para empreender ou atuar como PJ", dim: "autonomia" }
       ]},
-      { text: "Acredito em:", values: [
-        { name: "Mudança", desc: "Transformação" },
-        { name: "Estabilidade", desc: "Constância" },
-        { name: "Progresso", desc: "Evolução" },
-        { name: "Tradição", desc: "Permanência" }
+      { id: 17, theme: "Realização", text: "O feedback que mais me impulsiona é:", options: [
+        { text: "'Você superou a meta e entregou acima do esperado'", dim: "realizacao" },
+        { text: "'Sua abordagem criativa abriu novos caminhos'", dim: "inovacao" },
+        { text: "'Você é peça fundamental para a coesão do time'", dim: "relacionamento" },
+        { text: "'Seu trabalho traz impacto real para nossos clientes'", dim: "proposito" }
       ]},
-      { text: "Minha prioridade é:", values: [
-        { name: "Trabalho", desc: "Carreira" },
-        { name: "Família", desc: "Relações pessoais" },
-        { name: "Saúde", desc: "Bem-estar" },
-        { name: "Crescimento", desc: "Desenvolvimento" }
+      { id: 18, theme: "Segurança", text: "Em momentos de alta pressão, busco:", options: [
+        { text: "Seguir protocolos e minimizar erros críticos", dim: "seguranca" },
+        { text: "Apoio emocional e alinhamento com colegas", dim: "relacionamento" },
+        { text: "Foco total na entrega e eliminação de distrações", dim: "realizacao" },
+        { text: "Estratégias novas que quebrem o ciclo de estresse", dim: "inovacao" }
       ]},
-      { text: "Valorizo pessoas:", values: [
-        { name: "Competentes", desc: "Habilidosas" },
-        { name: "Éticas", desc: "Íntegras" },
-        { name: "Amigáveis", desc: "Simpáticas" },
-        { name: "Criativas", desc: "Inovadoras" }
+      { id: 19, theme: "Autonomia", text: "O que define minha lealdade a uma organização?", options: [
+        { text: "Respeito à minha independência e confiança na minha expertise", dim: "autonomia" },
+        { text: "Planos de sucessão e estabilidade de longo prazo", dim: "seguranca" },
+        { text: "Cultura de reconhecimento e meritocracia clara", dim: "reconhecimento" },
+        { text: "Missão e valores que ressoam com os meus", dim: "proposito" }
       ]},
-      { text: "O que me define:", values: [
-        { name: "Determinação", desc: "Foco" },
-        { name: "Empatia", desc: "Compreensão" },
-        { name: "Criatividade", desc: "Inovação" },
-        { name: "Lealdade", desc: "Fidelidade" }
+      { id: 20, theme: "Reconhecimento", text: "Ao negociar minha remuneração, o peso maior fica em:", options: [
+        { text: "Bônus por resultados e participação nos lucros", dim: "realizacao" },
+        { text: "Reconhecimento de cargo, título e status no mercado", dim: "reconhecimento" },
+        { text: "Benefícios de saúde, previdência e segurança", dim: "seguranca" },
+        { text: "Flexibilidade, dias livres e qualidade de vida", dim: "equilibrio" }
       ]},
-      { text: "É importante ter:", values: [
-        { name: "Segurança financeira", desc: "Estabilidade" },
-        { name: "Liberdade de escolha", desc: "Autonomia" },
-        { name: "Relacionamentos", desc: "Conexões" },
-        { name: "Realização pessoal", desc: "Sucesso" }
+      { id: 21, theme: "Inovação", text: "Minha criatividade floresce quando:", options: [
+        { text: "Tenho liberdade para testar hipóteses e iterar rápido", dim: "inovacao" },
+        { text: "Existe um problema claro que precisa de solução prática", dim: "realizacao" },
+        { text: "Posso colaborar e fazer brainstorming com outros", dim: "relacionamento" },
+        { text: "Tenho tempo e tranquilidade para refletir profundamente", dim: "equilibrio" }
       ]},
-      { text: "Busco:", values: [
-        { name: "Excelência", desc: "Qualidade" },
-        { name: "Diversão", desc: "Alegria" },
-        { name: "Sabedoria", desc: "Conhecimento" },
-        { name: "Poder", desc: "Influência" }
+      { id: 22, theme: "Equilíbrio", text: "O burnout me atinge quando:", options: [
+        { text: "Perco o controle sobre minha agenda e limites", dim: "autonomia" },
+        { text: "O trabalho consome toda minha energia sem retorno pessoal", dim: "equilibrio" },
+        { text: "Sinto que estou estagnado sem evolução visível", dim: "realizacao" },
+        { text: "O ambiente é tóxico ou desalinhado com meus princípios", dim: "proposito" }
       ]},
-      { text: "Valorizo:", values: [
-        { name: "Honestidade", desc: "Verdade" },
-        { name: "Ambição", desc: "Sucesso" },
-        { name: "Generosidade", desc: "Doação" },
-        { name: "Disciplina", desc: "Organização" }
+      { id: 23, theme: "Relacionamento", text: "Para mim, liderar é essencialmente:", options: [
+        { text: "Desenvolver pessoas e criar um ambiente seguro", dim: "relacionamento" },
+        { text: "Direcionar estratégias e cobrar excelência", dim: "realizacao" },
+        { text: "Inspirar mudança e desafiar o status quo", dim: "inovacao" },
+        { text: "Proteger a equipe de riscos e incertezas externas", dim: "seguranca" }
       ]},
-      { text: "É fundamental:", values: [
-        { name: "Respeitar outros", desc: "Consideração" },
-        { name: "Ser respeitado", desc: "Reconhecimento" },
-        { name: "Ajudar sociedade", desc: "Contribuição" },
-        { name: "Crescer pessoal", desc: "Evolução" }
+      { id: 24, theme: "Propósito", text: "O legado que quero deixar na minha carreira é:", options: [
+        { text: "Ter contribuído para transformar realidades e comunidades", dim: "proposito" },
+        { text: "Ter construído algo próprio e duradouro", dim: "autonomia" },
+        { text: "Ser lembrado pela excelência e alta performance", dim: "realizacao" },
+        { text: "Ter formado uma rede forte de mentores e liderados", dim: "relacionamento" }
       ]},
-      { text: "Prefiro viver:", values: [
-        { name: "Com paixão", desc: "Intensidade" },
-        { name: "Com prudência", desc: "Cautela" },
-        { name: "Com alegria", desc: "Otimismo" },
-        { name: "Com propósito", desc: "Significado" }
+      { id: 25, theme: "Reconhecimento", text: "O que me faz permanecer em um projeto difícil?", options: [
+        { text: "A certeza de que serei creditado pelo sucesso", dim: "reconhecimento" },
+        { text: "A autonomia para resolver do meu jeito", dim: "autonomia" },
+        { text: "A segurança de que não haverá demissões ou cortes", dim: "seguranca" },
+        { text: "A chance de aprender algo que ninguém mais domina", dim: "inovacao" }
       ]},
-      { text: "Valorizo a:", values: [
-        { name: "Diversidade", desc: "Variedade" },
-        { name: "Unidade", desc: "Harmonia" },
-        { name: "Competição", desc: "Rivalidade" },
-        { name: "Cooperação", desc: "Colaboração" }
+      { id: 26, theme: "Inovação", text: "Minha relação com regras e processos é:", options: [
+        { text: "Úteis se funcionam, mas prontas para serem quebradas se travarem", dim: "inovacao" },
+        { text: "Essenciais para manter ordem e previsibilidade", dim: "seguranca" },
+        { text: "Menos importantes que o resultado e a velocidade", dim: "realizacao" },
+        { text: "Deveriam servir às pessoas, não o contrário", dim: "relacionamento" }
       ]},
-      { text: "É importante:", values: [
-        { name: "Ser lembrado", desc: "Legado" },
-        { name: "Ser feliz", desc: "Bem-estar" },
-        { name: "Ser útil", desc: "Serviço" },
-        { name: "Ser livre", desc: "Autonomia" }
+      { id: 27, theme: "Equilíbrio", text: "Minha visão de carreira ideal inclui:", options: [
+        { text: "Trabalhar de qualquer lugar, controlando meu ritmo", dim: "autonomia" },
+        { text: "Crescer sem sacrificar saúde e família", dim: "equilibrio" },
+        { text: "Alcançar o topo e ser referência no setor", dim: "reconhecimento" },
+        { text: "Gerar impacto positivo e sustentável", dim: "proposito" }
       ]},
-      { text: "Busco constantemente:", values: [
-        { name: "Melhorar", desc: "Evolução" },
-        { name: "Aproveitar", desc: "Prazer" },
-        { name: "Contribuir", desc: "Impacto" },
-        { name: "Conquistar", desc: "Sucesso" }
+      { id: 28, theme: "Realização", text: "O que me dá mais energia no dia a dia?", options: [
+        { text: "Ver métricas subindo e objetivos sendo cruzados", dim: "realizacao" },
+        { text: "Resolver conflitos e unir pessoas", dim: "relacionamento" },
+        { text: "Automatizar processos e ganhar eficiência", dim: "seguranca" },
+        { text: "Desenhar novas estratégias e cenários futuros", dim: "inovacao" }
       ]},
-      { text: "Valorizo mais:", values: [
-        { name: "Qualidade", desc: "Excelência" },
-        { name: "Quantidade", desc: "Volume" },
-        { name: "Velocidade", desc: "Rapidez" },
-        { name: "Precisão", desc: "Exatidão" }
+      { id: 29, theme: "Autonomia", text: "Meu maior medo profissional é:", options: [
+        { text: "Perder minha independência e cair em microgerenciamento", dim: "autonomia" },
+        { text: "Ficar obsoleto e não acompanhar as mudanças", dim: "inovacao" },
+        { text: "Falhar publicamente e perder credibilidade", dim: "reconhecimento" },
+        { text: "Perder a estabilidade e ficar desprotegido", dim: "seguranca" }
       ]},
-      { text: "Minha filosofia é:", values: [
-        { name: "Carpe Diem", desc: "Aproveitar o momento" },
-        { name: "Devagar e sempre", desc: "Constância" },
-        { name: "Otimismo", desc: "Positividade" },
-        { name: "Realismo", desc: "Praticidade" }
+      { id: 30, theme: "Propósito", text: "Ao final da carreira, quero poder dizer que:", options: [
+        { text: "Vivi com propósito e deixei o mundo melhor", dim: "proposito" },
+        { text: "Conquistei tudo que planejei e sonhei", dim: "realizacao" },
+        { text: "Fui livre, autêntico e dono do meu tempo", dim: "autonomia" },
+        { text: "Construí relações profundas e fui amado/respeitado", dim: "relacionamento" }
       ]}
     ];
 
-    let currentQuestion = 0;
-    let answers = [];
-    let timeLeft = 20 * 60;
-    let timerInterval;
+    // ============================================
+    // PERFIS MOTIVACIONAIS
+    // ============================================
+    const profiles = {
+      realizador: {
+        name: "Realizador Estratégico",
+        traits: "Alta ambição, foco em crescimento, metas e resultados",
+        strengths: ["Liderança orientada a performance", "Execução rápida", "Resiliência em cenários competitivos", "Foco em ROI e métricas"],
+        watchouts: ["Excesso de cobrança própria e alheia", "Impaciência com processos lentos", "Pode negligenciar o lado humano"],
+        env: "Ambientes de alta performance com metas claras, cultura de meritocracia e ciclos curtos de feedback.",
+        lead: "Liderança direta, orientada a resultados, que delega objetivos mas cobra entregas.",
+        engage: "Desafios quantificáveis, progressão de carreira acelerada, bônus atrelado a resultados.",
+        demotivate: "Estagnação, falta de métricas, ambientes burocráticos sem evolução visível.",
+        careers: ["Gestão Comercial", "Diretoria Executiva", "Consultoria Estratégica", "Empreendedorismo", "Investimentos"],
+        quote: "Seus valores definem suas escolhas, e suas escolhas definem seu futuro. Quando estão alinhados ao ambiente, a performance se torna natural."
+      },
+      humanista: {
+        name: "Humanista Colaborativo",
+        traits: "Empatia, relacionamento, cooperação e suporte",
+        strengths: ["Construção de times coesos", "Inteligência relacional", "Mediação de conflitos", "Cultura de pertencimento"],
+        watchouts: ["Evitar conflitos necessários", "Dificuldade em impor limites", "Pode priorizar harmonia sobre resultados"],
+        env: "Culturas acolhedoras, foco em bem-estar, trabalho em equipe e comunicação aberta.",
+        lead: "Liderança servidora, empática, que desenvolve pessoas e valoriza o clima organizacional.",
+        engage: "Reconhecimento genuíno, propósito coletivo, autonomia para cuidar do time.",
+        demotivate: "Ambientes tóxicos, competitividade destrutiva, falta de conexão humana.",
+        careers: ["Recursos Humanos", "Gestão de Pessoas", "Coaching", "Sucesso do Cliente", "Educação Corporativa"],
+        quote: "Quando seus valores estão alinhados ao ambiente, a performance se torna natural. Propósito e valores são os pilares da realização profissional."
+      },
+      analitico: {
+        name: "Analítico & Estruturado",
+        traits: "Organização, segurança, estabilidade e disciplina",
+        strengths: ["Planejamento de longo prazo", "Consistência operacional", "Gestão de riscos", "Qualidade e precisão"],
+        watchouts: ["Resistência a mudanças abruptas", "Rigidez em processos", "Pode travar por excesso de análise"],
+        env: "Organizações maduras, processos bem documentados, estabilidade setorial e governança clara.",
+        lead: "Liderança técnica, previsível, que valoriza competência e segue frameworks consolidados.",
+        engage: "Clareza de processos, segurança psicológica, evolução técnica contínua.",
+        demotivate: "Caos organizacional, decisões impulsivas, falta de estrutura ou compliance.",
+        careers: ["Gestão de Operações", "Finanças Corporativas", "Compliance & Riscos", "TI & Infraestrutura", "Auditoria"],
+        quote: "Propósito e valores são os pilares da realização profissional. A disciplina transforma visão em legado."
+      },
+      inovador: {
+        name: "Inovador Autônomo",
+        traits: "Criatividade, liberdade, independência e visão disruptiva",
+        strengths: ["Pensamento fora da caixa", "Adaptação rápida", "Prototipação e experimentação", "Visão de futuro"],
+        watchouts: ["Dificuldade com rotina e burocracia", "Impaciência estrutural", "Pode abandonar projetos na fase de execução"],
+        env: "Startups, labs de inovação, culturas ágeis, liberdade de experimentação e falha rápida.",
+        lead: "Liderança visionária, que dá espaço para criatividade e confia na autonomia do time.",
+        engage: "Liberdade de método, desafios complexos, cultura de aprendizado e iteração.",
+        demotivate: "Microgerenciamento, aversão a risco, processos engessados, falta de espaço para ideias.",
+        careers: ["Produto & Design", "P&D", "Tecnologia & IA", "Marketing Digital", "Consultoria de Inovação"],
+        quote: "Seus valores definem suas escolhas. Liberdade e criatividade são o combustível da transformação."
+      },
+      proposito: {
+        name: "Propósito & Impacto",
+        traits: "Significado, contribuição, transformação e legado",
+        strengths: ["Engajamento profundo", "Inspiração e storytelling", "Visão sistêmica", "Ética e integridade"],
+        watchouts: ["Frustração com ambientes puramente mercantis", "Excesso de idealismo", "Pode negligenciar aspectos práticos"],
+        env: "ESG, terceiro setor, empresas com missão clara, culturas orientadas a impacto social/ambiental.",
+        lead: "Liderança inspiradora, que conecta o 'porquê' ao 'como' e alinha negócios a causas.",
+        engage: "Missão clara, transparência, oportunidades de contribuição real e métricas de impacto.",
+        demotivate: "Lucro a qualquer custo, greenwashing, falta de transparência, desalinhamento ético.",
+        careers: ["ESG & Sustentabilidade", "Impacto Social", "Gestão de Projetos Sociais", "Comunicação Estratégica", "Diretoria de Propósito"],
+        quote: "Quando seus valores estão alinhados ao ambiente, a performance se torna natural. Legado é o que resta quando o dia acaba."
+      }
+    };
 
-    document.addEventListener('DOMContentLoaded', () => {
-      loadQuestion();
-      startTimer();
-    });
-
-    function startTimer() {
-      timerInterval = setInterval(() => {
-        timeLeft--;
-        const mins = Math.floor(timeLeft / 60);
-        const secs = timeLeft % 60;
-        document.getElementById('time-display').textContent = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
-        if (timeLeft <= 300) document.getElementById('timer').classList.add('warning');
-        if (timeLeft <= 0) { clearInterval(timerInterval); finishTest(); }
-      }, 1000);
+    // ============================================
+    // FUNÇÕES DE NAVEGAÇÃO E UI
+    // ============================================
+    function showView(viewId) {
+      ['landingView', 'instructionsView', 'testView', 'loadingView', 'resultsView'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+      document.getElementById(viewId).classList.remove('hidden');
+      window.scrollTo(0, 0);
     }
 
-    function loadQuestion() {
-      const q = questions[currentQuestion];
-      document.getElementById('question-number').textContent = `Questão ${currentQuestion + 1}`;
-      document.getElementById('question-text').textContent = q.text;
-      
-      const container = document.getElementById('value-options');
-      container.innerHTML = '';
-      const currentAns = answers[currentQuestion] || [];
-      
-      q.values.forEach((val, idx) => {
-        const div = document.createElement('div');
-        div.className = 'value-option' + (currentAns.includes(idx) ? ' selected' : '');
-        div.innerHTML = `<div class="value-name">${val.name}</div><div class="value-desc">${val.desc}</div>`;
-        div.onclick = () => toggleValue(idx);
-        container.appendChild(div);
-      });
+    function startAssessment() {
+      AppState.currentQ = 0;
+      AppState.answers = new Array(30).fill(null);
+      AppState.dimensions = { realizacao: 0, seguranca: 0, relacionamento: 0, autonomia: 0, proposito: 0, reconhecimento: 0, inovacao: 0, equilibrio: 0 };
+      renderQuestion();
+      showView('testView');
+    }
 
-      const percent = Math.round(((currentQuestion + 1) / questions.length) * 100);
-      document.getElementById('progress-fill').style.width = `${percent}%`;
-      document.getElementById('progress-text').textContent = `Questão ${currentQuestion + 1} de ${questions.length}`;
-      document.getElementById('progress-percent').textContent = `${percent}%`;
-
-      document.getElementById('btn-prev').disabled = currentQuestion === 0;
-      if (currentQuestion === questions.length - 1) {
-        document.getElementById('btn-next').classList.add('hidden');
-        document.getElementById('btn-finish').classList.remove('hidden');
-      } else {
-        document.getElementById('btn-next').classList.remove('hidden');
-        document.getElementById('btn-finish').classList.add('hidden');
-        document.getElementById('btn-next').disabled = !answers[currentQuestion] || answers[currentQuestion].length === 0;
+    function confirmExit() {
+      if (confirm('Deseja realmente sair? Seu progresso será perdido.')) {
+        showView('landingView');
       }
     }
 
-    function toggleValue(idx) {
-      if (!answers[currentQuestion]) answers[currentQuestion] = [];
-      const pos = answers[currentQuestion].indexOf(idx);
-      if (pos > -1) answers[currentQuestion].splice(pos, 1);
-      else answers[currentQuestion].push(idx);
-      loadQuestion();
+    function resetTest() {
+      if (confirm('Deseja refazer a avaliação? Os resultados atuais serão substituídos.')) {
+        startAssessment();
+      }
     }
 
-    function prevQuestion() { if (currentQuestion > 0) { currentQuestion--; loadQuestion(); } }
-    function nextQuestion() { if (currentQuestion < questions.length - 1 && answers[currentQuestion] && answers[currentQuestion].length > 0) { currentQuestion++; loadQuestion(); } }
-
-    function finishTest() {
-      clearInterval(timerInterval);
+    // ============================================
+    // RENDERIZAÇÃO DO TESTE
+    // ============================================
+    function renderQuestion() {
+      const q = questions[AppState.currentQ];
+      document.getElementById('currentQ').textContent = AppState.currentQ + 1;
+      document.getElementById('qTheme').textContent = q.theme;
+      document.getElementById('qText').textContent = q.text;
+      document.getElementById('progressFill').style.width = `${((AppState.currentQ + 1) / 30) * 100}%`;
       
-      const valuesMap = {};
-      answers.forEach((ans, qIdx) => {
-        if (ans) {
-          ans.forEach(valIdx => {
-            const valName = questions[qIdx].values[valIdx].name;
-            valuesMap[valName] = (valuesMap[valName] || 0) + 1;
-          });
+      document.getElementById('prevBtn').disabled = AppState.currentQ === 0;
+      document.getElementById('nextBtn').textContent = AppState.currentQ === 29 ? 'Finalizar Avaliação' : 'Próxima Pergunta';
+
+      const container = document.getElementById('optionsContainer');
+      container.innerHTML = '';
+      
+      // Reset current answer if exists
+      let currentOrder = AppState.answers[AppState.currentQ] || [null, null, null, null];
+
+      q.options.forEach((opt, idx) => {
+        const div = document.createElement('div');
+        div.className = 'option-card';
+        div.dataset.dim = opt.dim;
+        div.dataset.idx = idx;
+        
+        // Find if this option is already assigned a rank
+        const rankPos = currentOrder.indexOf(opt.dim);
+        const rankBtn = rankPos !== -1 ? `<div class="rank-btn assigned">${rankPos + 1}º</div>` : `<div class="rank-btn" onclick="assignRank('${opt.dim}', ${idx})">?</div>`;
+        
+        div.innerHTML = `
+          <span class="text-sm md:text-base">${opt.text}</span>
+          ${rankBtn}
+        `;
+        container.appendChild(div);
+      });
+
+      // Animate
+      const card = document.getElementById('questionContainer');
+      card.style.opacity = '0'; card.style.transform = 'translateY(10px)';
+      setTimeout(() => { card.style.transition = 'all 0.3s ease'; card.style.opacity = '1'; card.style.transform = 'translateY(0)'; }, 50);
+    }
+
+    function assignRank(dim, idx) {
+      let order = AppState.answers[AppState.currentQ] || [null, null, null, null];
+      
+      // If already assigned, remove it first
+      const existingPos = order.indexOf(dim);
+      if (existingPos !== -1) order[existingPos] = null;
+      
+      // Find first empty slot
+      const emptyPos = order.indexOf(null);
+      if (emptyPos !== -1) {
+        order[emptyPos] = dim;
+        AppState.answers[AppState.currentQ] = order;
+        renderQuestion();
+      }
+    }
+
+    function clearRanks() {
+      AppState.answers[AppState.currentQ] = [null, null, null, null];
+      renderQuestion();
+    }
+
+    function prevQuestion() {
+      if (AppState.currentQ > 0) {
+        AppState.currentQ--;
+        renderQuestion();
+      }
+    }
+
+    function nextQuestion() {
+      const order = AppState.answers[AppState.currentQ];
+      if (!order || order.includes(null)) {
+        alert('Por favor, ranqueie todas as 4 alternativas antes de continuar.');
+        return;
+      }
+
+      if (AppState.currentQ < 29) {
+        AppState.currentQ++;
+        renderQuestion();
+      } else {
+        calculateResults();
+        showView('loadingView');
+        simulateLoading();
+      }
+    }
+
+    function simulateLoading() {
+      let p = 0;
+      const bar = document.getElementById('loadingProgress');
+      const int = setInterval(() => {
+        p += Math.random() * 15;
+        if (p >= 100) {
+          p = 100;
+          clearInterval(int);
+          setTimeout(() => {
+            renderResults();
+            showView('resultsView');
+          }, 600);
+        }
+        bar.style.width = `${p}%`;
+      }, 200);
+    }
+
+    // ============================================
+    // CÁLCULO E RESULTADOS
+    // ============================================
+    function calculateResults() {
+      // Reset
+      Object.keys(AppState.dimensions).forEach(k => AppState.dimensions[k] = 0);
+      
+      AppState.answers.forEach(order => {
+        order.forEach((dim, rank) => {
+          const points = 4 - rank; // 1st=4, 2nd=3, 3rd=2, 4th=1
+          AppState.dimensions[dim] += points;
+        });
+      });
+    }
+
+    function getProfile() {
+      const dims = AppState.dimensions;
+      const sorted = Object.entries(dims).sort((a, b) => b[1] - a[1]);
+      const [top1, top2] = sorted;
+      
+      // Mapping logic based on dominant dimensions
+      if (top1[0] === 'realizacao' || top1[0] === 'reconhecimento') return profiles.realizador;
+      if (top1[0] === 'relacionamento') return profiles.humanista;
+      if (top1[0] === 'seguranca' || top1[0] === 'equilibrio') return profiles.analitico;
+      if (top1[0] === 'inovacao' || top1[0] === 'autonomia') return profiles.inovador;
+      if (top1[0] === 'proposito') return profiles.proposito;
+      return profiles.realizador; // Fallback
+    }
+
+    function renderResults() {
+      const profile = getProfile();
+      const dims = AppState.dimensions;
+      const total = Object.values(dims).reduce((a,b) => a+b, 0);
+      
+      // Normalize to %
+      const pcts = {};
+      Object.keys(dims).forEach(k => pcts[k] = Math.round((dims[k] / total) * 100));
+      
+      // UI Updates
+      document.getElementById('profileBadge').textContent = profile.name;
+      document.getElementById('motivationIndex').textContent = `${Math.round((dims[Object.keys(dims).sort((a,b)=>dims[b]-dims[a])[0]] / 30) * 100)}%`;
+      document.getElementById('culturalFit').textContent = pcts[Object.keys(dims).sort((a,b)=>dims[b]-dims[a])[0]] > 25 ? 'Alto' : 'Médio';
+      
+      document.getElementById('envAnalysis').textContent = profile.env;
+      document.getElementById('leadAnalysis').textContent = profile.lead;
+      document.getElementById('engageAnalysis').textContent = profile.engage;
+      document.getElementById('demotivateAnalysis').textContent = profile.demotivate;
+      document.getElementById('impactQuote').textContent = profile.quote;
+
+      // Strategic Orientations
+      const orientations = document.getElementById('strategicOrientations');
+      orientations.innerHTML = `
+        <li class="flex gap-2"><span class="text-brand-cyan">➤</span> Busque ambientes que respeitem seu perfil motivacional central (${Object.keys(dims).sort((a,b)=>dims[b]-dims[a])[0]}).</li>
+        <li class="flex gap-2"><span class="text-brand-cyan">➤</span> Desenvolva conscientemente sua dimensão secundária para maior flexibilidade profissional.</li>
+        <li class="flex gap-2"><span class="text-brand-cyan">➤</span> Negocie alinhamento cultural antes de aceitar novas propostas.</li>
+        <li class="flex gap-2"><span class="text-brand-cyan">➤</span> Monitore indicadores de desmotivação e aja preventivamente.</li>
+      `;
+
+      // Career Suggestions
+      const careers = document.getElementById('careerSuggestions');
+      careers.innerHTML = profile.careers.map(c => `<span class="px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 hover:bg-white/10 transition">${c}</span>`).join('');
+
+      // Charts
+      renderCharts(pcts);
+    }
+
+    function renderCharts(pcts) {
+      // Radar
+      const radarCtx = document.getElementById('radarChart').getContext('2d');
+      new Chart(radarCtx, {
+        type: 'radar',
+        data: {
+          labels: ['Realização', 'Segurança', 'Relacionamento', 'Autonomia', 'Propósito', 'Reconhecimento', 'Inovação', 'Equilíbrio'],
+          datasets: [{
+            label: 'Seu Perfil',
+            data: Object.values(pcts),
+            backgroundColor: 'rgba(124, 58, 237, 0.2)',
+            borderColor: '#7C3AED',
+            borderWidth: 2,
+            pointBackgroundColor: '#7C3AED'
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          scales: { r: { angleLines: { color: 'rgba(255,255,255,0.1)' }, grid: { color: 'rgba(255,255,255,0.1)' }, pointLabels: { color: '#94A3B8', font: {size: 11} }, ticks: { display: false, backdropColor: 'transparent' } } },
+          plugins: { legend: { display: false } }
         }
       });
 
-      const values = Object.entries(valuesMap)
-        .map(([name, score]) => ({ name, score: Math.round((score / questions.length) * 100) }))
-        .sort((a, b) => b.score - a.score);
-
-      const top5 = values.slice(0, 5);
-
-      document.getElementById('test-screen').classList.add('hidden');
-      document.getElementById('result').classList.remove('hidden');
-      
-      document.getElementById('top-values').innerHTML = top5.map(v => 
-        `<div class="value-badge">${v.name}</div>`
-      ).join('');
-
-      document.getElementById('all-values').innerHTML = values.map(v => 
-        `<div class="value-item">
-          <div class="value-label">${v.name}</div>
-          <div class="value-bar"><div class="value-fill" style="width: ${v.score}%"></div></div>
-          <div class="value-percent">${v.score}%</div>
-        </div>`
-      ).join('');
+      // Bar
+      const barCtx = document.getElementById('barChart').getContext('2d');
+      new Chart(barCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Realização', 'Segurança', 'Relacionamento', 'Autonomia', 'Propósito', 'Reconhecimento', 'Inovação', 'Equilíbrio'],
+          datasets: [{
+            label: '%',
+            data: Object.values(pcts),
+            backgroundColor: ['#1D4ED8', '#64748B', '#06B6D4', '#7C3AED', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899'],
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          scales: { y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#94A3B8' } }, x: { grid: { display: false }, ticks: { color: '#F8FAFC', font: {weight: 'bold', size: 10} } } },
+          plugins: { legend: { display: false } }
+        }
+      });
     }
+
+    // Init
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check local storage for saved progress if needed
+    });
   </script>
 </body>
 </html>
