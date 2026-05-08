@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Avaliação QE | Vigorre People Analytics</title>
+  <title>Teste de Inteligência Emocional | Vigorre People Analytics</title>
   
   <!-- Tailwind CSS & Chart.js -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -24,8 +24,9 @@
               purple: '#7C3AED',
               blue: '#2563EB',
               cyan: '#06B6D4',
-              gray: '#64748B',
-              light: '#F8FAFC'
+              emerald: '#10B981',
+              amber: '#F59E0B',
+              rose: '#F43F5E'
             }
           }
         }
@@ -35,14 +36,20 @@
 
   <style>
     /* ============================================
-       PREMIUM STYLES & GLASSMORPHISM
+       BASE & RESET
        ============================================ */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
+      font-family: 'Inter', sans-serif; 
       background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%); 
       color: #F8FAFC; 
       min-height: 100vh; 
       line-height: 1.6;
     }
+
+    /* ============================================
+       GLASSMORPHISM & PREMIUM EFFECTS
+       ============================================ */
     .glass { 
       background: rgba(30, 41, 59, 0.7); 
       backdrop-filter: blur(12px); 
@@ -63,430 +70,475 @@
       -webkit-text-fill-color: transparent; 
       background-clip: text; 
     }
+
+    /* ============================================
+       BUTTONS & INTERACTIONS
+       ============================================ */
     .btn-primary { 
       background: linear-gradient(135deg, #2563EB, #7C3AED); 
-      transition: all 0.3s ease; 
-      position: relative; 
-      overflow: hidden; 
+      transition: all 0.3s ease; position: relative; overflow: hidden; 
     }
-    .btn-primary::before { 
-      content: ''; 
-      position: absolute; 
-      inset: 0; 
-      background: linear-gradient(135deg, #7C3AED, #06B6D4); 
-      opacity: 0; 
-      transition: opacity 0.3s ease; 
+    .btn-primary::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, #7C3AED, #06B6D4);
+      opacity: 0; transition: opacity 0.3s ease;
     }
     .btn-primary:hover::before { opacity: 1; }
-    .btn-primary:hover { 
-      transform: translateY(-2px); 
-      box-shadow: 0 12px 40px rgba(124, 58, 237, 0.4); 
-    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(124, 58, 237, 0.4); }
+    
     .btn-secondary {
       background: rgba(255,255,255,0.1);
       border: 1px solid rgba(255,255,255,0.2);
       transition: all 0.3s ease;
     }
-    .btn-secondary:hover {
-      background: rgba(255,255,255,0.2);
-      transform: translateY(-1px);
-    }
-    .option-btn { 
-      width: 100%; 
-      padding: 16px 20px; 
-      border-radius: 12px; 
-      border: 2px solid rgba(255,255,255,0.1); 
-      background: rgba(255,255,255,0.05); 
-      color: #F8FAFC; 
-      text-align: left; 
-      cursor: pointer; 
-      transition: all 0.2s ease; 
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .option-btn:hover { 
-      border-color: #2563EB; 
-      background: rgba(37, 99, 235, 0.1); 
-    }
-    .option-btn.selected { 
-      border-color: #10B981; 
-      background: rgba(16, 185, 129, 0.15); 
-    }
-    .progress-bar { 
-      height: 6px; 
-      background: rgba(255,255,255,0.1); 
-      border-radius: 3px; 
-      overflow: hidden; 
-    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.2); transform: translateY(-1px); }
+
+    /* ============================================
+       PROGRESS & CHARTS
+       ============================================ */
+    .progress-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
     .progress-fill { 
-      height: 100%; 
-      background: linear-gradient(90deg, #2563EB, #7C3AED, #06B6D4); 
-      transition: width 0.4s ease; 
-      position: relative; 
+      height: 100%; background: linear-gradient(90deg, #2563EB, #7C3AED, #06B6D4); 
+      transition: width 0.4s ease; position: relative; 
     }
-    .progress-fill::after { 
-      content: ''; 
-      position: absolute; 
-      top: 0; left: 0; right: 0; bottom: 0; 
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); 
-      animation: shimmer 2s infinite; 
+    .progress-fill::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shimmer 2s infinite;
     }
-    @keyframes shimmer { 
-      0% { transform: translateX(-100%); } 
-      100% { transform: translateX(100%); } 
+    @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+    /* ============================================
+       TEST INTERFACE
+       ============================================ */
+    .option-btn { 
+      width: 100%; padding: 16px 20px; border-radius: 12px; 
+      border: 2px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); 
+      color: #F8FAFC; text-align: left; cursor: pointer; transition: all 0.2s ease; 
+      display: flex; align-items: center; gap: 12px; font-size: 1rem;
     }
-    .score-circle {
-      width: 140px; height: 140px; border-radius: 50%;
-      background: conic-gradient(#10B981 0% 85%, rgba(255,255,255,0.1) 85% 100%);
-      display: flex; align-items: center; justify-content: center;
-      position: relative;
+    .option-btn:hover { border-color: #2563EB; background: rgba(37, 99, 235, 0.1); }
+    .option-btn.selected { border-color: #10B981; background: rgba(16, 185, 129, 0.15); }
+    .option-btn .check-icon { width: 20px; height: 20px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .option-btn.selected .check-icon { background: #10B981; border-color: #10B981; }
+
+    /* ============================================
+       PRINT OPTIMIZATION
+       ============================================ */
+    @media print {
+      body { background: white; color: #111; }
+      .no-print { display: none !important; }
+      .glass, .glass-card { 
+        background: white !important; border: 1px solid #ccc !important; 
+        box-shadow: none !important; backdrop-filter: none !important; 
+      }
+      .gradient-text { -webkit-text-fill-color: #2563EB !important; }
+      .results-view { max-width: 100%; padding: 20px; }
     }
-    .score-circle::before {
-      content: ''; position: absolute; width: 110px; height: 110px;
-      border-radius: 50%; background: #0F172A;
-    }
-    .score-value { position: relative; z-index: 1; font-size: 2.5rem; font-weight: 700; }
-    
-    /* Print Optimization */
-    @media print { 
-      body { background: white; color: #111; } 
-      .no-print, header, .btn-primary, .btn-secondary { display: none !important; } 
-      .glass-card, .glass { background: white; border: 1px solid #ccc; box-shadow: none; backdrop-filter: none; } 
-      .gradient-text { -webkit-text-fill-color: #2563EB; } 
-      .results-view { padding: 20px; max-width: 100%; }
-    }
+
+    /* ============================================
+       ANIMATIONS
+       ============================================ */
+    .fade-in { animation: fadeIn 0.5s ease-out; }
+    .slide-up { animation: slideUp 0.4s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0F172A; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
   </style>
 </head>
 <body class="antialiased">
 
   <!-- ============================================
-       LANDING PAGE
+       HEADER / CONTROLS (NO PRINT)
        ============================================ -->
-  <div id="landingView" class="min-h-screen flex flex-col">
-    <header class="glass border-b border-white/10 sticky top-0 z-50 no-print">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center font-bold text-white">V</div>
-          <div><h1 class="font-bold text-lg">Vigorre</h1><p class="text-xs text-gray-400">People Analytics</p></div>
-        </div>
-        <nav class="hidden md:flex items-center gap-6">
-          <a href="#" class="text-sm text-gray-300 hover:text-white transition">Metodologia</a>
-          <a href="#" class="text-sm text-gray-300 hover:text-white transition">Recursos</a>
-          <button onclick="showView('introView')" class="btn-primary px-5 py-2 rounded-xl text-sm font-medium text-white">Iniciar Avaliação</button>
-        </nav>
-      </div>
-    </header>
-
-    <main class="flex-1 flex items-center justify-center px-4 py-12">
-      <div class="max-w-4xl mx-auto text-center animate-on-scroll">
-        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6">
-          <span class="w-2 h-2 rounded-full bg-brand-cyan animate-pulse"></span>
-          <span class="text-sm text-gray-300">Assessment Premium de Inteligência Emocional</span>
-        </div>
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">Avaliação de <span class="gradient-text">Inteligência Emocional</span><br>para Profissionais de Alta Performance</h1>
-        <p class="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto">Descubra como suas emoções impactam sua liderança, comunicação, decisões, produtividade e relacionamentos profissionais.</p>
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-          <button onclick="showView('introView')" class="btn-primary px-8 py-4 rounded-xl font-semibold text-white text-lg w-full sm:w-auto">Iniciar Avaliação Gratuita</button>
-          <button class="btn-secondary px-8 py-4 rounded-xl font-medium text-gray-300 w-full sm:w-auto">Ver Demonstração</button>
-        </div>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
-          <div class="glass-card p-4 hover-lift"><div class="text-2xl mb-2">🧠</div><h3 class="font-semibold text-sm">Inteligência Emocional</h3></div>
-          <div class="glass-card p-4 hover-lift"><div class="text-2xl mb-2">👑</div><h3 class="font-semibold text-sm">Liderança</h3></div>
-          <div class="glass-card p-4 hover-lift"><div class="text-2xl mb-2">💪</div><h3 class="font-semibold text-sm">Resiliência</h3></div>
-          <div class="glass-card p-4 hover-lift"><div class="text-2xl mb-2">🤝</div><h3 class="font-semibold text-sm">Relacionamentos</h3></div>
+  <header class="glass border-b border-white/10 sticky top-0 z-50 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center font-bold text-white">V</div>
+        <div>
+          <h1 class="font-bold text-lg">Vigorre</h1>
+          <p class="text-xs text-gray-400">Inteligência Emocional • People Analytics</p>
         </div>
       </div>
-    </main>
-
-    <footer class="glass border-t border-white/10 py-6 no-print">
-      <div class="max-w-7xl mx-auto px-4 text-center text-sm text-gray-400">
-        <p>© 2024 Vigorre People Analytics. Metodologia validada em psicologia organizacional.</p>
+      <div class="flex items-center gap-4">
+        <span class="text-sm text-gray-300" id="progressText">Pergunta 1 de 30</span>
+        <div class="w-32 md:w-48"><div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 3.33%"></div></div></div>
       </div>
-    </footer>
-  </div>
+    </div>
+  </header>
 
   <!-- ============================================
-       INTRODUCTION / INSTRUCTIONS
+       TEST CONTAINER
        ============================================ -->
-  <div id="introView" class="hidden min-h-screen flex items-center justify-center px-4 py-12">
-    <div class="max-w-2xl mx-auto glass-card p-8 animate-on-scroll">
-      <div class="text-center mb-8">
-        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center mx-auto mb-4"><span class="text-2xl">💙</span></div>
-        <h2 class="text-2xl font-bold mb-2">Teste de Inteligência Emocional — QE Profissional</h2>
-        <p class="text-gray-400">Análise Estratégica de Padrões Emocionais</p>
+  <main class="max-w-3xl mx-auto px-4 py-8 results-view" id="testContainer">
+    <div class="glass-card p-6 md:p-8 slide-up">
+      <div class="mb-6">
+        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-cyan/20 text-brand-cyan text-xs font-medium mb-3" id="qTheme">Autoconsciência</span>
+        <h2 class="text-xl md:text-2xl font-semibold leading-relaxed" id="qText">Carregando situação...</h2>
       </div>
-      <div class="space-y-4 mb-8 text-gray-300">
-        <p>Esta avaliação foi desenvolvida com base em metodologias modernas de Inteligência Emocional utilizadas globalmente em liderança corporativa, recrutamento e desenvolvimento executivo.</p>
-        <p>O objetivo é identificar padrões emocionais relacionados a autocontrole, empatia, resiliência, equilíbrio emocional, comunicação e inteligência social.</p>
+      <div class="space-y-3 mb-8" id="optionsContainer"></div>
+      <div class="flex gap-3 no-print">
+        <button id="prevBtn" onclick="prevQuestion()" class="flex-1 px-4 py-3 rounded-xl font-medium text-gray-300 btn-secondary disabled:opacity-50 disabled:cursor-not-allowed" disabled>Anterior</button>
+        <button id="nextBtn" onclick="nextQuestion()" class="flex-1 btn-primary px-4 py-3 rounded-xl font-semibold text-white">Próxima Pergunta</button>
       </div>
-      <div class="glass p-5 rounded-xl mb-8">
-        <h3 class="font-semibold mb-3 flex items-center gap-2"><span class="text-brand-cyan">ⓘ</span> Instruções Importantes</h3>
-        <ul class="space-y-2 text-sm text-gray-300">
-          <li class="flex items-start gap-2"><span class="text-brand-emerald mt-0.5">✓</span><span>Não existem respostas certas ou erradas</span></li>
-          <li class="flex items-start gap-2"><span class="text-brand-emerald mt-0.5">✓</span><span>Responda com sinceridade absoluta sobre seu comportamento real</span></li>
-          <li class="flex items-start gap-2"><span class="text-brand-emerald mt-0.5">✓</span><span>Escolha a alternativa que mais representa sua ação natural</span></li>
-          <li class="flex items-start gap-2"><span class="text-brand-emerald mt-0.5">✓</span><span>O teste não possui tempo limite</span></li>
-          <li class="flex items-start gap-2"><span class="text-brand-emerald mt-0.5">✓</span><span>Não tente responder o "ideal" – seja autêntico</span></li>
-        </ul>
+    </div>
+  </main>
+
+  <!-- ============================================
+       RESULTS VIEW
+       ============================================ -->
+  <div id="resultsView" class="hidden max-w-5xl mx-auto px-4 py-8 results-view">
+    <!-- Header -->
+    <div class="glass-card p-6 md:p-8 mb-8 text-center slide-up">
+      <h1 class="text-3xl font-bold mb-2">Sua Inteligência Emocional</h1>
+      <p class="text-gray-400 mb-4" id="participantName">Análise Emocional Vigorre</p>
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-emerald/20 text-brand-emerald border border-brand-emerald/30" id="profileBadge">QE: --</div>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="grid md:grid-cols-2 gap-6 mb-8">
+      <div class="glass-card p-6 slide-up">
+        <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">Radar Emocional</h3>
+        <canvas id="ieRadarChart" class="w-full h-64"></canvas>
       </div>
-      <div class="flex gap-3">
-        <button onclick="showView('landingView')" class="flex-1 px-4 py-3 rounded-xl font-medium text-gray-300 btn-secondary">Voltar</button>
-        <button onclick="startAssessment()" class="flex-1 btn-primary px-4 py-3 rounded-xl font-semibold text-white">Entendi, Iniciar Teste</button>
+      <div class="glass-card p-6 slide-up">
+        <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">Índice QE por Dimensão</h3>
+        <canvas id="ieBarChart" class="w-full h-64"></canvas>
       </div>
+    </div>
+
+    <!-- Resumo Executivo -->
+    <div class="glass-card p-6 md:p-8 mb-8 slide-up">
+      <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">📊 Resumo Executivo</h3>
+      <div id="executiveSummary"></div>
+    </div>
+
+    <!-- Análise Detalhada -->
+    <div class="glass-card p-6 md:p-8 mb-8 slide-up">
+      <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">🧠 Análise das Dimensões Emocionais</h3>
+      <div id="detailedAnalysis"></div>
+    </div>
+
+    <!-- Recomendações -->
+    <div class="glass-card p-6 md:p-8 mb-8 slide-up">
+      <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">💡 Plano de Desenvolvimento Emocional</h3>
+      <div id="recommendations"></div>
+    </div>
+
+    <!-- CTAs -->
+    <div class="grid md:grid-cols-2 gap-4 no-print mb-8">
+      <div class="glass-card p-6 text-center slide-up">
+        <h4 class="font-semibold mb-2">📄 Relatório Simples</h4>
+        <p class="text-sm text-gray-400 mb-4">Visão geral do seu perfil emocional</p>
+        <button onclick="downloadSimpleReport()" class="btn-primary px-6 py-3 rounded-lg font-semibold w-full">Baixar Relatório Simples</button>
+      </div>
+      <div class="glass-card p-6 text-center slide-up">
+        <h4 class="font-semibold mb-2">🔓 Desbloquear Análise Completa</h4>
+        <p class="text-sm text-gray-400 mb-4">Laudo detalhado + fit cultural + plano de desenvolvimento</p>
+        <button onclick="window.location.href='laudo-vigorre.html?test=IE'" class="btn-secondary px-6 py-3 rounded-lg font-semibold w-full">Ver Laudo Vigorre</button>
+      </div>
+    </div>
+
+    <!-- Frase Final -->
+    <div class="glass-card p-8 text-center slide-up mb-8">
+      <blockquote class="text-lg italic text-gray-300 mb-4">"<span>A inteligência emocional é a habilidade mais poderosa da alta performance.</span>"</blockquote>
+      <p class="text-sm text-gray-400">— Vigorre People Analytics</p>
     </div>
   </div>
 
-  <!-- ============================================
-       TEST INTERFACE
-       ============================================ -->
-  <div id="testView" class="hidden min-h-screen flex flex-col">
-    <header class="glass border-b border-white/10 px-4 py-3 sticky top-0 z-40 no-print">
-      <div class="max-w-4xl mx-auto flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <button onclick="confirmExit()" class="p-2 rounded-lg hover:bg-white/10 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg></button>
-          <div><h2 class="font-semibold">Avaliação QE</h2><p class="text-xs text-gray-400">Pergunta <span id="currentQ">1</span> de 30</p></div>
-        </div>
-        <div class="w-48"><div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 3.33%"></div></div></div>
-      </div>
-    </header>
-
-    <main class="flex-1 flex items-center justify-center px-4 py-8">
-      <div class="max-w-3xl mx-auto w-full">
-        <div id="questionContainer" class="glass-card p-6 md:p-8 animate-on-scroll">
-          <div class="mb-6">
-            <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-blue/20 text-brand-blue text-xs font-medium mb-3" id="qTheme">Autoconsciência</span>
-            <h3 class="text-xl md:text-2xl font-semibold" id="qText">Carregando situação...</h3>
-          </div>
-          <div id="optionsContainer" class="space-y-3 mb-8"></div>
-          <div class="flex gap-3 no-print">
-            <button id="prevBtn" onclick="prevQuestion()" class="flex-1 px-4 py-3 rounded-xl font-medium text-gray-300 btn-secondary disabled:opacity-50 disabled:cursor-not-allowed" disabled>Anterior</button>
-            <button id="nextBtn" onclick="nextQuestion()" class="flex-1 btn-primary px-4 py-3 rounded-xl font-semibold text-white">Próxima Pergunta</button>
-          </div>
-        </div>
-      </div>
-    </main>
-  </div>
-
-  <!-- ============================================
-       LOADING / PROCESSING
-       ============================================ -->
-  <div id="loadingView" class="hidden min-h-screen flex items-center justify-center px-4">
-    <div class="text-center animate-on-scroll">
-      <div class="relative w-24 h-24 mx-auto mb-6">
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden">
+    <div class="text-center">
+      <div class="relative w-20 h-20 mx-auto mb-4">
         <div class="absolute inset-0 rounded-full border-4 border-white/10"></div>
         <div class="absolute inset-0 rounded-full border-4 border-t-brand-cyan border-r-brand-purple border-b-transparent border-l-transparent animate-spin"></div>
-        <div class="absolute inset-4 rounded-full bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center"><span class="text-2xl">💙</span></div>
       </div>
-      <h3 class="text-xl font-semibold mb-2">Analisando sua Inteligência Emocional</h3>
-      <p class="text-gray-400 mb-6">Processando suas respostas com algoritmo QE...</p>
-      <div class="w-64 mx-auto"><div class="progress-bar"><div class="progress-fill" id="loadingProgress" style="width: 0%"></div></div></div>
+      <p class="text-gray-300">Calculando seu índice QE...</p>
     </div>
   </div>
 
-  <!-- ============================================
-       RESULTS DASHBOARD
-       ============================================ -->
-  <div id="resultsView" class="hidden min-h-screen results-view">
-    <header class="glass border-b border-white/10 px-4 py-4 sticky top-0 z-40 no-print">
-      <div class="max-w-6xl mx-auto flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <button onclick="resetTest()" class="p-2 rounded-lg hover:bg-white/10 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg></button>
-          <div><h2 class="font-semibold">Resultado da Avaliação</h2><p class="text-xs text-gray-400">Inteligência Emocional QE</p></div>
-        </div>
-        <div class="flex items-center gap-2 no-print">
-          <button onclick="window.print()" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-300 btn-secondary flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-            Exportar PDF
-          </button>
-        </div>
-      </div>
-    </header>
-
-    <main class="max-w-6xl mx-auto px-4 py-8">
-      <!-- Header Perfil -->
-      <div class="glass-card p-6 md:p-8 mb-6 animate-on-scroll">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <div class="flex items-center gap-3 mb-2">
-              <h1 class="text-2xl md:text-3xl font-bold">Seu Perfil Emocional</h1>
-              <span id="profileBadge" class="px-3 py-1 rounded-full text-sm font-semibold bg-brand-purple/20 text-brand-purple border border-brand-purple/30">Alta Inteligência Emocional</span>
-            </div>
-            <p class="text-gray-400">Baseado em 30 perguntas de avaliação emocional profunda</p>
-          </div>
-          <div class="flex items-center gap-6">
-            <div class="score-circle"><span class="score-value" id="qeScore">85</span></div>
-            <div class="text-center"><div class="text-3xl font-bold gradient-text" id="emotionalBalance">Equilibrado</div><div class="text-xs text-gray-400 mt-1">Estabilidade Emocional</div></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Gráficos -->
-      <div class="grid md:grid-cols-2 gap-6 mb-6">
-        <div class="glass-card p-6 animate-on-scroll">
-          <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">Radar Emocional</h3>
-          <div class="h-72"><canvas id="radarChart"></canvas></div>
-        </div>
-        <div class="glass-card p-6 animate-on-scroll">
-          <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">Intensidade por Dimensão</h3>
-          <div class="h-72"><canvas id="barChart"></canvas></div>
-        </div>
-      </div>
-
-      <!-- Análise Detalhada -->
-      <div class="glass-card p-6 md:p-8 mb-6 animate-on-scroll">
-        <h3 class="font-semibold mb-6 border-b border-white/10 pb-2">Análise Estratégica de Motivadores</h3>
-        <div class="grid md:grid-cols-2 gap-6">
-          <div class="p-4 rounded-xl bg-white/5 border-l-4 border-brand-blue">
-            <h4 class="font-medium mb-2 text-brand-blue">Ambiente Ideal de Trabalho</h4>
-            <p class="text-sm text-gray-300" id="envAnalysis">Ambientes que ofereçam autonomia para inovação, com metas claras e reconhecimento por resultados tangíveis. Cultura focada em performance e crescimento contínuo.</p>
-          </div>
-          <div class="p-4 rounded-xl bg-white/5 border-l-4 border-brand-purple">
-            <h4 class="font-medium mb-2 text-brand-purple">Estilo de Liderança Compatível</h4>
-            <p class="text-sm text-gray-300" id="leadAnalysis">Liderança orientada a resultados, que delega confiança, fornece feedback direto e valoriza a eficiência e a independência na execução das tarefas.</p>
-          </div>
-          <div class="p-4 rounded-xl bg-white/5 border-l-4 border-brand-cyan">
-            <h4 class="font-medium mb-2 text-brand-cyan">Fatores de Engajamento</h4>
-            <p class="text-sm text-gray-300" id="engageAnalysis">Desafios intelectuais, liberdade para propor soluções, métricas de sucesso claras e oportunidades de aceleração de carreira.</p>
-          </div>
-          <div class="p-4 rounded-xl bg-white/5 border-l-4 border-brand-emerald">
-            <h4 class="font-medium mb-2 text-brand-emerald">Fatores de Desmotivação</h4>
-            <p class="text-sm text-gray-300" id="demotivateAnalysis">Microgerenciamento, burocracia excessiva, falta de reconhecimento por entregas de alto impacto e ambientes estagnados sem evolução.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Orientações & Sugestões -->
-      <div class="grid md:grid-cols-2 gap-6 mb-6">
-        <div class="glass-card p-6 animate-on-scroll">
-          <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">Orientações Estratégicas</h3>
-          <ul class="space-y-3 text-sm text-gray-300" id="strategicOrientations"></ul>
-        </div>
-        <div class="glass-card p-6 animate-on-scroll">
-          <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">Áreas Profissionais Aderentes</h3>
-          <div class="flex flex-wrap gap-2" id="careerSuggestions"></div>
-        </div>
-      </div>
-
-      <!-- Frase Impactante -->
-      <div class="glass-card p-8 text-center animate-on-scroll mb-8">
-        <blockquote class="text-xl italic text-gray-300 mb-4">"<span id="impactQuote">A inteligência emocional é a habilidade mais poderosa da alta performance.</span>"</blockquote>
-        <p class="text-sm text-gray-400">— Vigorre People Analytics</p>
-      </div>
-    </main>
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed top-4 right-4 glass px-4 py-3 rounded-lg z-50 flex items-center gap-2 hidden">
+    <span>✅</span><span id="toastMessage">Ação realizada!</span>
   </div>
 
   <script>
     // ============================================
-    // ESTADO GLOBAL
+    // ESTADO E DADOS
     // ============================================
     const AppState = {
       currentQ: 0,
-      answers: [],
-      dimensions: { autoconsciencia: 0, autocontrole: 0, empatia: 0, habilidadesSociais: 0, resiliencia: 0, adaptabilidade: 0 },
-      questions: []
+      answers: [], // 0-3 para cada pergunta
+      completed: false
+    };
+
+    // Banco de Perguntas de Inteligência Emocional (30 perguntas)
+    const IE_QUESTIONS = [
+      // AUTOCONSCIÊNCIA (1-5)
+      { id: 1, theme: "Autoconsciência", text: "Quando sinto uma emoção forte, consigo identificar exatamente o que estou sentindo:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+      { id: 2, theme: "Autoconsciência", text: "Percebo como minhas emoções afetam minhas decisões:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+      { id: 3, theme: "Autoconsciência", text: "Consigo reconhecer meus gatilhos emocionais antes de reagir:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+      { id: 4, theme: "Autoconsciência", text: "Entendo como meu humor impacta meu desempenho:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+      { id: 5, theme: "Autoconsciência", text: "Reconheço minhas limitações emocionais:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+
+      // AUTOCONTROLE (6-10)
+      { id: 6, theme: "Autocontrole", text: "Consigo manter a calma em situações de alta pressão:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+      { id: 7, theme: "Autocontrole", text: "Penso antes de agir quando estou emocionalmente ativado:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+      { id: 8, theme: "Autocontrole", text: "Consigo controlar impulsos de reagir negativamente:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+      { id: 9, theme: "Autocontrole", text: "Mantenho compostura mesmo quando provocado:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+      { id: 10, theme: "Autocontrole", text: "Consigo regular minhas emoções para atingir objetivos:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+
+      // EMPATIA (11-15)
+      { id: 11, theme: "Empatia", text: "Percebo facilmente quando alguém está desconfortável:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+      { id: 12, theme: "Empatia", text: "Consigo me colocar no lugar do outro:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+      { id: 13, theme: "Empatia", text: "Adapto minha comunicação conforme o estado emocional do outro:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+      { id: 14, theme: "Empatia", text: "Ouço ativamente sem interromper:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+      { id: 15, theme: "Empatia", text: "Ofereço suporte genuíno quando percebo que alguém precisa:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+
+      // RESILIÊNCIA (16-20)
+      { id: 16, theme: "Resiliência", text: "Recupero-me rapidamente de frustrações:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+      { id: 17, theme: "Resiliência", text: "Vejo desafios como oportunidades de crescimento:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+      { id: 18, theme: "Resiliência", text: "Mantenho motivação mesmo após contratempos:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+      { id: 19, theme: "Resiliência", text: "Transformo críticas em aprendizado:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+      { id: 20, theme: "Resiliência", text: "Mantenho perspectiva positiva em tempos difíceis:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+
+      // INTELIGÊNCIA SOCIAL (21-25)
+      { id: 21, theme: "Inteligência Social", text: "Navego bem em dinâmicas de grupo:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+      { id: 22, theme: "Inteligência Social", text: "Consigo resolver conflitos de forma diplomática:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+      { id: 23, theme: "Inteligência Social", text: "Construo relações de confiança facilmente:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+      { id: 24, theme: "Inteligência Social", text: "Influencio positivamente as pessoas ao meu redor:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+      { id: 25, theme: "Inteligência Social", text: "Adapto-me bem a diferentes personalidades:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+
+      // ESTABILIDADE EMOCIONAL (26-30)
+      { id: 26, theme: "Estabilidade", text: "Meu humor permanece relativamente constante:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+      { id: 27, theme: "Estabilidade", text: "Lido bem com incertezas:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+      { id: 28, theme: "Estabilidade", text: "Não deixo emoções temporárias afetarem decisões importantes:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+      { id: 29, theme: "Estabilidade", text: "Mantenho equilíbrio entre vida pessoal e profissional:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]},
+      { id: 30, theme: "Estabilidade", text: "Consigo desacelerar e relaxar quando necessário:", options: [
+        { text: "Sempre", value: 4 },
+        { text: "Frequentemente", value: 3 },
+        { text: "Às vezes", value: 2 },
+        { text: "Raramente", value: 1 }
+      ]}
+    ];
+
+    // Interpretações de Inteligência Emocional
+    const IE_INTERPRETATIONS = {
+      autoconsciencia: {
+        name: 'Autoconsciência',
+        high: 'Excelente capacidade de reconhecer emoções e gatilhos. Consegue identificar padrões emocionais com precisão.',
+        medium: 'Boa capacidade de reconhecer emoções, com espaço para desenvolver maior precisão na identificação de gatilhos.',
+        low: 'Pode beneficiar-se de práticas de reflexão para aumentar a consciência sobre suas emoções e reações.'
+      },
+      autocontrole: {
+        name: 'Autocontrole',
+        high: 'Excelente capacidade de regular emoções sob pressão. Mantém clareza e compostura em situações desafiadoras.',
+        medium: 'Boa capacidade de autocontrole, com oportunidades para desenvolver técnicas de regulação emocional.',
+        low: 'Pode beneficiar-se de estratégias para gerenciar impulsos e manter equilíbrio em momentos de estresse.'
+      },
+      empatia: {
+        name: 'Empatia',
+        high: 'Excelente capacidade de compreender as emoções alheias. Adapta comunicação com sensibilidade e inteligência.',
+        medium: 'Boa capacidade empática, com espaço para desenvolver escuta ativa e compreensão mais profunda.',
+        low: 'Pode beneficiar-se de práticas para desenvolver maior sensibilidade às necessidades emocionais dos outros.'
+      },
+      resiliencia: {
+        name: 'Resiliência',
+        high: 'Excelente capacidade de recuperação emocional. Transforma desafios em oportunidades de crescimento.',
+        medium: 'Boa resiliência, com oportunidades para fortalecer estratégias de enfrentamento de adversidades.',
+        low: 'Pode beneficiar-se de técnicas para desenvolver maior tolerância à frustração e recuperação emocional.'
+      },
+      social: {
+        name: 'Inteligência Social',
+        high: 'Excelente habilidade de navegar dinâmicas sociais. Constrói relacionamentos com autenticidade e influência.',
+        medium: 'Boa inteligência social, com espaço para desenvolver networking estratégico e influência positiva.',
+        low: 'Pode beneficiar-se de práticas para desenvolver maior consciência das dinâmicas interpessoais.'
+      },
+      estabilidade: {
+        name: 'Estabilidade Emocional',
+        high: 'Excelente equilíbrio emocional. Mantém compostura e clareza mesmo em situações voláteis.',
+        medium: 'Boa estabilidade, com oportunidades para desenvolver maior consistência emocional.',
+        low: 'Pode beneficiar-se de técnicas para gerenciar oscilações emocionais e manter equilíbrio.'
+      }
     };
 
     // ============================================
-    // BANCO DE PERGUNTAS QE (30 QUESTÕES)
+    // INICIALIZAÇÃO
     // ============================================
-    const QE_QUESTIONS = [
-      // AUTOCONSCIÊNCIA (1-5)
-      { id: 1, theme: "Autoconsciência", text: "Quando algo me irrita no trabalho, eu consigo identificar imediatamente o que estou sentindo.", dim: "autoconsciencia" },
-      { id: 2, theme: "Autoconsciência", text: "Eu reconheço quais situações ou pessoas tendem a me deixar ansioso(a).", dim: "autoconsciencia" },
-      { id: 3, theme: "Autoconsciência", text: "Consigo perceber como minhas emoções afetam minhas decisões profissionais.", dim: "autoconsciencia" },
-      { id: 4, theme: "Autoconsciência", text: "Quando estou frustrado(a), consigo nomear exatamente o que estou sentindo.", dim: "autoconsciencia" },
-      { id: 5, theme: "Autoconsciência", text: "Eu percebo quando meu humor está afetando minha produtividade.", dim: "autoconsciencia" },
-      // AUTOCONTROLE (6-10)
-      { id: 6, theme: "Autocontrole", text: "Quando recebo uma crítica, consigo responder de forma calma e construtiva.", dim: "autocontrole" },
-      { id: 7, theme: "Autocontrole", text: "Em situações de alta pressão, consigo manter a clareza mental.", dim: "autocontrole" },
-      { id: 8, theme: "Autocontrole", text: "Consigo controlar impulsos de responder de forma agressiva quando discordo.", dim: "autocontrole" },
-      { id: 9, theme: "Autocontrole", text: "Quando algo dá errado, evito culpar outras pessoas imediatamente.", dim: "autocontrole" },
-      { id: 10, theme: "Autocontrole", text: "Consigo adiar uma resposta emocional até ter mais informações.", dim: "autocontrole" },
-      // EMPATIA (11-15)
-      { id: 11, theme: "Empatia", text: "Percebo facilmente quando um colega está passando por dificuldades, mesmo que não diga nada.", dim: "empatia" },
-      { id: 12, theme: "Empatia", text: "Consigo me colocar no lugar do outro antes de julgar uma situação.", dim: "empatia" },
-      { id: 13, theme: "Empatia", text: "Adapto minha comunicação conforme o estado emocional da pessoa com quem falo.", dim: "empatia" },
-      { id: 14, theme: "Empatia", text: "Ouço ativamente sem interromper, buscando entender a perspectiva alheia.", dim: "empatia" },
-      { id: 15, theme: "Empatia", text: "Ofereço suporte genuíno quando percebo que alguém precisa de ajuda emocional.", dim: "empatia" },
-      // HABILIDADES SOCIAIS (16-20)
-      { id: 16, theme: "Habilidades Sociais", text: "Consigo resolver conflitos entre colegas de forma diplomática e eficaz.", dim: "habilidadesSociais" },
-      { id: 17, theme: "Habilidades Sociais", text: "Minhas apresentações ou argumentos costumam envolver e inspirar a audiência.", dim: "habilidadesSociais" },
-      { id: 18, theme: "Habilidades Sociais", text: "Construo redes de relacionamento profissionais com facilidade e naturalidade.", dim: "habilidadesSociais" },
-      { id: 19, theme: "Habilidades Sociais", text: "Consigo influenciar decisões do grupo sem impor minha vontade agressivamente.", dim: "habilidadesSociais" },
-      { id: 20, theme: "Habilidades Sociais", text: "Mantenho a harmonia da equipe mesmo em períodos de alta demanda.", dim: "habilidadesSociais" },
-      // RESILIÊNCIA (21-25)
-      { id: 21, theme: "Resiliência", text: "Após um fracasso ou erro grave, consigo me recuperar emocionalmente em pouco tempo.", dim: "resiliencia" },
-      { id: 22, theme: "Resiliência", text: "Encaro obstáculos como oportunidades de aprendizado, não como ameaças.", dim: "resiliencia" },
-      { id: 23, theme: "Resiliência", text: "Mantenho o foco e a motivação mesmo quando os resultados demoram a aparecer.", dim: "resiliencia" },
-      { id: 24, theme: "Resiliência", text: "Não deixo que feedbacks negativos abalem minha autoconfiança profissional.", dim: "resiliencia" },
-      { id: 25, theme: "Resiliência", text: "Consigo transformar situações de crise em planos de ação claros e executáveis.", dim: "resiliencia" },
-      // ADAPTABILIDADE (26-30)
-      { id: 26, theme: "Adaptabilidade", text: "Ajusto-me rapidamente a mudanças inesperadas de prioridades ou processos.", dim: "adaptabilidade" },
-      { id: 27, theme: "Adaptabilidade", text: "Sinto-me confortável trabalhando com pessoas de estilos e culturas diferentes.", dim: "adaptabilidade" },
-      { id: 28, theme: "Adaptabilidade", text: "Consigo manter a produtividade mesmo quando o ambiente de trabalho está instável.", dim: "adaptabilidade" },
-      { id: 29, theme: "Adaptabilidade", text: "Estou aberto(a) a testar novas abordagens, mesmo que saiam da minha zona de conforto.", dim: "adaptabilidade" },
-      { id: 30, theme: "Adaptabilidade", text: "Reajo a feedbacks de mudança com curiosidade, não com resistência ou defesa.", dim: "adaptabilidade" }
-    ];
-
-    // ============================================
-    // NAVEGAÇÃO E UI
-    // ============================================
-    function showView(viewId) {
-      ['landingView', 'introView', 'testView', 'loadingView', 'resultsView'].forEach(id => {
-        document.getElementById(id).classList.add('hidden');
-      });
-      document.getElementById(viewId).classList.remove('hidden');
-      window.scrollTo(0, 0);
-    }
-
-    function startAssessment() {
-      AppState.currentQ = 0;
-      AppState.answers = new Array(30).fill(null);
-      AppState.dimensions = { autoconsciencia: 0, autocontrole: 0, empatia: 0, habilidadesSociais: 0, resiliencia: 0, adaptabilidade: 0 };
+    document.addEventListener('DOMContentLoaded', () => {
       renderQuestion();
-      showView('testView');
-    }
+    });
 
-    function confirmExit() {
-      if (confirm('Deseja realmente sair? Seu progresso será perdido.')) {
-        showView('landingView');
-      }
-    }
-
-    function resetTest() {
-      if (confirm('Deseja refazer a avaliação? Os resultados atuais serão substituídos.')) {
-        startAssessment();
-      }
-    }
-
-    // ============================================
-    // RENDERIZAÇÃO DO TESTE
-    // ============================================
     function renderQuestion() {
-      const q = QE_QUESTIONS[AppState.currentQ];
-      document.getElementById('currentQ').textContent = AppState.currentQ + 1;
-      document.getElementById('qTheme').textContent = q.theme;
+      const q = IE_QUESTIONS[AppState.currentQ];
+      document.getElementById('progressText').textContent = `Pergunta ${AppState.currentQ + 1} de ${IE_QUESTIONS.length}`;
+      document.getElementById('progressFill').style.width = `${((AppState.currentQ + 1) / IE_QUESTIONS.length) * 100}%`;
       document.getElementById('qText').textContent = q.text;
-      document.getElementById('progressFill').style.width = `${((AppState.currentQ + 1) / 30) * 100}%`;
+      document.getElementById('qTheme').textContent = q.theme;
       
       document.getElementById('prevBtn').disabled = AppState.currentQ === 0;
-      document.getElementById('nextBtn').textContent = AppState.currentQ === 29 ? 'Finalizar Avaliação' : 'Próxima Pergunta';
-
+      document.getElementById('nextBtn').textContent = AppState.currentQ === IE_QUESTIONS.length - 1 ? 'Finalizar Teste' : 'Próxima Pergunta';
+      
       const container = document.getElementById('optionsContainer');
       container.innerHTML = '';
       
-      const options = [
-        { text: "Sempre representa meu comportamento", weight: 4 },
-        { text: "Frequentemente representa", weight: 3 },
-        { text: "Às vezes representa", weight: 2 },
-        { text: "Raramente representa", weight: 1 }
-      ];
-
-      options.forEach((opt, idx) => {
+      q.options.forEach((opt, idx) => {
         const btn = document.createElement('button');
         btn.className = `option-btn ${AppState.answers[AppState.currentQ] === idx ? 'selected' : ''}`;
-        btn.innerHTML = `<span class="w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs ${AppState.answers[AppState.currentQ] === idx ? 'border-brand-emerald bg-brand-emerald text-white' : 'border-gray-500 text-gray-400'}">${idx + 1}</span> ${opt.text}`;
+        btn.innerHTML = `
+          <span class="check-icon">${AppState.answers[AppState.currentQ] === idx ? '✓' : ''}</span>
+          <span>${opt.text}</span>
+        `;
         btn.onclick = () => {
           AppState.answers[AppState.currentQ] = idx;
           renderQuestion();
@@ -494,7 +546,8 @@
         container.appendChild(btn);
       });
 
-      const card = document.getElementById('questionContainer');
+      // Animação
+      const card = document.querySelector('.glass-card');
       card.style.opacity = '0'; card.style.transform = 'translateY(10px)';
       setTimeout(() => { card.style.transition = 'all 0.3s ease'; card.style.opacity = '1'; card.style.transform = 'translateY(0)'; }, 50);
     }
@@ -507,168 +560,292 @@
     }
 
     function nextQuestion() {
-      if (AppState.answers[AppState.currentQ] === null) {
-        alert('Por favor, selecione uma alternativa antes de continuar.');
+      if (AppState.answers[AppState.currentQ] === undefined) {
+        showToast('Por favor, selecione uma opção antes de continuar.', true);
         return;
       }
-      if (AppState.currentQ < 29) {
+      
+      if (AppState.currentQ < IE_QUESTIONS.length - 1) {
         AppState.currentQ++;
         renderQuestion();
       } else {
-        calculateResults();
-        showView('loadingView');
-        simulateLoading();
+        finishTest();
       }
     }
 
-    function simulateLoading() {
-      let p = 0;
-      const bar = document.getElementById('loadingProgress');
-      const int = setInterval(() => {
-        p += Math.random() * 15;
-        if (p >= 100) {
-          p = 100;
-          clearInterval(int);
-          setTimeout(() => {
-            renderResults();
-            showView('resultsView');
-          }, 600);
+    function finishTest() {
+      // Salvar no localStorage
+      const session = JSON.parse(localStorage.getItem('vigorre_current_user'));
+      if (session) {
+        const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+        const idx = participants.findIndex(p => p.id === session.id);
+        if (idx > -1) {
+          if (!participants[idx].completedTests) participants[idx].completedTests = [];
+          if (!participants[idx].completedTests.includes('IE')) {
+            participants[idx].completedTests.push('IE');
+          }
+          localStorage.setItem('vigorre_participants', JSON.stringify(participants));
         }
-        bar.style.width = `${p}%`;
-      }, 200);
-    }
+      }
 
-    // ============================================
-    // CÁLCULO E RESULTADOS QE
-    // ============================================
-    function calculateResults() {
-      // Reset
-      Object.keys(AppState.dimensions).forEach(k => AppState.dimensions[k] = 0);
-      
-      // Sum weights per dimension (5 questions each, max 20)
-      QE_QUESTIONS.forEach((q, idx) => {
-        const weight = AppState.answers[idx] !== null ? (4 - AppState.answers[idx]) : 0;
-        AppState.dimensions[q.dim] += weight;
-      });
-    }
-
-    function getProfile() {
-      const dims = AppState.dimensions;
-      const total = Object.values(dims).reduce((a,b)=>a+b, 0);
-      const pcts = {};
-      Object.keys(dims).forEach(k => pcts[k] = Math.round((dims[k] / 20) * 100));
-      
-      const avgQE = Math.round(Object.values(pcts).reduce((a,b)=>a+b, 0) / 6);
-      const sortedDims = Object.entries(pcts).sort((a,b) => b[1] - a[1]);
-      
-      let profileName = "Equilibrado";
-      if (avgQE >= 80) profileName = "Alta Inteligência Emocional";
-      else if (sortedDims[0][0] === 'autocontrole' || sortedDims[0][0] === 'autoconsciencia') profileName = "Analítico Emocional";
-      else if (sortedDims[0][0] === 'resiliencia' || sortedDims[0][0] === 'adaptabilidade') profileName = "Reativo Emocional";
-      else if (sortedDims[0][0] === 'habilidadesSociais' || sortedDims[0][0] === 'empatia') profileName = "Social Influente";
-      
-      return { pcts, avgQE, profileName, sortedDims };
-    }
-
-    function renderResults() {
-      const { pcts, avgQE, profileName, sortedDims } = getProfile();
-      
-      document.getElementById('qeScore').textContent = avgQE;
-      document.getElementById('profileBadge').textContent = profileName;
-      document.getElementById('emotionalBalance').textContent = avgQE > 70 ? 'Alto' : avgQE > 50 ? 'Médio' : 'Em Desenvolvimento';
-      
-      // Dynamic Insights
-      document.getElementById('envAnalysis').textContent = profileName.includes('Alta') 
-        ? "Ambientes colaborativos com autonomia, foco em inovação e reconhecimento por impacto. Cultura psicológica segura e transparente." 
-        : "Ambientes estruturados com regras claras, metas mensuráveis e processos bem definidos. Valoriza estabilidade e previsibilidade.";
-      
-      document.getElementById('leadAnalysis').textContent = profileName.includes('Social') 
-        ? "Liderança inspiradora, focada em desenvolvimento de pessoas, comunicação aberta e empoderamento de equipes." 
-        : "Liderança técnica e orientada a processos, com foco em eficiência, controle de qualidade e cumprimento de prazos.";
-      
-      document.getElementById('engageAnalysis').textContent = "Reconhecimento público, desafios intelectuais, oportunidades de crescimento e autonomia para propor soluções.";
-      document.getElementById('demotivateAnalysis').textContent = "Microgerenciamento, falta de transparência, ambientes tóxicos ou competitivos de forma destrutiva.";
-      
-      // Orientations
-      const orientations = document.getElementById('strategicOrientations');
-      orientations.innerHTML = `
-        <li class="flex gap-2"><span class="text-brand-cyan">➤</span> Pratique mindfulness ou journaling por 10 minutos diários para fortalecer a autoconsciência.</li>
-        <li class="flex gap-2"><span class="text-brand-cyan">➤</span> Utilize a técnica de "pausa estratégica" (respiração 4-7-8) antes de responder a críticas.</li>
-        <li class="flex gap-2"><span class="text-brand-cyan">➤</span> Busque feedbacks estruturados mensalmente para calibrar sua percepção emocional.</li>
-        <li class="flex gap-2"><span class="text-brand-cyan">➤</span> Desenvolva escuta ativa: repita o que o outro disse antes de dar sua opinião.</li>
-      `;
-      
-      // Careers
-      const careers = document.getElementById('careerSuggestions');
-      const careerMap = {
-        "Alta Inteligência Emocional": ["Liderança Executiva", "Coaching", "Gestão de Pessoas", "Mediação de Conflitos", "Customer Success"],
-        "Analítico Emocional": ["Análise de Dados", "Finanças", "Compliance", "TI & Infraestrutura", "Planejamento Estratégico"],
-        "Reativo Emocional": ["Empreendedorismo", "Vendas Complexas", "Gestão de Crises", "Operações", "Logística"],
-        "Social Influente": ["Marketing", "Comunicação Corporativa", "Relações Públicas", "Treinamento & Desenvolvimento", "Vendas"],
-        "Equilibrado": ["Gestão de Projetos", "Consultoria", "Business Partner", "Produto", "Operações Estratégicas"]
+      // Calcular resultados
+      const dimensions = { autoconsciencia: 0, autocontrole: 0, empatia: 0, resiliencia: 0, social: 0, estabilidade: 0 };
+      const dimensionMap = {
+        'Autoconsciência': 'autoconsciencia',
+        'Autocontrole': 'autocontrole',
+        'Empatia': 'empatia',
+        'Resiliência': 'resiliencia',
+        'Inteligência Social': 'social',
+        'Estabilidade': 'estabilidade'
       };
-      careers.innerHTML = (careerMap[profileName] || careerMap["Equilibrado"]).map(c => `<span class="px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 hover:bg-white/10 transition">${c}</span>`).join('');
-      
-      // Quote
-      const quotes = [
-        "A inteligência emocional é a habilidade mais poderosa da alta performance.",
-        "Quem domina as próprias emoções lidera qualquer ambiente.",
-        "Autoconhecimento emocional transforma resultados profissionais e pessoais."
-      ];
-      document.getElementById('impactQuote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
-      
-      // Charts
-      renderCharts(pcts);
-    }
 
-    function renderCharts(pcts) {
-      // Radar
-      const radarCtx = document.getElementById('radarChart').getContext('2d');
-      new Chart(radarCtx, {
-        type: 'radar',
-        data: {
-          labels: ['Autoconsciência', 'Autocontrole', 'Empatia', 'Habilidades Sociais', 'Resiliência', 'Adaptabilidade'],
-          datasets: [{
-            label: 'Seu Perfil',
-            data: Object.values(pcts),
-            backgroundColor: 'rgba(124, 58, 237, 0.2)',
-            borderColor: '#7C3AED',
-            borderWidth: 2,
-            pointBackgroundColor: '#7C3AED'
-          }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          scales: { r: { angleLines: { color: 'rgba(255,255,255,0.1)' }, grid: { color: 'rgba(255,255,255,0.1)' }, pointLabels: { color: '#94A3B8', font: {size: 11} }, ticks: { display: false, backdropColor: 'transparent' } } },
-          plugins: { legend: { display: false } }
+      IE_QUESTIONS.forEach((q, idx) => {
+        if (AppState.answers[idx] !== undefined) {
+          const dimKey = dimensionMap[q.theme];
+          dimensions[dimKey] += q.options[AppState.answers[idx]].value;
         }
       });
 
-      // Bar
-      const barCtx = document.getElementById('barChart').getContext('2d');
-      new Chart(barCtx, {
-        type: 'bar',
-        data: {
-          labels: ['Autoconsciência', 'Autocontrole', 'Empatia', 'H. Sociais', 'Resiliência', 'Adaptabilidade'],
-          datasets: [{
-            label: '%',
-            data: Object.values(pcts),
-            backgroundColor: ['#2563EB', '#7C3AED', '#06B6D4', '#10B981', '#F59E0B', '#EC4899'],
-            borderRadius: 6
-          }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          scales: { y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#94A3B8' } }, x: { grid: { display: false }, ticks: { color: '#F8FAFC', font: {weight: 'bold', size: 10} } } },
-          plugins: { legend: { display: false } }
-        }
+      // Calcular percentuais (max 20 pontos por dimensão)
+      const percentages = {};
+      Object.keys(dimensions).forEach(k => {
+        percentages[k] = Math.round((dimensions[k] / 20) * 100);
       });
+
+      const avgQE = Math.round(Object.values(percentages).reduce((a, b) => a + b, 0) / 6);
+
+      // Salvar resultados
+      const results = {
+        date: new Date().toISOString(),
+        type: 'IE',
+        dimensions,
+        percentages,
+        avgQE
+      };
+
+      localStorage.setItem('vigorre_last_ie_result', JSON.stringify(results));
+
+      // Salvar histórico de relatórios
+      const reports = JSON.parse(localStorage.getItem('vigorre_reports') || '[]');
+      reports.push({
+        id: Date.now().toString(),
+        participantId: session?.id || 'anonymous',
+        participantName: session?.name || 'Participante',
+        type: 'simple',
+        testType: 'IE',
+        date: new Date().toLocaleDateString('pt-BR'),
+        status: 'completed'
+      });
+      localStorage.setItem('vigorre_reports', JSON.stringify(reports));
+
+      // Mostrar loading
+      document.getElementById('loadingOverlay').classList.remove('hidden');
+
+      // Enviar relatório simples por e-mail (simulação)
+      setTimeout(() => {
+        sendSimpleReportEmail(results, session);
+        showResults(results);
+      }, 1500);
     }
 
-    // Init
-    document.addEventListener('DOMContentLoaded', () => {
-      // Check local storage for saved progress if needed
-    });
+    function showResults(results) {
+      document.getElementById('loadingOverlay').classList.add('hidden');
+      document.getElementById('testContainer').classList.add('hidden');
+      document.querySelector('header').classList.add('hidden');
+      document.getElementById('resultsView').classList.remove('hidden');
+
+      const session = JSON.parse(localStorage.getItem('vigorre_current_user'));
+      if (session?.name) {
+        document.getElementById('participantName').textContent = session.name;
+      }
+      document.getElementById('profileBadge').textContent = `QE: ${results.avgQE}%`;
+
+      // Determinar perfil emocional
+      let profileName = 'Equilibrado';
+      if (results.avgQE >= 80) profileName = 'Alta Inteligência Emocional';
+      else if (results.avgQE >= 60) profileName = 'Inteligência Emocional em Desenvolvimento';
+      else profileName = 'Oportunidades de Desenvolvimento Emocional';
+      document.getElementById('profileBadge').textContent += ` • ${profileName}`;
+
+      // Resumo Executivo
+      document.getElementById('executiveSummary').innerHTML = `
+        <p class="text-gray-300 mb-4">
+          Seu Índice QE geral é <strong style="color: ${results.avgQE >= 70 ? '#10B981' : results.avgQE >= 50 ? '#F59E0B' : '#F43F5E'}">${results.avgQE}%</strong>, 
+          indicando ${profileName.toLowerCase()}. 
+        </p>
+        <div class="grid md:grid-cols-3 gap-4">
+          ${Object.entries(results.percentages).map(([key, value]) => {
+            const interp = IE_INTERPRETATIONS[key];
+            const level = value >= 70 ? 'high' : value >= 50 ? 'medium' : 'low';
+            return `
+              <div class="glass p-4 rounded-lg">
+                <h4 class="font-semibold mb-1">${interp.name}</h4>
+                <div class="w-full bg-white/10 rounded-full h-2 mb-2">
+                  <div class="bg-brand-emerald h-2 rounded-full" style="width: ${value}%"></div>
+                </div>
+                <p class="text-xs text-gray-400">${value}%</p>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+
+      // Análise Detalhada
+      document.getElementById('detailedAnalysis').innerHTML = Object.entries(results.percentages).map(([key, value]) => {
+        const interp = IE_INTERPRETATIONS[key];
+        const level = value >= 70 ? 'high' : value >= 50 ? 'medium' : 'low';
+        const desc = level === 'high' ? interp.high : level === 'medium' ? interp.medium : interp.low;
+        return `
+          <div class="glass p-4 rounded-lg mb-4">
+            <div class="flex justify-between items-center mb-2">
+              <h4 class="font-semibold">${interp.name}</h4>
+              <span class="px-2 py-1 rounded-full text-xs ${value >= 70 ? 'bg-brand-emerald/20 text-brand-emerald' : value >= 50 ? 'bg-brand-amber/20 text-brand-amber' : 'bg-brand-rose/20 text-brand-rose'}">${value}%</span>
+            </div>
+            <p class="text-sm text-gray-300">${desc}</p>
+          </div>
+        `;
+      }).join('');
+
+      // Recomendações
+      document.getElementById('recommendations').innerHTML = `
+        <ul class="space-y-2 text-sm text-gray-300">
+          <li class="flex gap-2"><span class="text-brand-emerald">➤</span> Pratique mindfulness diário para fortalecer autoconsciência emocional.</li>
+          <li class="flex gap-2"><span class="text-brand-emerald">➤</span> Utilize a técnica de pausa estratégica (respiração 4-7-8) antes de responder a situações desafiadoras.</li>
+          <li class="flex gap-2"><span class="text-brand-emerald">➤</span> Busque feedback regular sobre seu impacto emocional nas relações.</li>
+          <li class="flex gap-2"><span class="text-brand-emerald">➤</span> Considere o laudo completo Vigorre para análise integrada com DISC e Valores Pessoais.</li>
+        </ul>
+      `;
+
+      // Renderizar gráficos
+      renderCharts(results.percentages);
+
+      // Scroll to top
+      window.scrollTo(0, 0);
+    }
+
+    function renderCharts(percentages) {
+      // Radar Chart
+      const radarCtx = document.getElementById('ieRadarChart');
+      if (radarCtx) {
+        new Chart(radarCtx, {
+          type: 'radar',
+          data: {
+            labels: ['Autoconsciência', 'Autocontrole', 'Empatia', 'Resiliência', 'Inteligência Social', 'Estabilidade'],
+            datasets: [{
+              label: 'Seu Perfil',
+              data: [percentages.autoconsciencia, percentages.autocontrole, percentages.empatia, percentages.resiliencia, percentages.social, percentages.estabilidade],
+              backgroundColor: 'rgba(6, 182, 212, 0.2)',
+              borderColor: '#06B6D4',
+              borderWidth: 2,
+              pointBackgroundColor: '#06B6D4'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              r: {
+                min: 0,
+                max: 100,
+                angleLines: { color: 'rgba(255,255,255,0.1)' },
+                grid: { color: 'rgba(255,255,255,0.1)' },
+                pointLabels: { color: '#94A3B8', font: { size: 10 } },
+                ticks: { display: false, backdropColor: 'transparent' }
+              }
+            },
+            plugins: { legend: { display: false } }
+          }
+        });
+      }
+
+      // Bar Chart
+      const barCtx = document.getElementById('ieBarChart');
+      if (barCtx) {
+        new Chart(barCtx, {
+          type: 'bar',
+          data: {
+            labels: ['AC', 'AT', 'EM', 'RS', 'IS', 'ES'],
+            datasets: [{
+              label: '%',
+              data: [percentages.autoconsciencia, percentages.autocontrole, percentages.empatia, percentages.resiliencia, percentages.social, percentages.estabilidade],
+              backgroundColor: ['#3B82F6', '#7C3AED', '#F59E0B', '#10B981', '#06B6D4', '#EC4899'],
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#94A3B8' } },
+              x: { grid: { display: false }, ticks: { color: '#F8FAFC', font: { weight: 'bold', size: 10 } } }
+            },
+            plugins: { legend: { display: false } }
+          }
+        });
+      }
+    }
+
+    function sendSimpleReportEmail(results, session) {
+      // Simulação de envio de e-mail
+      console.log('Enviando relatório simples IE por e-mail para:', session?.email);
+      
+      // Salvar flag de e-mail enviado
+      if (session) {
+        const reports = JSON.parse(localStorage.getItem('vigorre_reports') || '[]');
+        const lastReport = reports[reports.length - 1];
+        if (lastReport) {
+          lastReport.emailSent = true;
+          lastReport.emailDate = new Date().toLocaleString('pt-BR');
+          localStorage.setItem('vigorre_reports', JSON.stringify(reports));
+        }
+      }
+
+      showToast('✅ Relatório simples enviado para seu e-mail!');
+    }
+
+    function downloadSimpleReport() {
+      const results = JSON.parse(localStorage.getItem('vigorre_last_ie_result'));
+      if (!results) return;
+
+      const session = JSON.parse(localStorage.getItem('vigorre_current_user'));
+      
+      const reportContent = `
+RELATÓRIO SIMPLES - INTELIGÊNCIA EMOCIONAL (QE)
+================================================
+Participante: ${session?.name || 'Participante'}
+Data: ${new Date().toLocaleDateString('pt-BR')}
+Índice QE Geral: ${results.avgQE}%
+
+DIMENSÕES
+---------
+Autoconsciência: ${results.percentages.autoconsciencia}%
+Autocontrole: ${results.percentages.autocontrole}%
+Empatia: ${results.percentages.empatia}%
+Resiliência: ${results.percentages.resiliencia}%
+Inteligência Social: ${results.percentages.social}%
+Estabilidade Emocional: ${results.percentages.estabilidade}%
+
+Para análise completa, acesse: laudo-vigorre.html
+      `;
+
+      const blob = new Blob([reportContent], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Relatorio-Simples-IE-${session?.name || 'Vigorre'}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+      
+      showToast('✅ Relatório baixado com sucesso!');
+    }
+
+    function showToast(message, isError = false) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMessage').textContent = message;
+      toast.querySelector('span:first-child').textContent = isError ? '⚠️' : '✅';
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 3000);
+    }
   </script>
 </body>
 </html>
