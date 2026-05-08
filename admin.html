@@ -1096,6 +1096,7 @@
           '<td>' +
             '<button class="btn btn-warning btn-sm" onclick="editParticipant(\'' + p.id + '\')">✏️ Editar</button>' +
             '<button class="btn btn-primary btn-sm" onclick="resendTest(\'' + p.id + '\')">📧 Reenviar Teste</button>' +
+            '<button class="btn btn-secondary btn-sm" onclick="openVigorreLaudo(\'' + p.id + '\')">💎 Laudo Vigorre</button>' +
             '<button class="btn btn-danger btn-sm" onclick="deleteItem(\'participants\',\'' + p.id + '\')">🗑️ Excluir</button>' +
           '</td>' +
         '</tr>';
@@ -1177,6 +1178,14 @@
     function resendTest(id) {
       var p = DB.participants.find(function(x) { return x.id === id; });
       if (p) showToast('Credenciais e testes reenviados para ' + p.email, 'success');
+    }
+
+    // ============================================
+    // ABRIR LAUDO VIGORRE PREMIUM
+    // ============================================
+    function openVigorreLaudo(participantId) {
+      // Abre o laudo premium em uma nova aba, passando o ID do participante
+      window.open('laudo-vigorre.html?participantId=' + participantId, '_blank');
     }
 
     // ============================================
