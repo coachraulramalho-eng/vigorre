@@ -32,6 +32,8 @@
               purple: '#7C3AED',
               cyan: '#06B6D4',
               emerald: '#10B981',
+              amber: '#F59E0B',
+              rose: '#F43F5E'
             }
           },
           animation: {
@@ -256,6 +258,56 @@
     .insight-c { border-left-color: #7C3AED; }
     
     /* ============================================
+       TOAST NOTIFICATIONS
+       ============================================ */
+    #toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 12px 20px;
+      border-radius: 12px;
+      background: rgba(30, 41, 59, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 9999;
+      transform: translateX(400px);
+      transition: transform 0.3s ease;
+      max-width: 350px;
+    }
+    #toast.show {
+      transform: translateX(0);
+    }
+    #toast.success {
+      border-left: 4px solid #10B981;
+    }
+    #toast.error {
+      border-left: 4px solid #EF4444;
+    }
+    #toast .toast-icon {
+      font-size: 1.25rem;
+    }
+    #toast .toast-message {
+      font-size: 0.875rem;
+      color: #F8FAFC;
+      flex: 1;
+    }
+    #toast .toast-close {
+      background: none;
+      border: none;
+      color: #94A3B8;
+      cursor: pointer;
+      font-size: 1.25rem;
+      line-height: 1;
+      padding: 0;
+    }
+    #toast .toast-close:hover {
+      color: #F8FAFC;
+    }
+    
+    /* ============================================
        RESPONSIVIDADE
        ============================================ */
     @media (max-width: 768px) {
@@ -315,6 +367,15 @@
   </style>
 </head>
 <body class="antialiased">
+  
+  <!-- ============================================
+       TOAST NOTIFICATION
+       ============================================ -->
+  <div id="toast" class="hidden">
+    <span class="toast-icon" id="toastIcon">✅</span>
+    <span class="toast-message" id="toastMessage">Mensagem</span>
+    <button class="toast-close" onclick="hideToast()">×</button>
+  </div>
   
   <!-- ============================================
        LANDING PAGE / HERO SECTION
@@ -519,7 +580,7 @@
           <!-- Instruções de Ranqueamento -->
           <div class="glass p-4 rounded-xl mb-6">
             <p class="text-sm text-gray-300">
-              <strong class="text-white">Instrução:</strong> Arraste as características abaixo para ordená-las da <span class="text-brand-emerald">MAIS parecida com você</span> (topo) para a <span class="text-brand-red">MENOS parecida com você</span> (base).
+              <strong class="text-white">Instrução:</strong> Arraste as características abaixo para ordená-las da <span class="text-brand-emerald">MAIS parecida com você</span> (topo) para a <span class="text-brand-rose">MENOS parecida com você</span> (base).
             </p>
           </div>
           
@@ -663,7 +724,7 @@
           <!-- Comunicação -->
           <div class="insight-card insight-d p-4 rounded-xl">
             <h4 class="font-medium mb-2 flex items-center gap-2">
-              <span class="text-brand-red">💬</span>
+              <span class="text-brand-rose">💬</span>
               Estilo de Comunicação
             </h4>
             <p class="text-sm text-gray-300" id="communicationInsight">
@@ -674,7 +735,7 @@
           <!-- Liderança -->
           <div class="insight-card insight-d p-4 rounded-xl">
             <h4 class="font-medium mb-2 flex items-center gap-2">
-              <span class="text-brand-red">👑</span>
+              <span class="text-brand-rose">👑</span>
               Estilo de Liderança
             </h4>
             <p class="text-sm text-gray-300" id="leadershipInsight">
@@ -744,6 +805,24 @@
         </div>
       </div>
 
+      <!-- CTAs de Relatório -->
+      <div class="grid md:grid-cols-2 gap-4 mb-8">
+        <div class="glass-card p-6 text-center animate-on-scroll">
+          <h4 class="font-semibold mb-2">📄 Relatório Simples</h4>
+          <p class="text-sm text-gray-400 mb-4">Visão geral do seu perfil DISC para download</p>
+          <button onclick="downloadSimpleReport()" class="btn-primary px-6 py-3 rounded-lg font-semibold w-full">
+            Baixar Relatório Simples
+          </button>
+        </div>
+        <div class="glass-card p-6 text-center animate-on-scroll">
+          <h4 class="font-semibold mb-2">🔓 Laudo Vigorre Completo</h4>
+          <p class="text-sm text-gray-400 mb-4">Análise integrada com IE + Valores + Fit Cultural</p>
+          <button onclick="window.location.href='laudo-vigorre.html?test=DISC'" class="btn-secondary px-6 py-3 rounded-lg font-semibold w-full">
+            Ver Laudo Vigorre
+          </button>
+        </div>
+      </div>
+
     </main>
 
     <!-- Footer de Resultados -->
@@ -768,7 +847,9 @@
       currentQuestionIndex: 0,
       answers: [],
       discScores: { D: 0, I: 0, S: 0, C: 0 },
-      questions: []
+      questions: [],
+      participant: null,
+      session: null
     };
 
     // ============================================
@@ -1060,7 +1141,7 @@
       D: {
         name: 'Dominância',
         color: '#EF4444',
-        gradient: 'from-red-500 to-red-700',
+        gradient: 'from-rose-500 to-rose-700',
         badge: 'profile-d',
         characteristics: [
           'Competitivo', 'Direto', 'Rápido', 'Estratégico', 'Executor',
@@ -1209,12 +1290,31 @@
       // Inicializar respostas vazias
       AppState.answers = new Array(25).fill(null);
       
+      // Carregar sessão do participante
+      loadSession();
+      
       // Configurar observers para animações
       setupScrollAnimations();
       
       // Carregar progresso salvo se existir
       loadProgress();
     });
+
+    // ============================================
+    // CARREGAR SESSÃO DO PARTICIPANTE
+    // ============================================
+    function loadSession() {
+      try {
+        const session = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+        if (session && session.id) {
+          AppState.session = session;
+          const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+          AppState.participant = participants.find(p => p.id === session.id);
+        }
+      } catch (e) {
+        console.error('Erro ao carregar sessão:', e);
+      }
+    }
 
     // ============================================
     // ANIMAÇÕES DE SCROLL
@@ -1505,7 +1605,7 @@
       // Verificar se todas as opções foram ranqueadas
       const list = document.getElementById('rankList');
       if (list.children.length !== 4) {
-        alert('Por favor, ranqueie todas as 4 características antes de continuar.');
+        showToast('Por favor, ranqueie todas as 4 características antes de continuar.', 'error');
         return;
       }
       
@@ -1515,8 +1615,110 @@
         saveProgress();
       } else {
         // Finalizar teste
-        calculateResults();
-        showLoadingResults();
+        finishTest();
+      }
+    }
+
+    // ============================================
+    // FINALIZAR TESTE E PROCESSAR RESULTADOS
+    // ============================================
+    function finishTest() {
+      // Calcular resultados
+      const results = calculateResults();
+      
+      // Salvar no localStorage do participante
+      saveParticipantResults(results);
+      
+      // Enviar relatório simples por e-mail (simulado)
+      sendSimpleReportEmail(results);
+      
+      // Mostrar loading
+      showLoadingResults();
+    }
+
+    // ============================================
+    // SALVAR RESULTADOS NO PARTICIPANTE
+    // ============================================
+    function saveParticipantResults(results) {
+      if (!AppState.participant) return;
+      
+      try {
+        const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+        const idx = participants.findIndex(p => p.id === AppState.participant.id);
+        
+        if (idx > -1) {
+          // Garantir arrays existentes
+          if (!participants[idx].completedTests) {
+            participants[idx].completedTests = [];
+          }
+          if (!participants[idx].testResults) {
+            participants[idx].testResults = {};
+          }
+          
+          // Marcar DISC como concluído se ainda não estiver
+          if (!participants[idx].completedTests.includes('DISC')) {
+            participants[idx].completedTests.push('DISC');
+          }
+          
+          // Salvar resultados do teste
+          participants[idx].testResults.DISC = {
+            date: new Date().toISOString(),
+            scores: results.scores,
+            percentages: results.percentages,
+            dominant: Object.entries(results.percentages).sort((a, b) => b[1] - a[1])[0][0]
+          };
+          
+          // Salvar no localStorage
+          localStorage.setItem('vigorre_participants', JSON.stringify(participants));
+          
+          // Atualizar estado local
+          AppState.participant = participants[idx];
+        }
+      } catch (e) {
+        console.error('Erro ao salvar resultados:', e);
+      }
+    }
+
+    // ============================================
+    // ENVIAR RELATÓRIO SIMPLES POR E-MAIL (SIMULADO)
+    // ============================================
+    function sendSimpleReportEmail(results) {
+      // Em produção, aqui chamaria a API: /api/send-simple-report
+      console.log('📧 Enviando relatório DISC para:', AppState.session?.email);
+      
+      // Simular delay de envio
+      setTimeout(() => {
+        // Salvar histórico de relatório enviado
+        saveReportHistory('DISC', 'simple');
+        
+        // Mostrar toast de confirmação
+        showToast('✅ Relatório simples enviado para seu e-mail!', 'success');
+      }, 1000);
+    }
+
+    // ============================================
+    // SALVAR HISTÓRICO DE RELATÓRIOS
+    // ============================================
+    function saveReportHistory(testType, reportType) {
+      try {
+        const reports = JSON.parse(localStorage.getItem('vigorre_reports') || '[]');
+        
+        reports.push({
+          id: Date.now().toString(),
+          participantId: AppState.session?.id || 'anonymous',
+          participantName: AppState.participant?.name || 'Participante',
+          participantEmail: AppState.session?.email || '',
+          type: reportType,
+          testType: testType,
+          date: new Date().toLocaleDateString('pt-BR'),
+          status: 'completed',
+          emailSent: true,
+          emailDate: new Date().toLocaleString('pt-BR')
+        });
+        
+        localStorage.setItem('vigorre_reports', JSON.stringify(reports));
+      } catch (e) {
+        console.error('Erro ao salvar histórico:', e);
       }
     }
 
@@ -1706,7 +1908,7 @@
       const devList = document.getElementById('developmentList');
       devList.innerHTML = profile.development.map(point => `
         <li class="flex items-start gap-2 text-sm text-gray-300">
-          <span class="text-brand-red mt-0.5">•</span>
+          <span class="text-brand-rose mt-0.5">•</span>
           <span>${point}</span>
         </li>
       `).join('');
@@ -1749,10 +1951,97 @@
     }
 
     // ============================================
+    // DOWNLOAD DE RELATÓRIO SIMPLES
+    // ============================================
+    function downloadSimpleReport() {
+      const results = calculateResults();
+      const dominant = Object.entries(results.percentages).sort((a, b) => b[1] - a[1])[0][0];
+      const profile = DISC_PROFILES[dominant];
+      
+      const reportContent = `
+RELATÓRIO SIMPLES DISC - VIGORRE PEOPLE ANALYTICS
+==================================================
+Participante: ${AppState.participant?.name || 'Participante'}
+Data: ${new Date().toLocaleDateString('pt-BR')}
+Teste: Assessment DISC
+
+PERFIL PREDOMINANTE
+-------------------
+${profile.name} (${results.percentages[dominant]}%)
+${profile.characteristics.slice(0, 5).join(' • ')}
+
+PONTOS FORTES
+-------------
+${profile.strengths.map(s => `• ${s}`).join('\n')}
+
+PONTOS DE DESENVOLVIMENTO
+-------------------------
+${profile.development.map(d => `• ${d}`).join('\n')}
+
+CARREIRAS COMPATÍVEIS
+---------------------
+${profile.careers.slice(0, 5).join('\n')}
+
+INSIGHTS PRINCIPAIS
+-------------------
+Comunicação: ${profile.insights.communication}
+Liderança: ${profile.insights.leadership}
+Decisão: ${profile.insights.decision}
+Sob Pressão: ${profile.insights.pressure}
+
+---
+Para análise completa integrada com Inteligência Emocional e Valores Pessoais,
+acesse: laudo-vigorre.html
+
+© 2024 Vigorre People Analytics. Metodologia DISC validada internacionalmente.
+      `;
+      
+      // Criar blob e download
+      const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Relatorio-Simples-DISC-${AppState.participant?.name?.replace(/\s+/g, '-') || 'Vigorre'}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      showToast('✅ Relatório baixado com sucesso!', 'success');
+    }
+
+    // ============================================
     // EXPORTAÇÃO PDF (SIMULAÇÃO)
     // ============================================
     function exportPDF() {
-      alert('📄 Funcionalidade de exportação PDF:\n\nEm uma implementação real, esta função geraria um relatório profissional em PDF com:\n\n• Gráficos em alta resolução\n• Análise completa do perfil\n• Recomendações personalizadas\n• Identidade visual da empresa\n\nPara esta demonstração, use Ctrl+P para imprimir a página.');
+      showToast('📄 Em produção, esta função geraria um PDF profissional com gráficos HD e identidade visual Vigorre. Use Ctrl+P para imprimir esta página.', 'success');
+    }
+
+    // ============================================
+    // TOAST NOTIFICATIONS
+    // ============================================
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const icon = document.getElementById('toastIcon');
+      const msg = document.getElementById('toastMessage');
+      
+      // Configurar toast
+      toast.className = `toast ${type}`;
+      icon.textContent = type === 'success' ? '✅' : '⚠️';
+      msg.textContent = message;
+      
+      // Mostrar toast
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('show'), 10);
+      
+      // Auto-hide após 4 segundos
+      setTimeout(() => hideToast(), 4000);
+    }
+
+    function hideToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.remove('show');
+      setTimeout(() => toast.classList.add('hidden'), 300);
     }
 
   </script>
