@@ -109,6 +109,19 @@
     @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 
     /* ============================================
+       CORREÇÃO CRÍTICA: CONTAINERS DE GRÁFICOS COM ALTURA FIXA
+       ============================================ */
+    .chart-container {
+      position: relative;
+      height: 300px !important;
+      max-height: 300px !important;
+      width: 100%;
+    }
+    .chart-container canvas {
+      max-height: 300px !important;
+    }
+
+    /* ============================================
        TEST INTERFACE
        ============================================ */
     .option-btn { 
@@ -204,11 +217,11 @@
     <div class="grid md:grid-cols-2 gap-6 mb-8">
       <div class="glass-card p-6 slide-up">
         <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">Radar Emocional</h3>
-        <canvas id="ieRadarChart" class="w-full h-64"></canvas>
+        <div class="chart-container"><canvas id="ieRadarChart"></canvas></div>
       </div>
       <div class="glass-card p-6 slide-up">
         <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">Índice QE por Dimensão</h3>
-        <canvas id="ieBarChart" class="w-full h-64"></canvas>
+        <div class="chart-container"><canvas id="ieBarChart"></canvas></div>
       </div>
     </div>
 
@@ -273,9 +286,17 @@
     // ============================================
     const AppState = {
       currentQ: 0,
-      answers: [], // 0-3 para cada pergunta
-      completed: false
+      answers: [],
+      completed: false,
+      session: null,
+      participant: null
     };
+
+    // ============================================
+    // VARIÁVEIS GLOBAIS PARA GRÁFICOS (CORREÇÃO CRÍTICA)
+    // ============================================
+    let ieRadarChartInstance = null;
+    let ieBarChartInstance = null;
 
     // Banco de Perguntas de Inteligência Emocional (30 perguntas)
     const IE_QUESTIONS = [
@@ -516,8 +537,26 @@
     // INICIALIZAÇÃO
     // ============================================
     document.addEventListener('DOMContentLoaded', () => {
+      // Carregar sessão do participante
+      loadSession();
       renderQuestion();
     });
+
+    // ============================================
+    // CARREGAR SESSÃO DO PARTICIPANTE
+    // ============================================
+    function loadSession() {
+      try {
+        const session = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+        if (session && session.id) {
+          AppState.session = session;
+          const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+          AppState.participant = participants.find(p => p.id === session.id);
+        }
+      } catch (e) {
+        console.error('Erro ao carregar sessão:', e);
+      }
+    }
 
     function renderQuestion() {
       const q = IE_QUESTIONS[AppState.currentQ];
@@ -574,11 +613,10 @@
     }
 
     function finishTest() {
-      // Salvar no localStorage
-      const session = JSON.parse(localStorage.getItem('vigorre_current_user'));
-      if (session) {
+      // Salvar no localStorage - marcar teste como concluído
+      if (AppState.participant) {
         const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-        const idx = participants.findIndex(p => p.id === session.id);
+        const idx = participants.findIndex(p => p.id === AppState.participant.id);
         if (idx > -1) {
           if (!participants[idx].completedTests) participants[idx].completedTests = [];
           if (!participants[idx].completedTests.includes('IE')) {
@@ -629,12 +667,15 @@
       const reports = JSON.parse(localStorage.getItem('vigorre_reports') || '[]');
       reports.push({
         id: Date.now().toString(),
-        participantId: session?.id || 'anonymous',
-        participantName: session?.name || 'Participante',
+        participantId: AppState.session?.id || 'anonymous',
+        participantName: AppState.session?.name || 'Participante',
+        participantEmail: AppState.session?.email || '',
         type: 'simple',
         testType: 'IE',
         date: new Date().toLocaleDateString('pt-BR'),
-        status: 'completed'
+        status: 'completed',
+        emailSent: true,
+        emailDate: new Date().toLocaleString('pt-BR')
       });
       localStorage.setItem('vigorre_reports', JSON.stringify(reports));
 
@@ -643,9 +684,22 @@
 
       // Enviar relatório simples por e-mail (simulação)
       setTimeout(() => {
-        sendSimpleReportEmail(results, session);
+        sendSimpleReportEmail(results);
         showResults(results);
       }, 1500);
+    }
+
+    // ============================================
+    // ENVIAR RELATÓRIO SIMPLES POR E-MAIL (SIMULAÇÃO)
+    // ============================================
+    function sendSimpleReportEmail(results) {
+      // Em produção, aqui chamaria a API: /api/send-simple-report
+      console.log('📧 Enviando relatório IE para:', AppState.session?.email);
+      
+      // Simular delay de envio
+      setTimeout(() => {
+        showToast('✅ Relatório simples enviado para seu e-mail!', 'success');
+      }, 1000);
     }
 
     function showResults(results) {
@@ -654,9 +708,8 @@
       document.querySelector('header').classList.add('hidden');
       document.getElementById('resultsView').classList.remove('hidden');
 
-      const session = JSON.parse(localStorage.getItem('vigorre_current_user'));
-      if (session?.name) {
-        document.getElementById('participantName').textContent = session.name;
+      if (AppState.session?.name) {
+        document.getElementById('participantName').textContent = AppState.session.name;
       }
       document.getElementById('profileBadge').textContent = `QE: ${results.avgQE}%`;
 
@@ -716,18 +769,31 @@
         </ul>
       `;
 
-      // Renderizar gráficos
+      // Renderizar gráficos (CORREÇÃO APLICADA)
       renderCharts(results.percentages);
 
       // Scroll to top
       window.scrollTo(0, 0);
     }
 
+    // ============================================
+    // RENDERIZAR GRÁFICOS (CORREÇÃO CRÍTICA APLICADA)
+    // ============================================
     function renderCharts(percentages) {
+      // CORREÇÃO: Destruir instâncias anteriores antes de criar novas
+      if (ieRadarChartInstance) {
+        ieRadarChartInstance.destroy();
+        ieRadarChartInstance = null;
+      }
+      if (ieBarChartInstance) {
+        ieBarChartInstance.destroy();
+        ieBarChartInstance = null;
+      }
+
       // Radar Chart
       const radarCtx = document.getElementById('ieRadarChart');
       if (radarCtx) {
-        new Chart(radarCtx, {
+        ieRadarChartInstance = new Chart(radarCtx, {
           type: 'radar',
           data: {
             labels: ['Autoconsciência', 'Autocontrole', 'Empatia', 'Resiliência', 'Inteligência Social', 'Estabilidade'],
@@ -742,7 +808,7 @@
           },
           options: {
             responsive: true,
-            maintainAspectRatio: false,
+            maintainAspectRatio: false, // CORREÇÃO CRÍTICA: impede expansão infinita
             scales: {
               r: {
                 min: 0,
@@ -761,7 +827,7 @@
       // Bar Chart
       const barCtx = document.getElementById('ieBarChart');
       if (barCtx) {
-        new Chart(barCtx, {
+        ieBarChartInstance = new Chart(barCtx, {
           type: 'bar',
           data: {
             labels: ['AC', 'AT', 'EM', 'RS', 'IS', 'ES'],
@@ -774,7 +840,7 @@
           },
           options: {
             responsive: true,
-            maintainAspectRatio: false,
+            maintainAspectRatio: false, // CORREÇÃO CRÍTICA: impede expansão infinita
             scales: {
               y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#94A3B8' } },
               x: { grid: { display: false }, ticks: { color: '#F8FAFC', font: { weight: 'bold', size: 10 } } }
@@ -785,34 +851,14 @@
       }
     }
 
-    function sendSimpleReportEmail(results, session) {
-      // Simulação de envio de e-mail
-      console.log('Enviando relatório simples IE por e-mail para:', session?.email);
-      
-      // Salvar flag de e-mail enviado
-      if (session) {
-        const reports = JSON.parse(localStorage.getItem('vigorre_reports') || '[]');
-        const lastReport = reports[reports.length - 1];
-        if (lastReport) {
-          lastReport.emailSent = true;
-          lastReport.emailDate = new Date().toLocaleString('pt-BR');
-          localStorage.setItem('vigorre_reports', JSON.stringify(reports));
-        }
-      }
-
-      showToast('✅ Relatório simples enviado para seu e-mail!');
-    }
-
     function downloadSimpleReport() {
       const results = JSON.parse(localStorage.getItem('vigorre_last_ie_result'));
       if (!results) return;
 
-      const session = JSON.parse(localStorage.getItem('vigorre_current_user'));
-      
       const reportContent = `
 RELATÓRIO SIMPLES - INTELIGÊNCIA EMOCIONAL (QE)
 ================================================
-Participante: ${session?.name || 'Participante'}
+Participante: ${AppState.session?.name || 'Participante'}
 Data: ${new Date().toLocaleDateString('pt-BR')}
 Índice QE Geral: ${results.avgQE}%
 
@@ -828,23 +874,29 @@ Estabilidade Emocional: ${results.percentages.estabilidade}%
 Para análise completa, acesse: laudo-vigorre.html
       `;
 
-      const blob = new Blob([reportContent], { type: 'text/plain' });
+      const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `Relatorio-Simples-IE-${session?.name || 'Vigorre'}.txt`;
+      a.download = `Relatorio-Simples-IE-${AppState.session?.name?.replace(/\s+/g, '-') || 'Vigorre'}.txt`;
+      document.body.appendChild(a);
       a.click();
+      document.body.removeChild(a);
       URL.revokeObjectURL(url);
       
-      showToast('✅ Relatório baixado com sucesso!');
+      showToast('✅ Relatório baixado com sucesso!', 'success');
     }
 
-    function showToast(message, isError = false) {
+    function showToast(message, type = 'success') {
       const toast = document.getElementById('toast');
-      document.getElementById('toastMessage').textContent = message;
-      toast.querySelector('span:first-child').textContent = isError ? '⚠️' : '✅';
+      const icon = toast.querySelector('span:first-child');
+      const msg = document.getElementById('toastMessage');
+      
+      icon.textContent = type === 'success' ? '✅' : '⚠️';
+      msg.textContent = message;
+      
       toast.classList.remove('hidden');
-      setTimeout(() => toast.classList.add('hidden'), 3000);
+      setTimeout(() => toast.classList.add('hidden'), 4000);
     }
   </script>
 </body>
