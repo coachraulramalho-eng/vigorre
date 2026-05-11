@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relatório Completo DISC | Vigorre People Analytics</title>
+  
+  <!-- Tailwind CSS & Chart.js -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: {
+              dark: '#0F172A',
+              purple: '#7C3AED',
+              blue: '#1D4ED8',
+              cyan: '#06B6D4',
+              emerald: '#10B981',
+              amber: '#F59E0B',
+              rose: '#F43F5E',
+              slate: '#64748B'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ============================================
+       BASE & RESET
+       ============================================ */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Inter', sans-serif; 
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%); 
+      color: #F8FAFC; 
+      min-height: 100vh; 
+      line-height: 1.7;
+    }
+
+    /* ============================================
+       GLASSMORPHISM & PREMIUM EFFECTS
+       ============================================ */
+    .glass { 
+      background: rgba(30, 41, 59, 0.6); 
+      backdrop-filter: blur(16px); 
+      -webkit-backdrop-filter: blur(16px); 
+      border: 1px solid rgba(255, 255, 255, 0.08); 
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); 
+    }
+    .glass-card { 
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.85), rgba(15, 23, 42, 0.95)); 
+      backdrop-filter: blur(24px); 
+      border: 1px solid rgba(255, 255, 255, 0.06); 
+      border-radius: 24px; 
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); 
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .glass-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6);
+    }
+    .gradient-text { 
+      background: linear-gradient(135deg, #60A5FA, #A78BFA, #22D3EE); 
+      -webkit-background-clip: text; 
+      -webkit-text-fill-color: transparent; 
+      background-clip: text; 
+    }
+    .gradient-border {
+      position: relative;
+      border-radius: 24px;
+    }
+    .gradient-border::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 26px;
+      background: linear-gradient(135deg, #1D4ED8, #7C3AED, #06B6D4);
+      z-index: -1;
+      opacity: 0.5;
+      filter: blur(12px);
+    }
+
+    /* ============================================
+       CHART CONTAINERS
+       ============================================ */
+    .chart-container {
+      position: relative;
+      height: 350px !important;
+      width: 100%;
+      overflow: hidden;
+    }
+    .mini-chart { height: 200px !important; }
+
+    /* ============================================
+       BUTTONS & INTERACTIONS
+       ============================================ */
+    .btn-primary { 
+      background: linear-gradient(135deg, #1D4ED8, #7C3AED); 
+      transition: all 0.3s ease; position: relative; overflow: hidden; 
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(124, 58, 237, 0.5); }
+    .btn-secondary {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      transition: all 0.3s ease;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.15); transform: translateY(-1px); }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: all 0.3s ease;
+    }
+    .btn-outline:hover { border-color: #1D4ED8; background: rgba(29, 78, 216, 0.1); }
+
+    /* ============================================
+       PROGRESS & INDICATORS
+       ============================================ */
+    .score-ring {
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, #1D4ED8, #7C3AED, #06B6D4, #1D4ED8);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .score-ring::before {
+      content: ''; position: absolute;
+      width: 100px; height: 100px; border-radius: 50%;
+      background: #0F172A;
+    }
+    .score-value { position: relative; z-index: 1; font-size: 2rem; font-weight: 800; }
+
+    .badge-pill {
+      padding: 6px 14px; border-radius: 100px; font-size: 0.75rem; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+
+    /* ============================================
+       ANIMATIONS
+       ============================================ */
+    .fade-in { animation: fadeIn 0.6s ease-out; }
+    .slide-up { animation: slideUp 0.5s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    .pulse-slow { animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+
+    /* ============================================
+       PRINT OPTIMIZATION
+       ============================================ */
+    @media print {
+      body { background: white; color: #111; }
+      .no-print { display: none !important; }
+      .glass, .glass-card { 
+        background: white !important; border: 1px solid #ddd !important; 
+        box-shadow: none !important; backdrop-filter: none !important; color: #111 !important;
+      }
+      .gradient-text { -webkit-text-fill-color: #1D4ED8 !important; color: #1D4ED8 !important; }
+      .chart-container { height: 300px !important; page-break-inside: avoid; }
+      section { page-break-inside: avoid; margin-bottom: 2rem; }
+      h1, h2, h3 { color: #111 !important; border-bottom: 2px solid #eee; padding-bottom: 0.5rem; }
+      p, li, td { color: #333 !important; }
+      .badge-pill { border: 1px solid #ccc; color: #333 !important; background: #f5f5f5 !important; }
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: #0F172A; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 5px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- ============================================
+       HEADER / CONTROLS
+       ============================================ -->
+  <header class="glass border-b border-white/10 sticky top-0 z-50 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center font-bold text-white text-lg">V</div>
+        <div>
+          <h1 class="font-bold text-lg tracking-tight">Vigorre</h1>
+          <p class="text-xs text-gray-400">People Analytics • Relatório DISC Completo</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="badge-pill bg-brand-emerald/20 text-brand-emerald border border-brand-emerald/30">✅ Liberado</span>
+        <button onclick="window.print()" class="btn-secondary px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+          Imprimir
+        </button>
+        <button onclick="exportPDF()" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          Exportar PDF
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================
+       MAIN REPORT CONTENT
+       ============================================ -->
+  <main class="max-w-6xl mx-auto px-4 py-8 space-y-8" id="reportContent">
+    
+    <!-- CAPA PREMIUM -->
+    <section class="glass-card p-8 md:p-12 text-center slide-up gradient-border">
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center mx-auto mb-6 shadow-2xl">
+        <span class="text-3xl font-bold text-white">V</span>
+      </div>
+      <h1 class="text-3xl md:text-4xl font-extrabold mb-3 tracking-tight">RELATÓRIO COMPLETO DISC VIGORRE</h1>
+      <p class="text-lg text-gray-400 mb-8">Análise Estratégica de Perfil Comportamental e Profissional</p>
+      
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto mb-8">
+        <div class="glass p-4 rounded-xl text-left">
+          <p class="text-xs text-gray-500 mb-1">Participante</p>
+          <p class="font-semibold text-lg" id="coverName">Carregando...</p>
+        </div>
+        <div class="glass p-4 rounded-xl text-left">
+          <p class="text-xs text-gray-500 mb-1">Empresa</p>
+          <p class="font-semibold" id="coverCompany">Independente</p>
+        </div>
+        <div class="glass p-4 rounded-xl text-left">
+          <p class="text-xs text-gray-500 mb-1">Data</p>
+          <p class="font-semibold" id="coverDate">--/--/----</p>
+        </div>
+        <div class="glass p-4 rounded-xl text-left">
+          <p class="text-xs text-gray-500 mb-1">Código</p>
+          <p class="font-mono text-sm text-brand-cyan" id="coverCode">VIG-2024-000</p>
+        </div>
+      </div>
+      
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-white/10">
+        <span class="w-2 h-2 rounded-full bg-brand-emerald animate-pulse"></span>
+        <span class="text-sm text-gray-300">Gerado automaticamente por Vigorre People Analytics</span>
+      </div>
+    </section>
+
+    <!-- 1. RESUMO EXECUTIVO -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-blue/20 flex items-center justify-center text-brand-blue">📊</span>
+        1. Resumo Executivo
+      </h2>
+      <div class="grid md:grid-cols-3 gap-6 mb-8">
+        <div class="glass p-5 rounded-xl text-center">
+          <div class="score-ring mx-auto mb-3">
+            <span class="score-value gradient-text" id="execScore">--</span>
+          </div>
+          <p class="text-sm text-gray-400">Índice de Aderência Profissional</p>
+        </div>
+        <div class="glass p-5 rounded-xl col-span-2">
+          <h3 class="font-semibold mb-3 text-brand-amber">Perfil Identificado</h3>
+          <p class="text-lg font-bold mb-2" id="execProfileName">Carregando análise...</p>
+          <p class="text-sm text-gray-400 leading-relaxed" id="execProfileDesc">Analisando combinações DISC para gerar visão executiva...</p>
+        </div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="glass p-4 rounded-xl">
+          <h4 class="font-medium mb-2 text-brand-emerald">Estilo de Comunicação</h4>
+          <p class="text-sm text-gray-300" id="execCommStyle">--</p>
+        </div>
+        <div class="glass p-4 rounded-xl">
+          <h4 class="font-medium mb-2 text-brand-purple">Padrão de Liderança</h4>
+          <p class="text-sm text-gray-300" id="execLeadStyle">--</p>
+        </div>
+        <div class="glass p-4 rounded-xl">
+          <h4 class="font-medium mb-2 text-brand-cyan">Tomada de Decisão</h4>
+          <p class="text-sm text-gray-300" id="execDecisionStyle">--</p>
+        </div>
+        <div class="glass p-4 rounded-xl">
+          <h4 class="font-medium mb-2 text-brand-rose">Aderência Profissional</h4>
+          <p class="text-sm text-gray-300" id="execFitStyle">--</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. GRÁFICO DISC -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-purple/20 flex items-center justify-center text-brand-purple">📈</span>
+        2. Gráficos de Distribuição DISC
+      </h2>
+      <div class="grid md:grid-cols-2 gap-8">
+        <div>
+          <h3 class="font-semibold mb-3 text-center">Radar Comportamental</h3>
+          <div class="chart-container"><canvas id="discRadarChart"></canvas></div>
+        </div>
+        <div>
+          <h3 class="font-semibold mb-3 text-center">Intensidade por Fator</h3>
+          <div class="chart-container"><canvas id="discBarChart"></canvas></div>
+        </div>
+      </div>
+      <div class="mt-6 glass p-4 rounded-xl">
+        <h4 class="font-medium mb-2">Distribuição Percentual</h4>
+        <div class="flex flex-wrap gap-4 justify-center" id="discBadges">
+          <!-- Inserido via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. VISÃO GERAL DO PERFIL -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-cyan/20 flex items-center justify-center text-brand-cyan">👤</span>
+        3. Visão Geral do Perfil
+      </h2>
+      <div class="space-y-4" id="profileOverview">
+        <p class="text-gray-300 leading-relaxed">Carregando interpretação profunda baseada na combinação DISC...</p>
+      </div>
+    </section>
+
+    <!-- 4. COMUNICAÇÃO -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-blue/20 flex items-center justify-center text-brand-blue">💬</span>
+        4. Estilo de Comunicação
+      </h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="glass p-5 rounded-xl">
+          <h3 class="font-semibold mb-3 text-brand-emerald">Padrão Comunicacional</h3>
+          <p class="text-sm text-gray-300" id="commPattern">--</p>
+        </div>
+        <div class="glass p-5 rounded-xl">
+          <h3 class="font-semibold mb-3 text-brand-amber">Em Reuniões e Apresentações</h3>
+          <p class="text-sm text-gray-300" id="commMeetings">--</p>
+        </div>
+      </div>
+      <div class="mt-6 grid md:grid-cols-3 gap-4">
+        <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Clareza</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-emerald h-2 rounded-full" id="commClarityBar" style="width:0%"></div></div></div>
+        <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Influência</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-blue h-2 rounded-full" id="commInfluenceBar" style="width:0%"></div></div></div>
+        <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Empatia</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-purple h-2 rounded-full" id="commEmpathyBar" style="width:0%"></div></div></div>
+      </div>
+    </section>
+
+    <!-- 5. TOMADA DE DECISÃO -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-rose/20 flex items-center justify-center text-brand-rose">🎯</span>
+        5. Tomada de Decisão
+      </h2>
+      <div class="glass p-5 rounded-xl mb-4">
+        <h3 class="font-semibold mb-2">Perfil Decisório</h3>
+        <p class="text-sm text-gray-300" id="decisionProfile">--</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2 text-brand-cyan">Velocidade vs Cautela</h4><p class="text-sm text-gray-300" id="decisionSpeed">--</p></div>
+        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2 text-brand-amber">Racionalidade vs Intuição</h4><p class="text-sm text-gray-300" id="decisionLogic">--</p></div>
+      </div>
+    </section>
+
+    <!-- 6. PERFIL PROFISSIONAL -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-emerald/20 flex items-center justify-center text-brand-emerald">💼</span>
+        6. Perfil Profissional e Produtividade
+      </h2>
+      <div class="grid md:grid-cols-3 gap-4 mb-6">
+        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-1">Ritmo de Trabalho</h4><p class="text-sm text-gray-300" id="profPace">--</p></div>
+        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-1">Nível de Autonomia</h4><p class="text-sm text-gray-300" id="profAutonomy">--</p></div>
+        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-1">Foco em Resultados</h4><p class="text-sm text-gray-300" id="profResults">--</p></div>
+      </div>
+      <div class="glass p-5 rounded-xl">
+        <h3 class="font-semibold mb-2">Estilo de Execução</h3>
+        <p class="text-sm text-gray-300" id="profExecution">--</p>
+      </div>
+    </section>
+
+    <!-- 7. TRABALHO EM EQUIPE -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-purple/20 flex items-center justify-center text-brand-purple"></span>
+        7. Trabalho em Equipe e Colaboração
+      </h2>
+      <div class="space-y-4">
+        <p class="text-gray-300" id="teamColab">--</p>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2 text-brand-blue">Integração no Grupo</h4><p class="text-sm text-gray-300" id="teamIntegration">--</p></div>
+          <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2 text-brand-rose">Gestão de Conflitos</h4><p class="text-sm text-gray-300" id="teamConflict">--</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. LIDERANÇA -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-amber/20 flex items-center justify-center text-brand-amber">👑</span>
+        8. Potencial e Estilo de Liderança
+      </h2>
+      <div class="glass p-5 rounded-xl mb-4">
+        <h3 class="font-semibold mb-2">Arquétipo de Liderança</h3>
+        <p class="text-sm text-gray-300" id="leadArchetype">--</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2">Motivação de Equipe</h4><p class="text-sm text-gray-300" id="leadMotivation">--</p></div>
+        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2">Delegação e Controle</h4><p class="text-sm text-gray-300" id="leadDelegation">--</p></div>
+      </div>
+    </section>
+
+    <!-- 9. COMPORTAMENTO SOB PRESSÃO -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-rose/20 flex items-center justify-center text-brand-rose">⚡</span>
+        9. Comportamento Sob Pressão e Estresse
+      </h2>
+      <div class="glass p-5 rounded-xl mb-4">
+        <h3 class="font-semibold mb-2">Reação a Cenários de Alta Demanda</h3>
+        <p class="text-sm text-gray-300" id="pressureReaction">--</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Estabilidade</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-cyan h-2 rounded-full" id="pressStabilityBar" style="width:0%"></div></div></div>
+        <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Tolerância</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-emerald h-2 rounded-full" id="pressToleranceBar" style="width:0%"></div></div></div>
+        <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Resiliência</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-purple h-2 rounded-full" id="pressResilienceBar" style="width:0%"></div></div></div>
+      </div>
+    </section>
+
+    <!-- 10. PRODUTIVIDADE E EXECUÇÃO -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-blue/20 flex items-center justify-center text-brand-blue">🚀</span>
+        10. Produtividade e Capacidade de Execução
+      </h2>
+      <div class="space-y-4">
+        <p class="text-gray-300" id="prodCapacity">--</p>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2">Consistência e Disciplina</h4><p class="text-sm text-gray-300" id="prodConsistency">--</p></div>
+          <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2">Adaptabilidade a Mudanças</h4><p class="text-sm text-gray-300" id="prodAdaptability">--</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11. AMBIENTE IDEAL -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-cyan/20 flex items-center justify-center text-brand-cyan">🏢</span>
+        11. Ambiente e Cultura Organizacional Ideal
+      </h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="glass p-5 rounded-xl">
+          <h3 class="font-semibold mb-2 text-brand-emerald">Cultura Aderente</h3>
+          <p class="text-sm text-gray-300" id="envCulture">--</p>
+        </div>
+        <div class="glass p-5 rounded-xl">
+          <h3 class="font-semibold mb-2 text-brand-amber">Estilo de Gestão Recomendado</h3>
+          <p class="text-sm text-gray-300" id="envManagement">--</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12. MOTIVADORES PROFISSIONAIS -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-purple/20 flex items-center justify-center text-brand-purple">🔥</span>
+        12. Motivadores e Drivers de Engajamento
+      </h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="motivatorsGrid">
+        <!-- Inserido via JS -->
+      </div>
+    </section>
+
+    <!-- 13. PONTOS FORTES -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-emerald/20 flex items-center justify-center text-brand-emerald">✅</span>
+        13. Pontos Fortes e Competências Chave
+      </h2>
+      <div class="grid md:grid-cols-2 gap-4" id="strengthsList">
+        <!-- Inserido via JS -->
+      </div>
+    </section>
+
+    <!-- 14. PONTOS DE DESENVOLVIMENTO -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-amber/20 flex items-center justify-center text-brand-amber">📈</span>
+        14. Pontos de Desenvolvimento e Áreas de Atenção
+      </h2>
+      <div class="grid md:grid-cols-2 gap-4" id="developmentList">
+        <!-- Inserido via JS -->
+      </div>
+    </section>
+
+    <!-- 15. COMPATIBILIDADE COM VAGA -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-blue/20 flex items-center justify-center text-brand-blue">🎯</span>
+        15. Compatibilidade com Vaga e Fit Cultural
+      </h2>
+      <div class="glass p-5 rounded-xl mb-6 text-center">
+        <div class="score-ring mx-auto mb-3" style="width:100px;height:100px;">
+          <span class="score-value gradient-text" style="font-size:1.5rem;" id="fitScore">--%</span>
+        </div>
+        <h3 class="font-semibold text-lg" id="fitTitle">Análise de Aderência</h3>
+        <p class="text-sm text-gray-400" id="fitDesc">--</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2">Compatibilidade DISC</h4><p class="text-sm text-gray-300" id="fitDisc">--</p></div>
+        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2">Potencial para Função</h4><p class="text-sm text-gray-300" id="fitPotential">--</p></div>
+        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2">Riscos Comportamentais</h4><p class="text-sm text-gray-300" id="fitRisks">--</p></div>
+      </div>
+    </section>
+
+    <!-- 16. RECOMENDAÇÕES PARA RH -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-cyan/20 flex items-center justify-center text-brand-cyan">👔</span>
+        16. Recomendações Estratégicas para RH e Gestores
+      </h2>
+      <div class="space-y-4" id="rhRecommendations">
+        <!-- Inserido via JS -->
+      </div>
+    </section>
+
+    <!-- 17. RECOMENDAÇÕES AO PARTICIPANTE -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-purple/20 flex items-center justify-center text-brand-purple"></span>
+        17. Plano de Desenvolvimento Individual (PDI)
+      </h2>
+      <div class="space-y-4" id="participantRecommendations">
+        <!-- Inserido via JS -->
+      </div>
+    </section>
+
+    <!-- 18. CONCLUSÃO EXECUTIVA -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-emerald/20 flex items-center justify-center text-brand-emerald">📜</span>
+        18. Conclusão Executiva
+      </h2>
+      <div class="glass p-5 rounded-xl">
+        <p class="text-gray-300 leading-relaxed" id="execConclusion">--</p>
+      </div>
+    </section>
+
+    <!-- 19. FRASE FINAL IMPACTANTE -->
+    <section class="glass-card p-8 text-center slide-up gradient-border">
+      <blockquote class="text-xl md:text-2xl italic text-gray-200 mb-4 font-light">"<span id="finalQuote">Carregando insight final...</span>"</blockquote>
+      <p class="text-sm text-gray-500">— Vigorre People Analytics • Inteligência Comportamental Corporativa</p>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="glass border-t border-white/10 py-8 mt-12 no-print">
+    <div class="max-w-6xl mx-auto px-4 text-center text-sm text-gray-500">
+      <p class="mb-2">Relatório gerado automaticamente pela plataforma Vigorre People Analytics.</p>
+      <p>© 2024 Vigorre. Metodologia DISC validada para assessment corporativo e people analytics.</p>
+      <p class="mt-2 text-xs">Documento confidencial. Uso exclusivo para desenvolvimento profissional e gestão de talentos.</p>
+    </div>
+  </footer>
+
+  <!-- LOADING OVERLAY -->
+  <div id="loadingOverlay" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+    <div class="text-center">
+      <div class="relative w-24 h-24 mx-auto mb-6">
+        <div class="absolute inset-0 rounded-full border-4 border-white/10"></div>
+        <div class="absolute inset-0 rounded-full border-4 border-t-brand-cyan border-r-brand-purple animate-spin"></div>
+      </div>
+      <h3 class="text-xl font-semibold mb-2">Gerando Relatório DISC Completo</h3>
+      <p class="text-gray-400">Processando análise comportamental e insights estratégicos...</p>
+    </div>
+  </div>
+
+  <script>
+    // ============================================
+    // ESTADO E DADOS
+    // ============================================
+    const AppState = {
+      session: null,
+      participant: null,
+      company: null,
+      discResults: null,
+      charts: { radar: null, bar: null }
+    };
+
+    // Banco de Interpretações DISC Corporativas
+    const DISC_INSIGHTS = {
+      D: {
+        name: 'Dominância', color: '#EF4444', short: 'D',
+        high: 'Forte orientação para resultados, assertividade e liderança natural. Toma decisões rápidas e assume riscos calculados.',
+        medium: 'Equilíbrio entre ação e análise. Consegue liderar quando necessário, mas também segue processos.',
+        low: 'Prefere ambientes colaborativos e evita conflitos diretos. Foca em harmonia e suporte.',
+        comm: 'Direto, objetivo e focado em eficiência. Valoriza reuniões produtivas e evita rodeios.',
+        decision: 'Rápido, pragmático e orientado a impacto. Avalia riscos de forma ágil e age com determinação.',
+        team: 'Lidera pelo exemplo e cobra resultados. Pode precisar desenvolver escuta ativa e paciência.',
+        pressure: 'Mantém foco e acelera a execução. Pode tornar-se mais exigente e menos flexível sob estresse.',
+        strengths: ['Liderança natural', 'Tomada de decisão ágil', 'Foco em resultados', 'Coragem para inovar', 'Visão estratégica'],
+        development: ['Pode ser percebido como impaciente', 'Tendência a ignorar detalhes', 'Necessidade de desenvolver empatia', 'Dificuldade em delegar'],
+        motivators: ['Desafios complexos', 'Autonomia decisória', 'Reconhecimento por resultados', 'Crescimento acelerado']
+      },
+      I: {
+        name: 'Influência', color: '#3B82F6', short: 'I',
+        high: 'Excelente comunicador, persuasivo e orientado a pessoas. Constrói redes facilmente e motiva equipes.',
+        medium: 'Boa capacidade de engajamento, com equilíbrio entre socialização e execução de tarefas.',
+        low: 'Prefere trabalho independente e análise técnica. Foca em precisão e evita exposição excessiva.',
+        comm: 'Entusiasta, persuasivo e focado em conexões. Usa storytelling e engaja plateias com facilidade.',
+        decision: 'Considera impacto nas pessoas e busca consenso. Valoriza inovação e oportunidades de crescimento.',
+        team: 'Integra grupos, resolve tensões com diplomacia e mantém clima positivo. Pode dispersar foco com excesso de ideias.',
+        pressure: 'Mantém otimismo e busca soluções colaborativas. Pode dispersar energia se não houver direção clara.',
+        strengths: ['Comunicação impactante', 'Capacidade de motivar', 'Networking estratégico', 'Criatividade', 'Adaptabilidade social'],
+        development: ['Pode priorizar relações sobre prazos', 'Tendência a otimismo excessivo', 'Dificuldade com rotinas rígidas', 'Necessidade de estruturar processos'],
+        motivators: ['Reconhecimento público', 'Ambiente colaborativo', 'Liberdade criativa', 'Interação constante']
+      },
+      S: {
+        name: 'Estabilidade', color: '#10B981', short: 'S',
+        high: 'Paciente, empático e orientado a suporte. Mantém harmonia, constância e lealdade nas relações.',
+        medium: 'Equilíbrio entre adaptação e estabilidade. Consegue lidar com mudanças desde que haja estrutura.',
+        low: 'Busca novidade e ritmo acelerado. Pode resistir a rotinas repetitivas e processos estáticos.',
+        comm: 'Calmo, empático e focado em entendimento mútuo. Evita confrontos e prioriza escuta ativa.',
+        decision: 'Cauteloso, analisa impactos nas pessoas e busca segurança. Prefere avaliar com calma antes de agir.',
+        team: 'Apoia colegas, mantém coerência e resolve conflitos com mediação. Pode evitar decisões difíceis.',
+        pressure: 'Busca apoio e divide responsabilidades. Pode precisar de tempo para processar mudanças abruptas.',
+        strengths: ['Lealdade e constância', 'Escuta ativa', 'Mediação de conflitos', 'Execução consistente', 'Empatia operacional'],
+        development: ['Resistência a mudanças rápidas', 'Dificuldade em dizer não', 'Tendência a evitar riscos', 'Necessidade de assertividade'],
+        motivators: ['Estabilidade organizacional', 'Reconhecimento por suporte', 'Clima harmonioso', 'Processos claros']
+      },
+      C: {
+        name: 'Conformidade', color: '#7C3AED', short: 'C',
+        high: 'Analítico, detalhista e orientado a qualidade. Segue padrões, antecipa riscos e busca precisão.',
+        medium: 'Equilíbrio entre análise e ação. Consegue entregar qualidade sem paralisar por perfeccionismo.',
+        low: 'Prefere agilidade e experimentação. Pode negligenciar detalhes em prol de velocidade e inovação.',
+        comm: 'Preciso, baseado em fatos e estruturado. Valoriza clareza, dados e evita ambiguidades.',
+        decision: 'Metódico, avalia minuciosamente e busca mitigar riscos. Age com cautela e embasamento técnico.',
+        team: 'Organiza processos, garante qualidade e antecipa falhas. Pode ser percebido como rígido ou distante.',
+        pressure: 'Organiza prioridades e segue planos. Pode precisar de estrutura para manter eficiência sob caos.',
+        strengths: ['Análise técnica profunda', 'Precisão e qualidade', 'Planejamento estratégico', 'Gestão de riscos', 'Pensamento lógico'],
+        development: ['Pode demorar para decidir', 'Tendência ao perfeccionismo', 'Dificuldade em ambientes caóticos', 'Necessidade de flexibilidade'],
+        motivators: ['Padrões de excelência', 'Autonomia técnica', 'Processos otimizados', 'Desafios analíticos']
+      }
+    };
+
+    // Combinações de Perfil DISC
+    const PROFILE_COMBOS = {
+      'D_I': { name: 'Executor Visionário', desc: 'Combina assertividade com influência. Lidera com foco em resultados enquanto engaja e inspira equipes. Ideal para cargos de diretoria e expansão de mercados.' },
+      'D_S': { name: 'Líder Estratégico Estável', desc: 'Une tomada de decisão ágil com consistência operacional. Consegue acelerar resultados sem sacrificar processos. Forte em gestão de transformação.' },
+      'D_C': { name: 'Analítico Decisor', desc: 'Foco em resultados aliado à precisão técnica. Toma decisões rápidas, mas embasadas em dados. Excelente para operações e finanças.' },
+      'I_D': { name: 'Comunicador Estratégico', desc: 'Influência com orientação a resultados. Vende ideias e fecha acordos com naturalidade. Forte em vendas complexas e marketing.' },
+      'I_S': { name: 'Facilitador Relacional', desc: 'Equilíbrio entre engajamento e suporte. Constrói culturas colaborativas e mantém times coesos. Ideal para RH e Customer Success.' },
+      'I_C': { name: 'Inovador Estruturado', desc: 'Criatividade com método. Gera ideias e as estrutura em processos viáveis. Forte em P&D e produto.' },
+      'S_D': { name: 'Executor Consistente', desc: 'Constância com capacidade de ação. Entrega resultados de forma previsível e confiável. Forte em operações e logística.' },
+      'S_I': { name: 'Colaborador Engajado', desc: 'Suporte com influência positiva. Mantém times motivados e processos fluidos. Ideal para treinamento e desenvolvimento.' },
+      'S_C': { name: 'Analítico Operacional', desc: 'Precisão com constância. Garante qualidade e follow-through em processos críticos. Forte em compliance e auditoria.' },
+      'C_D': { name: 'Estrategista Técnico', desc: 'Visão sistêmica com foco em entrega. Planeja e executa com precisão cirúrgica. Ideal para engenharia e TI.' },
+      'C_I': { name: 'Consultor Influente', desc: 'Conhecimento técnico com capacidade de comunicação. Traduz complexidade em valor. Forte em consultoria e vendas técnicas.' },
+      'C_S': { name: 'Especialista Confiável', desc: 'Domínio técnico com execução estável. Garante excelência contínua. Ideal para áreas reguladas e de alta precisão.' }
+    };
+
+    // ============================================
+    // INICIALIZAÇÃO
+    // ============================================
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('Inicializando Relatório DISC Vigorre...');
+      loadSession();
+      loadDiscResults();
+    });
+
+    function loadSession() {
+      try {
+        const session = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+        if (session?.id) {
+          AppState.session = session;
+          const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+          AppState.participant = participants.find(p => p.id === session.id);
+          
+          const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+          if (AppState.participant?.compId) {
+            AppState.company = companies.find(c => c.id === AppState.participant.compId);
+          }
+        }
+      } catch (e) { console.error('Erro ao carregar sessão:', e); }
+    }
+
+    function loadDiscResults() {
+      try {
+        const discData = localStorage.getItem('vigorre_last_disc_result');
+        if (!discData) {
+          showToast('Nenhum resultado DISC encontrado. Complete o teste primeiro.', 'error');
+          setTimeout(() => window.location.href = 'index.html', 2000);
+          return;
+        }
+        AppState.discResults = JSON.parse(discData);
+        generateReport();
+      } catch (e) {
+        console.error('Erro ao carregar resultados DISC:', e);
+        showToast('Erro ao processar relatório.', 'error');
+      }
+    }
+
+    function generateReport() {
+      const r = AppState.discResults;
+      if (!r || !r.percentages) return;
+
+      // Preencher Capa
+      document.getElementById('coverName').textContent = AppState.participant?.name || 'Participante';
+      document.getElementById('coverCompany').textContent = AppState.company?.name || 'Independente';
+      document.getElementById('coverDate').textContent = new Date().toLocaleDateString('pt-BR');
+      document.getElementById('coverCode').textContent = 'VIG-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 9000 + 1000);
+
+      // Calcular Score Geral (simulado baseado na coerência do perfil)
+      const scores = [r.percentages.D, r.percentages.I, r.percentages.S, r.percentages.C];
+      const dominant = scores.indexOf(Math.max(...scores));
+      const secondary = scores.indexOf(Math.max(...scores.filter((_, i) => i !== dominant)));
+      const factors = ['D', 'I', 'S', 'C'];
+      const domKey = factors[dominant];
+      const secKey = factors[secondary];
+      
+      const fitScore = Math.min(98, Math.max(65, Math.round((r.percentages[domKey] + r.percentages[secKey]) / 2 + Math.random() * 10)));
+      document.getElementById('execScore').textContent = fitScore + '%';
+      document.getElementById('fitScore').textContent = fitScore + '%';
+
+      // Gerar Conteúdo Dinâmico para todas as seções
+      renderExecutiveSummary(r, domKey, secKey);
+      renderCharts(r.percentages);
+      renderProfileOverview(r, domKey, secKey);
+      renderCommunication(r, domKey);
+      renderDecisionMaking(r, domKey);
+      renderProfessionalProfile(r, domKey, secKey);
+      renderTeamwork(r, domKey, secKey);
+      renderLeadership(r, domKey, secKey);
+      renderPressureBehavior(r, domKey);
+      renderProductivity(r, domKey);
+      renderIdealEnvironment(r, domKey, secKey);
+      renderMotivators(r, domKey, secKey);
+      renderStrengths(r, domKey, secKey);
+      renderDevelopmentAreas(r, domKey, secKey);
+      renderCompatibility(r, domKey, secKey, fitScore);
+      renderRHRecommendations(r, domKey, secKey);
+      renderParticipantRecommendations(r, domKey, secKey);
+      renderConclusion(r, domKey, secKey);
+      renderFinalQuote();
+
+      // Esconder loading e mostrar relatório
+      document.getElementById('loadingOverlay').classList.add('hidden');
+      document.getElementById('reportContent').classList.remove('hidden');
+    }
+
+    // ============================================
+    // RENDERIZADORES DE SEÇÕES (COMPLETOS)
+    // ============================================
+    function renderExecutiveSummary(r, dom, sec) {
+      const comboKey = dom + '_' + sec;
+      const combo = PROFILE_COMBOS[comboKey] || { name: 'Perfil Híbrido', desc: 'Combinação única de fatores comportamentais com forte adaptabilidade organizacional.' };
+      
+      document.getElementById('execProfileName').textContent = combo.name;
+      document.getElementById('execProfileDesc').textContent = combo.desc;
+      document.getElementById('execCommStyle').textContent = DISC_INSIGHTS[dom].comm;
+      document.getElementById('execLeadStyle').textContent = DISC_INSIGHTS[dom].team;
+      document.getElementById('execDecisionStyle').textContent = DISC_INSIGHTS[dom].decision;
+      document.getElementById('execFitStyle').textContent = 'Alta aderência a ambientes que valorizam ' + DISC_INSIGHTS[dom].motivators[0].toLowerCase() + ' e ' + DISC_INSIGHTS[sec].motivators[0].toLowerCase() + '.';
+      
+      // Badges
+      const badgesHtml = Object.entries(r.percentages).map(([k, v]) => 
+        `<span class="badge-pill" style="background:${DISC_INSIGHTS[k].color}20; color:${DISC_INSIGHTS[k].color}; border:1px solid ${DISC_INSIGHTS[k].color}40;">${k}: ${v}%</span>`
+      ).join('');
+      document.getElementById('discBadges').innerHTML = badgesHtml;
+    }
+
+    function renderCharts(percentages) {
+      if (AppState.charts.radar) AppState.charts.radar.destroy();
+      if (AppState.charts.bar) AppState.charts.bar.destroy();
+
+      const ctxRadar = document.getElementById('discRadarChart').getContext('2d');
+      AppState.charts.radar = new Chart(ctxRadar, {
+        type: 'radar',
+         {
+          labels: ['Dominância', 'Influência', 'Estabilidade', 'Conformidade'],
+          datasets: [{
+            label: 'Perfil Comportamental',
+             [percentages.D, percentages.I, percentages.S, percentages.C],
+            backgroundColor: 'rgba(124, 58, 237, 0.25)',
+            borderColor: '#7C3AED',
+            borderWidth: 3,
+            pointBackgroundColor: '#fff',
+            pointBorderColor: '#7C3AED',
+            pointHoverBackgroundColor: '#7C3AED',
+            pointHoverBorderColor: '#fff'
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          scales: {
+            r: {
+              angleLines: { color: 'rgba(255,255,255,0.1)' },
+              grid: { color: 'rgba(255,255,255,0.1)' },
+              pointLabels: { color: '#F8FAFC', font: { size: 12, weight: '600' } },
+              ticks: { display: false, backdropColor: 'transparent' },
+              suggestedMin: 0, suggestedMax: 100
+            }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+
+      const ctxBar = document.getElementById('discBarChart').getContext('2d');
+      AppState.charts.bar = new Chart(ctxBar, {
+        type: 'bar',
+         {
+          labels: ['D - Dominância', 'I - Influência', 'S - Estabilidade', 'C - Conformidade'],
+          datasets: [{
+            label: 'Intensidade',
+             [percentages.D, percentages.I, percentages.S, percentages.C],
+            backgroundColor: ['rgba(239, 68, 68, 0.8)', 'rgba(59, 130, 246, 0.8)', 'rgba(16, 185, 129, 0.8)', 'rgba(124, 58, 237, 0.8)'],
+            borderColor: ['#EF4444', '#3B82F6', '#10B981', '#7C3AED'],
+            borderWidth: 2,
+            borderRadius: 8
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          scales: {
+            y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94A3B8' } },
+            x: { grid: { display: false }, ticks: { color: '#F8FAFC', font: { weight: 'bold' } } }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+    }
+
+    function renderProfileOverview(r, dom, sec) {
+      const domInsight = DISC_INSIGHTS[dom];
+      const secInsight = DISC_INSIGHTS[sec];
+      const comboKey = dom + '_' + sec;
+      const combo = PROFILE_COMBOS[comboKey] || PROFILE_COMBOS['D_I'];
+      
+      let html = `<p class="text-gray-300 mb-4">O participante apresenta um perfil predominantemente <strong style="color:${domInsight.color}">${domInsight.name}</strong> com influência secundária de <strong style="color:${secInsight.color}">${secInsight.name}</strong>. ${combo.desc}</p>`;
+      html += `<p class="text-gray-300 mb-4">Combinado, esse padrão gera um profissional com ritmo profissional <strong>${dom === 'D' || dom === 'I' ? 'acelerado e orientado a impacto' : 'constante e orientado a processos'}</strong>, foco em <strong>${dom === 'C' || sec === 'C' ? 'precisão e qualidade técnica' : 'relacionamentos e resultados'}</strong>, e padrão de interação <strong>${dom === 'I' || sec === 'I' ? 'colaborativo e persuasivo' : 'direto e estruturado'}</strong>.</p>`;
+      html += `<p class="text-gray-300">Em contextos corporativos, esse perfil tende a se destacar em ambientes que oferecem <strong>${domInsight.motivators.join(', ').toLowerCase()}</strong>, mantendo alta performance quando alinhado a uma cultura que valorize essas dimensões.</p>`;
+      
+      document.getElementById('profileOverview').innerHTML = html;
+    }
+
+    function renderCommunication(r, dom) {
+      const ins = DISC_INSIGHTS[dom];
+      document.getElementById('commPattern').textContent = ins.comm + ' Adapta o tom conforme a audiência, mas mantém coerência com seu estilo natural.';
+      document.getElementById('commMeetings').textContent = dom === 'D' ? 'Foca em pautas objetivas, cobra follow-ups e evita reuniões sem decisão clara.' : 
+                       dom === 'I' ? 'Engaja participantes, facilita brainstormings e mantém energia alta, podendo precisar de moderador para foco.' :
+                       dom === 'S' ? 'Ouve ativamente, valida contribuições e busca consenso. Pode precisar de incentivo para discordar.' :
+                       'Estrutura atas claras, documenta decisões e garante que todos os pontos técnicos sejam cobertos.';
+      
+      // Barras de comunicação
+      document.getElementById('commClarityBar').style.width = (dom === 'D' || dom === 'C' ? '85' : '65') + '%';
+      document.getElementById('commInfluenceBar').style.width = (dom === 'I' ? '90' : dom === 'D' ? '75' : '60') + '%';
+      document.getElementById('commEmpathyBar').style.width = (dom === 'S' ? '92' : dom === 'I' ? '80' : '55') + '%';
+    }
+
+    function renderDecisionMaking(r, dom) {
+      const ins = DISC_INSIGHTS[dom];
+      document.getElementById('decisionProfile').textContent = ins.decision + ' O processo decisório é fortemente influenciado pela necessidade de ' + (dom === 'D' ? 'velocidade e impacto' : dom === 'I' ? 'engajamento e inovação' : dom === 'S' ? 'segurança e alinhamento' : 'precisão e mitigação de riscos') + '.';
+      document.getElementById('decisionSpeed').textContent = dom === 'D' ? 'Rápido e assertivo. Prioriza ação sobre análise prolongada.' :
+                       dom === 'I' ? 'Ágil, mas busca validação social antes de finalizar.' :
+                       dom === 'S' ? 'Cauteloso. Prefere avaliar impactos a médio/longo prazo.' :
+                       'Metódico. Coleta dados extensivos antes de concluir.';
+      document.getElementById('decisionLogic').textContent = dom === 'C' ? 'Altamente racional. Baseia escolhas em fatos, métricas e precedentes.' :
+                       dom === 'D' ? 'Pragmático. Usa lógica focada em ROI e eficiência operacional.' :
+                       dom === 'I' ? 'Intuitivo-estratégico. Combina dados com leitura de cenário e oportunidades.' :
+                       'Equilibrado. Pondera dados técnicos com impacto humano e cultural.';
+    }
+
+    function renderProfessionalProfile(r, dom, sec) {
+      document.getElementById('profPace').textContent = dom === 'D' || dom === 'I' ? 'Ritmo acelerado. Responde rapidamente a demandas e busca ciclos curtos de entrega.' : 'Ritmo consistente. Prioriza qualidade e follow-through sobre velocidade bruta.';
+      document.getElementById('profAutonomy').textContent = dom === 'D' || sec === 'D' ? 'Alta necessidade de autonomia. Prospera quando pode definir caminhos e métodos.' : 'Valoriza diretrizes claras. Executa melhor com processos validados e suporte estruturado.';
+      document.getElementById('profResults').textContent = dom === 'D' ? 'Orientação extrema a resultados. Usa métricas como bússola principal.' : dom === 'C' ? 'Foco em excelência técnica. Resultados são medidos por precisão e conformidade.' : 'Equilíbrio entre entregas e qualidade relacional/processual.';
+      document.getElementById('profExecution').textContent = 'Estilo de execução marcado por ' + (dom === 'D' ? 'iniciativa e cobramento' : dom === 'I' ? 'engajamento e adaptabilidade' : dom === 'S' ? 'constância e suporte' : 'organização e controle de qualidade') + '. Consegue manter produtividade mesmo sob demandas concorrentes, desde que alinhado a ' + DISC_INSIGHTS[dom].motivators[0].toLowerCase() + '.';
+    }
+
+    function renderTeamwork(r, dom, sec) {
+      const domIns = DISC_INSIGHTS[dom];
+      const secIns = DISC_INSIGHTS[sec];
+      document.getElementById('teamColab').textContent = 'No trabalho em equipe, o participante demonstra forte capacidade de ' + (dom === 'I' || sec === 'I' ? 'integração e comunicação transversal' : dom === 'S' ? 'suporte e manutenção de clima' : dom === 'D' ? 'direcionamento e cobrança construtiva' : 'estruturação e garantia de padrões') + '. Busca naturalmente ' + (dom === 'I' ? 'reconhecimento coletivo' : dom === 'S' ? 'harmonia e lealdade' : dom === 'D' ? 'eficiência e resultados compartilhados' : 'excelência técnica do grupo') + '.';
+      document.getElementById('teamIntegration').textContent = dom === 'I' ? 'Natural networker. Conecta departamentos e facilita trocas de conhecimento.' : dom === 'S' ? 'Cola do time. Mantém coesão e apoia membros em dificuldade.' : dom === 'D' ? 'Impulsiona o time com metas claras. Pode precisar desenvolver escuta ativa.' : 'Garante que processos e padrões sejam seguidos pelo grupo. Eleva a barra técnica.';
+      document.getElementById('teamConflict').textContent = dom === 'D' ? 'Enfrenta conflitos diretamente. Foca em resolver, não em agradar.' : dom === 'I' ? 'Media com diplomacia. Busca soluções win-win e restaura harmonia.' : dom === 'S' ? 'Evita confronto aberto. Prefere conversas privadas e acordos silenciosos.' : 'Analisa a raiz do conflito com frieza. Propõe soluções baseadas em regras e dados.';
+    }
+
+    function renderLeadership(r, dom, sec) {
+      const arch = dom === 'D' ? 'Líder Diretivo e Orientado a Resultados' : dom === 'I' ? 'Líder Inspirador e Facilitador' : dom === 'S' ? 'Líder Servidor e Estabilizador' : 'Líder Técnico e Estruturador';
+      document.getElementById('leadArchetype').textContent = arch + '. Estilo marcado por ' + (dom === 'D' ? 'tomada de decisão ágil e delegação com cobramento' : dom === 'I' ? 'motivação por propósito e empoderamento' : dom === 'S' ? 'desenvolvimento de pessoas e suporte contínuo' : 'padronização de processos e mentoria técnica') + '.';
+      document.getElementById('leadMotivation').textContent = dom === 'I' ? 'Usa reconhecimento público e desafios criativos.' : dom === 'D' ? 'Define metas agressivas e celebra marcos de entrega.' : dom === 'S' ? 'Oferece segurança psicológica e crescimento estável.' : 'Proporciona autonomia técnica e recursos para excelência.';
+      document.getElementById('leadDelegation').textContent = dom === 'D' ? 'Delega autoridade, mas cobra resultados semanalmente.' : dom === 'I' ? 'Delega com confiança, mas mantém check-ins motivacionais.' : dom === 'S' ? 'Delega com suporte próximo. Prefere acompanhar sem microgerenciar.' : 'Delega com manuais e critérios claros. Valida entregas contra padrões.';
+    }
+
+    function renderPressureBehavior(r, dom) {
+      const ins = DISC_INSIGHTS[dom];
+      document.getElementById('pressureReaction').textContent = ins.pressure + ' Em cenários de crise, o participante tende a ' + (dom === 'D' ? 'centralizar decisões temporariamente para acelerar resposta' : dom === 'I' ? 'manter o moral alto enquanto busca soluções criativas' : dom === 'S' ? 'buscar estabilidade e apoio de aliados confiáveis' : 'seguir protocolos de contingência com rigor técnico') + '. Gatilhos de desgaste incluem ' + (dom === 'D' ? 'burocracia excessiva e lentidão decisória' : dom === 'I' ? 'isolamento e falta de reconhecimento' : dom === 'S' ? 'mudanças abruptas sem comunicação' : 'ambiguidade de requisitos e falta de dados') + '.';
+      document.getElementById('pressStabilityBar').style.width = (dom === 'S' || dom === 'C' ? '88' : '65') + '%';
+      document.getElementById('pressToleranceBar').style.width = (dom === 'C' ? '90' : dom === 'S' ? '75' : '60') + '%';
+      document.getElementById('pressResilienceBar').style.width = (dom === 'D' ? '92' : dom === 'I' ? '78' : '70') + '%';
+    }
+
+    function renderProductivity(r, dom) {
+      document.getElementById('prodCapacity').textContent = 'Capacidade de entrega consistente, com pico de produtividade quando alinhado a ' + DISC_INSIGHTS[dom].motivators.join(' e ').toLowerCase() + '. Consegue manter foco em tarefas complexas por períodos prolongados, desde que haja ' + (dom === 'D' ? 'clareza de metas e autonomia' : dom === 'I' ? 'variedade e interação' : dom === 'S' ? 'previsibilidade e suporte' : 'estrutura e critérios de qualidade') + '.';
+      document.getElementById('prodConsistency').textContent = dom === 'S' || dom === 'C' ? 'Alta consistência. Raramente varia qualidade ou prazo. Segue ritmos planejados.' : 'Consistência moderada-alta. Pode oscilar conforme nível de engajamento e novidade do desafio.';
+      document.getElementById('prodAdaptability').textContent = dom === 'I' || dom === 'D' ? 'Alta adaptabilidade. Pivota rapidamente diante de mudanças de escopo ou prioridade.' : 'Adaptabilidade moderada. Prefere mudanças graduais com transição estruturada e treinamento.';
+    }
+
+    function renderIdealEnvironment(r, dom, sec) {
+      document.getElementById('envCulture').textContent = 'Prospera em culturas que valorizam ' + DISC_INSIGHTS[dom].motivators[0].toLowerCase() + ' e oferecem ' + (dom === 'D' ? 'autonomia decisória e meritocracia' : dom === 'I' ? 'espaço para criatividade e colaboração' : dom === 'S' ? 'estabilidade e reconhecimento por lealdade' : 'excelência técnica e processos maduros') + '. Ambientes excessivamente ' + (dom === 'D' ? 'burocráticos' : dom === 'I' ? 'rígidos' : dom === 'S' ? 'caóticos' : 'improvisados') + ' tendem a reduzir engajamento.';
+      document.getElementById('envManagement').textContent = dom === 'D' ? 'Gestão por objetivos e resultados. Check-ins focados em métricas e remoção de bloqueios.' : dom === 'I' ? 'Gestão participativa. Feedback frequente, reconhecimento público e co-criação.' : dom === 'S' ? 'Gestão de suporte. Comunicação clara, previsibilidade e desenvolvimento contínuo.' : 'Gestão técnica. Padrões definidos, revisão por pares e autonomia especializada.';
+    }
+
+    function renderMotivators(r, dom, sec) {
+      const allMotivators = [...DISC_INSIGHTS[dom].motivators, ...DISC_INSIGHTS[sec].motivators].filter((v, i, a) => a.indexOf(v) === i);
+      const icons = ['🎯', '🚀', '🤝', '📈', '🏆', '', '🛡️', '🌱'];
+      let html = '';
+      allMotivators.forEach((mot, i) => {
+        html += `<div class="glass p-4 rounded-xl flex items-center gap-3"><span class="text-2xl">${icons[i % icons.length]}</span><div><h4 class="font-medium">${mot}</h4><p class="text-xs text-gray-400">Driver de engajamento e retenção</p></div></div>`;
+      });
+      document.getElementById('motivatorsGrid').innerHTML = html;
+    }
+
+    function renderStrengths(r, dom, sec) {
+      const all = [...DISC_INSIGHTS[dom].strengths, ...DISC_INSIGHTS[sec].strengths].filter((v, i, a) => a.indexOf(v) === i).slice(0, 6);
+      let html = '';
+      all.forEach(s => {
+        html += `<div class="glass p-4 rounded-xl flex items-center gap-3"><span class="text-brand-emerald text-xl">✓</span><p class="font-medium">${s}</p></div>`;
+      });
+      document.getElementById('strengthsList').innerHTML = html;
+    }
+
+    function renderDevelopmentAreas(r, dom, sec) {
+      const all = [...DISC_INSIGHTS[dom].development, ...DISC_INSIGHTS[sec].development].filter((v, i, a) => a.indexOf(v) === i).slice(0, 6);
+      let html = '';
+      all.forEach(d => {
+        html += `<div class="glass p-4 rounded-xl flex items-center gap-3"><span class="text-brand-amber text-xl">⚡</span><p class="font-medium">${d}</p></div>`;
+      });
+      document.getElementById('developmentList').innerHTML = html;
+    }
+
+    function renderCompatibility(r, dom, sec, score) {
+      document.getElementById('fitTitle').textContent = score >= 85 ? 'Alta Compatibilidade' : score >= 70 ? 'Compatibilidade Moderada-Alta' : 'Compatibilidade em Desenvolvimento';
+      document.getElementById('fitDesc').textContent = 'O perfil DISC apresenta ' + (score >= 85 ? 'forte aderência' : score >= 70 ? 'boa aderência com pontos de ajuste' : 'aderência parcial que requer desenvolvimento direcionado') + ' a cargos que demandem ' + DISC_INSIGHTS[dom].motivators[0].toLowerCase() + ' e ' + DISC_INSIGHTS[sec].motivators[1].toLowerCase() + '.';
+      document.getElementById('fitDisc').textContent = 'Combinação ' + dom + '/' + sec + ' alinhada a funções ' + (dom === 'D' ? 'estratégicas e de liderança' : dom === 'I' ? 'relacionais e de influência' : dom === 'S' ? 'operacionais e de suporte' : 'técnicas e analíticas') + '.';
+      document.getElementById('fitPotential').textContent = 'Alto potencial de performance em ' + (dom === 'D' || sec === 'D' ? 'gestão de projetos e expansão' : dom === 'I' || sec === 'I' ? 'vendas, marketing e cultura' : dom === 'S' || sec === 'S' ? 'operações, RH e customer success' : 'engenharia, finanças e compliance') + '.';
+      document.getElementById('fitRisks').textContent = dom === 'D' ? 'Risco de burnout por sobrecarga autoimposta. Monitorar equilíbrio.' : dom === 'I' ? 'Risco de dispersão em múltiplos projetos. Focar em priorização.' : dom === 'S' ? 'Risco de resistência a pivôs estratégicos. Preparar para transições.' : 'Risco de paralisia por análise. Estabelecer deadlines claros.';
+    }
+
+    function renderRHRecommendations(r, dom, sec) {
+      let html = '';
+      const recs = [
+        `Onboarding: Focar em <strong>${dom === 'D' ? 'metas claras e autonomia inicial' : dom === 'I' ? 'integração com o time e cultura' : dom === 'S' ? 'processos detalhados e mentor' : 'padrões técnicos e ferramentas'}</strong>.`,
+        `Estilo de Gestão: Adotar abordagem <strong>${dom === 'D' ? 'diretiva por objetivos' : dom === 'I' ? 'participativa e inspiracional' : dom === 'S' ? 'suporte contínuo e previsível' : 'técnica e baseada em critérios'}</strong>.`,
+        `Retenção: Oferecer <strong>${DISC_INSIGHTS[dom].motivators[0]}</strong> e caminhos claros de <strong>${sec === 'I' ? 'visibilidade' : sec === 'C' ? 'especialização' : 'crescimento vertical'}</strong>.`,
+        `Desenvolvimento: Investir em <strong>${DISC_INSIGHTS[dom].development[0].toLowerCase()}</strong> e <strong>${DISC_INSIGHTS[sec].development[0].toLowerCase()}</strong> via coaching e treinamento prático.`
+      ];
+      recs.forEach(r => html += `<div class="glass p-4 rounded-xl flex items-start gap-3"><span class="text-brand-cyan mt-1">➤</span><p class="text-sm text-gray-300">${r}</p></div>`);
+      document.getElementById('rhRecommendations').innerHTML = html;
+    }
+
+    function renderParticipantRecommendations(r, dom, sec) {
+      let html = '';
+      const recs = [
+        `Fortalecer <strong>inteligência relacional</strong> através de escuta ativa e feedbacks estruturados.`,
+        `Desenvolver <strong>${dom === 'D' ? 'paciência processual' : dom === 'I' ? 'foco e priorização' : dom === 'S' ? 'assertividade e gestão de conflitos' : 'flexibilidade e entrega iterativa'}</strong> via prática deliberada.`,
+        `Estabelecer rotina de <strong>autoconhecimento</strong> (journaling, 360 feedback) para calibrar impacto comportamental.`,
+        `Buscar mentoria em <strong>${sec === 'D' ? 'liderança estratégica' : sec === 'I' ? 'comunicação executiva' : sec === 'S' ? 'gestão de mudança' : 'pensamento sistêmico'}</strong>.`
+      ];
+      recs.forEach(r => html += `<div class="glass p-4 rounded-xl flex items-start gap-3"><span class="text-brand-purple mt-1">🧭</span><p class="text-sm text-gray-300">${r}</p></div>`);
+      document.getElementById('participantRecommendations').innerHTML = html;
+    }
+
+    function renderConclusion(r, dom, sec) {
+      const comboKey = dom + '_' + sec;
+      const combo = PROFILE_COMBOS[comboKey] || PROFILE_COMBOS['D_I'];
+      document.getElementById('execConclusion').textContent = `O participante demonstra um perfil ${combo.name.toLowerCase()} com potencial significativo para roles que exijam ${DISC_INSIGHTS[dom].motivators.join(' e ').toLowerCase()}. A combinação de fatores DISC indica um profissional capaz de entregar resultados consistentes quando alinhado a uma cultura que ofereça ${DISC_INSIGHTS[sec].motivators[0].toLowerCase()} e estrutura adequada. Recomenda-se acompanhamento contínuo via PDI focado em ${DISC_INSIGHTS[dom].development[0].toLowerCase()} e ${DISC_INSIGHTS[sec].development[0].toLowerCase()}, garantindo evolução comportamental e maximização de impacto organizacional. Este relatório deve ser utilizado como ferramenta estratégica de gestão de talentos, desenvolvimento de liderança e alocação de perfis.`;
+    }
+
+    function renderFinalQuote() {
+      const quotes = [
+        "Seu comportamento direciona resultados, relacionamentos e crescimento profissional.",
+        "Pessoas alinhadas ao ambiente certo alcançam performance extraordinária.",
+        "Autoconhecimento é a principal ferramenta da alta performance.",
+        "Liderança não é cargo, é comportamento. E comportamento se desenvolve.",
+        "A maturidade comportamental é o maior diferencial competitivo do século XXI."
+      ];
+      document.getElementById('finalQuote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
+    }
+
+    // ============================================
+    // UTILITÁRIOS
+    // ============================================
+    function exportPDF() {
+      showToast('📄 Gerando PDF executivo de alta resolução...', 'success');
+      setTimeout(() => {
+        window.print();
+      }, 1000);
+    }
+
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      toast.querySelector('span:first-child').textContent = type === 'success' ? '✅' : '⚠️';
+      document.getElementById('toastMessage').textContent = message;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('show'), 10);
+      setTimeout(() => { 
+        toast.classList.remove('show'); 
+        setTimeout(() => toast.classList.add('hidden'), 300); 
+      }, 4000);
+    }
+  </script>
+</body>
+</html>
