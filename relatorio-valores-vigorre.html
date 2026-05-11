@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relatório Completo de Valores Pessoais | Vigorre People Analytics</title>
+  
+  <!-- Tailwind CSS & Chart.js -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: {
+              dark: '#0F172A',
+              purple: '#7C3AED',
+              blue: '#1D4ED8',
+              cyan: '#06B6D4',
+              emerald: '#10B981',
+              amber: '#F59E0B',
+              rose: '#F43F5E',
+              slate: '#64748B'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ============================================
+       BASE & RESET
+       ============================================ */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Inter', sans-serif; 
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%); 
+      color: #F8FAFC; 
+      min-height: 100vh; 
+      line-height: 1.7;
+    }
+
+    /* ============================================
+       GLASSMORPHISM & PREMIUM EFFECTS
+       ============================================ */
+    .glass { 
+      background: rgba(30, 41, 59, 0.6); 
+      backdrop-filter: blur(16px); 
+      -webkit-backdrop-filter: blur(16px); 
+      border: 1px solid rgba(255, 255, 255, 0.08); 
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); 
+    }
+    .glass-card { 
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.85), rgba(15, 23, 42, 0.95)); 
+      backdrop-filter: blur(24px); 
+      border: 1px solid rgba(255, 255, 255, 0.06); 
+      border-radius: 24px; 
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); 
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .glass-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6);
+    }
+    .gradient-text { 
+      background: linear-gradient(135deg, #60A5FA, #A78BFA, #22D3EE); 
+      -webkit-background-clip: text; 
+      -webkit-text-fill-color: transparent; 
+      background-clip: text; 
+    }
+    .gradient-border {
+      position: relative;
+      border-radius: 24px;
+    }
+    .gradient-border::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 26px;
+      background: linear-gradient(135deg, #F59E0B, #EC4899, #8B5CF6);
+      z-index: -1;
+      opacity: 0.5;
+      filter: blur(12px);
+    }
+
+    /* ============================================
+       CHART CONTAINERS
+       ============================================ */
+    .chart-container {
+      position: relative;
+      height: 350px !important;
+      width: 100%;
+      overflow: hidden;
+    }
+    .mini-chart { height: 200px !important; }
+
+    /* ============================================
+       BUTTONS & INTERACTIONS
+       ============================================ */
+    .btn-primary { 
+      background: linear-gradient(135deg, #F59E0B, #EC4899); 
+      transition: all 0.3s ease; position: relative; overflow: hidden; 
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(245, 158, 11, 0.5); }
+    .btn-secondary {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      transition: all 0.3s ease;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.15); transform: translateY(-1px); }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: all 0.3s ease;
+    }
+    .btn-outline:hover { border-color: #F59E0B; background: rgba(245, 158, 11, 0.1); }
+
+    /* ============================================
+       PROGRESS & INDICATORS
+       ============================================ */
+    .score-ring {
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, #F59E0B, #EC4899, #8B5CF6, #3B82F6, #F59E0B);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .score-ring::before {
+      content: ''; position: absolute;
+      width: 100px; height: 100px; border-radius: 50%;
+      background: #0F172A;
+    }
+    .score-value { position: relative; z-index: 1; font-size: 2rem; font-weight: 800; }
+
+    .badge-pill {
+      padding: 6px 14px; border-radius: 100px; font-size: 0.75rem; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+
+    /* ============================================
+       ANIMATIONS
+       ============================================ */
+    .fade-in { animation: fadeIn 0.6s ease-out; }
+    .slide-up { animation: slideUp 0.5s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    .pulse-slow { animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+
+    /* ============================================
+       PRINT OPTIMIZATION
+       ============================================ */
+    @media print {
+      body { background: white; color: #111; }
+      .no-print { display: none !important; }
+      .glass, .glass-card { 
+        background: white !important; border: 1px solid #ddd !important; 
+        box-shadow: none !important; backdrop-filter: none !important; color: #111 !important;
+      }
+      .gradient-text { -webkit-text-fill-color: #F59E0B !important; color: #F59E0B !important; }
+      .chart-container { height: 300px !important; page-break-inside: avoid; }
+      section { page-break-inside: avoid; margin-bottom: 2rem; }
+      h1, h2, h3 { color: #111 !important; border-bottom: 2px solid #eee; padding-bottom: 0.5rem; }
+      p, li, td { color: #333 !important; }
+      .badge-pill { border: 1px solid #ccc; color: #333 !important; background: #f5f5f5 !important; }
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: #0F172A; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 5px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- ============================================
+       HEADER / CONTROLS
+       ============================================ -->
+  <header class="glass border-b border-white/10 sticky top-0 z-50 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-amber to-brand-purple flex items-center justify-center font-bold text-white text-lg">V</div>
+        <div>
+          <h1 class="font-bold text-lg tracking-tight">Vigorre</h1>
+          <p class="text-xs text-gray-400">People Analytics • Relatório de Valores Pessoais</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="badge-pill bg-brand-amber/20 text-brand-amber border border-brand-amber/30">✅ Liberado</span>
+        <button onclick="window.print()" class="btn-secondary px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+          Imprimir
+        </button>
+        <button onclick="exportPDF()" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          Exportar PDF
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================
+       MAIN REPORT CONTENT
+       ============================================ -->
+  <main class="max-w-6xl mx-auto px-4 py-8 space-y-8" id="reportContent">
+    
+    <!-- CAPA PREMIUM -->
+    <section class="glass-card p-8 md:p-12 text-center slide-up gradient-border">
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-amber to-brand-purple flex items-center justify-center mx-auto mb-6 shadow-2xl">
+        <span class="text-3xl font-bold text-white">💎</span>
+      </div>
+      <h1 class="text-3xl md:text-4xl font-extrabold mb-3 tracking-tight">RELATÓRIO COMPLETO DE VALORES PESSOAIS VIGORRE</h1>
+      <p class="text-lg text-gray-400 mb-8">Análise Estratégica de Motivadores Humanos, Cultura e Direcionadores Profissionais</p>
+      
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto mb-8">
+        <div class="glass p-4 rounded-xl text-left">
+          <p class="text-xs text-gray-500 mb-1">Participante</p>
+          <p class="font-semibold text-lg" id="coverName">Carregando...</p>
+        </div>
+        <div class="glass p-4 rounded-xl text-left">
+          <p class="text-xs text-gray-500 mb-1">Empresa</p>
+          <p class="font-semibold" id="coverCompany">Independente</p>
+        </div>
+        <div class="glass p-4 rounded-xl text-left">
+          <p class="text-xs text-gray-500 mb-1">Data</p>
+          <p class="font-semibold" id="coverDate">--/--/----</p>
+        </div>
+        <div class="glass p-4 rounded-xl text-left">
+          <p class="text-xs text-gray-500 mb-1">Código</p>
+          <p class="font-mono text-sm text-brand-amber" id="coverCode">VIG-VL-2024-000</p>
+        </div>
+      </div>
+      
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-white/10">
+        <span class="w-2 h-2 rounded-full bg-brand-amber animate-pulse"></span>
+        <span class="text-sm text-gray-300">Gerado automaticamente por Vigorre People Analytics • Metodologia proprietária</span>
+      </div>
+    </section>
+
+    <!-- 1. RESUMO EXECUTIVO -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-amber/20 flex items-center justify-center text-brand-amber">📊</span>
+        1. Resumo Executivo de Valores Pessoais
+      </h2>
+      <div class="grid md:grid-cols-3 gap-6 mb-8">
+        <div class="glass p-5 rounded-xl text-center">
+          <div class="score-ring mx-auto mb-3">
+            <span class="score-value gradient-text" id="valuesScore">--</span>
+          </div>
+          <p class="text-sm text-gray-400">Índice de Coerência Motivacional</p>
+        </div>
+        <div class="glass p-5 rounded-xl col-span-2">
+          <h3 class="font-semibold mb-3 text-brand-amber">Perfil Motivacional Identificado</h3>
+          <p class="text-lg font-bold mb-2" id="valuesProfileName">Carregando análise...</p>
+          <p class="text-sm text-gray-400 leading-relaxed" id="valuesProfileDesc">Analisando motivadores e valores para gerar visão estratégica...</p>
+        </div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="glass p-4 rounded-xl">
+          <h4 class="font-medium mb-2 text-brand-amber">Valor Predominante</h4>
+          <p class="text-sm text-gray-300" id="execDominantValue">--</p>
+        </div>
+        <div class="glass p-4 rounded-xl">
+          <h4 class="font-medium mb-2 text-brand-purple">Perfil de Realização</h4>
+          <p class="text-sm text-gray-300" id="execAchievementStyle">--</p>
+        </div>
+        <div class="glass p-4 rounded-xl">
+          <h4 class="font-medium mb-2 text-brand-cyan">Estilo Profissional</h4>
+          <p class="text-sm text-gray-300" id="execWorkStyle">--</p>
+        </div>
+        <div class="glass p-4 rounded-xl">
+          <h4 class="font-medium mb-2 text-brand-emerald">Alinhamento Cultural</h4>
+          <p class="text-sm text-gray-300" id="execCulturalFit">--</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. RADAR DE VALORES -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-purple/20 flex items-center justify-center text-brand-purple">📈</span>
+        2. Radar de Valores e Motivadores
+      </h2>
+      <div class="grid md:grid-cols-2 gap-8">
+        <div>
+          <h3 class="font-semibold mb-3 text-center">Radar Motivacional Completo</h3>
+          <div class="chart-container"><canvas id="valuesRadarChart"></canvas></div>
+        </div>
+        <div>
+          <h3 class="font-semibold mb-3 text-center">Intensidade por Valor</h3>
+          <div class="chart-container"><canvas id="valuesBarChart"></canvas></div>
+        </div>
+      </div>
+      <div class="mt-6 glass p-4 rounded-xl">
+        <h4 class="font-medium mb-2">Ranking de Valores Pessoais</h4>
+        <div class="flex flex-wrap gap-4 justify-center" id="valuesBadges">
+          <!-- Inserido via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. PROPÓSITO PROFISSIONAL -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-emerald/20 flex items-center justify-center text-brand-emerald">🎯</span>
+        3. Propósito Profissional e Significado
+      </h2>
+      <div class="space-y-4">
+        <p class="text-gray-300 leading-relaxed" id="purposeDesc">--</p>
+        <div class="grid md:grid-cols-3 gap-4">
+          <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Necessidade de Significado</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-emerald h-2 rounded-full" id="purposeMeaningBar" style="width:0%"></div></div></div>
+          <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Busca por Impacto</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-cyan h-2 rounded-full" id="purposeImpactBar" style="width:0%"></div></div></div>
+          <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Visão de Legado</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-blue h-2 rounded-full" id="purposeLegacyBar" style="width:0%"></div></div></div>
+        </div>
+        <div class="glass p-5 rounded-xl">
+          <h4 class="font-medium mb-2 text-brand-amber">Ambientes que Potencializam o Propósito</h4>
+          <p class="text-sm text-gray-300" id="purposeEnvironments">--</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. NECESSIDADE DE RECONHECIMENTO -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-rose/20 flex items-center justify-center text-brand-rose">🏆</span>
+        4. Necessidade de Reconhecimento e Valorização
+      </h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="glass p-5 rounded-xl">
+          <h3 class="font-semibold mb-3 text-brand-cyan">Perfil de Valorização</h3>
+          <p class="text-sm text-gray-300" id="recognitionProfile">--</p>
+        </div>
+        <div class="glass p-5 rounded-xl">
+          <h3 class="font-semibold mb-3 text-brand-amber">Feedback e Visibilidade</h3>
+          <p class="text-sm text-gray-300" id="recognitionFeedback">--</p>
+        </div>
+      </div>
+      <div class="mt-6 grid md:grid-cols-3 gap-4">
+        <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Status</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-purple h-2 rounded-full" id="recStatusBar" style="width:0%"></div></div></div>
+        <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Competitividade</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-rose h-2 rounded-full" id="recCompetitionBar" style="width:0%"></div></div></div>
+        <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Validação Externa</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-amber h-2 rounded-full" id="recValidationBar" style="width:0%"></div></div></div>
+      </div>
+    </section>
+
+    <!-- 5. AUTONOMIA E LIBERDADE -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-blue/20 flex items-center justify-center text-brand-blue">🕊️</span>
+        5. Autonomia, Liberdade e Independência Profissional
+      </h2>
+      <div class="glass p-5 rounded-xl mb-4">
+        <h3 class="font-semibold mb-2">Perfil de Independência Profissional</h3>
+        <p class="text-sm text-gray-300" id="autonomyProfile">--</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2 text-brand-cyan">Necessidade de Controle</h4><p class="text-sm text-gray-300" id="autonomyControl">--</p></div>
+        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2 text-brand-emerald">Flexibilidade e Criatividade</h4><p class="text-sm text-gray-300" id="autonomyFlexibility">--</p></div>
+      </div>
+    </section>
+
+    <!-- 6. ESTABILIDADE E SEGURANÇA -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-cyan/20 flex items-center justify-center text-brand-cyan">🛡️</span>
+        6. Estabilidade, Segurança e Previsibilidade
+      </h2>
+      <div class="space-y-4">
+        <p class="text-gray-300" id="stabilityDesc">--</p>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2 text-brand-emerald">Segurança Profissional</h4><p class="text-sm text-gray-300" id="stabilitySecurity">--</p></div>
+          <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2 text-brand-purple">Estabilidade Emocional no Trabalho</h4><p class="text-sm text-gray-300" id="stabilityEmotional">--</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. RELACIONAMENTO E CULTURA -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-purple/20 flex items-center justify-center text-brand-purple">🤝</span>
+        7. Relacionamento, Pertencimento e Cultura Organizacional
+      </h2>
+      <div class="glass p-5 rounded-xl mb-4">
+        <h3 class="font-semibold mb-2">Perfil de Conexão e Pertencimento</h3>
+        <p class="text-sm text-gray-300" id="relationshipProfile">--</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2">Colaboração e Trabalho em Equipe</h4><p class="text-sm text-gray-300" id="relationshipCollab">--</p></div>
+        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2">Necessidade de Ambiente Saudável</h4><p class="text-sm text-gray-300" id="relationshipEnvironment">--</p></div>
+      </div>
+    </section>
+
+    <!-- 8. INOVAÇÃO E MUDANÇA -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-amber/20 flex items-center justify-center text-brand-amber">🚀</span>
+        8. Inovação, Mudança e Pensamento Disruptivo
+      </h2>
+      <div class="space-y-4">
+        <p class="text-gray-300" id="innovationDesc">--</p>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2">Abertura a Novas Ideias</h4><p class="text-sm text-gray-300" id="innovationOpenness">--</p></div>
+          <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2">Adaptabilidade a Mudanças</h4><p class="text-sm text-gray-300" id="innovationAdaptability">--</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. MAPA DE ENERGIA PROFISSIONAL™ -->
+    <section class="glass-card p-6 md:p-8 slide-up gradient-border">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-amber/20 flex items-center justify-center text-brand-amber">⚡</span>
+        9. Mapa de Energia Profissional Vigorre™
+      </h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="glass p-5 rounded-xl border-l-4 border-brand-emerald">
+          <h3 class="font-semibold mb-3 text-brand-emerald flex items-center gap-2">✅ O que Energiza</h3>
+          <ul class="space-y-2 text-sm text-gray-300" id="energyPositive">
+            <!-- Inserido via JS -->
+          </ul>
+        </div>
+        <div class="glass p-5 rounded-xl border-l-4 border-brand-rose">
+          <h3 class="font-semibold mb-3 text-brand-rose flex items-center gap-2">⚠️ O que Desgasta</h3>
+          <ul class="space-y-2 text-sm text-gray-300" id="energyNegative">
+            <!-- Inserido via JS -->
+          </ul>
+        </div>
+      </div>
+      <div class="mt-6 glass p-5 rounded-xl">
+        <h4 class="font-medium mb-2 text-brand-cyan">Fatores Motivacionais e Desmotivadores Críticos</h4>
+        <p class="text-sm text-gray-300" id="energyFactors">--</p>
+      </div>
+    </section>
+
+    <!-- 10. ÍNDICE DE ADERÊNCIA CULTURAL™ -->
+    <section class="glass-card p-6 md:p-8 slide-up gradient-border">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-purple/20 flex items-center justify-center text-brand-purple">🎯</span>
+        10. Índice de Aderência Cultural Vigorre™
+      </h2>
+      <div class="glass p-5 rounded-xl mb-6 text-center">
+        <div class="score-ring mx-auto mb-3" style="width:100px;height:100px;">
+          <span class="score-value gradient-text" style="font-size:1.5rem;" id="culturalFitScore">--%</span>
+        </div>
+        <h3 class="font-semibold text-lg" id="culturalFitTitle">Análise de Fit Cultural</h3>
+        <p class="text-sm text-gray-400" id="culturalFitDesc">--</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2">Compatibilidade de Valores</h4><p class="text-sm text-gray-300" id="fitValues">--</p></div>
+        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2">Potencial de Adaptação</h4><p class="text-sm text-gray-300" id="fitAdaptation">--</p></div>
+        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2">Riscos de Desalinhamento</h4><p class="text-sm text-gray-300" id="fitRisks">--</p></div>
+      </div>
+    </section>
+
+    <!-- 11. PERFIL DE REALIZAÇÃO -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-emerald/20 flex items-center justify-center text-brand-emerald">🏆</span>
+        11. Perfil de Realização e Sucesso Profissional
+      </h2>
+      <div class="glass p-5 rounded-xl mb-4">
+        <h3 class="font-semibold mb-2">Como o Participante Busca e Define Sucesso</h3>
+        <p class="text-sm text-gray-300" id="achievementProfile">--</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2">Motivadores de Crescimento</h4><p class="text-sm text-gray-300" id="achievementGrowth">--</p></div>
+        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2">Visão de Carreira e Legado</h4><p class="text-sm text-gray-300" id="achievementLegacy">--</p></div>
+      </div>
+    </section>
+
+    <!-- 12. PERFIL DE LIDERANÇA CULTURAL -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-blue/20 flex items-center justify-center text-brand-blue">👑</span>
+        12. Perfil de Liderança Cultural e Influência Organizacional
+      </h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="glass p-5 rounded-xl">
+          <h3 class="font-semibold mb-3 text-brand-cyan">Estilo de Liderança por Valores</h3>
+          <p class="text-sm text-gray-300" id="leadValuesStyle">--</p>
+        </div>
+        <div class="glass p-5 rounded-xl">
+          <h3 class="font-semibold mb-3 text-brand-amber">Influência Cultural e Modelagem</h3>
+          <p class="text-sm text-gray-300" id="leadCulturalInfluence">--</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13. RISCOS MOTIVACIONAIS™ -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-rose/20 flex items-center justify-center text-brand-rose">⚠️</span>
+        13. Mapa de Riscos Motivacionais Vigorre™
+      </h2>
+      <div class="grid md:grid-cols-2 gap-4" id="motivationalRisksList">
+        <!-- Inserido via JS -->
+      </div>
+    </section>
+
+    <!-- 14. RECOMENDAÇÕES EXECUTIVAS -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-cyan/20 flex items-center justify-center text-brand-cyan">💡</span>
+        14. Recomendações Estratégicas para Alinhamento Motivacional
+      </h2>
+      <div class="space-y-4" id="valuesRecommendations">
+        <!-- Inserido via JS -->
+      </div>
+    </section>
+
+    <!-- 15. CONCLUSÃO EXECUTIVA -->
+    <section class="glass-card p-6 md:p-8 slide-up">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-brand-purple/20 flex items-center justify-center text-brand-purple">📜</span>
+        15. Conclusão Executiva
+      </h2>
+      <div class="glass p-5 rounded-xl">
+        <p class="text-gray-300 leading-relaxed" id="valuesConclusion">--</p>
+      </div>
+    </section>
+
+    <!-- FRASE FINAL IMPACTANTE -->
+    <section class="glass-card p-8 text-center slide-up gradient-border">
+      <blockquote class="text-xl md:text-2xl italic text-gray-200 mb-4 font-light">"<span id="finalQuote">Carregando insight final...</span>"</blockquote>
+      <p class="text-sm text-gray-500">— Vigorre People Analytics • Inteligência de Valores Corporativa</p>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="glass border-t border-white/10 py-8 mt-12 no-print">
+    <div class="max-w-6xl mx-auto px-4 text-center text-sm text-gray-500">
+      <p class="mb-2">Relatório gerado automaticamente pela plataforma Vigorre People Analytics.</p>
+      <p>© 2024 Vigorre. Metodologia proprietária de análise de valores para people analytics corporativo.</p>
+      <p class="mt-2 text-xs">Documento confidencial. Uso exclusivo para desenvolvimento profissional e gestão estratégica de talentos.</p>
+    </div>
+  </footer>
+
+  <!-- LOADING OVERLAY -->
+  <div id="loadingOverlay" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+    <div class="text-center">
+      <div class="relative w-24 h-24 mx-auto mb-6">
+        <div class="absolute inset-0 rounded-full border-4 border-white/10"></div>
+        <div class="absolute inset-0 rounded-full border-4 border-t-brand-amber border-r-brand-purple animate-spin"></div>
+      </div>
+      <h3 class="text-xl font-semibold mb-2">Gerando Relatório de Valores Pessoais</h3>
+      <p class="text-gray-400">Processando análise motivacional e insights estratégicos proprietários...</p>
+    </div>
+  </div>
+
+  <script>
+    // ============================================
+    // ESTADO E DADOS
+    // ============================================
+    const AppState = {
+      session: null,
+      participant: null,
+      company: null,
+      valuesResults: null,
+      charts: { radar: null, bar: null }
+    };
+
+    // Banco de Interpretações de Valores Pessoais Corporativos
+    const VALUES_INSIGHTS = {
+      proposito: {
+        name: 'Propósito', color: '#10B981',
+        high: 'Forte conexão entre trabalho e propósito de vida. Busca impacto social e significado profundo nas atividades.',
+        medium: 'Boa consciência de propósito, com espaço para aprofundar conexão entre valores pessoais e profissionais.',
+        low: 'Pode beneficiar-se de explorar mais o significado do trabalho e alinhar atividades a valores pessoais.',
+        motivators: ['Missão clara e impacto social', 'Contribuição para causas maiores', 'Legado profissional significativo'],
+        environments: ['Organizações com propósito definido', 'Projetos com impacto social', 'Culturas de significado']
+      },
+      reconhecimento: {
+        name: 'Reconhecimento', color: '#F59E0B',
+        high: 'Forte motivação por reconhecimento e visibilidade. Valoriza feedback, status e validação externa.',
+        medium: 'Valoriza reconhecimento sem dependência excessiva. Equilibra validação externa e auto-avaliação.',
+        low: 'Pode beneficiar-se de buscar mais validação externa e desenvolver consciência do próprio valor.',
+        motivators: ['Reconhecimento público', 'Feedback frequente', 'Oportunidades de visibilidade'],
+        environments: ['Culturas de meritocracia', 'Ambientes de alta performance', 'Estruturas de carreira claras']
+      },
+      estabilidade: {
+        name: 'Estabilidade', color: '#3B82F6',
+        high: 'Forte valorização de segurança e estabilidade. Prefere previsibilidade, processos maduros e segurança financeira.',
+        medium: 'Equilíbrio entre busca de segurança e abertura a mudanças. Consegue lidar com transições estruturadas.',
+        low: 'Pode beneficiar-se de desenvolver maior tolerância à incerteza e flexibilidade em cenários dinâmicos.',
+        motivators: ['Segurança financeira', 'Processos claros', 'Previsibilidade organizacional'],
+        environments: ['Estruturas consolidadas', 'Culturas de baixo risco', 'Organizações com histórico estável']
+      },
+      autonomia: {
+        name: 'Autonomia', color: '#7C3AED',
+        high: 'Forte necessidade de independência e liberdade de ação. Prospera com autonomia decisória e flexibilidade.',
+        medium: 'Boa capacidade de auto-gestão com colaboração. Equilibra independência e trabalho em equipe.',
+        low: 'Pode beneficiar-se de desenvolver maior assertividade na independência e confiança na auto-gestão.',
+        motivators: ['Liberdade de decisão', 'Flexibilidade de horários', 'Autonomia metodológica'],
+        environments: ['Culturas de confiança', 'Estruturas ágeis', 'Ambientes de inovação']
+      },
+      relacionamento: {
+        name: 'Relacionamento', color: '#06B6D4',
+        high: 'Forte valorização de conexões e harmonia interpessoal. Prioriza clima saudável e colaboração genuína.',
+        medium: 'Boa capacidade relacional com foco em resultados. Equilibra conexões e entregas.',
+        low: 'Pode beneficiar-se de investir mais em networking e desenvolvimento de conexões estratégicas.',
+        motivators: ['Clima colaborativo', 'Reconhecimento por equipe', 'Ambientes de apoio mútuo'],
+        environments: ['Culturas de pertencimento', 'Times coesos', 'Organizações com foco em pessoas']
+      },
+      inovacao: {
+        name: 'Inovação', color: '#EC4899',
+        high: 'Forte orientação para novidades e experimentação. Busca criatividade, mudança e evolução constante.',
+        medium: 'Equilíbrio entre inovação e estabilidade. Consegue inovar dentro de estruturas definidas.',
+        low: 'Pode beneficiar-se de ser mais aberto a novas abordagens e desenvolver mentalidade de experimentação.',
+        motivators: ['Espaço para criatividade', 'Projetos disruptivos', 'Cultura de aprendizado'],
+        environments: ['Startups', 'Áreas de P&D', 'Organizações em transformação']
+      },
+      realizacao: {
+        name: 'Realização', color: '#8B5CF6',
+        high: 'Forte motivação por resultados e superação de desafios. Orientado a metas, crescimento e conquistas.',
+        medium: 'Boa orientação para resultados, com equilíbrio em outras áreas. Consegue entregar com qualidade.',
+        low: 'Pode beneficiar-se de definir metas mais desafiadoras e desenvolver foco em entregas de impacto.',
+        motivators: ['Metas desafiadoras', 'Crescimento acelerado', 'Reconhecimento por conquistas'],
+        environments: ['Culturas de alta performance', 'Estruturas meritocráticas', 'Ambientes competitivos']
+      },
+      equilibrio: {
+        name: 'Equilíbrio', color: '#14B8A6',
+        high: 'Forte prioridade em balancear vida e trabalho. Valoriza bem-estar, limites saudáveis e qualidade de vida.',
+        medium: 'Boa consciência de limites com flexibilidade. Consegue equilibrar demandas profissionais e pessoais.',
+        low: 'Pode beneficiar-se de praticar mais autocuidado e estabelecer limites claros entre vida e trabalho.',
+        motivators: ['Flexibilidade de horários', 'Bem-estar organizacional', 'Respeito a limites pessoais'],
+        environments: ['Culturas de bem-estar', 'Políticas de work-life balance', 'Organizações humanizadas']
+      }
+    };
+
+    // Níveis de Aderência Cultural Vigorre™
+    const CULTURAL_FIT_LEVELS = {
+      alta: { name: 'Alta Aderência', desc: 'Valores alinhados à cultura organizacional. Potencial de engajamento e retenção elevado.', color: '#10B981' },
+      moderada: { name: 'Aderência Moderada', desc: 'Valores parcialmente alinhados. Requer ajustes culturais ou desenvolvimento direcionado.', color: '#F59E0B' },
+      desenvolvimento: { name: 'Aderência em Desenvolvimento', desc: 'Valores com gaps significativos. Recomenda-se avaliação de fit e plano de adaptação.', color: '#F43F5E' }
+    };
+
+    // ============================================
+    // INICIALIZAÇÃO
+    // ============================================
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('Inicializando Relatório Valores Vigorre...');
+      loadSession();
+      loadValuesResults();
+    });
+
+    function loadSession() {
+      try {
+        const session = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+        if (session?.id) {
+          AppState.session = session;
+          const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+          AppState.participant = participants.find(p => p.id === session.id);
+          
+          const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+          if (AppState.participant?.compId) {
+            AppState.company = companies.find(c => c.id === AppState.participant.compId);
+          }
+        }
+      } catch (e) { console.error('Erro ao carregar sessão:', e); }
+    }
+
+    function loadValuesResults() {
+      try {
+        const valuesData = localStorage.getItem('vigorre_last_values_result');
+        if (!valuesData) {
+          showToast('Nenhum resultado de Valores Pessoais encontrado. Complete o teste primeiro.', 'error');
+          setTimeout(() => window.location.href = 'index.html', 2000);
+          return;
+        }
+        AppState.valuesResults = JSON.parse(valuesData);
+        generateReport();
+      } catch (e) {
+        console.error('Erro ao carregar resultados Valores:', e);
+        showToast('Erro ao processar relatório.', 'error');
+      }
+    }
+
+    function generateReport() {
+      const r = AppState.valuesResults;
+      if (!r || !r.percentages) return;
+
+      // Preencher Capa
+      document.getElementById('coverName').textContent = AppState.participant?.name || 'Participante';
+      document.getElementById('coverCompany').textContent = AppState.company?.name || 'Independente';
+      document.getElementById('coverDate').textContent = new Date().toLocaleDateString('pt-BR');
+      document.getElementById('coverCode').textContent = 'VIG-VL-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 9000 + 1000);
+
+      // Calcular Score de Coerência Motivacional
+      const valuesArray = Object.values(r.percentages);
+      const dominantValue = r.dominant;
+      const dominantScore = r.percentages[dominantValue];
+      const coherenceScore = Math.round(dominantScore + (100 - Math.max(...valuesArray.filter(v => v !== dominantScore))) / 2);
+      
+      document.getElementById('valuesScore').textContent = coherenceScore + '%';
+      document.getElementById('culturalFitScore').textContent = coherenceScore + '%';
+
+      // Determinar nível de aderência cultural
+      const fitLevel = coherenceScore >= 75 ? 'alta' : coherenceScore >= 55 ? 'moderada' : 'desenvolvimento';
+      const fitInfo = CULTURAL_FIT_LEVELS[fitLevel];
+
+      // Gerar Conteúdo Dinâmico para todas as seções
+      renderExecutiveSummary(r, dominantValue, dominantScore, coherenceScore, fitLevel);
+      renderCharts(r.percentages);
+      renderPurpose(r, dominantValue);
+      renderRecognition(r);
+      renderAutonomy(r);
+      renderStability(r);
+      renderRelationship(r);
+      renderInnovation(r);
+      renderEnergyMap(r, dominantValue);
+      renderCulturalFit(r, dominantValue, fitLevel);
+      renderAchievementProfile(r, dominantValue);
+      renderCulturalLeadership(r, dominantValue);
+      renderMotivationalRisks(r, dominantValue);
+      renderRecommendations(r, dominantValue, fitLevel);
+      renderConclusion(r, dominantValue, coherenceScore, fitLevel);
+      renderFinalQuote();
+
+      // Esconder loading e mostrar relatório
+      document.getElementById('loadingOverlay').classList.add('hidden');
+      document.getElementById('reportContent').classList.remove('hidden');
+    }
+
+    // ============================================
+    // RENDERIZADORES DE SEÇÕES (COMPLETOS)
+    // ============================================
+    function renderExecutiveSummary(r, dominant, dominantScore, coherenceScore, fitLevel) {
+      const dominantInsight = VALUES_INSIGHTS[dominant];
+      const profileName = dominantScore >= 70 ? `${dominantInsight.name} Elevado` : dominantScore >= 50 ? `${dominantInsight.name} Moderado` : `${dominantInsight.name} em Desenvolvimento`;
+      
+      document.getElementById('valuesProfileName').textContent = profileName;
+      document.getElementById('valuesProfileDesc').textContent = `O participante apresenta ${dominantInsight.name.toLowerCase()} como valor predominante (${dominantScore}%). ${dominantInsight.high}. Índice de coerência motivacional de ${coherenceScore}% indica ${CULTURAL_FIT_LEVELS[fitLevel].desc.toLowerCase()}.`;
+      document.getElementById('execDominantValue').textContent = `${dominantInsight.name}: ${dominantScore}% - ${dominantInsight.desc}`;
+      document.getElementById('execAchievementStyle').textContent = dominant === 'realizacao' ? 'Orientado a metas e conquistas. Busca crescimento acelerado e reconhecimento por resultados.' : dominant === 'proposito' ? 'Orientado a significado e impacto. Busca contribuição social e legado profissional.' : dominant === 'autonomia' ? 'Orientado a independência e liberdade. Prospera com autonomia decisória e flexibilidade.' : dominant === 'relacionamento' ? 'Orientado a conexões e harmonia. Valoriza clima saudável e colaboração genuína.' : 'Perfil equilibrado com foco em estabilidade e qualidade de vida.';
+      document.getElementById('execWorkStyle').textContent = dominant === 'inovacao' ? 'Estilo ágil e experimental. Adapta-se rapidamente e busca inovação contínua.' : dominant === 'estabilidade' ? 'Estilo estruturado e previsível. Valoriza processos maduros e segurança operacional.' : 'Estilo adaptável que equilibra entrega e qualidade conforme o contexto.';
+      document.getElementById('execCulturalFit').textContent = `Aderência ${fitLevel.toLowerCase()}: ${CULTURAL_FIT_LEVELS[fitLevel].desc}`;
+      
+      // Badges ordenados por intensidade
+      const sortedValues = Object.entries(r.percentages).sort((a, b) => b[1] - a[1]);
+      const badgesHtml = sortedValues.map(([k, v]) => 
+        `<span class="badge-pill" style="background:${VALUES_INSIGHTS[k].color}20; color:${VALUES_INSIGHTS[k].color}; border:1px solid ${VALUES_INSIGHTS[k].color}40;">${VALUES_INSIGHTS[k].name}: ${v}%</span>`
+      ).join('');
+      document.getElementById('valuesBadges').innerHTML = badgesHtml;
+    }
+
+    function renderCharts(percentages) {
+      if (AppState.charts.radar) AppState.charts.radar.destroy();
+      if (AppState.charts.bar) AppState.charts.bar.destroy();
+
+      const ctxRadar = document.getElementById('valuesRadarChart').getContext('2d');
+      AppState.charts.radar = new Chart(ctxRadar, {
+        type: 'radar',
+        data: {
+          labels: ['Propósito', 'Reconhecimento', 'Estabilidade', 'Autonomia', 'Relacionamento', 'Inovação', 'Realização', 'Equilíbrio'],
+          datasets: [{
+            label: 'Perfil Motivacional',
+            data: [percentages.proposito, percentages.reconhecimento, percentages.estabilidade, percentages.autonomia, percentages.relacionamento, percentages.inovacao, percentages.realizacao, percentages.equilibrio],
+            backgroundColor: 'rgba(245, 158, 11, 0.25)',
+            borderColor: '#F59E0B',
+            borderWidth: 3,
+            pointBackgroundColor: '#fff',
+            pointBorderColor: '#F59E0B',
+            pointHoverBackgroundColor: '#F59E0B',
+            pointHoverBorderColor: '#fff'
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          scales: {
+            r: {
+              angleLines: { color: 'rgba(255,255,255,0.1)' },
+              grid: { color: 'rgba(255,255,255,0.1)' },
+              pointLabels: { color: '#F8FAFC', font: { size: 10, weight: '600' } },
+              ticks: { display: false, backdropColor: 'transparent' },
+              suggestedMin: 0, suggestedMax: 100
+            }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+
+      const ctxBar = document.getElementById('valuesBarChart').getContext('2d');
+      AppState.charts.bar = new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+          labels: ['PR', 'RC', 'ES', 'AU', 'RL', 'IN', 'RZ', 'EQ'],
+          datasets: [{
+            label: 'Intensidade',
+            data: [percentages.proposito, percentages.reconhecimento, percentages.estabilidade, percentages.autonomia, percentages.relacionamento, percentages.inovacao, percentages.realizacao, percentages.equilibrio],
+            backgroundColor: ['#10B981', '#F59E0B', '#3B82F6', '#7C3AED', '#06B6D4', '#EC4899', '#8B5CF6', '#14B8A6'],
+            borderColor: ['#059669', '#D97706', '#2563EB', '#6D28D9', '#0891B2', '#DB2777', '#7C3AED', '#0D9488'],
+            borderWidth: 2,
+            borderRadius: 8
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          scales: {
+            y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94A3B8' } },
+            x: { grid: { display: false }, ticks: { color: '#F8FAFC', font: { weight: 'bold' } } }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+    }
+
+    function renderPurpose(r, dominant) {
+      const propScore = r.percentages.proposito;
+      const ins = VALUES_INSIGHTS.proposito;
+      const level = propScore >= 70 ? 'high' : propScore >= 50 ? 'medium' : 'low';
+      const desc = level === 'high' ? ins.high : level === 'medium' ? ins.medium : ins.low;
+      
+      document.getElementById('purposeDesc').textContent = `${desc} ${dominant === 'proposito' ? 'Como valor predominante, direciona escolhas profissionais com base em significado e impacto.' : ''}`;
+      document.getElementById('purposeMeaningBar').style.width = propScore + '%';
+      document.getElementById('purposeImpactBar').style.width = Math.min(100, propScore + 10) + '%';
+      document.getElementById('purposeLegacyBar').style.width = Math.min(100, propScore + 5) + '%';
+      document.getElementById('purposeEnvironments').textContent = propScore >= 70 ? 'Organizações com missão clara, projetos de impacto social e culturas de significado.' : propScore >= 50 ? 'Ambientes que conectem trabalho a propósito, mesmo que parcialmente.' : 'Desenvolvimento de conexão com propósito via reflexão e alinhamento de valores.';
+    }
+
+    function renderRecognition(r) {
+      const recScore = r.percentages.reconhecimento;
+      const ins = VALUES_INSIGHTS.reconhecimento;
+      const level = recScore >= 70 ? 'high' : recScore >= 50 ? 'medium' : 'low';
+      const desc = level === 'high' ? ins.high : level === 'medium' ? ins.medium : ins.low;
+      
+      document.getElementById('recognitionProfile').textContent = desc;
+      document.getElementById('recognitionFeedback').textContent = recScore >= 70 ? 'Valoriza feedback frequente e reconhecimento público. Motiva-se por visibilidade e status.' : recScore >= 50 ? 'Aprecia reconhecimento sem dependência excessiva. Equilibra validação externa e auto-avaliação.' : 'Pode beneficiar-se de buscar mais feedback estruturado e desenvolver consciência do próprio valor.';
+      document.getElementById('recStatusBar').style.width = recScore + '%';
+      document.getElementById('recCompetitionBar').style.width = Math.min(100, recScore + 15) + '%';
+      document.getElementById('recValidationBar').style.width = recScore + '%';
+    }
+
+    function renderAutonomy(r) {
+      const autoScore = r.percentages.autonomia;
+      const ins = VALUES_INSIGHTS.autonomia;
+      const level = autoScore >= 70 ? 'high' : autoScore >= 50 ? 'medium' : 'low';
+      const desc = level === 'high' ? ins.high : level === 'medium' ? ins.medium : ins.low;
+      
+      document.getElementById('autonomyProfile').textContent = desc;
+      document.getElementById('autonomyControl').textContent = autoScore >= 70 ? 'Alta necessidade de autonomia. Prospera quando pode definir caminhos e métodos.' : autoScore >= 50 ? 'Valoriza diretrizes claras com espaço para auto-gestão. Equilibra estrutura e liberdade.' : 'Beneficia-se de autonomia gradual com suporte estruturado para desenvolver confiança.';
+      document.getElementById('autonomyFlexibility').textContent = autoScore >= 70 ? 'Alta flexibilidade e criatividade. Adapta métodos conforme contexto e inovação.' : 'Flexibilidade moderada. Consegue inovar dentro de estruturas definidas.';
+    }
+
+    function renderStability(r) {
+      const stabScore = r.percentages.estabilidade;
+      const ins = VALUES_INSIGHTS.estabilidade;
+      const level = stabScore >= 70 ? 'high' : stabScore >= 50 ? 'medium' : 'low';
+      const desc = level === 'high' ? ins.high : level === 'medium' ? ins.medium : ins.low;
+      
+      document.getElementById('stabilityDesc').textContent = desc;
+      document.getElementById('stabilitySecurity').textContent = stabScore >= 70 ? 'Alta valorização de segurança financeira e previsibilidade organizacional.' : stabScore >= 50 ? 'Equilíbrio entre segurança e abertura a mudanças calculadas.' : 'Pode desenvolver maior tolerância à incerteza via exposição gradual e planejamento de contingência.';
+      document.getElementById('stabilityEmotional').textContent = stabScore >= 70 ? 'Estabilidade emocional no trabalho. Mantém equilíbrio mesmo em transições.' : 'Estabilidade moderada. Beneficia-se de comunicação clara em mudanças.';
+    }
+
+    function renderRelationship(r) {
+      const relScore = r.percentages.relacionamento;
+      const ins = VALUES_INSIGHTS.relacionamento;
+      const level = relScore >= 70 ? 'high' : relScore >= 50 ? 'medium' : 'low';
+      const desc = level === 'high' ? ins.high : level === 'medium' ? ins.medium : ins.low;
+      
+      document.getElementById('relationshipProfile').textContent = desc;
+      document.getElementById('relationshipCollab').textContent = relScore >= 70 ? 'Alta colaboração. Constrói times coesos e mantém clima positivo.' : relScore >= 50 ? 'Boa colaboração com foco em resultados. Equilibra conexões e entregas.' : 'Pode desenvolver mais escuta ativa e investimento em networking estratégico.';
+      document.getElementById('relationshipEnvironment').textContent = relScore >= 70 ? 'Ambientes de pertencimento, culturas de apoio mútuo e times integrados.' : 'Ambientes que valorizem conexões sem sacrificar resultados.';
+    }
+
+    function renderInnovation(r) {
+      const inoScore = r.percentages.inovacao;
+      const ins = VALUES_INSIGHTS.inovacao;
+      const level = inoScore >= 70 ? 'high' : inoScore >= 50 ? 'medium' : 'low';
+      const desc = level === 'high' ? ins.high : level === 'medium' ? ins.medium : ins.low;
+      
+      document.getElementById('innovationDesc').textContent = desc;
+      document.getElementById('innovationOpenness').textContent = inoScore >= 70 ? 'Alta abertura a novas ideias. Busca experimentação e aprendizado contínuo.' : inoScore >= 50 ? 'Abertura moderada. Consegue inovar dentro de estruturas definidas.' : 'Pode desenvolver mais mentalidade de experimentação e tolerância ao risco calculado.';
+      document.getElementById('innovationAdaptability').textContent = inoScore >= 70 ? 'Alta adaptabilidade a mudanças. Pivota rapidamente e abraça transformação.' : 'Adaptabilidade moderada. Prefere mudanças graduais com transição estruturada.';
+    }
+
+    function renderEnergyMap(r, dominant) {
+      const energizers = VALUES_INSIGHTS[dominant].motivators;
+      const environments = VALUES_INSIGHTS[dominant].environments;
+      
+      // Determinar o que desgasta baseado nos valores mais baixos
+      const sorted = Object.entries(r.percentages).sort((a, b) => a[1] - b[1]);
+      const lowestValues = sorted.slice(0, 3).map(([k]) => VALUES_INSIGHTS[k].name);
+      
+      const drains = [
+        `Ambientes que não ofereçam ${energizers[0].toLowerCase()}`,
+        `Culturas que negligenciem ${environments[0].toLowerCase()}`,
+        `Falta de ${lowestValues[0]} e ${lowestValues[1]}`
+      ];
+      
+      document.getElementById('energyPositive').innerHTML = energizers.map(e => `<li>• ${e}</li>`).join('');
+      document.getElementById('energyNegative').innerHTML = drains.map(d => `<li>• ${d}</li>`).join('');
+      document.getElementById('energyFactors').textContent = `Gatilhos de desengajamento incluem ${drains.slice(0, 2).join(' e ').toLowerCase()}. Para manter alta motivação, recomenda-se ambientes que ofereçam ${energizers.slice(0, 2).join(' e ').toLowerCase()}.`;
+    }
+
+    function renderCulturalFit(r, dominant, fitLevel) {
+      const fitInfo = CULTURAL_FIT_LEVELS[fitLevel];
+      const dominantInsight = VALUES_INSIGHTS[dominant];
+      
+      document.getElementById('culturalFitTitle').textContent = fitInfo.name;
+      document.getElementById('culturalFitDesc').textContent = fitInfo.desc;
+      document.getElementById('fitValues').textContent = `Valores alinhados: ${dominantInsight.name} predominante com ${Math.round((r.percentages[dominant] + Object.values(r.percentages).reduce((a,b)=>a+b,0)/8)/2)}% de coerência.`;
+      document.getElementById('fitAdaptation').textContent = fitLevel === 'alta' ? 'Alto potencial de adaptação e engajamento cultural.' : fitLevel === 'moderada' ? 'Adaptação possível com desenvolvimento direcionado de valores secundários.' : 'Adaptação requer avaliação de fit e plano estruturado de alinhamento cultural.';
+      document.getElementById('fitRisks').textContent = dominant === 'autonomia' ? 'Risco de desengajamento em ambientes com microgerenciamento.' : dominant === 'estabilidade' ? 'Risco de estresse em ambientes caóticos ou de alta mudança.' : dominant === 'inovacao' ? 'Risco de desmotivação em ambientes rígidos ou burocráticos.' : 'Risco de desalinhamento se valores organizacionais divergirem de ${dominantInsight.name.toLowerCase()}.';
+    }
+
+    function renderAchievementProfile(r, dominant) {
+      const dominantInsight = VALUES_INSIGHTS[dominant];
+      
+      document.getElementById('achievementProfile').textContent = `O participante busca sucesso através de ${dominantInsight.motivators.join(' e ').toLowerCase()}. ${dominant === 'realizacao' ? 'Define sucesso por metas alcançadas e crescimento mensurável.' : dominant === 'proposito' ? 'Define sucesso por impacto gerado e significado construído.' : dominant === 'reconhecimento' ? 'Define sucesso por visibilidade e validação externa.' : 'Define sucesso por equilíbrio entre conquistas e bem-estar.'}`;
+      document.getElementById('achievementGrowth').textContent = dominant === 'realizacao' ? 'Crescimento acelerado, promoções e desafios progressivos.' : dominant === 'proposito' ? 'Crescimento de impacto, expansão de influência e legado.' : 'Crescimento equilibrado com alinhamento a valores pessoais.';
+      document.getElementById('achievementLegacy').textContent = dominant === 'proposito' ? 'Legado de contribuição social e transformação positiva.' : dominant === 'realizacao' ? 'Legado de conquistas e referência na área.' : 'Legado de equilíbrio, relacionamentos e bem-estar sustentável.';
+    }
+
+    function renderCulturalLeadership(r, dominant) {
+      const dominantInsight = VALUES_INSIGHTS[dominant];
+      
+      document.getElementById('leadValuesStyle').textContent = `Estilo de liderança baseado em ${dominant.toLowerCase()}: ${dominant === 'proposito' ? 'Lidera por propósito, inspirando através de significado e impacto.' : dominant === 'reconhecimento' ? 'Lidera por reconhecimento, motivando através de visibilidade e meritocracia.' : dominant === 'autonomia' ? 'Lidera por autonomia, empoderando através de confiança e liberdade.' : dominant === 'relacionamento' ? 'Lidera por conexão, engajando através de empatia e pertencimento.' : 'Liderança equilibrada que adapta estilo conforme contexto e valores da equipe.'}`;
+      document.getElementById('leadCulturalInfluence').textContent = dominant === 'inovacao' ? 'Influencia cultura através de experimentação e aprendizado contínuo.' : dominant === 'estabilidade' ? 'Influencia cultura através de consistência e processos maduros.' : `Influencia cultura através de ${dominantInsight.motivators[0].toLowerCase()} e modelagem comportamental.`;
+    }
+
+    function renderMotivationalRisks(r, dominant) {
+      const risks = [];
+      const dominantInsight = VALUES_INSIGHTS[dominant];
+      
+      // Riscos baseados em valores extremos ou desequilíbrios
+      if (r.percentages.reconhecimento >= 80) {
+        risks.push({ title: 'Dependência de Validação Externa', desc: 'Pode priorizar reconhecimento sobre propósito. Recomenda-se desenvolver auto-avaliação.', color: 'amber' });
+      }
+      if (r.percentages.estabilidade >= 80) {
+        risks.push({ title: 'Resistência a Mudanças Estratégicas', desc: 'Pode resistir a pivôs necessários. Recomenda-se exposição gradual a inovação.', color: 'blue' });
+      }
+      if (r.percentages.autonomia >= 80) {
+        risks.push({ title: 'Dificuldade em Estruturas Hierárquicas', desc: 'Pode desengajar em ambientes com microgerenciamento. Recomenda-se clareza de autonomia.', color: 'purple' });
+      }
+      if (r.percentages.relacionamento >= 80) {
+        risks.push({ title: 'Evitação de Conflitos Necessários', desc: 'Pode evitar feedbacks difíceis para manter harmonia. Recomenda-se assertividade.', color: 'cyan' });
+      }
+      if (r.percentages.inovacao >= 80) {
+        risks.push({ title: 'Impaciência com Processos Maduros', desc: 'Pode negligenciar estabilidade em prol de novidade. Recomenda-se equilíbrio.', color: 'rose' });
+      }
+      if (r.percentages.realizacao >= 80) {
+        risks.push({ title: 'Burnout por Sobrecarga Autoimposta', desc: 'Pode priorizar resultados sobre bem-estar. Recomenda-se limites saudáveis.', color: 'emerald' });
+      }
+      if (r.percentages.equilibrio >= 80) {
+        risks.push({ title: 'Baixa Tolerância a Ambientes Intensos', desc: 'Pode desengajar em culturas de alta pressão. Recomenda-se resiliência.', color: 'teal' });
+      }
+      
+      // Fallback se não houver riscos
+      if (risks.length === 0) {
+        risks.push({ title: 'Manutenção de Motivação Sustentável', desc: 'Manter práticas de alinhamento entre valores pessoais e profissionais para engajamento duradouro.', color: 'emerald' });
+      }
+      
+      document.getElementById('motivationalRisksList').innerHTML = risks.map(risk => 
+        `<div class="glass p-4 rounded-xl border-l-4 border-${risk.color}-500"><h4 class="font-medium mb-1 text-${risk.color}-400">${risk.title}</h4><p class="text-sm text-gray-300">${risk.desc}</p></div>`
+      ).join('');
+    }
+
+    function renderRecommendations(r, dominant, fitLevel) {
+      const recs = [];
+      const dominantInsight = VALUES_INSIGHTS[dominant];
+      
+      // Recomendações baseadas no valor predominante
+      recs.push(`Alinhar ambiente de trabalho a ${dominantInsight.motivators.join(' e ').toLowerCase()}.`);
+      recs.push(`Desenvolver ${dominant === 'autonomia' ? 'assertividade em estruturas hierárquicas' : dominant === 'estabilidade' ? 'flexibilidade em cenários dinâmicos' : dominant === 'inovacao' ? 'paciência com processos maduros' : 'equilíbrio entre valor predominante e demandas organizacionais'}.`);
+      
+      // Recomendações baseadas no nível de fit cultural
+      if (fitLevel === 'alta') {
+        recs.push('Aproveitar alto fit cultural para assumir papéis de influência e modelagem organizacional.');
+      } else if (fitLevel === 'moderada') {
+        recs.push('Desenvolver valores secundários para ampliar adaptabilidade cultural.');
+      } else {
+        recs.push('Avaliar fit cultural e considerar plano estruturado de adaptação ou realocação.');
+      }
+      
+      // Recomendações específicas por gaps
+      const lowest = Object.entries(r.percentages).sort((a,b) => a[1] - b[1])[0][0];
+      if (lowest !== dominant) {
+        recs.push(`Fortalecer ${VALUES_INSIGHTS[lowest].name.toLowerCase()} através de práticas direcionadas e exposição gradual.`);
+      }
+      
+      document.getElementById('valuesRecommendations').innerHTML = recs.map(rec => 
+        `<div class="glass p-4 rounded-xl flex items-start gap-3"><span class="text-brand-amber mt-1">➤</span><p class="text-sm text-gray-300">${rec}</p></div>`
+      ).join('');
+    }
+
+    function renderConclusion(r, dominant, coherenceScore, fitLevel) {
+      const dominantInsight = VALUES_INSIGHTS[dominant];
+      const fitInfo = CULTURAL_FIT_LEVELS[fitLevel];
+      
+      document.getElementById('valuesConclusion').textContent = `O participante demonstra um perfil motivacional com ${dominantInsight.name.toLowerCase()} como valor predominante (${r.percentages[dominant]}%), ${dominantInsight.high}. Índice de coerência motivacional de ${coherenceScore}% indica ${fitInfo.desc.toLowerCase()}. Este perfil indica potencial para ${coherenceScore >= 75 ? 'alta performance em ambientes alinhados a ' + dominantInsight.name.toLowerCase() + ', com engajamento sustentável e influência cultural positiva' : coherenceScore >= 55 ? 'crescimento acelerado com desenvolvimento direcionado de valores secundários e ajustes culturais' : 'desenvolvimento estruturado de alinhamento entre valores pessoais e demandas organizacionais'}. Recomenda-se acompanhamento contínuo via PDI motivacional focado em ${Object.entries(r.percentages).sort((a,b) => a[1] - b[1])[0][0].toLowerCase()} e práticas de ${fitLevel === 'alta' ? 'modelagem cultural' : fitLevel === 'moderada' ? 'adaptação estratégica' : 'avaliação de fit'}, garantindo evolução motivacional e maximização de engajamento profissional. Este relatório deve ser utilizado como ferramenta estratégica de gestão de talentos, alocação de perfis e desenvolvimento de cultura organizacional.`;
+    }
+
+    function renderFinalQuote() {
+      const quotes = [
+        "Valores alinhados criam propósito, propósito cria performance, performance cria legado.",
+        "Pessoas motivadas pelos valores certos transformam culturas e resultados.",
+        "Autoconhecimento motivacional é a base do engajamento sustentável.",
+        "Liderança por valores inspira mais que liderança por cargo.",
+        "Culturas fortes são construídas por pessoas com valores claros e alinhados."
+      ];
+      document.getElementById('finalQuote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
+    }
+
+    // ============================================
+    // UTILITÁRIOS
+    // ============================================
+    function exportPDF() {
+      showToast('📄 Gerando PDF executivo de alta resolução...', 'success');
+      setTimeout(() => {
+        window.print();
+      }, 1000);
+    }
+
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      toast.querySelector('span:first-child').textContent = type === 'success' ? '✅' : '⚠️';
+      document.getElementById('toastMessage').textContent = message;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('show'), 10);
+      setTimeout(() => { 
+        toast.classList.remove('show'); 
+        setTimeout(() => toast.classList.add('hidden'), 300); 
+      }, 4000);
+    }
+  </script>
+</body>
+</html>
