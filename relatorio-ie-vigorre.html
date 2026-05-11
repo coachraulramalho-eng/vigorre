@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Relatório Completo DISC | Vigorre People Analytics</title>
+  <title>Relatório Completo de Inteligência Emocional | Vigorre People Analytics</title>
   
   <!-- Tailwind CSS & Chart.js -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -129,7 +129,7 @@
     .score-ring {
       width: 120px; height: 120px;
       border-radius: 50%;
-      background: conic-gradient(from 0deg, #1D4ED8, #7C3AED, #06B6D4, #1D4ED8);
+      background: conic-gradient(from 0deg, #06B6D4, #10B981, #3B82F6, #7C3AED, #06B6D4);
       display: flex; align-items: center; justify-content: center;
       position: relative;
     }
@@ -191,7 +191,7 @@
         <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center font-bold text-white text-lg">V</div>
         <div>
           <h1 class="font-bold text-lg tracking-tight">Vigorre</h1>
-          <p class="text-xs text-gray-400">People Analytics • Relatório DISC Completo</p>
+          <p class="text-xs text-gray-400">People Analytics • Relatório de Inteligência Emocional</p>
         </div>
       </div>
       <div class="flex items-center gap-2">
@@ -215,11 +215,11 @@
     
     <!-- CAPA PREMIUM -->
     <section class="glass-card p-8 md:p-12 text-center slide-up gradient-border">
-      <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center mx-auto mb-6 shadow-2xl">
-        <span class="text-3xl font-bold text-white">V</span>
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-cyan to-brand-blue flex items-center justify-center mx-auto mb-6 shadow-2xl">
+        <span class="text-3xl font-bold text-white">🧠</span>
       </div>
-      <h1 class="text-3xl md:text-4xl font-extrabold mb-3 tracking-tight">RELATÓRIO COMPLETO DISC VIGORRE</h1>
-      <p class="text-lg text-gray-400 mb-8">Análise Estratégica de Perfil Comportamental e Profissional</p>
+      <h1 class="text-3xl md:text-4xl font-extrabold mb-3 tracking-tight">RELATÓRIO COMPLETO DE INTELIGÊNCIA EMOCIONAL VIGORRE</h1>
+      <p class="text-lg text-gray-400 mb-8">Análise Estratégica de Inteligência Emocional, Relacional e Profissional</p>
       
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto mb-8">
         <div class="glass p-4 rounded-xl text-left">
@@ -236,317 +236,273 @@
         </div>
         <div class="glass p-4 rounded-xl text-left">
           <p class="text-xs text-gray-500 mb-1">Código</p>
-          <p class="font-mono text-sm text-brand-cyan" id="coverCode">VIG-2024-000</p>
+          <p class="font-mono text-sm text-brand-cyan" id="coverCode">VIG-IE-2024-000</p>
         </div>
       </div>
       
       <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-white/10">
-        <span class="w-2 h-2 rounded-full bg-brand-emerald animate-pulse"></span>
-        <span class="text-sm text-gray-300">Gerado automaticamente por Vigorre People Analytics</span>
+        <span class="w-2 h-2 rounded-full bg-brand-cyan animate-pulse"></span>
+        <span class="text-sm text-gray-300">Gerado automaticamente por Vigorre People Analytics • Metodologia proprietária</span>
       </div>
     </section>
 
     <!-- 1. RESUMO EXECUTIVO -->
     <section class="glass-card p-6 md:p-8 slide-up">
       <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
-        <span class="w-8 h-8 rounded-lg bg-brand-blue/20 flex items-center justify-center text-brand-blue">📊</span>
-        1. Resumo Executivo
+        <span class="w-8 h-8 rounded-lg bg-brand-cyan/20 flex items-center justify-center text-brand-cyan">📊</span>
+        1. Resumo Executivo de Inteligência Emocional
       </h2>
       <div class="grid md:grid-cols-3 gap-6 mb-8">
         <div class="glass p-5 rounded-xl text-center">
           <div class="score-ring mx-auto mb-3">
-            <span class="score-value gradient-text" id="execScore">--</span>
+            <span class="score-value gradient-text" id="ieScore">--</span>
           </div>
-          <p class="text-sm text-gray-400">Índice de Aderência Profissional</p>
+          <p class="text-sm text-gray-400">Índice de Inteligência Emocional</p>
         </div>
         <div class="glass p-5 rounded-xl col-span-2">
-          <h3 class="font-semibold mb-3 text-brand-amber">Perfil Identificado</h3>
-          <p class="text-lg font-bold mb-2" id="execProfileName">Carregando análise...</p>
-          <p class="text-sm text-gray-400 leading-relaxed" id="execProfileDesc">Analisando combinações DISC para gerar visão executiva...</p>
+          <h3 class="font-semibold mb-3 text-brand-emerald">Perfil Emocional Identificado</h3>
+          <p class="text-lg font-bold mb-2" id="ieProfileName">Carregando análise...</p>
+          <p class="text-sm text-gray-400 leading-relaxed" id="ieProfileDesc">Analisando dimensões emocionais para gerar visão estratégica...</p>
         </div>
       </div>
       <div class="grid md:grid-cols-2 gap-4">
         <div class="glass p-4 rounded-xl">
-          <h4 class="font-medium mb-2 text-brand-emerald">Estilo de Comunicação</h4>
-          <p class="text-sm text-gray-300" id="execCommStyle">--</p>
+          <h4 class="font-medium mb-2 text-brand-cyan">Estabilidade Emocional</h4>
+          <p class="text-sm text-gray-300" id="execStability">--</p>
         </div>
         <div class="glass p-4 rounded-xl">
-          <h4 class="font-medium mb-2 text-brand-purple">Padrão de Liderança</h4>
-          <p class="text-sm text-gray-300" id="execLeadStyle">--</p>
+          <h4 class="font-medium mb-2 text-brand-purple">Inteligência Relacional</h4>
+          <p class="text-sm text-gray-300" id="execRelational">--</p>
         </div>
         <div class="glass p-4 rounded-xl">
-          <h4 class="font-medium mb-2 text-brand-cyan">Tomada de Decisão</h4>
-          <p class="text-sm text-gray-300" id="execDecisionStyle">--</p>
+          <h4 class="font-medium mb-2 text-brand-amber">Maturidade Profissional</h4>
+          <p class="text-sm text-gray-300" id="execMaturity">--</p>
         </div>
         <div class="glass p-4 rounded-xl">
-          <h4 class="font-medium mb-2 text-brand-rose">Aderência Profissional</h4>
-          <p class="text-sm text-gray-300" id="execFitStyle">--</p>
+          <h4 class="font-medium mb-2 text-brand-rose">Adaptabilidade Organizacional</h4>
+          <p class="text-sm text-gray-300" id="execAdaptability">--</p>
         </div>
       </div>
     </section>
 
-    <!-- 2. GRÁFICO DISC -->
+    <!-- 2. RADAR EMOCIONAL -->
     <section class="glass-card p-6 md:p-8 slide-up">
       <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
-        <span class="w-8 h-8 rounded-lg bg-brand-purple/20 flex items-center justify-center text-brand-purple">📈</span>
-        2. Gráficos de Distribuição DISC
+        <span class="w-8 h-8 rounded-lg bg-brand-blue/20 flex items-center justify-center text-brand-blue">📈</span>
+        2. Radar de Inteligência Emocional
       </h2>
       <div class="grid md:grid-cols-2 gap-8">
         <div>
-          <h3 class="font-semibold mb-3 text-center">Radar Comportamental</h3>
-          <div class="chart-container"><canvas id="discRadarChart"></canvas></div>
+          <h3 class="font-semibold mb-3 text-center">Radar Emocional Completo</h3>
+          <div class="chart-container"><canvas id="ieRadarChart"></canvas></div>
         </div>
         <div>
-          <h3 class="font-semibold mb-3 text-center">Intensidade por Fator</h3>
-          <div class="chart-container"><canvas id="discBarChart"></canvas></div>
+          <h3 class="font-semibold mb-3 text-center">Intensidade por Dimensão</h3>
+          <div class="chart-container"><canvas id="ieBarChart"></canvas></div>
         </div>
       </div>
       <div class="mt-6 glass p-4 rounded-xl">
-        <h4 class="font-medium mb-2">Distribuição Percentual</h4>
-        <div class="flex flex-wrap gap-4 justify-center" id="discBadges">
+        <h4 class="font-medium mb-2">Distribuição das Dimensões Emocionais</h4>
+        <div class="flex flex-wrap gap-4 justify-center" id="ieBadges">
           <!-- Inserido via JS -->
         </div>
       </div>
     </section>
 
-    <!-- 3. VISÃO GERAL DO PERFIL -->
+    <!-- 3. AUTOCONSCIÊNCIA -->
     <section class="glass-card p-6 md:p-8 slide-up">
       <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
-        <span class="w-8 h-8 rounded-lg bg-brand-cyan/20 flex items-center justify-center text-brand-cyan">👤</span>
-        3. Visão Geral do Perfil
+        <span class="w-8 h-8 rounded-lg bg-brand-emerald/20 flex items-center justify-center text-brand-emerald">🔍</span>
+        3. Autoconsciência Emocional
       </h2>
-      <div class="space-y-4" id="profileOverview">
-        <p class="text-gray-300 leading-relaxed">Carregando interpretação profunda baseada na combinação DISC...</p>
+      <div class="space-y-4">
+        <p class="text-gray-300 leading-relaxed" id="selfAwarenessDesc">--</p>
+        <div class="grid md:grid-cols-3 gap-4">
+          <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Percepção</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-emerald h-2 rounded-full" id="awarenessPerceptionBar" style="width:0%"></div></div></div>
+          <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Reconhecimento de Padrões</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-cyan h-2 rounded-full" id="awarenessPatternsBar" style="width:0%"></div></div></div>
+          <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Clareza Emocional</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-blue h-2 rounded-full" id="awarenessClarityBar" style="width:0%"></div></div></div>
+        </div>
+        <div class="glass p-5 rounded-xl">
+          <h4 class="font-medium mb-2 text-brand-amber">Pontos Fortes e Áreas de Desenvolvimento</h4>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div><h5 class="text-sm font-semibold text-brand-emerald mb-1">✓ Pontos Fortes</h5><p class="text-sm text-gray-300" id="awarenessStrengths">--</p></div>
+            <div><h5 class="text-sm font-semibold text-brand-rose mb-1">⚡ Áreas de Desenvolvimento</h5><p class="text-sm text-gray-300" id="awarenessDevelopment">--</p></div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- 4. COMUNICAÇÃO -->
+    <!-- 4. AUTOCONTROLE -->
     <section class="glass-card p-6 md:p-8 slide-up">
       <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
-        <span class="w-8 h-8 rounded-lg bg-brand-blue/20 flex items-center justify-center text-brand-blue">💬</span>
-        4. Estilo de Comunicação
+        <span class="w-8 h-8 rounded-lg bg-brand-purple/20 flex items-center justify-center text-brand-purple">⚖️</span>
+        4. Autocontrole e Equilíbrio Emocional
       </h2>
       <div class="grid md:grid-cols-2 gap-6">
         <div class="glass p-5 rounded-xl">
-          <h3 class="font-semibold mb-3 text-brand-emerald">Padrão Comunicacional</h3>
-          <p class="text-sm text-gray-300" id="commPattern">--</p>
+          <h3 class="font-semibold mb-3 text-brand-cyan">Padrão de Regulação Emocional</h3>
+          <p class="text-sm text-gray-300" id="selfControlPattern">--</p>
         </div>
         <div class="glass p-5 rounded-xl">
-          <h3 class="font-semibold mb-3 text-brand-amber">Em Reuniões e Apresentações</h3>
-          <p class="text-sm text-gray-300" id="commMeetings">--</p>
+          <h3 class="font-semibold mb-3 text-brand-amber">Tolerância à Frustração</h3>
+          <p class="text-sm text-gray-300" id="selfControlTolerance">--</p>
         </div>
       </div>
       <div class="mt-6 grid md:grid-cols-3 gap-4">
-        <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Clareza</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-emerald h-2 rounded-full" id="commClarityBar" style="width:0%"></div></div></div>
-        <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Influência</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-blue h-2 rounded-full" id="commInfluenceBar" style="width:0%"></div></div></div>
-        <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Empatia</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-purple h-2 rounded-full" id="commEmpathyBar" style="width:0%"></div></div></div>
+        <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Impulsividade</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-rose h-2 rounded-full" id="controlImpulseBar" style="width:0%"></div></div></div>
+        <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Estabilidade</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-emerald h-2 rounded-full" id="controlStabilityBar" style="width:0%"></div></div></div>
+        <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Resposta a Críticas</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-purple h-2 rounded-full" id="controlCriticismBar" style="width:0%"></div></div></div>
       </div>
     </section>
 
-    <!-- 5. TOMADA DE DECISÃO -->
+    <!-- 5. RESILIÊNCIA -->
     <section class="glass-card p-6 md:p-8 slide-up">
       <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
-        <span class="w-8 h-8 rounded-lg bg-brand-rose/20 flex items-center justify-center text-brand-rose">🎯</span>
-        5. Tomada de Decisão
+        <span class="w-8 h-8 rounded-lg bg-brand-amber/20 flex items-center justify-center text-brand-amber">🛡️</span>
+        5. Resiliência e Capacidade de Recuperação
       </h2>
       <div class="glass p-5 rounded-xl mb-4">
-        <h3 class="font-semibold mb-2">Perfil Decisório</h3>
-        <p class="text-sm text-gray-300" id="decisionProfile">--</p>
+        <h3 class="font-semibold mb-2">Perfil de Resiliência Profissional</h3>
+        <p class="text-sm text-gray-300" id="resilienceProfile">--</p>
       </div>
       <div class="grid md:grid-cols-2 gap-4">
-        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2 text-brand-cyan">Velocidade vs Cautela</h4><p class="text-sm text-gray-300" id="decisionSpeed">--</p></div>
-        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2 text-brand-amber">Racionalidade vs Intuição</h4><p class="text-sm text-gray-300" id="decisionLogic">--</p></div>
+        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2 text-brand-cyan">Recuperação após Adversidades</h4><p class="text-sm text-gray-300" id="resilienceRecovery">--</p></div>
+        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2 text-brand-emerald">Persistência em Metas de Longo Prazo</h4><p class="text-sm text-gray-300" id="resiliencePersistence">--</p></div>
       </div>
     </section>
 
-    <!-- 6. PERFIL PROFISSIONAL -->
+    <!-- 6. EMPATIA E RELACIONAMENTO -->
     <section class="glass-card p-6 md:p-8 slide-up">
       <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
-        <span class="w-8 h-8 rounded-lg bg-brand-emerald/20 flex items-center justify-center text-brand-emerald">💼</span>
-        6. Perfil Profissional e Produtividade
-      </h2>
-      <div class="grid md:grid-cols-3 gap-4 mb-6">
-        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-1">Ritmo de Trabalho</h4><p class="text-sm text-gray-300" id="profPace">--</p></div>
-        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-1">Nível de Autonomia</h4><p class="text-sm text-gray-300" id="profAutonomy">--</p></div>
-        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-1">Foco em Resultados</h4><p class="text-sm text-gray-300" id="profResults">--</p></div>
-      </div>
-      <div class="glass p-5 rounded-xl">
-        <h3 class="font-semibold mb-2">Estilo de Execução</h3>
-        <p class="text-sm text-gray-300" id="profExecution">--</p>
-      </div>
-    </section>
-
-    <!-- 7. TRABALHO EM EQUIPE -->
-    <section class="glass-card p-6 md:p-8 slide-up">
-      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
-        <span class="w-8 h-8 rounded-lg bg-brand-purple/20 flex items-center justify-center text-brand-purple"></span>
-        7. Trabalho em Equipe e Colaboração
+        <span class="w-8 h-8 rounded-lg bg-brand-rose/20 flex items-center justify-center text-brand-rose">🤝</span>
+        6. Empatia e Inteligência Relacional
       </h2>
       <div class="space-y-4">
-        <p class="text-gray-300" id="teamColab">--</p>
+        <p class="text-gray-300" id="empathyRelational">--</p>
         <div class="grid md:grid-cols-2 gap-4">
-          <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2 text-brand-blue">Integração no Grupo</h4><p class="text-sm text-gray-300" id="teamIntegration">--</p></div>
-          <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2 text-brand-rose">Gestão de Conflitos</h4><p class="text-sm text-gray-300" id="teamConflict">--</p></div>
+          <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2 text-brand-blue">Escuta Ativa e Compreensão</h4><p class="text-sm text-gray-300" id="empathyListening">--</p></div>
+          <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2 text-brand-purple">Gestão de Conflitos Interpessoais</h4><p class="text-sm text-gray-300" id="empathyConflict">--</p></div>
         </div>
       </div>
     </section>
 
-    <!-- 8. LIDERANÇA -->
-    <section class="glass-card p-6 md:p-8 slide-up">
-      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
-        <span class="w-8 h-8 rounded-lg bg-brand-amber/20 flex items-center justify-center text-brand-amber">👑</span>
-        8. Potencial e Estilo de Liderança
-      </h2>
-      <div class="glass p-5 rounded-xl mb-4">
-        <h3 class="font-semibold mb-2">Arquétipo de Liderança</h3>
-        <p class="text-sm text-gray-300" id="leadArchetype">--</p>
-      </div>
-      <div class="grid md:grid-cols-2 gap-4">
-        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2">Motivação de Equipe</h4><p class="text-sm text-gray-300" id="leadMotivation">--</p></div>
-        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2">Delegação e Controle</h4><p class="text-sm text-gray-300" id="leadDelegation">--</p></div>
-      </div>
-    </section>
-
-    <!-- 9. COMPORTAMENTO SOB PRESSÃO -->
+    <!-- 7. COMPORTAMENTO SOB PRESSÃO -->
     <section class="glass-card p-6 md:p-8 slide-up">
       <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
         <span class="w-8 h-8 rounded-lg bg-brand-rose/20 flex items-center justify-center text-brand-rose">⚡</span>
-        9. Comportamento Sob Pressão e Estresse
+        7. Comportamento Sob Pressão e Estresse Corporativo
       </h2>
       <div class="glass p-5 rounded-xl mb-4">
         <h3 class="font-semibold mb-2">Reação a Cenários de Alta Demanda</h3>
         <p class="text-sm text-gray-300" id="pressureReaction">--</p>
       </div>
       <div class="grid md:grid-cols-3 gap-4">
-        <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Estabilidade</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-cyan h-2 rounded-full" id="pressStabilityBar" style="width:0%"></div></div></div>
-        <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Tolerância</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-emerald h-2 rounded-full" id="pressToleranceBar" style="width:0%"></div></div></div>
-        <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Resiliência</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-purple h-2 rounded-full" id="pressResilienceBar" style="width:0%"></div></div></div>
+        <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Estabilidade sob Pressão</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-cyan h-2 rounded-full" id="pressStabilityBar" style="width:0%"></div></div></div>
+        <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Controle de Impulsos</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-emerald h-2 rounded-full" id="pressImpulseBar" style="width:0%"></div></div></div>
+        <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Tomada de Decisão em Crise</h4><div class="w-full bg-white/10 rounded-full h-2"><div class="bg-brand-purple h-2 rounded-full" id="pressDecisionBar" style="width:0%"></div></div></div>
       </div>
     </section>
 
-    <!-- 10. PRODUTIVIDADE E EXECUÇÃO -->
+    <!-- 8. LIDERANÇA EMOCIONAL -->
     <section class="glass-card p-6 md:p-8 slide-up">
       <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
-        <span class="w-8 h-8 rounded-lg bg-brand-blue/20 flex items-center justify-center text-brand-blue">🚀</span>
-        10. Produtividade e Capacidade de Execução
+        <span class="w-8 h-8 rounded-lg bg-brand-blue/20 flex items-center justify-center text-brand-blue">👑</span>
+        8. Liderança Emocional e Influência
       </h2>
-      <div class="space-y-4">
-        <p class="text-gray-300" id="prodCapacity">--</p>
-        <div class="grid md:grid-cols-2 gap-4">
-          <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2">Consistência e Disciplina</h4><p class="text-sm text-gray-300" id="prodConsistency">--</p></div>
-          <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2">Adaptabilidade a Mudanças</h4><p class="text-sm text-gray-300" id="prodAdaptability">--</p></div>
-        </div>
+      <div class="glass p-5 rounded-xl mb-4">
+        <h3 class="font-semibold mb-2">Estilo de Liderança Emocional</h3>
+        <p class="text-sm text-gray-300" id="leadEmotionalStyle">--</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2">Influência e Motivação de Equipe</h4><p class="text-sm text-gray-300" id="leadInfluence">--</p></div>
+        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2">Comunicação Emocional Efetiva</h4><p class="text-sm text-gray-300" id="leadCommunication">--</p></div>
       </div>
     </section>
 
-    <!-- 11. AMBIENTE IDEAL -->
-    <section class="glass-card p-6 md:p-8 slide-up">
+    <!-- 9. MAPA DE ENERGIA PROFISSIONAL™ -->
+    <section class="glass-card p-6 md:p-8 slide-up gradient-border">
       <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
-        <span class="w-8 h-8 rounded-lg bg-brand-cyan/20 flex items-center justify-center text-brand-cyan">🏢</span>
-        11. Ambiente e Cultura Organizacional Ideal
+        <span class="w-8 h-8 rounded-lg bg-brand-amber/20 flex items-center justify-center text-brand-amber">⚡</span>
+        9. Mapa de Energia Profissional Vigorre™
       </h2>
       <div class="grid md:grid-cols-2 gap-6">
-        <div class="glass p-5 rounded-xl">
-          <h3 class="font-semibold mb-2 text-brand-emerald">Cultura Aderente</h3>
-          <p class="text-sm text-gray-300" id="envCulture">--</p>
+        <div class="glass p-5 rounded-xl border-l-4 border-brand-emerald">
+          <h3 class="font-semibold mb-3 text-brand-emerald flex items-center gap-2">✅ O que Energiza</h3>
+          <ul class="space-y-2 text-sm text-gray-300" id="energyPositive">
+            <!-- Inserido via JS -->
+          </ul>
         </div>
-        <div class="glass p-5 rounded-xl">
-          <h3 class="font-semibold mb-2 text-brand-amber">Estilo de Gestão Recomendado</h3>
-          <p class="text-sm text-gray-300" id="envManagement">--</p>
+        <div class="glass p-5 rounded-xl border-l-4 border-brand-rose">
+          <h3 class="font-semibold mb-3 text-brand-rose flex items-center gap-2">⚠️ O que Desgasta</h3>
+          <ul class="space-y-2 text-sm text-gray-300" id="energyNegative">
+            <!-- Inserido via JS -->
+          </ul>
         </div>
       </div>
-    </section>
-
-    <!-- 12. MOTIVADORES PROFISSIONAIS -->
-    <section class="glass-card p-6 md:p-8 slide-up">
-      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
-        <span class="w-8 h-8 rounded-lg bg-brand-purple/20 flex items-center justify-center text-brand-purple">🔥</span>
-        12. Motivadores e Drivers de Engajamento
-      </h2>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="motivatorsGrid">
-        <!-- Inserido via JS -->
+      <div class="mt-6 glass p-5 rounded-xl">
+        <h4 class="font-medium mb-2 text-brand-cyan">Gatilhos Emocionais e Contextos de Alta Performance</h4>
+        <p class="text-sm text-gray-300" id="energyTriggers">--</p>
       </div>
     </section>
 
-    <!-- 13. PONTOS FORTES -->
-    <section class="glass-card p-6 md:p-8 slide-up">
+    <!-- 10. ÍNDICE DE MATURIDADE PROFISSIONAL™ -->
+    <section class="glass-card p-6 md:p-8 slide-up gradient-border">
       <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
-        <span class="w-8 h-8 rounded-lg bg-brand-emerald/20 flex items-center justify-center text-brand-emerald">✅</span>
-        13. Pontos Fortes e Competências Chave
-      </h2>
-      <div class="grid md:grid-cols-2 gap-4" id="strengthsList">
-        <!-- Inserido via JS -->
-      </div>
-    </section>
-
-    <!-- 14. PONTOS DE DESENVOLVIMENTO -->
-    <section class="glass-card p-6 md:p-8 slide-up">
-      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
-        <span class="w-8 h-8 rounded-lg bg-brand-amber/20 flex items-center justify-center text-brand-amber">📈</span>
-        14. Pontos de Desenvolvimento e Áreas de Atenção
-      </h2>
-      <div class="grid md:grid-cols-2 gap-4" id="developmentList">
-        <!-- Inserido via JS -->
-      </div>
-    </section>
-
-    <!-- 15. COMPATIBILIDADE COM VAGA -->
-    <section class="glass-card p-6 md:p-8 slide-up">
-      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
-        <span class="w-8 h-8 rounded-lg bg-brand-blue/20 flex items-center justify-center text-brand-blue">🎯</span>
-        15. Compatibilidade com Vaga e Fit Cultural
+        <span class="w-8 h-8 rounded-lg bg-brand-purple/20 flex items-center justify-center text-brand-purple">🎯</span>
+        10. Índice de Maturidade Profissional Vigorre™
       </h2>
       <div class="glass p-5 rounded-xl mb-6 text-center">
         <div class="score-ring mx-auto mb-3" style="width:100px;height:100px;">
-          <span class="score-value gradient-text" style="font-size:1.5rem;" id="fitScore">--%</span>
+          <span class="score-value gradient-text" style="font-size:1.5rem;" id="maturityScore">--</span>
         </div>
-        <h3 class="font-semibold text-lg" id="fitTitle">Análise de Aderência</h3>
-        <p class="text-sm text-gray-400" id="fitDesc">--</p>
+        <h3 class="font-semibold text-lg" id="maturityLevel">Nível: --</h3>
+        <p class="text-sm text-gray-400" id="maturityDesc">--</p>
       </div>
-      <div class="grid md:grid-cols-3 gap-4">
-        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2">Compatibilidade DISC</h4><p class="text-sm text-gray-300" id="fitDisc">--</p></div>
-        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2">Potencial para Função</h4><p class="text-sm text-gray-300" id="fitPotential">--</p></div>
-        <div class="glass p-4 rounded-xl"><h4 class="font-medium mb-2">Riscos Comportamentais</h4><p class="text-sm text-gray-300" id="fitRisks">--</p></div>
+      <div class="grid md:grid-cols-4 gap-4">
+        <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Estabilidade</h4><p class="font-semibold text-brand-emerald" id="maturityStability">--</p></div>
+        <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Responsabilidade</h4><p class="font-semibold text-brand-cyan" id="maturityResponsibility">--</p></div>
+        <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Inteligência Relacional</h4><p class="font-semibold text-brand-purple" id="maturityRelational">--</p></div>
+        <div class="glass p-4 rounded-xl text-center"><h4 class="text-xs text-gray-500 mb-1">Coerência Comportamental</h4><p class="font-semibold text-brand-amber" id="maturityCoherence">--</p></div>
       </div>
     </section>
 
-    <!-- 16. RECOMENDAÇÕES PARA RH -->
+    <!-- 11. RISCOS COMPORTAMENTAIS™ -->
     <section class="glass-card p-6 md:p-8 slide-up">
       <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
-        <span class="w-8 h-8 rounded-lg bg-brand-cyan/20 flex items-center justify-center text-brand-cyan">👔</span>
-        16. Recomendações Estratégicas para RH e Gestores
+        <span class="w-8 h-8 rounded-lg bg-brand-rose/20 flex items-center justify-center text-brand-rose">⚠️</span>
+        11. Mapa de Risco Comportamental Vigorre™
       </h2>
-      <div class="space-y-4" id="rhRecommendations">
+      <div class="grid md:grid-cols-2 gap-4" id="risksList">
         <!-- Inserido via JS -->
       </div>
     </section>
 
-    <!-- 17. RECOMENDAÇÕES AO PARTICIPANTE -->
+    <!-- 12. RECOMENDAÇÕES EXECUTIVAS -->
     <section class="glass-card p-6 md:p-8 slide-up">
       <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
-        <span class="w-8 h-8 rounded-lg bg-brand-purple/20 flex items-center justify-center text-brand-purple"></span>
-        17. Plano de Desenvolvimento Individual (PDI)
+        <span class="w-8 h-8 rounded-lg bg-brand-emerald/20 flex items-center justify-center text-brand-emerald">💡</span>
+        12. Recomendações Estratégicas para Desenvolvimento Emocional
       </h2>
-      <div class="space-y-4" id="participantRecommendations">
+      <div class="space-y-4" id="ieRecommendations">
         <!-- Inserido via JS -->
       </div>
     </section>
 
-    <!-- 18. CONCLUSÃO EXECUTIVA -->
+    <!-- 13. CONCLUSÃO EXECUTIVA -->
     <section class="glass-card p-6 md:p-8 slide-up">
       <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
-        <span class="w-8 h-8 rounded-lg bg-brand-emerald/20 flex items-center justify-center text-brand-emerald">📜</span>
-        18. Conclusão Executiva
+        <span class="w-8 h-8 rounded-lg bg-brand-cyan/20 flex items-center justify-center text-brand-cyan">📜</span>
+        13. Conclusão Executiva
       </h2>
       <div class="glass p-5 rounded-xl">
-        <p class="text-gray-300 leading-relaxed" id="execConclusion">--</p>
+        <p class="text-gray-300 leading-relaxed" id="ieConclusion">--</p>
       </div>
     </section>
 
-    <!-- 19. FRASE FINAL IMPACTANTE -->
+    <!-- FRASE FINAL IMPACTANTE -->
     <section class="glass-card p-8 text-center slide-up gradient-border">
       <blockquote class="text-xl md:text-2xl italic text-gray-200 mb-4 font-light">"<span id="finalQuote">Carregando insight final...</span>"</blockquote>
-      <p class="text-sm text-gray-500">— Vigorre People Analytics • Inteligência Comportamental Corporativa</p>
+      <p class="text-sm text-gray-500">— Vigorre People Analytics • Inteligência Emocional Corporativa</p>
     </section>
 
   </main>
@@ -555,8 +511,8 @@
   <footer class="glass border-t border-white/10 py-8 mt-12 no-print">
     <div class="max-w-6xl mx-auto px-4 text-center text-sm text-gray-500">
       <p class="mb-2">Relatório gerado automaticamente pela plataforma Vigorre People Analytics.</p>
-      <p>© 2024 Vigorre. Metodologia DISC validada para assessment corporativo e people analytics.</p>
-      <p class="mt-2 text-xs">Documento confidencial. Uso exclusivo para desenvolvimento profissional e gestão de talentos.</p>
+      <p>© 2024 Vigorre. Metodologia proprietária de análise de inteligência emocional para people analytics corporativo.</p>
+      <p class="mt-2 text-xs">Documento confidencial. Uso exclusivo para desenvolvimento profissional e gestão estratégica de talentos.</p>
     </div>
   </footer>
 
@@ -567,8 +523,8 @@
         <div class="absolute inset-0 rounded-full border-4 border-white/10"></div>
         <div class="absolute inset-0 rounded-full border-4 border-t-brand-cyan border-r-brand-purple animate-spin"></div>
       </div>
-      <h3 class="text-xl font-semibold mb-2">Gerando Relatório DISC Completo</h3>
-      <p class="text-gray-400">Processando análise comportamental e insights estratégicos...</p>
+      <h3 class="text-xl font-semibold mb-2">Gerando Relatório de Inteligência Emocional</h3>
+      <p class="text-gray-400">Processando análise emocional e insights estratégicos proprietários...</p>
     </div>
   </div>
 
@@ -585,89 +541,78 @@
       session: null,
       participant: null,
       company: null,
-      discResults: null,
+      ieResults: null,
       charts: { radar: null, bar: null }
     };
 
-    // Banco de Interpretações DISC Corporativas
-    const DISC_INSIGHTS = {
-      D: {
-        name: 'Dominância', color: '#EF4444', short: 'D',
-        high: 'Forte orientação para resultados, assertividade e liderança natural. Toma decisões rápidas e assume riscos calculados.',
-        medium: 'Equilíbrio entre ação e análise. Consegue liderar quando necessário, mas também segue processos.',
-        low: 'Prefere ambientes colaborativos e evita conflitos diretos. Foca em harmonia e suporte.',
-        comm: 'Direto, objetivo e focado em eficiência. Valoriza reuniões produtivas e evita rodeios.',
-        decision: 'Rápido, pragmático e orientado a impacto. Avalia riscos de forma ágil e age com determinação.',
-        team: 'Lidera pelo exemplo e cobra resultados. Pode precisar desenvolver escuta ativa e paciência.',
-        pressure: 'Mantém foco e acelera a execução. Pode tornar-se mais exigente e menos flexível sob estresse.',
-        strengths: ['Liderança natural', 'Tomada de decisão ágil', 'Foco em resultados', 'Coragem para inovar', 'Visão estratégica'],
-        development: ['Pode ser percebido como impaciente', 'Tendência a ignorar detalhes', 'Necessidade de desenvolver empatia', 'Dificuldade em delegar'],
-        motivators: ['Desafios complexos', 'Autonomia decisória', 'Reconhecimento por resultados', 'Crescimento acelerado']
+    // Banco de Interpretações de Inteligência Emocional Corporativa
+    const IE_INSIGHTS = {
+      autoconsciencia: {
+        name: 'Autoconsciência', color: '#10B981',
+        high: 'Excelente percepção das próprias emoções e padrões comportamentais. Reconhece gatilhos emocionais antes de reagir.',
+        medium: 'Boa capacidade de auto-observação, com espaço para desenvolver maior precisão na identificação de padrões.',
+        low: 'Pode beneficiar-se de práticas de reflexão para aumentar a consciência sobre reações emocionais.',
+        strengths: ['Reconhecimento precoce de emoções', 'Clareza sobre impactos comportamentais', 'Capacidade de auto-ajuste'],
+        development: ['Praticar journaling emocional', 'Buscar feedback 360° regularmente', 'Desenvolver vocabulário emocional']
       },
-      I: {
-        name: 'Influência', color: '#3B82F6', short: 'I',
-        high: 'Excelente comunicador, persuasivo e orientado a pessoas. Constrói redes facilmente e motiva equipes.',
-        medium: 'Boa capacidade de engajamento, com equilíbrio entre socialização e execução de tarefas.',
-        low: 'Prefere trabalho independente e análise técnica. Foca em precisão e evita exposição excessiva.',
-        comm: 'Entusiasta, persuasivo e focado em conexões. Usa storytelling e engaja plateias com facilidade.',
-        decision: 'Considera impacto nas pessoas e busca consenso. Valoriza inovação e oportunidades de crescimento.',
-        team: 'Integra grupos, resolve tensões com diplomacia e mantém clima positivo. Pode dispersar foco com excesso de ideias.',
-        pressure: 'Mantém otimismo e busca soluções colaborativas. Pode dispersar energia se não houver direção clara.',
-        strengths: ['Comunicação impactante', 'Capacidade de motivar', 'Networking estratégico', 'Criatividade', 'Adaptabilidade social'],
-        development: ['Pode priorizar relações sobre prazos', 'Tendência a otimismo excessivo', 'Dificuldade com rotinas rígidas', 'Necessidade de estruturar processos'],
-        motivators: ['Reconhecimento público', 'Ambiente colaborativo', 'Liberdade criativa', 'Interação constante']
+      autocontrole: {
+        name: 'Autocontrole', color: '#3B82F6',
+        high: 'Excelente regulação emocional sob pressão. Mantém clareza e compostura em cenários desafiadores.',
+        medium: 'Boa capacidade de controle, com oportunidades para desenvolver técnicas de pausa estratégica.',
+        low: 'Pode beneficiar-se de estratégias para gerenciar impulsos em momentos de alta demanda.',
+        strengths: ['Compostura em situações críticas', 'Tomada de decisão equilibrada', 'Gestão de reações impulsivas'],
+        development: ['Técnica de respiração 4-7-8', 'Pausa estratégica antes de responder', 'Mindfulness aplicado ao trabalho']
       },
-      S: {
-        name: 'Estabilidade', color: '#10B981', short: 'S',
-        high: 'Paciente, empático e orientado a suporte. Mantém harmonia, constância e lealdade nas relações.',
-        medium: 'Equilíbrio entre adaptação e estabilidade. Consegue lidar com mudanças desde que haja estrutura.',
-        low: 'Busca novidade e ritmo acelerado. Pode resistir a rotinas repetitivas e processos estáticos.',
-        comm: 'Calmo, empático e focado em entendimento mútuo. Evita confrontos e prioriza escuta ativa.',
-        decision: 'Cauteloso, analisa impactos nas pessoas e busca segurança. Prefere avaliar com calma antes de agir.',
-        team: 'Apoia colegas, mantém coerência e resolve conflitos com mediação. Pode evitar decisões difíceis.',
-        pressure: 'Busca apoio e divide responsabilidades. Pode precisar de tempo para processar mudanças abruptas.',
-        strengths: ['Lealdade e constância', 'Escuta ativa', 'Mediação de conflitos', 'Execução consistente', 'Empatia operacional'],
-        development: ['Resistência a mudanças rápidas', 'Dificuldade em dizer não', 'Tendência a evitar riscos', 'Necessidade de assertividade'],
-        motivators: ['Estabilidade organizacional', 'Reconhecimento por suporte', 'Clima harmonioso', 'Processos claros']
+      empatia: {
+        name: 'Empatia', color: '#F59E0B',
+        high: 'Excelente capacidade de compreender perspectivas alheias. Adapta comunicação com sensibilidade e inteligência.',
+        medium: 'Boa sensibilidade interpessoal, com espaço para desenvolver escuta ativa mais profunda.',
+        low: 'Pode beneficiar-se de práticas para aumentar a sensibilidade às necessidades emocionais dos outros.',
+        strengths: ['Leitura precisa de clima emocional', 'Adaptação comunicacional', 'Mediação de conflitos'],
+        development: ['Escuta sem julgamento', 'Validação emocional ativa', 'Prática de perspectiva-taking']
       },
-      C: {
-        name: 'Conformidade', color: '#7C3AED', short: 'C',
-        high: 'Analítico, detalhista e orientado a qualidade. Segue padrões, antecipa riscos e busca precisão.',
-        medium: 'Equilíbrio entre análise e ação. Consegue entregar qualidade sem paralisar por perfeccionismo.',
-        low: 'Prefere agilidade e experimentação. Pode negligenciar detalhes em prol de velocidade e inovação.',
-        comm: 'Preciso, baseado em fatos e estruturado. Valoriza clareza, dados e evita ambiguidades.',
-        decision: 'Metódico, avalia minuciosamente e busca mitigar riscos. Age com cautela e embasamento técnico.',
-        team: 'Organiza processos, garante qualidade e antecipa falhas. Pode ser percebido como rígido ou distante.',
-        pressure: 'Organiza prioridades e segue planos. Pode precisar de estrutura para manter eficiência sob caos.',
-        strengths: ['Análise técnica profunda', 'Precisão e qualidade', 'Planejamento estratégico', 'Gestão de riscos', 'Pensamento lógico'],
-        development: ['Pode demorar para decidir', 'Tendência ao perfeccionismo', 'Dificuldade em ambientes caóticos', 'Necessidade de flexibilidade'],
-        motivators: ['Padrões de excelência', 'Autonomia técnica', 'Processos otimizados', 'Desafios analíticos']
+      resiliencia: {
+        name: 'Resiliência', color: '#7C3AED',
+        high: 'Excelente capacidade de recuperação emocional. Transforma adversidades em oportunidades de crescimento.',
+        medium: 'Boa resiliência, com oportunidades para fortalecer estratégias de enfrentamento de adversidades.',
+        low: 'Pode beneficiar-se de técnicas para desenvolver maior tolerância à frustração e recuperação emocional.',
+        strengths: ['Recuperação rápida após contratempos', 'Mentalidade de crescimento', 'Persistência em metas'],
+        development: ['Reframing cognitivo', 'Rede de apoio profissional', 'Plano de contingência emocional']
+      },
+      social: {
+        name: 'Inteligência Social', color: '#06B6D4',
+        high: 'Excelente habilidade de navegar dinâmicas sociais complexas. Constrói relacionamentos com autenticidade e influência.',
+        medium: 'Boa inteligência social, com espaço para desenvolver networking estratégico e influência positiva.',
+        low: 'Pode beneficiar-se de práticas para desenvolver maior consciência das dinâmicas interpessoais.',
+        strengths: ['Construção de redes de valor', 'Influência positiva', 'Leitura de contextos sociais'],
+        development: ['Networking intencional', 'Comunicação assertiva', 'Gestão de impressões']
+      },
+      adaptabilidade: {
+        name: 'Adaptabilidade', color: '#EC4899',
+        high: 'Excelente flexibilidade emocional e cognitiva. Pivota rapidamente diante de mudanças sem perder foco.',
+        medium: 'Boa capacidade de adaptação, com oportunidades para desenvolver maior agilidade em transições.',
+        low: 'Pode beneficiar-se de técnicas para aumentar a flexibilidade diante de mudanças organizacionais.',
+        strengths: ['Aceitação proativa de mudanças', 'Aprendizado contínuo', 'Agilidade decisória'],
+        development: ['Exposição gradual a mudanças', 'Desenvolvimento de mentalidade ágil', 'Prática de cenários']
       }
     };
 
-    // Combinações de Perfil DISC
-    const PROFILE_COMBOS = {
-      'D_I': { name: 'Executor Visionário', desc: 'Combina assertividade com influência. Lidera com foco em resultados enquanto engaja e inspira equipes. Ideal para cargos de diretoria e expansão de mercados.' },
-      'D_S': { name: 'Líder Estratégico Estável', desc: 'Une tomada de decisão ágil com consistência operacional. Consegue acelerar resultados sem sacrificar processos. Forte em gestão de transformação.' },
-      'D_C': { name: 'Analítico Decisor', desc: 'Foco em resultados aliado à precisão técnica. Toma decisões rápidas, mas embasadas em dados. Excelente para operações e finanças.' },
-      'I_D': { name: 'Comunicador Estratégico', desc: 'Influência com orientação a resultados. Vende ideias e fecha acordos com naturalidade. Forte em vendas complexas e marketing.' },
-      'I_S': { name: 'Facilitador Relacional', desc: 'Equilíbrio entre engajamento e suporte. Constrói culturas colaborativas e mantém times coesos. Ideal para RH e Customer Success.' },
-      'I_C': { name: 'Inovador Estruturado', desc: 'Criatividade com método. Gera ideias e as estrutura em processos viáveis. Forte em P&D e produto.' },
-      'S_D': { name: 'Executor Consistente', desc: 'Constância com capacidade de ação. Entrega resultados de forma previsível e confiável. Forte em operações e logística.' },
-      'S_I': { name: 'Colaborador Engajado', desc: 'Suporte com influência positiva. Mantém times motivados e processos fluidos. Ideal para treinamento e desenvolvimento.' },
-      'S_C': { name: 'Analítico Operacional', desc: 'Precisão com constância. Garante qualidade e follow-through em processos críticos. Forte em compliance e auditoria.' },
-      'C_D': { name: 'Estrategista Técnico', desc: 'Visão sistêmica com foco em entrega. Planeja e executa com precisão cirúrgica. Ideal para engenharia e TI.' },
-      'C_I': { name: 'Consultor Influente', desc: 'Conhecimento técnico com capacidade de comunicação. Traduz complexidade em valor. Forte em consultoria e vendas técnicas.' },
-      'C_S': { name: 'Especialista Confiável', desc: 'Domínio técnico com execução estável. Garante excelência contínua. Ideal para áreas reguladas e de alta precisão.' }
+    // Níveis de Maturidade Profissional Vigorre™
+    const MATURITY_LEVELS = {
+      inicial: { name: 'Inicial', desc: 'Desenvolvimento de consciência emocional básica. Foco em reconhecimento de padrões.', color: '#94A3B8' },
+      desenvolvimento: { name: 'Em Desenvolvimento', desc: 'Consciência emocional em construção. Aplica técnicas de regulação com suporte.', color: '#F59E0B' },
+      avancado: { name: 'Avançado', desc: 'Boa inteligência emocional aplicada. Regula emoções e influencia positivamente.', color: '#10B981' },
+      estrategico: { name: 'Estratégico', desc: 'Inteligência emocional como diferencial competitivo. Desenvolve outros.', color: '#3B82F6' },
+      executivo: { name: 'Executivo', desc: 'Maturidade emocional de referência. Modela comportamento para a organização.', color: '#7C3AED' }
     };
 
     // ============================================
     // INICIALIZAÇÃO
     // ============================================
     document.addEventListener('DOMContentLoaded', () => {
-      console.log('Inicializando Relatório DISC Vigorre...');
+      console.log('Inicializando Relatório IE Vigorre...');
       loadSession();
-      loadDiscResults();
+      loadIeResults();
     });
 
     function loadSession() {
@@ -686,63 +631,66 @@
       } catch (e) { console.error('Erro ao carregar sessão:', e); }
     }
 
-    function loadDiscResults() {
+    function loadIeResults() {
       try {
-        const discData = localStorage.getItem('vigorre_last_disc_result');
-        if (!discData) {
-          showToast('Nenhum resultado DISC encontrado. Complete o teste primeiro.', 'error');
+        const ieData = localStorage.getItem('vigorre_last_ie_result');
+        if (!ieData) {
+          showToast('Nenhum resultado de Inteligência Emocional encontrado. Complete o teste primeiro.', 'error');
           setTimeout(() => window.location.href = 'index.html', 2000);
           return;
         }
-        AppState.discResults = JSON.parse(discData);
+        AppState.ieResults = JSON.parse(ieData);
         generateReport();
       } catch (e) {
-        console.error('Erro ao carregar resultados DISC:', e);
+        console.error('Erro ao carregar resultados IE:', e);
         showToast('Erro ao processar relatório.', 'error');
       }
     }
 
     function generateReport() {
-      const r = AppState.discResults;
+      const r = AppState.ieResults;
       if (!r || !r.percentages) return;
 
       // Preencher Capa
       document.getElementById('coverName').textContent = AppState.participant?.name || 'Participante';
       document.getElementById('coverCompany').textContent = AppState.company?.name || 'Independente';
       document.getElementById('coverDate').textContent = new Date().toLocaleDateString('pt-BR');
-      document.getElementById('coverCode').textContent = 'VIG-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 9000 + 1000);
+      document.getElementById('coverCode').textContent = 'VIG-IE-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 9000 + 1000);
 
-      // Calcular Score Geral (simulado baseado na coerência do perfil)
-      const scores = [r.percentages.D, r.percentages.I, r.percentages.S, r.percentages.C];
-      const dominant = scores.indexOf(Math.max(...scores));
-      const secondary = scores.indexOf(Math.max(...scores.filter((_, i) => i !== dominant)));
-      const factors = ['D', 'I', 'S', 'C'];
-      const domKey = factors[dominant];
-      const secKey = factors[secondary];
+      // Calcular Score Geral de IE
+      const scores = Object.values(r.percentages);
+      const avgIE = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+      document.getElementById('ieScore').textContent = avgIE + '%';
+
+      // Determinar nível de maturidade
+      const maturityThresholds = [
+        { min: 85, level: 'executivo' },
+        { min: 70, level: 'estrategico' },
+        { min: 55, level: 'avancado' },
+        { min: 40, level: 'desenvolvimento' },
+        { min: 0, level: 'inicial' }
+      ];
+      const maturity = maturityThresholds.find(t => avgIE >= t.min).level;
+      const maturityInfo = MATURITY_LEVELS[maturity];
       
-      const fitScore = Math.min(98, Math.max(65, Math.round((r.percentages[domKey] + r.percentages[secKey]) / 2 + Math.random() * 10)));
-      document.getElementById('execScore').textContent = fitScore + '%';
-      document.getElementById('fitScore').textContent = fitScore + '%';
+      document.getElementById('maturityScore').textContent = avgIE;
+      document.getElementById('maturityLevel').textContent = 'Nível: ' + maturityInfo.name;
+      document.getElementById('maturityDesc').textContent = maturityInfo.desc;
 
       // Gerar Conteúdo Dinâmico para todas as seções
-      renderExecutiveSummary(r, domKey, secKey);
+      renderExecutiveSummary(r, avgIE, maturity);
       renderCharts(r.percentages);
-      renderProfileOverview(r, domKey, secKey);
-      renderCommunication(r, domKey);
-      renderDecisionMaking(r, domKey);
-      renderProfessionalProfile(r, domKey, secKey);
-      renderTeamwork(r, domKey, secKey);
-      renderLeadership(r, domKey, secKey);
-      renderPressureBehavior(r, domKey);
-      renderProductivity(r, domKey);
-      renderIdealEnvironment(r, domKey, secKey);
-      renderMotivators(r, domKey, secKey);
-      renderStrengths(r, domKey, secKey);
-      renderDevelopmentAreas(r, domKey, secKey);
-      renderCompatibility(r, domKey, secKey, fitScore);
-      renderRHRecommendations(r, domKey, secKey);
-      renderParticipantRecommendations(r, domKey, secKey);
-      renderConclusion(r, domKey, secKey);
+      renderSelfAwareness(r);
+      renderSelfControl(r);
+      renderResilience(r);
+      renderEmpathyRelational(r);
+      renderPressureBehavior(r);
+      renderEmotionalLeadership(r);
+      renderEnergyMap(r);
+      renderMaturityIndicators(r, maturity);
+      renderBehavioralRisks(r);
+      renderRecommendations(r, maturity);
+      renderConclusion(r, avgIE, maturity);
       renderFinalQuote();
 
       // Esconder loading e mostrar relatório
@@ -753,22 +701,23 @@
     // ============================================
     // RENDERIZADORES DE SEÇÕES (COMPLETOS)
     // ============================================
-    function renderExecutiveSummary(r, dom, sec) {
-      const comboKey = dom + '_' + sec;
-      const combo = PROFILE_COMBOS[comboKey] || { name: 'Perfil Híbrido', desc: 'Combinação única de fatores comportamentais com forte adaptabilidade organizacional.' };
+    function renderExecutiveSummary(r, avgIE, maturity) {
+      const profileName = avgIE >= 85 ? 'Inteligência Emocional Executiva' : 
+                         avgIE >= 70 ? 'Inteligência Emocional Avançada' : 
+                         avgIE >= 55 ? 'Inteligência Emocional em Desenvolvimento' : 'Inteligência Emocional em Construção';
       
-      document.getElementById('execProfileName').textContent = combo.name;
-      document.getElementById('execProfileDesc').textContent = combo.desc;
-      document.getElementById('execCommStyle').textContent = DISC_INSIGHTS[dom].comm;
-      document.getElementById('execLeadStyle').textContent = DISC_INSIGHTS[dom].team;
-      document.getElementById('execDecisionStyle').textContent = DISC_INSIGHTS[dom].decision;
-      document.getElementById('execFitStyle').textContent = 'Alta aderência a ambientes que valorizam ' + DISC_INSIGHTS[dom].motivators[0].toLowerCase() + ' e ' + DISC_INSIGHTS[sec].motivators[0].toLowerCase() + '.';
+      document.getElementById('ieProfileName').textContent = profileName;
+      document.getElementById('ieProfileDesc').textContent = `O participante apresenta um perfil emocional com índice geral de ${avgIE}%, classificado como ${maturity.toLowerCase()}. ${MATURITY_LEVELS[maturity].desc}`;
+      document.getElementById('execStability').textContent = r.percentages.autocontrole >= 70 ? 'Alta estabilidade emocional. Mantém compostura em cenários de pressão.' : r.percentages.autocontrole >= 50 ? 'Estabilidade moderada. Beneficia-se de técnicas de regulação em picos de demanda.' : 'Desenvolvimento de estabilidade. Recomenda-se práticas de pausa estratégica.';
+      document.getElementById('execRelational').textContent = r.percentages.empatia >= 70 ? 'Excelente inteligência relacional. Adapta comunicação com sensibilidade.' : r.percentages.empatia >= 50 ? 'Boa sensibilidade interpessoal. Pode desenvolver escuta ativa mais profunda.' : 'Desenvolvimento de empatia. Recomenda-se práticas de perspectiva-taking.';
+      document.getElementById('execMaturity').textContent = `Nível ${maturity.toLowerCase()}: ${MATURITY_LEVELS[maturity].desc}`;
+      document.getElementById('execAdaptability').textContent = r.percentages.adaptabilidade >= 70 ? 'Alta flexibilidade emocional. Pivota rapidamente sem perder foco.' : r.percentages.adaptabilidade >= 50 ? 'Adaptabilidade moderada. Beneficia-se de exposição gradual a mudanças.' : 'Desenvolvimento de flexibilidade. Recomenda-se prática de cenários.';
       
       // Badges
       const badgesHtml = Object.entries(r.percentages).map(([k, v]) => 
-        `<span class="badge-pill" style="background:${DISC_INSIGHTS[k].color}20; color:${DISC_INSIGHTS[k].color}; border:1px solid ${DISC_INSIGHTS[k].color}40;">${k}: ${v}%</span>`
+        `<span class="badge-pill" style="background:${IE_INSIGHTS[k].color}20; color:${IE_INSIGHTS[k].color}; border:1px solid ${IE_INSIGHTS[k].color}40;">${IE_INSIGHTS[k].name}: ${v}%</span>`
       ).join('');
-      document.getElementById('discBadges').innerHTML = badgesHtml;
+      document.getElementById('ieBadges').innerHTML = badgesHtml;
     }
 
     function renderCharts(percentages) {
@@ -776,21 +725,21 @@
       if (AppState.charts.radar) { AppState.charts.radar.destroy(); AppState.charts.radar = null; }
       if (AppState.charts.bar) { AppState.charts.bar.destroy(); AppState.charts.bar = null; }
 
-      const ctxRadar = document.getElementById('discRadarChart');
+      const ctxRadar = document.getElementById('ieRadarChart');
       if (ctxRadar) {
         AppState.charts.radar = new Chart(ctxRadar, {
           type: 'radar',
           data: {
-            labels: ['Dominância', 'Influência', 'Estabilidade', 'Conformidade'],
+            labels: ['Autoconsciência', 'Autocontrole', 'Empatia', 'Resiliência', 'Inteligência Social', 'Adaptabilidade'],
             datasets: [{
-              label: 'Perfil Comportamental',
-              data: [percentages.D, percentages.I, percentages.S, percentages.C],
-              backgroundColor: 'rgba(124, 58, 237, 0.25)',
-              borderColor: '#7C3AED',
+              label: 'Perfil Emocional',
+               [percentages.autoconsciencia, percentages.autocontrole, percentages.empatia, percentages.resiliencia, percentages.social, percentages.adaptabilidade],
+              backgroundColor: 'rgba(6, 182, 212, 0.25)',
+              borderColor: '#06B6D4',
               borderWidth: 3,
               pointBackgroundColor: '#fff',
-              pointBorderColor: '#7C3AED',
-              pointHoverBackgroundColor: '#7C3AED',
+              pointBorderColor: '#06B6D4',
+              pointHoverBackgroundColor: '#06B6D4',
               pointHoverBorderColor: '#fff'
             }]
           },
@@ -801,7 +750,7 @@
               r: {
                 angleLines: { color: 'rgba(255,255,255,0.1)' },
                 grid: { color: 'rgba(255,255,255,0.1)' },
-                pointLabels: { color: '#F8FAFC', font: { size: 12, weight: '600' } },
+                pointLabels: { color: '#F8FAFC', font: { size: 11, weight: '600' } },
                 ticks: { display: false, backdropColor: 'transparent' },
                 suggestedMin: 0, suggestedMax: 100
               }
@@ -811,17 +760,17 @@
         });
       }
 
-      const ctxBar = document.getElementById('discBarChart');
+      const ctxBar = document.getElementById('ieBarChart');
       if (ctxBar) {
         AppState.charts.bar = new Chart(ctxBar, {
           type: 'bar',
           data: {
-            labels: ['D - Dominância', 'I - Influência', 'S - Estabilidade', 'C - Conformidade'],
+            labels: ['Autoconsciência', 'Autocontrole', 'Empatia', 'Resiliência', 'Social', 'Adaptabilidade'],
             datasets: [{
               label: 'Intensidade',
-              data: [percentages.D, percentages.I, percentages.S, percentages.C],
-              backgroundColor: ['rgba(239, 68, 68, 0.8)', 'rgba(59, 130, 246, 0.8)', 'rgba(16, 185, 129, 0.8)', 'rgba(124, 58, 237, 0.8)'],
-              borderColor: ['#EF4444', '#3B82F6', '#10B981', '#7C3AED'],
+               [percentages.autoconsciencia, percentages.autocontrole, percentages.empatia, percentages.resiliencia, percentages.social, percentages.adaptabilidade],
+              backgroundColor: ['rgba(16, 185, 129, 0.8)', 'rgba(59, 130, 246, 0.8)', 'rgba(245, 158, 11, 0.8)', 'rgba(124, 58, 237, 0.8)', 'rgba(6, 182, 212, 0.8)', 'rgba(236, 72, 153, 0.8)'],
+              borderColor: ['#10B981', '#3B82F6', '#F59E0B', '#7C3AED', '#06B6D4', '#EC4899'],
               borderWidth: 2,
               borderRadius: 8
             }]
@@ -839,160 +788,185 @@
       }
     }
 
-    function renderProfileOverview(r, dom, sec) {
-      const domInsight = DISC_INSIGHTS[dom];
-      const secInsight = DISC_INSIGHTS[sec];
-      const comboKey = dom + '_' + sec;
-      const combo = PROFILE_COMBOS[comboKey] || PROFILE_COMBOS['D_I'];
+    function renderSelfAwareness(r) {
+      const ins = IE_INSIGHTS.autoconsciencia;
+      const level = r.percentages.autoconsciencia >= 70 ? 'high' : r.percentages.autoconsciencia >= 50 ? 'medium' : 'low';
+      const desc = level === 'high' ? ins.high : level === 'medium' ? ins.medium : ins.low;
       
-      let html = `<p class="text-gray-300 mb-4">O participante apresenta um perfil predominantemente <strong style="color:${domInsight.color}">${domInsight.name}</strong> com influência secundária de <strong style="color:${secInsight.color}">${secInsight.name}</strong>. ${combo.desc}</p>`;
-      html += `<p class="text-gray-300 mb-4">Combinado, esse padrão gera um profissional com ritmo profissional <strong>${dom === 'D' || dom === 'I' ? 'acelerado e orientado a impacto' : 'constante e orientado a processos'}</strong>, foco em <strong>${dom === 'C' || sec === 'C' ? 'precisão e qualidade técnica' : 'relacionamentos e resultados'}</strong>, e padrão de interação <strong>${dom === 'I' || sec === 'I' ? 'colaborativo e persuasivo' : 'direto e estruturado'}</strong>.</p>`;
-      html += `<p class="text-gray-300">Em contextos corporativos, esse perfil tende a se destacar em ambientes que oferecem <strong>${domInsight.motivators.join(', ').toLowerCase()}</strong>, mantendo alta performance quando alinhado a uma cultura que valorize essas dimensões.</p>`;
+      document.getElementById('selfAwarenessDesc').textContent = desc;
+      document.getElementById('awarenessPerceptionBar').style.width = Math.min(100, r.percentages.autoconsciencia + 10) + '%';
+      document.getElementById('awarenessPatternsBar').style.width = Math.min(100, r.percentages.autoconsciencia + 5) + '%';
+      document.getElementById('awarenessClarityBar').style.width = r.percentages.autoconsciencia + '%';
+      document.getElementById('awarenessStrengths').textContent = ins.strengths.slice(0, 2).join(' • ');
+      document.getElementById('awarenessDevelopment').textContent = ins.development.slice(0, 2).join(' • ');
+    }
+
+    function renderSelfControl(r) {
+      const ins = IE_INSIGHTS.autocontrole;
+      const level = r.percentages.autocontrole >= 70 ? 'high' : r.percentages.autocontrole >= 50 ? 'medium' : 'low';
+      const desc = level === 'high' ? ins.high : level === 'medium' ? ins.medium : ins.low;
       
-      document.getElementById('profileOverview').innerHTML = html;
+      document.getElementById('selfControlPattern').textContent = desc;
+      document.getElementById('selfControlTolerance').textContent = r.percentages.autocontrole >= 70 ? 'Alta tolerância à frustração. Mantém equilíbrio mesmo sob críticas ou contratempos.' : r.percentages.autocontrole >= 50 ? 'Tolerância moderada. Beneficia-se de técnicas de pausa antes de reagir.' : 'Desenvolvimento de tolerância. Recomenda-se práticas de regulação emocional.';
+      document.getElementById('controlImpulseBar').style.width = (100 - r.percentages.autocontrole) + '%';
+      document.getElementById('controlStabilityBar').style.width = r.percentages.autocontrole + '%';
+      document.getElementById('controlCriticismBar').style.width = Math.min(100, r.percentages.autocontrole + 15) + '%';
     }
 
-    function renderCommunication(r, dom) {
-      const ins = DISC_INSIGHTS[dom];
-      document.getElementById('commPattern').textContent = ins.comm + ' Adapta o tom conforme a audiência, mas mantém coerência com seu estilo natural.';
-      document.getElementById('commMeetings').textContent = dom === 'D' ? 'Foca em pautas objetivas, cobra follow-ups e evita reuniões sem decisão clara.' : 
-                       dom === 'I' ? 'Engaja participantes, facilita brainstormings e mantém energia alta, podendo precisar de moderador para foco.' :
-                       dom === 'S' ? 'Ouve ativamente, valida contribuições e busca consenso. Pode precisar de incentivo para discordar.' :
-                       'Estrutura atas claras, documenta decisões e garante que todos os pontos técnicos sejam cobertos.';
+    function renderResilience(r) {
+      const ins = IE_INSIGHTS.resiliencia;
+      const level = r.percentages.resiliencia >= 70 ? 'high' : r.percentages.resiliencia >= 50 ? 'medium' : 'low';
+      const desc = level === 'high' ? ins.high : level === 'medium' ? ins.medium : ins.low;
       
-      // Barras de comunicação
-      document.getElementById('commClarityBar').style.width = (dom === 'D' || dom === 'C' ? '85' : '65') + '%';
-      document.getElementById('commInfluenceBar').style.width = (dom === 'I' ? '90' : dom === 'D' ? '75' : '60') + '%';
-      document.getElementById('commEmpathyBar').style.width = (dom === 'S' ? '92' : dom === 'I' ? '80' : '55') + '%';
+      document.getElementById('resilienceProfile').textContent = desc;
+      document.getElementById('resilienceRecovery').textContent = r.percentages.resiliencia >= 70 ? 'Recuperação rápida após adversidades. Transforma desafios em aprendizado.' : r.percentages.resiliencia >= 50 ? 'Recuperação moderada. Beneficia-se de rede de apoio e reframing cognitivo.' : 'Desenvolvimento de recuperação. Recomenda-se plano de contingência emocional.';
+      document.getElementById('resiliencePersistence').textContent = r.percentages.resiliencia >= 70 ? 'Persistência consistente em metas de longo prazo, mesmo com obstáculos.' : 'Persistência moderada. Beneficia-se de quebra de metas em marcos menores.';
     }
 
-    function renderDecisionMaking(r, dom) {
-      const ins = DISC_INSIGHTS[dom];
-      document.getElementById('decisionProfile').textContent = ins.decision + ' O processo decisório é fortemente influenciado pela necessidade de ' + (dom === 'D' ? 'velocidade e impacto' : dom === 'I' ? 'engajamento e inovação' : dom === 'S' ? 'segurança e alinhamento' : 'precisão e mitigação de riscos') + '.';
-      document.getElementById('decisionSpeed').textContent = dom === 'D' ? 'Rápido e assertivo. Prioriza ação sobre análise prolongada.' :
-                       dom === 'I' ? 'Ágil, mas busca validação social antes de finalizar.' :
-                       dom === 'S' ? 'Cauteloso. Prefere avaliar impactos a médio/longo prazo.' :
-                       'Metódico. Coleta dados extensivos antes de concluir.';
-      document.getElementById('decisionLogic').textContent = dom === 'C' ? 'Altamente racional. Baseia escolhas em fatos, métricas e precedentes.' :
-                       dom === 'D' ? 'Pragmático. Usa lógica focada em ROI e eficiência operacional.' :
-                       dom === 'I' ? 'Intuitivo-estratégico. Combina dados com leitura de cenário e oportunidades.' :
-                       'Equilibrado. Pondera dados técnicos com impacto humano e cultural.';
+    function renderEmpathyRelational(r) {
+      const ins = IE_INSIGHTS.empatia;
+      const level = r.percentages.empatia >= 70 ? 'high' : r.percentages.empatia >= 50 ? 'medium' : 'low';
+      const desc = level === 'high' ? ins.high : level === 'medium' ? ins.medium : ins.low;
+      
+      document.getElementById('empathyRelational').textContent = desc + ' ' + (r.percentages.social >= 70 ? 'Combinado com alta inteligência social, gera influência positiva em grupos.' : '');
+      document.getElementById('empathyListening').textContent = r.percentages.empatia >= 70 ? 'Escuta ativa genuína. Valida emoções alheias sem julgamento.' : r.percentages.empatia >= 50 ? 'Escuta atenta. Pode desenvolver validação emocional mais explícita.' : 'Desenvolvimento de escuta. Recomenda-se prática de escuta sem interrupção.';
+      document.getElementById('empathyConflict').textContent = r.percentages.empatia >= 70 ? 'Media conflitos com diplomacia e busca soluções win-win.' : r.percentages.empatia >= 50 ? 'Aborda conflitos com cautela. Pode desenvolver assertividade em mediações.' : 'Desenvolvimento de gestão de conflitos. Recomenda-se treinamento em comunicação não-violenta.';
     }
 
-    function renderProfessionalProfile(r, dom, sec) {
-      document.getElementById('profPace').textContent = dom === 'D' || dom === 'I' ? 'Ritmo acelerado. Responde rapidamente a demandas e busca ciclos curtos de entrega.' : 'Ritmo consistente. Prioriza qualidade e follow-through sobre velocidade bruta.';
-      document.getElementById('profAutonomy').textContent = dom === 'D' || sec === 'D' ? 'Alta necessidade de autonomia. Prospera quando pode definir caminhos e métodos.' : 'Valoriza diretrizes claras. Executa melhor com processos validados e suporte estruturado.';
-      document.getElementById('profResults').textContent = dom === 'D' ? 'Orientação extrema a resultados. Usa métricas como bússola principal.' : dom === 'C' ? 'Foco em excelência técnica. Resultados são medidos por precisão e conformidade.' : 'Equilíbrio entre entregas e qualidade relacional/processual.';
-      document.getElementById('profExecution').textContent = 'Estilo de execução marcado por ' + (dom === 'D' ? 'iniciativa e cobramento' : dom === 'I' ? 'engajamento e adaptabilidade' : dom === 'S' ? 'constância e suporte' : 'organização e controle de qualidade') + '. Consegue manter produtividade mesmo sob demandas concorrentes, desde que alinhado a ' + DISC_INSIGHTS[dom].motivators[0].toLowerCase() + '.';
+    function renderPressureBehavior(r) {
+      const autocontrole = r.percentages.autocontrole;
+      const resiliencia = r.percentages.resiliencia;
+      const adaptabilidade = r.percentages.adaptabilidade;
+      
+      document.getElementById('pressureReaction').textContent = `Em cenários de alta pressão, o participante tende a ${autocontrole >= 70 ? 'manter clareza decisória e compostura emocional' : autocontrole >= 50 ? 'buscar equilíbrio com apoio de técnicas de regulação' : 'beneficiar-se de pausas estratégicas antes de reagir'}. ${resiliencia >= 70 ? 'Recupera-se rapidamente após contratempos.' : resiliencia >= 50 ? 'Recupera-se com suporte de rede e reframing.' : 'Pode desenvolver maior tolerância à frustração.'} ${adaptabilidade >= 70 ? 'Adapta-se com agilidade a mudanças de escopo.' : adaptabilidade >= 50 ? 'Adapta-se com estrutura e transição gradual.' : 'Pode desenvolver maior flexibilidade diante de imprevistos.'}`;
+      
+      document.getElementById('pressStabilityBar').style.width = autocontrole + '%';
+      document.getElementById('pressImpulseBar').style.width = (100 - autocontrole) + '%';
+      document.getElementById('pressDecisionBar').style.width = Math.min(100, (autocontrole + resiliencia) / 2 + 10) + '%';
     }
 
-    function renderTeamwork(r, dom, sec) {
-      const domIns = DISC_INSIGHTS[dom];
-      const secIns = DISC_INSIGHTS[sec];
-      document.getElementById('teamColab').textContent = 'No trabalho em equipe, o participante demonstra forte capacidade de ' + (dom === 'I' || sec === 'I' ? 'integração e comunicação transversal' : dom === 'S' ? 'suporte e manutenção de clima' : dom === 'D' ? 'direcionamento e cobrança construtiva' : 'estruturação e garantia de padrões') + '. Busca naturalmente ' + (dom === 'I' ? 'reconhecimento coletivo' : dom === 'S' ? 'harmonia e lealdade' : dom === 'D' ? 'eficiência e resultados compartilhados' : 'excelência técnica do grupo') + '.';
-      document.getElementById('teamIntegration').textContent = dom === 'I' ? 'Natural networker. Conecta departamentos e facilita trocas de conhecimento.' : dom === 'S' ? 'Cola do time. Mantém coesão e apoia membros em dificuldade.' : dom === 'D' ? 'Impulsiona o time com metas claras. Pode precisar desenvolver escuta ativa.' : 'Garante que processos e padrões sejam seguidos pelo grupo. Eleva a barra técnica.';
-      document.getElementById('teamConflict').textContent = dom === 'D' ? 'Enfrenta conflitos diretamente. Foca em resolver, não em agradar.' : dom === 'I' ? 'Media com diplomacia. Busca soluções win-win e restaura harmonia.' : dom === 'S' ? 'Evita confronto aberto. Prefere conversas privadas e acordos silenciosos.' : 'Analisa a raiz do conflito com frieza. Propõe soluções baseadas em regras e dados.';
+    function renderEmotionalLeadership(r) {
+      const empatia = r.percentages.empatia;
+      const social = r.percentages.social;
+      const autocontrole = r.percentages.autocontrole;
+      
+      document.getElementById('leadEmotionalStyle').textContent = `Estilo de liderança emocional marcado por ${empatia >= 70 ? 'empatia genuína e validação emocional' : empatia >= 50 ? 'sensibilidade interpessoal em desenvolvimento' : 'oportunidade de desenvolver escuta ativa'}, combinado com ${social >= 70 ? 'influência positiva e construção de redes' : social >= 50 ? 'capacidade relacional em crescimento' : 'desenvolvimento de inteligência social'}. ${autocontrole >= 70 ? 'Mantém estabilidade emocional mesmo ao cobrar resultados.' : autocontrole >= 50 ? 'Pode desenvolver maior compostura ao dar feedbacks desafiadores.' : 'Beneficia-se de técnicas de regulação antes de conversas difíceis.'}`;
+      
+      document.getElementById('leadInfluence').textContent = social >= 70 ? 'Constrói influência autêntica através de conexões genuínas e reconhecimento do valor alheio.' : social >= 50 ? 'Desenvolve influência com foco em colaboração e benefícios mútuos.' : 'Pode desenvolver networking intencional e comunicação assertiva.';
+      document.getElementById('leadCommunication').textContent = empatia >= 70 ? 'Adapta tom, linguagem e canal conforme o interlocutor, garantindo compreensão e engajamento.' : empatia >= 50 ? 'Comunica-se com clareza. Pode desenvolver maior sensibilidade ao impacto emocional das palavras.' : 'Beneficia-se de prática de comunicação não-violenta e validação emocional.';
     }
 
-    function renderLeadership(r, dom, sec) {
-      const arch = dom === 'D' ? 'Líder Diretivo e Orientado a Resultados' : dom === 'I' ? 'Líder Inspirador e Facilitador' : dom === 'S' ? 'Líder Servidor e Estabilizador' : 'Líder Técnico e Estruturador';
-      document.getElementById('leadArchetype').textContent = arch + '. Estilo marcado por ' + (dom === 'D' ? 'tomada de decisão ágil e delegação com cobramento' : dom === 'I' ? 'motivação por propósito e empoderamento' : dom === 'S' ? 'desenvolvimento de pessoas e suporte contínuo' : 'padronização de processos e mentoria técnica') + '.';
-      document.getElementById('leadMotivation').textContent = dom === 'I' ? 'Usa reconhecimento público e desafios criativos.' : dom === 'D' ? 'Define metas agressivas e celebra marcos de entrega.' : dom === 'S' ? 'Oferece segurança psicológica e crescimento estável.' : 'Proporciona autonomia técnica e recursos para excelência.';
-      document.getElementById('leadDelegation').textContent = dom === 'D' ? 'Delega autoridade, mas cobra resultados semanalmente.' : dom === 'I' ? 'Delega com confiança, mas mantém check-ins motivacionais.' : dom === 'S' ? 'Delega com suporte próximo. Prefere acompanhar sem microgerenciar.' : 'Delega com manuais e critérios claros. Valida entregas contra padrões.';
+    function renderEnergyMap(r) {
+      const energizers = [];
+      const drains = [];
+      
+      // Lógica para determinar o que energiza/desgasta baseado nos scores
+      if (r.percentages.autoconsciencia >= 70) energizers.push('Ambientes que valorizam autoconhecimento e feedback construtivo');
+      if (r.percentages.autocontrole >= 70) energizers.push('Desafios que exigem compostura e tomada de decisão sob pressão');
+      if (r.percentages.empatia >= 70) energizers.push('Interações significativas e trabalho em equipe colaborativo');
+      if (r.percentages.resiliencia >= 70) energizers.push('Projetos de longo prazo com impacto visível');
+      if (r.percentages.social >= 70) energizers.push('Networking estratégico e construção de relacionamentos profissionais');
+      if (r.percentages.adaptabilidade >= 70) energizers.push('Mudanças organizacionais e inovação contínua');
+      
+      if (r.percentages.autoconsciencia < 50) drains.push('Ambientes sem espaço para reflexão e auto-observação');
+      if (r.percentages.autocontrole < 50) drains.push('Pressão constante sem pausas para regulação emocional');
+      if (r.percentages.empatia < 50) drains.push('Conflitos interpessoais frequentes e clima tóxico');
+      if (r.percentages.resiliencia < 50) drains.push('Adversidades recorrentes sem suporte ou reconhecimento');
+      if (r.percentages.social < 50) drains.push('Isolamento profissional e falta de interação significativa');
+      if (r.percentages.adaptabilidade < 50) drains.push('Mudanças abruptas sem comunicação ou estrutura');
+      
+      // Fallback se arrays estiverem vazios
+      if (energizers.length === 0) energizers.push('Ambientes que ofereçam crescimento e reconhecimento');
+      if (drains.length === 0) drains.push('Ambientes com alta ambiguidade e falta de estrutura');
+      
+      document.getElementById('energyPositive').innerHTML = energizers.map(e => `<li>• ${e}</li>`).join('');
+      document.getElementById('energyNegative').innerHTML = drains.map(d => `<li>• ${d}</li>`).join('');
+      document.getElementById('energyTriggers').textContent = `Gatilhos de desgaste incluem ${drains.slice(0, 2).join(' e ').toLowerCase()}. Para manter alta performance, recomenda-se ambientes que ofereçam ${energizers.slice(0, 2).join(' e ').toLowerCase()}.`;
     }
 
-    function renderPressureBehavior(r, dom) {
-      const ins = DISC_INSIGHTS[dom];
-      document.getElementById('pressureReaction').textContent = ins.pressure + ' Em cenários de crise, o participante tende a ' + (dom === 'D' ? 'centralizar decisões temporariamente para acelerar resposta' : dom === 'I' ? 'manter o moral alto enquanto busca soluções criativas' : dom === 'S' ? 'buscar estabilidade e apoio de aliados confiáveis' : 'seguir protocolos de contingência com rigor técnico') + '. Gatilhos de desgaste incluem ' + (dom === 'D' ? 'burocracia excessiva e lentidão decisória' : dom === 'I' ? 'isolamento e falta de reconhecimento' : dom === 'S' ? 'mudanças abruptas sem comunicação' : 'ambiguidade de requisitos e falta de dados') + '.';
-      document.getElementById('pressStabilityBar').style.width = (dom === 'S' || dom === 'C' ? '88' : '65') + '%';
-      document.getElementById('pressToleranceBar').style.width = (dom === 'C' ? '90' : dom === 'S' ? '75' : '60') + '%';
-      document.getElementById('pressResilienceBar').style.width = (dom === 'D' ? '92' : dom === 'I' ? '78' : '70') + '%';
+    function renderMaturityIndicators(r, maturity) {
+      document.getElementById('maturityStability').textContent = r.percentages.autocontrole >= 70 ? 'Alta' : r.percentages.autocontrole >= 50 ? 'Moderada' : 'Em Desenvolvimento';
+      document.getElementById('maturityResponsibility').textContent = r.percentages.resiliencia >= 70 ? 'Alta' : r.percentages.resiliencia >= 50 ? 'Moderada' : 'Em Desenvolvimento';
+      document.getElementById('maturityRelational').textContent = r.percentages.empatia >= 70 ? 'Alta' : r.percentages.empatia >= 50 ? 'Moderada' : 'Em Desenvolvimento';
+      document.getElementById('maturityCoherence').textContent = (r.percentages.autoconsciencia + r.percentages.autocontrole) / 2 >= 70 ? 'Alta' : (r.percentages.autoconsciencia + r.percentages.autocontrole) / 2 >= 50 ? 'Moderada' : 'Em Desenvolvimento';
     }
 
-    function renderProductivity(r, dom) {
-      document.getElementById('prodCapacity').textContent = 'Capacidade de entrega consistente, com pico de produtividade quando alinhado a ' + DISC_INSIGHTS[dom].motivators.join(' e ').toLowerCase() + '. Consegue manter foco em tarefas complexas por períodos prolongados, desde que haja ' + (dom === 'D' ? 'clareza de metas e autonomia' : dom === 'I' ? 'variedade e interação' : dom === 'S' ? 'previsibilidade e suporte' : 'estrutura e critérios de qualidade') + '.';
-      document.getElementById('prodConsistency').textContent = dom === 'S' || dom === 'C' ? 'Alta consistência. Raramente varia qualidade ou prazo. Segue ritmos planejados.' : 'Consistência moderada-alta. Pode oscilar conforme nível de engajamento e novidade do desafio.';
-      document.getElementById('prodAdaptability').textContent = dom === 'I' || dom === 'D' ? 'Alta adaptabilidade. Pivota rapidamente diante de mudanças de escopo ou prioridade.' : 'Adaptabilidade moderada. Prefere mudanças graduais com transição estruturada e treinamento.';
+    function renderBehavioralRisks(r) {
+      const risks = [];
+      
+      if (r.percentages.autocontrole < 50) {
+        risks.push({ title: 'Impulsividade em Decisões', desc: 'Pode reagir emocionalmente antes de analisar cenários. Recomenda-se pausa estratégica.', color: 'rose' });
+      }
+      if (r.percentages.resiliencia < 50) {
+        risks.push({ title: 'Desgaste por Adversidades', desc: 'Pode acumular estresse sem recuperação adequada. Recomenda-se rede de apoio.', color: 'amber' });
+      }
+      if (r.percentages.empatia < 50) {
+        risks.push({ title: 'Conflitos Relacionais', desc: 'Pode negligenciar impacto emocional em comunicações. Recomenda-se validação ativa.', color: 'purple' });
+      }
+      if (r.percentages.adaptabilidade < 50) {
+        risks.push({ title: 'Resistência a Mudanças', desc: 'Pode resistir a pivôs estratégicos. Recomenda-se exposição gradual.', color: 'blue' });
+      }
+      if (r.percentages.autoconsciencia < 50) {
+        risks.push({ title: 'Baixa Consciência de Gatilhos', desc: 'Pode não reconhecer padrões emocionais. Recomenda-se journaling e feedback.', color: 'cyan' });
+      }
+      if (r.percentages.social < 50) {
+        risks.push({ title: 'Isolamento Profissional', desc: 'Pode negligenciar networking. Recomenda-se interações intencionais.', color: 'emerald' });
+      }
+      
+      // Fallback se não houver riscos
+      if (risks.length === 0) {
+        risks.push({ title: 'Manutenção de Alta Performance', desc: 'Manter práticas de desenvolvimento contínuo para sustentar inteligência emocional.', color: 'emerald' });
+      }
+      
+      document.getElementById('risksList').innerHTML = risks.map(risk => 
+        `<div class="glass p-4 rounded-xl border-l-4 border-${risk.color}-500"><h4 class="font-medium mb-1 text-${risk.color}-400">${risk.title}</h4><p class="text-sm text-gray-300">${risk.desc}</p></div>`
+      ).join('');
     }
 
-    function renderIdealEnvironment(r, dom, sec) {
-      document.getElementById('envCulture').textContent = 'Prospera em culturas que valorizam ' + DISC_INSIGHTS[dom].motivators[0].toLowerCase() + ' e oferecem ' + (dom === 'D' ? 'autonomia decisória e meritocracia' : dom === 'I' ? 'espaço para criatividade e colaboração' : dom === 'S' ? 'estabilidade e reconhecimento por lealdade' : 'excelência técnica e processos maduros') + '. Ambientes excessivamente ' + (dom === 'D' ? 'burocráticos' : dom === 'I' ? 'rígidos' : dom === 'S' ? 'caóticos' : 'improvisados') + ' tendem a reduzir engajamento.';
-      document.getElementById('envManagement').textContent = dom === 'D' ? 'Gestão por objetivos e resultados. Check-ins focados em métricas e remoção de bloqueios.' : dom === 'I' ? 'Gestão participativa. Feedback frequente, reconhecimento público e co-criação.' : dom === 'S' ? 'Gestão de suporte. Comunicação clara, previsibilidade e desenvolvimento contínuo.' : 'Gestão técnica. Padrões definidos, revisão por pares e autonomia especializada.';
+    function renderRecommendations(r, maturity) {
+      const recs = [];
+      
+      // Recomendações baseadas no nível de maturidade
+      if (maturity === 'inicial' || maturity === 'desenvolvimento') {
+        recs.push('Estabelecer rotina diária de auto-observação emocional (5 min de journaling).');
+        recs.push('Praticar técnica de pausa estratégica (respiração 4-7-8) antes de decisões importantes.');
+        recs.push('Buscar feedback estruturado mensal sobre impacto emocional em equipes.');
+      }
+      if (maturity === 'avancado') {
+        recs.push('Desenvolver mentoria em inteligência emocional para pares.');
+        recs.push('Aplicar técnicas de reframing cognitivo em cenários de alta pressão.');
+        recs.push('Criar plano de desenvolvimento emocional trimestral com métricas.');
+      }
+      if (maturity === 'estrategico' || maturity === 'executivo') {
+        recs.push('Modelar inteligência emocional para a organização através de exemplos práticos.');
+        recs.push('Desenvolver programa de desenvolvimento emocional para equipes.');
+        recs.push('Integrar inteligência emocional em processos de recrutamento e promoção.');
+      }
+      
+      // Recomendações específicas por dimensão baixa
+      if (r.percentages.autoconsciencia < 60) recs.push('Fortalecer autoconsciência via feedback 360° e práticas de mindfulness.');
+      if (r.percentages.autocontrole < 60) recs.push('Desenvolver autocontrole com técnicas de regulação emocional aplicadas ao trabalho.');
+      if (r.percentages.empatia < 60) recs.push('Ampliar empatia através de escuta ativa e validação emocional em interações.');
+      if (r.percentages.resiliencia < 60) recs.push('Fortalecer resiliência com plano de recuperação emocional pós-adversidade.');
+      if (r.percentages.social < 60) recs.push('Desenvolver inteligência social com networking intencional e influência positiva.');
+      if (r.percentages.adaptabilidade < 60) recs.push('Ampliar adaptabilidade com exposição gradual a mudanças e prática de cenários.');
+      
+      document.getElementById('ieRecommendations').innerHTML = recs.map(rec => 
+        `<div class="glass p-4 rounded-xl flex items-start gap-3"><span class="text-brand-cyan mt-1">➤</span><p class="text-sm text-gray-300">${rec}</p></div>`
+      ).join('');
     }
 
-    function renderMotivators(r, dom, sec) {
-      const allMotivators = [...DISC_INSIGHTS[dom].motivators, ...DISC_INSIGHTS[sec].motivators].filter((v, i, a) => a.indexOf(v) === i);
-      const icons = ['🎯', '🚀', '🤝', '📈', '🏆', '', '🛡️', '🌱'];
-      let html = '';
-      allMotivators.forEach((mot, i) => {
-        html += `<div class="glass p-4 rounded-xl flex items-center gap-3"><span class="text-2xl">${icons[i % icons.length]}</span><div><h4 class="font-medium">${mot}</h4><p class="text-xs text-gray-400">Driver de engajamento e retenção</p></div></div>`;
-      });
-      document.getElementById('motivatorsGrid').innerHTML = html;
-    }
-
-    function renderStrengths(r, dom, sec) {
-      const all = [...DISC_INSIGHTS[dom].strengths, ...DISC_INSIGHTS[sec].strengths].filter((v, i, a) => a.indexOf(v) === i).slice(0, 6);
-      let html = '';
-      all.forEach(s => {
-        html += `<div class="glass p-4 rounded-xl flex items-center gap-3"><span class="text-brand-emerald text-xl">✓</span><p class="font-medium">${s}</p></div>`;
-      });
-      document.getElementById('strengthsList').innerHTML = html;
-    }
-
-    function renderDevelopmentAreas(r, dom, sec) {
-      const all = [...DISC_INSIGHTS[dom].development, ...DISC_INSIGHTS[sec].development].filter((v, i, a) => a.indexOf(v) === i).slice(0, 6);
-      let html = '';
-      all.forEach(d => {
-        html += `<div class="glass p-4 rounded-xl flex items-center gap-3"><span class="text-brand-amber text-xl">⚡</span><p class="font-medium">${d}</p></div>`;
-      });
-      document.getElementById('developmentList').innerHTML = html;
-    }
-
-    function renderCompatibility(r, dom, sec, score) {
-      document.getElementById('fitTitle').textContent = score >= 85 ? 'Alta Compatibilidade' : score >= 70 ? 'Compatibilidade Moderada-Alta' : 'Compatibilidade em Desenvolvimento';
-      document.getElementById('fitDesc').textContent = 'O perfil DISC apresenta ' + (score >= 85 ? 'forte aderência' : score >= 70 ? 'boa aderência com pontos de ajuste' : 'aderência parcial que requer desenvolvimento direcionado') + ' a cargos que demandem ' + DISC_INSIGHTS[dom].motivators[0].toLowerCase() + ' e ' + DISC_INSIGHTS[sec].motivators[1].toLowerCase() + '.';
-      document.getElementById('fitDisc').textContent = 'Combinação ' + dom + '/' + sec + ' alinhada a funções ' + (dom === 'D' ? 'estratégicas e de liderança' : dom === 'I' ? 'relacionais e de influência' : dom === 'S' ? 'operacionais e de suporte' : 'técnicas e analíticas') + '.';
-      document.getElementById('fitPotential').textContent = 'Alto potencial de performance em ' + (dom === 'D' || sec === 'D' ? 'gestão de projetos e expansão' : dom === 'I' || sec === 'I' ? 'vendas, marketing e cultura' : dom === 'S' || sec === 'S' ? 'operações, RH e customer success' : 'engenharia, finanças e compliance') + '.';
-      document.getElementById('fitRisks').textContent = dom === 'D' ? 'Risco de burnout por sobrecarga autoimposta. Monitorar equilíbrio.' : dom === 'I' ? 'Risco de dispersão em múltiplos projetos. Focar em priorização.' : dom === 'S' ? 'Risco de resistência a pivôs estratégicos. Preparar para transições.' : 'Risco de paralisia por análise. Estabelecer deadlines claros.';
-    }
-
-    function renderRHRecommendations(r, dom, sec) {
-      let html = '';
-      const recs = [
-        `Onboarding: Focar em <strong>${dom === 'D' ? 'metas claras e autonomia inicial' : dom === 'I' ? 'integração com o time e cultura' : dom === 'S' ? 'processos detalhados e mentor' : 'padrões técnicos e ferramentas'}</strong>.`,
-        `Estilo de Gestão: Adotar abordagem <strong>${dom === 'D' ? 'diretiva por objetivos' : dom === 'I' ? 'participativa e inspiracional' : dom === 'S' ? 'suporte contínuo e previsível' : 'técnica e baseada em critérios'}</strong>.`,
-        `Retenção: Oferecer <strong>${DISC_INSIGHTS[dom].motivators[0]}</strong> e caminhos claros de <strong>${sec === 'I' ? 'visibilidade' : sec === 'C' ? 'especialização' : 'crescimento vertical'}</strong>.`,
-        `Desenvolvimento: Investir em <strong>${DISC_INSIGHTS[dom].development[0].toLowerCase()}</strong> e <strong>${DISC_INSIGHTS[sec].development[0].toLowerCase()}</strong> via coaching e treinamento prático.`
-      ];
-      recs.forEach(r => html += `<div class="glass p-4 rounded-xl flex items-start gap-3"><span class="text-brand-cyan mt-1">➤</span><p class="text-sm text-gray-300">${r}</p></div>`);
-      document.getElementById('rhRecommendations').innerHTML = html;
-    }
-
-    function renderParticipantRecommendations(r, dom, sec) {
-      let html = '';
-      const recs = [
-        `Fortalecer <strong>inteligência relacional</strong> através de escuta ativa e feedbacks estruturados.`,
-        `Desenvolver <strong>${dom === 'D' ? 'paciência processual' : dom === 'I' ? 'foco e priorização' : dom === 'S' ? 'assertividade e gestão de conflitos' : 'flexibilidade e entrega iterativa'}</strong> via prática deliberada.`,
-        `Estabelecer rotina de <strong>autoconhecimento</strong> (journaling, 360 feedback) para calibrar impacto comportamental.`,
-        `Buscar mentoria em <strong>${sec === 'D' ? 'liderança estratégica' : sec === 'I' ? 'comunicação executiva' : sec === 'S' ? 'gestão de mudança' : 'pensamento sistêmico'}</strong>.`
-      ];
-      recs.forEach(r => html += `<div class="glass p-4 rounded-xl flex items-start gap-3"><span class="text-brand-purple mt-1">🧭</span><p class="text-sm text-gray-300">${r}</p></div>`);
-      document.getElementById('participantRecommendations').innerHTML = html;
-    }
-
-    function renderConclusion(r, dom, sec) {
-      const comboKey = dom + '_' + sec;
-      const combo = PROFILE_COMBOS[comboKey] || PROFILE_COMBOS['D_I'];
-      document.getElementById('execConclusion').textContent = `O participante demonstra um perfil ${combo.name.toLowerCase()} com potencial significativo para roles que exijam ${DISC_INSIGHTS[dom].motivators.join(' e ').toLowerCase()}. A combinação de fatores DISC indica um profissional capaz de entregar resultados consistentes quando alinhado a uma cultura que ofereça ${DISC_INSIGHTS[sec].motivators[0].toLowerCase()} e estrutura adequada. Recomenda-se acompanhamento contínuo via PDI focado em ${DISC_INSIGHTS[dom].development[0].toLowerCase()} e ${DISC_INSIGHTS[sec].development[0].toLowerCase()}, garantindo evolução comportamental e maximização de impacto organizacional. Este relatório deve ser utilizado como ferramenta estratégica de gestão de talentos, desenvolvimento de liderança e alocação de perfis.`;
+    function renderConclusion(r, avgIE, maturity) {
+      document.getElementById('ieConclusion').textContent = `O participante demonstra um perfil de inteligência emocional com índice de ${avgIE}%, classificado como ${MATURITY_LEVELS[maturity].name.toLowerCase()}. ${MATURITY_LEVELS[maturity].desc} Este perfil indica potencial para ${avgIE >= 70 ? 'liderança emocional, influência positiva e alta performance em ambientes dinâmicos' : avgIE >= 55 ? 'crescimento acelerado com desenvolvimento direcionado de dimensões específicas' : 'desenvolvimento estruturado de consciência e regulação emocional'}. Recomenda-se acompanhamento contínuo via PDI emocional focado em ${Object.entries(r.percentages).sort((a,b) => a[1] - b[1])[0][0].toLowerCase()} e práticas de ${maturity === 'inicial' ? 'auto-observação' : maturity === 'desenvolvimento' ? 'regulação aplicada' : maturity === 'avancado' ? 'influência emocional' : 'modelagem organizacional'}, garantindo evolução comportamental e maximização de impacto profissional. Este relatório deve ser utilizado como ferramenta estratégica de desenvolvimento humano, gestão de talentos e alocação de perfis em contextos de alta performance.`;
     }
 
     function renderFinalQuote() {
       const quotes = [
-        "Seu comportamento direciona resultados, relacionamentos e crescimento profissional.",
-        "Pessoas alinhadas ao ambiente certo alcançam performance extraordinária.",
-        "Autoconhecimento é a principal ferramenta da alta performance.",
-        "Liderança não é cargo, é comportamento. E comportamento se desenvolve.",
-        "A maturidade comportamental é o maior diferencial competitivo do século XXI."
+        "A inteligência emocional é o principal diferencial da liderança moderna.",
+        "Pessoas que dominam suas emoções dominam seus resultados.",
+        "Autoconhecimento emocional é a base da alta performance sustentável.",
+        "Liderança não é controlar outros, é dominar a si mesmo primeiro.",
+        "Emoções bem geridas criam culturas de excelência e inovação."
       ];
       document.getElementById('finalQuote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
     }
@@ -1026,7 +1000,7 @@
 
     // 1. Tratamento de erro global com fallback amigável
     window.addEventListener('error', function(e) {
-      console.error('Erro no relatório DISC:', e);
+      console.error('Erro no relatório IE:', e);
       const loading = document.getElementById('loadingOverlay');
       if (loading) loading.classList.add('hidden');
       const content = document.getElementById('reportContent');
@@ -1050,8 +1024,8 @@
     }, 10000);
 
     // 3. Debug: Logar resultados disponíveis no console para diagnóstico
-    console.log('🔍 Resultados DISC disponíveis:', {
-      hasResult: !!localStorage.getItem('vigorre_last_disc_result'),
+    console.log('🔍 Resultados IE disponíveis:', {
+      hasResult: !!localStorage.getItem('vigorre_last_ie_result'),
       participant: AppState.participant?.name || 'não carregado'
     });
 
