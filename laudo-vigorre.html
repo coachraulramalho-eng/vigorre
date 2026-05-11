@@ -1629,6 +1629,7 @@
 
     function showToast(message, type = 'success') {
       const toast = document.getElementById('toast');
+      if (!toast) return; // CORREÇÃO: Verifica se elemento existe
       document.getElementById('toastIcon').textContent = type === 'success' ? '✅' : '⚠️';
       document.getElementById('toastMessage').textContent = message;
       toast.classList.remove('hidden');
@@ -1638,6 +1639,47 @@
         setTimeout(() => toast.classList.add('hidden'), 300); 
       }, 4000);
     }
+
+    // ============================================
+    // >>> CORREÇÕES ADICIONADAS (SEM OTIMIZAR) <<<
+    // ============================================
+
+    // 1. Tratamento de erro global com fallback amigável
+    window.addEventListener('error', function(e) {
+      console.error('Erro no Laudo Vigorre:', e);
+      const loading = document.getElementById('loadingOverlay');
+      if (loading) loading.classList.add('hidden');
+      const content = document.getElementById('laudoContent');
+      if (content) {
+        content.innerHTML = '<div class="glass-card p-8 text-center"><h2 class="text-xl font-bold text-brand-rose mb-4">⚠️ Erro ao gerar Laudo</h2><p class="text-gray-400 mb-4">Ocorreu um erro ao processar seus dados.</p><button onclick="window.location.reload()" class="btn-primary px-6 py-3 rounded-lg">🔄 Recarregar Página</button></div>';
+        content.classList.remove('hidden');
+      }
+      return true; // Previne erro no console
+    });
+
+    // 2. Timeout de segurança: se loading persistir por 15s, força hide
+    setTimeout(function() {
+      const loading = document.getElementById('loadingOverlay');
+      const content = document.getElementById('laudoContent');
+      if (loading && !loading.classList.contains('hidden')) {
+        console.warn('Laudo: loading timeout - forçando exibição do conteúdo');
+        loading.classList.add('hidden');
+        if (content && content.classList.contains('hidden')) {
+          content.innerHTML = '<div class="glass-card p-8 text-center"><p class="text-gray-400">Carregamento lento. <button onclick="window.location.reload()" class="text-brand-cyan underline">Recarregar</button></p></div>';
+          content.classList.remove('hidden');
+        }
+        showToast('⚠️ Tempo de carregamento excedido. Verifique seus dados.', 'error');
+      }
+    }, 15000);
+
+    // 3. Debug: Logar resultados disponíveis no console para diagnóstico
+    console.log('🔍 Laudo Vigorre - Resultados disponíveis:', {
+      disc: !!localStorage.getItem('vigorre_last_disc_result'),
+      ie: !!localStorage.getItem('vigorre_last_ie_result'),
+      valores: !!localStorage.getItem('vigorre_last_values_result'),
+      participant: AppState.participant?.name || 'não carregado'
+    });
+
   </script>
 </body>
 </html>
