@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -365,6 +365,43 @@
       .main { margin-left: 70px; padding: 1rem; } 
       .form-row { grid-template-columns: 1fr; } 
     }
+    
+    /* ============================================
+       BADGES E INDICADORES PREMIUM
+       ============================================ */
+    .badge-pill {
+      padding: 4px 10px;
+      border-radius: 100px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .badge-disc { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; }
+    .badge-ie { background: #dbeafe; color: #2563eb; border: 1px solid #93c5fd; }
+    .badge-valores { background: #fef3c7; color: #d97706; border: 1px solid #fcd34d; }
+    .badge-completed { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+    .badge-pending { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
+    
+    .btn-report {
+      background: linear-gradient(135deg, #7C3AED, #1D4ED8);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-report:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+    }
   </style>
 </head>
 <body>
@@ -483,7 +520,8 @@
             <tr>
               <th>Nome</th>
               <th>Email</th>
-              <th>Ações</th>
+              <th>Status DISC</th>
+              <th>Relatório</th>
             </tr>
           </thead>
           <tbody id="employeesTableBody"></tbody>
@@ -504,6 +542,8 @@
               <th>Email / Telefone</th>
               <th>Credenciais de Acesso</th>
               <th>Testes Liberados</th>
+              <th>Status DISC</th>
+              <th>Relatório</th>
               <th>Ações</th>
             </tr>
           </thead>
@@ -690,6 +730,7 @@
           <option value="simple">📄 Relatório Simples</option>
           <option value="complete">📘 Relatório Completo (Modelo HMI)</option>
           <option value="laudo">📜 Laudo Comportamental Técnico</option>
+          <option value="vigorre">💎 Relatório Completo DISC Vigorre (Premium)</option>
         </select>
       </div>
       <div class="form-group">
@@ -1057,19 +1098,74 @@
       var tbody = document.getElementById('employeesTableBody');
       var emps = DB.participants.filter(function(p) { return p.compId === currentCompanyId; });
       if (emps.length === 0) { 
-        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#94a3b8;">Nenhum participante vinculado.</td></tr>'; 
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#94a3b8;">Nenhum participante vinculado.</td></tr>'; 
         return; 
       }
       tbody.innerHTML = emps.map(function(p) {
+        // Verificar status do teste DISC
+        var discStatus = checkDiscStatus(p.id);
+        var discBadge = discStatus.completed 
+          ? '<span class="badge-pill badge-completed">✅ Concluído</span>' 
+          : '<span class="badge-pill badge-pending">⏳ Pendente</span>';
+        
+        // Botão do relatório
+        var reportBtn = discStatus.completed
+          ? '<button class="btn-report" onclick="openVigorreReport(\'' + p.id + '\')">📊 Relatório Vigorre</button>'
+          : '<span class="badge-pill badge-pending">Aguardando teste</span>';
+        
         return '<tr>' +
           '<td>' + p.name + '</td>' +
           '<td>' + p.email + '</td>' +
-          '<td>' +
-            '<button class="btn btn-success btn-sm" onclick="openReportModal(\'' + p.id + '\', \'' + p.name + '\')">📧 Enviar Relatório Completo</button>' +
-            '<button class="btn btn-warning btn-sm" onclick="openReportModal(\'' + p.id + '\', \'' + p.name + '\')">📜 Enviar Laudo Comportamental</button>' +
-          '</td>' +
+          '<td>' + discBadge + '</td>' +
+          '<td>' + reportBtn + '</td>' +
         '</tr>';
       }).join('');
+    }
+
+    // ============================================
+    // FUNÇÃO: Verificar status do teste DISC
+    // ============================================
+    function checkDiscStatus(participantId) {
+      // Verifica se o participante completou o teste DISC
+      var participant = DB.participants.find(function(p) { return p.id === participantId; });
+      if (!participant) return { completed: false, hasResult: false };
+      
+      // Verifica se DISC está nos testes concluídos
+      var completedTests = participant.completedTests || [];
+      var hasCompleted = completedTests.includes('DISC');
+      
+      // Verifica se há resultado salvo no localStorage
+      var discResult = localStorage.getItem('vigorre_last_disc_result');
+      var hasResult = !!discResult;
+      
+      return {
+        completed: hasCompleted,
+        hasResult: hasResult,
+        canAccess: hasCompleted && hasResult
+      };
+    }
+
+    // ============================================
+    // FUNÇÃO: Abrir Relatório Vigorre DISC
+    // ============================================
+    function openVigorreReport(participantId) {
+      // Verificar se pode acessar o relatório
+      var status = checkDiscStatus(participantId);
+      
+      if (!status.canAccess) {
+        showToast('Participante ainda não completou o teste DISC ou resultado não encontrado.', 'error');
+        return;
+      }
+      
+      // Salvar participante atual no localStorage para o relatório
+      localStorage.setItem('vigorre_report_participant', JSON.stringify({
+        id: participantId,
+        name: DB.participants.find(p => p.id === participantId)?.name || 'Participante'
+      }));
+      
+      // Abrir relatório em nova aba
+      window.open('relatorio-disc-vigorre.html?participantId=' + participantId, '_blank');
+      showToast('📊 Abrindo Relatório Completo DISC Vigorre...', 'success');
     }
 
     // ============================================
@@ -1078,7 +1174,7 @@
     function renderParticipants() {
       var tbody = document.getElementById('participantsTableBody');
       if (DB.participants.length === 0) { 
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;">Nenhum participante cadastrado</td></tr>'; 
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#94a3b8;">Nenhum participante cadastrado</td></tr>'; 
         return; 
       }
       tbody.innerHTML = DB.participants.map(function(p) {
@@ -1086,6 +1182,18 @@
         var tests = (p.tests || []).map(function(t) { 
           return '<span class="badge" style="background:#e0e7ff; color:#3730a3; margin-right:4px; padding:2px 6px; border-radius:4px; font-size:0.75rem;">' + t + '</span>'; 
         }).join('') || '<span style="color:#ef4444;font-size:0.8rem;">Nenhum</span>';
+        
+        // Verificar status do teste DISC
+        var discStatus = checkDiscStatus(p.id);
+        var discBadge = discStatus.completed 
+          ? '<span class="badge-pill badge-completed">✅ Concluído</span>' 
+          : '<span class="badge-pill badge-pending">⏳ Pendente</span>';
+        
+        // Botão do relatório Vigorre
+        var reportBtn = discStatus.canAccess
+          ? '<button class="btn-report" onclick="openVigorreReport(\'' + p.id + '\')">📊 Relatório Vigorre</button>'
+          : '<span class="badge-pill badge-pending">Aguardando</span>';
+        
         return '<tr>' +
           '<td><strong>' + p.name + '</strong></td>' +
           '<td>' + p.email + '<br><small style="color:#64748b;">Tel: ' + p.phone + '</small></td>' +
@@ -1093,6 +1201,8 @@
             'U: ' + (p.user || '-') + '<br>S: ' + (p.pass || '-') + '<br>V: ' + (p.exp || '-') +
           '</td>' +
           '<td>' + tests + '</td>' +
+          '<td>' + discBadge + '</td>' +
+          '<td>' + reportBtn + '</td>' +
           '<td>' +
             '<button class="btn btn-warning btn-sm" onclick="editParticipant(\'' + p.id + '\')">✏️ Editar</button>' +
             '<button class="btn btn-primary btn-sm" onclick="resendTest(\'' + p.id + '\')">📧 Reenviar Teste</button>' +
@@ -1259,6 +1369,16 @@
           '<p>Laudo estruturado conforme normas de avaliação comportamental. Inclui análise de competências, perfil DISC/HMI cruzado, indicadores de liderança, resiliência e adaptação organizacional.</p>' +
           '<p><strong>Recomendações:</strong> Desenvolvimento de inteligência emocional, alinhamento de perfil à vaga, plano de ação trimestral.</p>' +
           '<p style="margin-top:20px; font-size:0.9rem; color:#64748b;">Documento técnico. Uso interno e confidencial.</p>';
+      } else if (type === 'vigorre') {
+        // Redireciona para o relatório Vigorre completo
+        localStorage.setItem('vigorre_report_participant', JSON.stringify({
+          id: p.id,
+          name: p.name
+        }));
+        window.open('relatorio-disc-vigorre.html?participantId=' + p.id, '_blank');
+        closeModal('reportModal');
+        showToast('📊 Abrindo Relatório Completo DISC Vigorre...', 'success');
+        return;
       }
 
       DB.reports.push({ 
