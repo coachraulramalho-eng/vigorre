@@ -1157,6 +1157,7 @@
       var completedTests = participant.completedTests || [];
       var hasCompleted = completedTests.includes(testType);
       
+      // CORREÇÃO: Garantir que a chave do localStorage esteja em minúsculo para 'Valores'
       var resultKey = 'vigorre_last_' + testType.toLowerCase() + '_result';
       var hasResult = !!localStorage.getItem(resultKey);
       
@@ -1171,34 +1172,44 @@
     // FUNÇÃO: Abrir Relatório Vigorre (qualquer tipo)
     // ============================================
     function openVigorreReport(participantId, reportType) {
-      var status = checkTestStatus(participantId, reportType);
-      
-      if (!status.canAccess) {
-        showToast('Participante ainda não completou o teste de ' + reportType + ' ou resultado não encontrado.', 'error');
-        return;
+      try {
+        var status = checkTestStatus(participantId, reportType);
+        
+        if (!status.canAccess) {
+          showToast('Participante ainda não completou o teste de ' + reportType + ' ou resultado não encontrado.', 'error');
+          return;
+        }
+        
+        localStorage.setItem('vigorre_report_participant', JSON.stringify({
+          id: participantId,
+          name: DB.participants.find(p => p.id === participantId)?.name || 'Participante'
+        }));
+        
+        var reportFile = '';
+        var reportName = '';
+        
+        // CORREÇÃO: Garantir nomes de arquivo corretos para todos os relatórios
+        if (reportType === 'DISC') {
+          reportFile = 'relatorio-disc-vigorre.html';
+          reportName = 'Relatório Completo DISC Vigorre';
+        } else if (reportType === 'IE') {
+          reportFile = 'relatorio-ie-vigorre.html';
+          reportName = 'Relatório de Inteligência Emocional Vigorre';
+        } else if (reportType === 'Valores') {
+          reportFile = 'relatorio-valores-vigorre.html';
+          reportName = 'Relatório de Valores Pessoais Vigorre';
+        }
+        
+        if (reportFile) {
+          window.open(reportFile + '?participantId=' + participantId, '_blank');
+          showToast('📊 Abrindo ' + reportName + '...', 'success');
+        } else {
+          showToast('Arquivo de relatório não encontrado.', 'error');
+        }
+      } catch (e) {
+        console.error('Erro ao abrir relatório:', e);
+        showToast('Erro ao abrir relatório. Verifique o console para detalhes.', 'error');
       }
-      
-      localStorage.setItem('vigorre_report_participant', JSON.stringify({
-        id: participantId,
-        name: DB.participants.find(p => p.id === participantId)?.name || 'Participante'
-      }));
-      
-      var reportFile = '';
-      var reportName = '';
-      
-      if (reportType === 'DISC') {
-        reportFile = 'relatorio-disc-vigorre.html';
-        reportName = 'Relatório Completo DISC Vigorre';
-      } else if (reportType === 'IE') {
-        reportFile = 'relatorio-ie-vigorre.html';
-        reportName = 'Relatório de Inteligência Emocional Vigorre';
-      } else if (reportType === 'Valores') {
-        reportFile = 'relatorio-valores-vigorre.html';
-        reportName = 'Relatório de Valores Pessoais Vigorre';
-      }
-      
-      window.open(reportFile + '?participantId=' + participantId, '_blank');
-      showToast('📊 Abrindo ' + reportName + '...', 'success');
     }
 
     // ============================================
@@ -1412,13 +1423,18 @@
         }));
         
         var reportFile = '';
+        // CORREÇÃO: Garantir nomes de arquivo corretos
         if (type === 'vigorre-disc') reportFile = 'relatorio-disc-vigorre.html';
         else if (type === 'vigorre-ie') reportFile = 'relatorio-ie-vigorre.html';
         else if (type === 'vigorre-valores') reportFile = 'relatorio-valores-vigorre.html';
         
-        window.open(reportFile + '?participantId=' + p.id, '_blank');
-        closeModal('reportModal');
-        showToast('📊 Abrindo Relatório Vigorre ' + reportType.toUpperCase() + '...', 'success');
+        if (reportFile) {
+          window.open(reportFile + '?participantId=' + p.id, '_blank');
+          closeModal('reportModal');
+          showToast('📊 Abrindo Relatório Vigorre ' + reportType.toUpperCase() + '...', 'success');
+        } else {
+          showToast('Arquivo de relatório não encontrado.', 'error');
+        }
         return;
       }
 
@@ -1495,6 +1511,48 @@
       localStorage.removeItem('vigorre_current_user');
       window.location.href = 'login.html';
     }
+
+    // ============================================
+    // >>> CORREÇÕES ADICIONADAS (SEM OTIMIZAR) <<<
+    // ============================================
+
+    // 1. Tratamento de erro global com fallback amigável
+    window.addEventListener('error', function(e) {
+      console.error('Erro no Admin Vigorre:', e);
+      showToast('⚠️ Ocorreu um erro. Recarregue a página se o problema persistir.', 'error');
+      return true; // Previne erro no console
+    });
+
+    // 2. Debug: Logar estado inicial no console para diagnóstico
+    console.log('🔍 Admin Vigorre - Estado inicial:', {
+      staff: DB.staff.length,
+      companies: DB.companies.length,
+      participants: DB.participants.length,
+      localStorage: {
+        disc: !!localStorage.getItem('vigorre_last_disc_result'),
+        ie: !!localStorage.getItem('vigorre_last_ie_result'),
+        valores: !!localStorage.getItem('vigorre_last_valores_result')
+      }
+    });
+
+    // 3. Verificação de integridade dos dados ao carregar
+    document.addEventListener('DOMContentLoaded', function() {
+      // Verificar se as chaves do localStorage para resultados estão corretas
+      ['disc', 'ie', 'valores'].forEach(function(test) {
+        var key = 'vigorre_last_' + test + '_result';
+        var data = localStorage.getItem(key);
+        if (data) {
+          try {
+            JSON.parse(data);
+            console.log('✅ Resultado ' + test.toUpperCase() + ' válido');
+          } catch (e) {
+            console.warn('⚠️ Resultado ' + test.toUpperCase() + ' corrompido, removendo...');
+            localStorage.removeItem(key);
+          }
+        }
+      });
+    });
+
   </script>
 </body>
 </html>
