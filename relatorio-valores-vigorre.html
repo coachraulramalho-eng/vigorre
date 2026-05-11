@@ -556,6 +556,11 @@
     </div>
   </div>
 
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="fixed top-4 right-4 glass px-4 py-3 rounded-lg z-50 flex items-center gap-2 hidden">
+    <span id="toastIcon">✅</span><span id="toastMessage">Ação realizada!</span>
+  </div>
+
   <script>
     // ============================================
     // ESTADO E DADOS
@@ -753,64 +758,71 @@
     }
 
     function renderCharts(percentages) {
-      if (AppState.charts.radar) AppState.charts.radar.destroy();
-      if (AppState.charts.bar) AppState.charts.bar.destroy();
+      // CORREÇÃO: Destruir instâncias anteriores antes de criar novas
+      if (AppState.charts.radar) { AppState.charts.radar.destroy(); AppState.charts.radar = null; }
+      if (AppState.charts.bar) { AppState.charts.bar.destroy(); AppState.charts.bar = null; }
 
-      const ctxRadar = document.getElementById('valuesRadarChart').getContext('2d');
-      AppState.charts.radar = new Chart(ctxRadar, {
-        type: 'radar',
-        data: {
-          labels: ['Propósito', 'Reconhecimento', 'Estabilidade', 'Autonomia', 'Relacionamento', 'Inovação', 'Realização', 'Equilíbrio'],
-          datasets: [{
-            label: 'Perfil Motivacional',
-            data: [percentages.proposito, percentages.reconhecimento, percentages.estabilidade, percentages.autonomia, percentages.relacionamento, percentages.inovacao, percentages.realizacao, percentages.equilibrio],
-            backgroundColor: 'rgba(245, 158, 11, 0.25)',
-            borderColor: '#F59E0B',
-            borderWidth: 3,
-            pointBackgroundColor: '#fff',
-            pointBorderColor: '#F59E0B',
-            pointHoverBackgroundColor: '#F59E0B',
-            pointHoverBorderColor: '#fff'
-          }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          scales: {
-            r: {
-              angleLines: { color: 'rgba(255,255,255,0.1)' },
-              grid: { color: 'rgba(255,255,255,0.1)' },
-              pointLabels: { color: '#F8FAFC', font: { size: 10, weight: '600' } },
-              ticks: { display: false, backdropColor: 'transparent' },
-              suggestedMin: 0, suggestedMax: 100
-            }
+      const ctxRadar = document.getElementById('valuesRadarChart');
+      if (ctxRadar) {
+        AppState.charts.radar = new Chart(ctxRadar, {
+          type: 'radar',
+           {
+            labels: ['Propósito', 'Reconhecimento', 'Estabilidade', 'Autonomia', 'Relacionamento', 'Inovação', 'Realização', 'Equilíbrio'],
+            datasets: [{
+              label: 'Perfil Motivacional',
+               [percentages.proposito, percentages.reconhecimento, percentages.estabilidade, percentages.autonomia, percentages.relacionamento, percentages.inovacao, percentages.realizacao, percentages.equilibrio],
+              backgroundColor: 'rgba(245, 158, 11, 0.25)',
+              borderColor: '#F59E0B',
+              borderWidth: 3,
+              pointBackgroundColor: '#fff',
+              pointBorderColor: '#F59E0B',
+              pointHoverBackgroundColor: '#F59E0B',
+              pointHoverBorderColor: '#fff'
+            }]
           },
-          plugins: { legend: { display: false } }
-        }
-      });
+          options: {
+            responsive: true,
+            maintainAspectRatio: false, // CRUCIAL: impede expansão infinita
+            scales: {
+              r: {
+                angleLines: { color: 'rgba(255,255,255,0.1)' },
+                grid: { color: 'rgba(255,255,255,0.1)' },
+                pointLabels: { color: '#F8FAFC', font: { size: 10, weight: '600' } },
+                ticks: { display: false, backdropColor: 'transparent' },
+                suggestedMin: 0, suggestedMax: 100
+              }
+            },
+            plugins: { legend: { display: false } }
+          }
+        });
+      }
 
-      const ctxBar = document.getElementById('valuesBarChart').getContext('2d');
-      AppState.charts.bar = new Chart(ctxBar, {
-        type: 'bar',
-        data: {
-          labels: ['PR', 'RC', 'ES', 'AU', 'RL', 'IN', 'RZ', 'EQ'],
-          datasets: [{
-            label: 'Intensidade',
-            data: [percentages.proposito, percentages.reconhecimento, percentages.estabilidade, percentages.autonomia, percentages.relacionamento, percentages.inovacao, percentages.realizacao, percentages.equilibrio],
-            backgroundColor: ['#10B981', '#F59E0B', '#3B82F6', '#7C3AED', '#06B6D4', '#EC4899', '#8B5CF6', '#14B8A6'],
-            borderColor: ['#059669', '#D97706', '#2563EB', '#6D28D9', '#0891B2', '#DB2777', '#7C3AED', '#0D9488'],
-            borderWidth: 2,
-            borderRadius: 8
-          }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          scales: {
-            y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94A3B8' } },
-            x: { grid: { display: false }, ticks: { color: '#F8FAFC', font: { weight: 'bold' } } }
+      const ctxBar = document.getElementById('valuesBarChart');
+      if (ctxBar) {
+        AppState.charts.bar = new Chart(ctxBar, {
+          type: 'bar',
+          data: {
+            labels: ['PR', 'RC', 'ES', 'AU', 'RL', 'IN', 'RZ', 'EQ'],
+            datasets: [{
+              label: 'Intensidade',
+               [percentages.proposito, percentages.reconhecimento, percentages.estabilidade, percentages.autonomia, percentages.relacionamento, percentages.inovacao, percentages.realizacao, percentages.equilibrio],
+              backgroundColor: ['#10B981', '#F59E0B', '#3B82F6', '#7C3AED', '#06B6D4', '#EC4899', '#8B5CF6', '#14B8A6'],
+              borderColor: ['#059669', '#D97706', '#2563EB', '#6D28D9', '#0891B2', '#DB2777', '#7C3AED', '#0D9488'],
+              borderWidth: 2,
+              borderRadius: 8
+            }]
           },
-          plugins: { legend: { display: false } }
-        }
-      });
+          options: {
+            responsive: true,
+            maintainAspectRatio: false, // CRUCIAL: impede expansão infinita
+            scales: {
+              y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94A3B8' } },
+              x: { grid: { display: false }, ticks: { color: '#F8FAFC', font: { weight: 'bold' } } }
+            },
+            plugins: { legend: { display: false } }
+          }
+        });
+      }
     }
 
     function renderPurpose(r, dominant) {
@@ -1023,7 +1035,8 @@
 
     function showToast(message, type = 'success') {
       const toast = document.getElementById('toast');
-      toast.querySelector('span:first-child').textContent = type === 'success' ? '✅' : '⚠️';
+      if (!toast) return;
+      document.getElementById('toastIcon').textContent = type === 'success' ? '✅' : '⚠️';
       document.getElementById('toastMessage').textContent = message;
       toast.classList.remove('hidden');
       setTimeout(() => toast.classList.add('show'), 10);
@@ -1032,6 +1045,42 @@
         setTimeout(() => toast.classList.add('hidden'), 300); 
       }, 4000);
     }
+
+    // ============================================
+    // >>> CORREÇÕES ADICIONADAS (SEM OTIMIZAR) <<<
+    // ============================================
+
+    // 1. Tratamento de erro global com fallback amigável
+    window.addEventListener('error', function(e) {
+      console.error('Erro no relatório Valores:', e);
+      const loading = document.getElementById('loadingOverlay');
+      if (loading) loading.classList.add('hidden');
+      const content = document.getElementById('reportContent');
+      if (content) {
+        content.innerHTML = '<div class="glass-card p-8 text-center"><h2 class="text-xl font-bold text-brand-rose mb-4">⚠️ Erro ao carregar relatório</h2><p class="text-gray-400 mb-4">Ocorreu um erro ao processar seus dados.</p><button onclick="window.location.reload()" class="btn-primary px-6 py-3 rounded-lg">🔄 Recarregar Página</button></div>';
+        content.classList.remove('hidden');
+      }
+      return true; // Previne erro no console
+    });
+
+    // 2. Timeout de segurança: se loading persistir por 10s, força hide
+    setTimeout(function() {
+      const loading = document.getElementById('loadingOverlay');
+      const content = document.getElementById('reportContent');
+      if (loading && !loading.classList.contains('hidden')) {
+        console.warn('Loading timeout - forçando exibição do conteúdo');
+        loading.classList.add('hidden');
+        if (content) content.classList.remove('hidden');
+        showToast('⚠️ Tempo de carregamento excedido. Verifique seus dados.', 'error');
+      }
+    }, 10000);
+
+    // 3. Debug: Logar resultados disponíveis no console para diagnóstico
+    console.log('🔍 Resultados Valores disponíveis:', {
+      hasResult: !!localStorage.getItem('vigorre_last_values_result'),
+      participant: AppState.participant?.name || 'não carregado'
+    });
+
   </script>
 </body>
 </html>
