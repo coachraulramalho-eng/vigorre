@@ -773,11 +773,11 @@
       const ctxRadar = document.getElementById('discRadarChart').getContext('2d');
       AppState.charts.radar = new Chart(ctxRadar, {
         type: 'radar',
-         {
+        data: {
           labels: ['Dominância', 'Influência', 'Estabilidade', 'Conformidade'],
           datasets: [{
             label: 'Perfil Comportamental',
-             [percentages.D, percentages.I, percentages.S, percentages.C],
+            data: [percentages.D, percentages.I, percentages.S, percentages.C],
             backgroundColor: 'rgba(124, 58, 237, 0.25)',
             borderColor: '#7C3AED',
             borderWidth: 3,
@@ -805,11 +805,11 @@
       const ctxBar = document.getElementById('discBarChart').getContext('2d');
       AppState.charts.bar = new Chart(ctxBar, {
         type: 'bar',
-         {
+        data: {
           labels: ['D - Dominância', 'I - Influência', 'S - Estabilidade', 'C - Conformidade'],
           datasets: [{
             label: 'Intensidade',
-             [percentages.D, percentages.I, percentages.S, percentages.C],
+            data: [percentages.D, percentages.I, percentages.S, percentages.C],
             backgroundColor: ['rgba(239, 68, 68, 0.8)', 'rgba(59, 130, 246, 0.8)', 'rgba(16, 185, 129, 0.8)', 'rgba(124, 58, 237, 0.8)'],
             borderColor: ['#EF4444', '#3B82F6', '#10B981', '#7C3AED'],
             borderWidth: 2,
