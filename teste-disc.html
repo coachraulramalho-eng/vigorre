@@ -849,7 +849,8 @@
       discScores: { D: 0, I: 0, S: 0, C: 0 },
       questions: [],
       participant: null,
-      session: null
+      session: null,
+      shuffledOptions: {} // ✅ NOVO: Armazenar ordem embaralhada POR PERGUNTA
     };
 
     // ============================================
@@ -1365,6 +1366,7 @@
       AppState.currentQuestionIndex = 0;
       AppState.answers = new Array(25).fill(null);
       AppState.discScores = { D: 0, I: 0, S: 0, C: 0 };
+      AppState.shuffledOptions = {}; // ✅ Resetar opções embaralhadas
       
       // Carregar primeira pergunta
       renderQuestion();
@@ -1410,7 +1412,7 @@
         AppState.currentQuestionIndex === 24 ? 'Ver Resultados' : 'Próxima Pergunta';
       
       // Renderizar lista de ranqueamento
-      renderRankList(question.options);
+      renderRankList(question.options, question.id);
       
       // Animar entrada
       container.style.opacity = '0';
@@ -1422,12 +1424,19 @@
       }, 50);
     }
 
-    function renderRankList(options) {
+    function renderRankList(options, questionId) {
       const list = document.getElementById('rankList');
       list.innerHTML = '';
       
-      // Embaralhar opções para cada pergunta
-      const shuffled = [...options].sort(() => Math.random() - 0.5);
+      // ✅ CORREÇÃO: Embaralhar UMA VEZ por pergunta e armazenar
+      if (!AppState.shuffledOptions[questionId]) {
+        // Criar cópia e embaralhar
+        const shuffled = [...options].sort(() => Math.random() - 0.5);
+        AppState.shuffledOptions[questionId] = shuffled;
+      }
+      
+      // Usar a ordem embaralhada armazenada
+      const shuffled = AppState.shuffledOptions[questionId];
       
       shuffled.forEach((option, index) => {
         const item = document.createElement('div');
@@ -1436,13 +1445,13 @@
         item.dataset.type = option.type;
         item.dataset.index = index;
         
+        // ✅ REMOVIDO: Não mostrar o tipo (D, I, S, C) para o usuário
         item.innerHTML = `
           <div class="rank-badge rank-${index + 1}" id="badge-${index}">${index + 1}º</div>
           <div class="flex-1">
             <p class="font-medium">${option.text}</p>
-            <span class="text-xs text-gray-400">Tipo: ${option.type}</span>
           </div>
-          <div class="text-gray-400">⋮⋮</div>
+          <div class="text-gray-400">⋮</div>
         `;
         
         // Eventos de drag and drop
@@ -1549,11 +1558,9 @@
       const list = document.getElementById('rankList');
       const items = Array.from(list.children);
       
-      // CORREÇÃO: Capturar a ordem REAL baseada na posição visual (topo = índice 0)
-      // Cada item tem dataset.type com 'D', 'I', 'S' ou 'C'
+      // Capturar a ordem REAL baseada na posição visual (topo = índice 0)
       const ranking = [];
       items.forEach((item, visualIndex) => {
-        // visualIndex 0 = topo (1º lugar = 4 pontos), visualIndex 3 = base (4º lugar = 1 ponto)
         ranking.push(item.dataset.type);
       });
       
@@ -1568,6 +1575,7 @@
       const progress = {
         currentQuestion: AppState.currentQuestionIndex,
         answers: AppState.answers,
+        shuffledOptions: AppState.shuffledOptions, // ✅ Salvar ordem embaralhada
         timestamp: Date.now()
       };
       localStorage.setItem('disc_assessment_progress', JSON.stringify(progress));
@@ -1582,6 +1590,7 @@
           if (Date.now() - progress.timestamp < 24 * 60 * 60 * 1000) {
             AppState.currentQuestionIndex = progress.currentQuestion;
             AppState.answers = progress.answers;
+            AppState.shuffledOptions = progress.shuffledOptions || {}; // ✅ Carregar ordem embaralhada
             return true;
           }
         } catch (e) {
