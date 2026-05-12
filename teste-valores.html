@@ -476,19 +476,36 @@
       }
     }
 
+    // ============================================
+    // FUNÇÃO CORRIGIDA: finishTest com salvamento CONSISTENTE
+    // ============================================
     function finishTest() {
+      console.log('🔄 Finalizando teste de Valores...');
+      
+      // ============================================
+      // CORREÇÃO 1: Atualizar completedTests do participante
+      // ============================================
       if (AppState.participant) {
         const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
         const idx = participants.findIndex(function(p) { return p.id === AppState.participant.id; });
         if (idx > -1) {
-          if (!participants[idx].completedTests) participants[idx].completedTests = [];
+          // Garantir que completedTests existe
+          if (!participants[idx].completedTests) {
+            participants[idx].completedTests = [];
+          }
+          // ✅ CORREÇÃO: Adicionar 'Valores' (com V maiúsculo) aos testes completados
           if (participants[idx].completedTests.indexOf('Valores') === -1) {
             participants[idx].completedTests.push('Valores');
+            console.log('✅ Valores adicionado a completedTests de', participants[idx].name);
           }
           localStorage.setItem('vigorre_participants', JSON.stringify(participants));
+          console.log('💾 Participante atualizado no localStorage');
         }
       }
 
+      // ============================================
+      // Calcular resultados
+      // ============================================
       const values = { realizacao: 0, proposito: 0, seguranca: 0, autonomia: 0, reconhecimento: 0, relacionamento: 0, inovacao: 0, equilibrio: 0 };
       VALUES_QUESTIONS.forEach(function(q, idx) {
         if (AppState.answers[idx] !== undefined) {
@@ -511,8 +528,18 @@
         percentages: percentages, 
         dominant: sortedEntries[0][0] 
       };
-      localStorage.setItem('vigorre_last_values_result', JSON.stringify(results));
+      
+      // ============================================
+      // CORREÇÃO 2: Salvar resultado com chave CONSISTENTE em português
+      // ============================================
+      // ❌ ANTES: 'vigorre_last_values_result' (inglês)
+      // ✅ AGORA: 'vigorre_last_valores_result' (português) - MESMA CHAVE DO ADMIN
+      localStorage.setItem('vigorre_last_valores_result', JSON.stringify(results));
+      console.log('✅ Resultado salvo em vigorre_last_valores_result');
 
+      // ============================================
+      // Salvar histórico de relatório
+      // ============================================
       const reports = JSON.parse(localStorage.getItem('vigorre_reports') || '[]');
       reports.push({ 
         id: Date.now().toString(), 
@@ -528,6 +555,9 @@
       });
       localStorage.setItem('vigorre_reports', JSON.stringify(reports));
 
+      // ============================================
+      // Mostrar resultados
+      // ============================================
       document.getElementById('loadingOverlay').classList.remove('hidden');
       setTimeout(function() { 
         sendSimpleReportEmail(results); 
@@ -661,7 +691,8 @@
     }
 
     function downloadSimpleReport() {
-      const results = JSON.parse(localStorage.getItem('vigorre_last_values_result'));
+      // ✅ CORREÇÃO: Buscar resultado com chave em português
+      const results = JSON.parse(localStorage.getItem('vigorre_last_valores_result'));
       if (!results) return;
       const session = JSON.parse(localStorage.getItem('vigorre_current_user'));
       const dominant = VALUES_INTERPRETATIONS[results.dominant];
@@ -725,6 +756,26 @@
         }, 300); 
       }, 4000);
     }
+
+    // ============================================
+    // >>> CORREÇÕES ADICIONADAS (SEM OTIMIZAR) <<<
+    // ============================================
+
+    // 1. Tratamento de erro global com fallback amigável
+    window.addEventListener('error', function(e) {
+      console.error('Erro no Teste Valores Vigorre:', e);
+      showToast('⚠️ Ocorreu um erro. Recarregue a página se o problema persistir.', 'error');
+      return true; // Previne erro no console
+    });
+
+    // 2. Debug: Logar estado inicial no console para diagnóstico
+    console.log('🔍 Teste Valores - Estado inicial:', {
+      participant: AppState.participant?.name || 'não carregado',
+      localStorage: {
+        valores: !!localStorage.getItem('vigorre_last_valores_result')
+      }
+    });
+
   </script>
 </body>
 </html>
