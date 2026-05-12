@@ -1324,7 +1324,7 @@
     }
 
     // ============================================
-    // PARTICIPANTES - SALVAR (FUNÇÃO CRUCIAL)
+    // PARTICIPANTES - SALVAR (FUNÇÃO CRUCIAL - CORRIGIDA)
     // ============================================
     function saveParticipant(e) {
       e.preventDefault();
@@ -1337,6 +1337,9 @@
       // ============================================
       var tests = Array.from(document.querySelectorAll('.test-check:checked')).map(function(cb) { return cb.value; });
       
+      // 🔍 Busca participante existente para preservar histórico
+      var existingParticipant = DB.participants.find(function(x) { return x.id === id; });
+      
       // Monta o objeto com todos os dados do participante
       var data = { 
         id: id, 
@@ -1347,9 +1350,9 @@
         user: document.getElementById('pUser').value.toLowerCase(), 
         pass: document.getElementById('pPass').value, 
         exp: document.getElementById('pExp').value, 
-        tests: tests, // <--- Garante que a lista de checkboxes vai para o banco
-        assignedTests: tests, // <--- Campo adicional para compatibilidade
-        completedTests: [] // <--- Inicia array vazio para testes concluídos
+        tests: tests,
+        assignedTests: tests
+        // ✅ NÃO definir completedTests ou testResults aqui - serão preservados abaixo
       };
       
       // Busca o índice do participante no banco local (se existir)
@@ -1357,10 +1360,17 @@
       
       // Atualiza ou adiciona o participante no banco
       if (idx > -1) {
-        // Atualiza participante existente, mantendo dados anteriores
-        DB.participants[idx] = { ...DB.participants[idx], ...data };
+        // ✅ PRESERVAR dados históricos ao atualizar participante existente
+        DB.participants[idx] = { 
+          ...DB.participants[idx],  // Mantém TODOS os dados existentes (completedTests, testResults, etc.)
+          ...data,                   // Sobrescreve APENAS com novos dados do formulário
+          completedTests: existingParticipant ? (existingParticipant.completedTests || []) : [],
+          testResults: existingParticipant ? (existingParticipant.testResults || {}) : {}
+        };
       } else {
-        // Adiciona novo participante ao banco
+        // Novo participante: inicializa arrays vazios
+        data.completedTests = [];
+        data.testResults = {};
         DB.participants.push(data);
       }
       
