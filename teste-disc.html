@@ -1678,6 +1678,14 @@
           // Salvar no localStorage
           localStorage.setItem('vigorre_participants', JSON.stringify(participants));
           
+          // ✅ CORREÇÃO: Salvar também na chave que o laudo espera encontrar
+          localStorage.setItem('vigorre_last_disc_result', JSON.stringify({
+            scores: results.scores,
+            percentages: results.percentages,
+            dominant: Object.entries(results.percentages).sort((a, b) => b[1] - a[1])[0][0],
+            date: new Date().toISOString()
+          }));
+          
           // Atualizar estado local
           AppState.participant = participants[idx];
         }
