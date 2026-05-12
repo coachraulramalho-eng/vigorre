@@ -1603,6 +1603,56 @@
       });
     });
 
+    // ============================================
+    // NOVA FUNÇÃO: Forçar sincronização de completedTests com localStorage
+    // ============================================
+    function syncCompletedTests() {
+      console.log('🔄 Sincronizando completedTests com localStorage...');
+      let updated = false;
+      
+      DB.participants.forEach(function(p) {
+        if (!p.completedTests) p.completedTests = [];
+        
+        // Verificar cada teste
+        ['DISC', 'IE', 'Valores'].forEach(function(test) {
+          var resultKey = test === 'DISC' ? 'vigorre_last_disc_result' : 
+                         test === 'IE' ? 'vigorre_last_ie_result' : 
+                         'vigorre_last_valores_result';
+          
+          // Se tem resultado no localStorage e não está em completedTests, adicionar
+          if (localStorage.getItem(resultKey) && !p.completedTests.includes(test)) {
+            p.completedTests.push(test);
+            console.log('✅ Adicionado', test, 'a completedTests de', p.name);
+            updated = true;
+          }
+        });
+      });
+      
+      if (updated) {
+        localStorage.setItem('vigorre_participants', JSON.stringify(DB.participants));
+        console.log('💾 Dados salvos após sincronização');
+        renderParticipants();
+        showToast('✅ Testes sincronizados com sucesso!', 'success');
+      } else {
+        console.log('ℹ️ Nenhum ajuste necessário');
+      }
+    }
+
+    // ============================================
+    // ADICIONAR BOTÃO DE DEBUG NO HEADER (opcional, para desenvolvimento)
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+      // Adicionar botão de sincronização apenas em desenvolvimento
+      const headerActions = document.getElementById('headerActions');
+      if (headerActions && window.location.hostname === 'localhost') {
+        const syncBtn = document.createElement('button');
+        syncBtn.className = 'btn btn-warning btn-sm';
+        syncBtn.textContent = '🔄 Sync Tests';
+        syncBtn.onclick = syncCompletedTests;
+        headerActions.appendChild(syncBtn);
+      }
+    });
+
   </script>
 </body>
 </html>
