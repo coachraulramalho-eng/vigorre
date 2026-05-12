@@ -1131,7 +1131,20 @@
       }
     }
 
+    // ============================================
+    // CORREÇÃO: renderDiscSection com validação de dados
+    // ============================================
     function renderDiscSection(results) {
+      // CORREÇÃO: Verificar se results e results.percentages existem
+      if (!results || !results.percentages) {
+        console.error('❌ Dados DISC inválidos:', results);
+        const discAnalysis = safeGetElement('discAnalysis');
+        if (discAnalysis) {
+          discAnalysis.innerHTML = '<p class="text-brand-rose">⚠️ Dados do teste DISC não disponíveis ou corrompidos.</p>';
+        }
+        return;
+      }
+      
       const dominant = Object.entries(results.percentages).sort((a, b) => b[1] - a[1])[0][0];
       const profile = DISC_INSIGHTS[dominant];
       
@@ -1169,8 +1182,21 @@
       renderDiscCharts(results.percentages);
     }
 
+    // ============================================
+    // CORREÇÃO: renderIeSection com validação de dados
+    // ============================================
     function renderIeSection(results) {
-      const avgQE = results.avgQE;
+      // CORREÇÃO: Verificar se results e results.percentages existem
+      if (!results || !results.percentages) {
+        console.error('❌ Dados IE inválidos:', results);
+        const ieAnalysis = safeGetElement('ieAnalysis');
+        if (ieAnalysis) {
+          ieAnalysis.innerHTML = '<p class="text-brand-rose">⚠️ Dados do teste de Inteligência Emocional não disponíveis ou corrompidos.</p>';
+        }
+        return;
+      }
+      
+      const avgQE = results.avgQE || 0;
       const profileName = avgQE >= 80 ? 'Alta Inteligência Emocional' : avgQE >= 60 ? 'QE em Desenvolvimento' : 'Oportunidades de Desenvolvimento';
       
       const ieAnalysis = safeGetElement('ieAnalysis');
@@ -1191,19 +1217,32 @@
       }
       
       const ieSelfControlBar = safeGetElement('ieSelfControlBar');
-      if (ieSelfControlBar) ieSelfControlBar.style.width = results.percentages.autocontrole + '%';
+      if (ieSelfControlBar) ieSelfControlBar.style.width = (results.percentages.autocontrole || 0) + '%';
       
       const ieResilienceBar = safeGetElement('ieResilienceBar');
-      if (ieResilienceBar) ieResilienceBar.style.width = results.percentages.resiliencia + '%';
+      if (ieResilienceBar) ieResilienceBar.style.width = (results.percentages.resiliencia || 0) + '%';
       
       const ieEmpathyBar = safeGetElement('ieEmpathyBar');
-      if (ieEmpathyBar) ieEmpathyBar.style.width = results.percentages.empatia + '%';
+      if (ieEmpathyBar) ieEmpathyBar.style.width = (results.percentages.empatia || 0) + '%';
       
       // Gráficos
       renderIeCharts(results.percentages);
     }
 
+    // ============================================
+    // CORREÇÃO: renderValuesSection com validação de dados
+    // ============================================
     function renderValuesSection(results) {
+      // CORREÇÃO: Verificar se results e results.percentages existem
+      if (!results || !results.percentages || !results.dominant) {
+        console.error('❌ Dados Valores inválidos:', results);
+        const valuesAnalysis = safeGetElement('valuesAnalysis');
+        if (valuesAnalysis) {
+          valuesAnalysis.innerHTML = '<p class="text-brand-rose">⚠️ Dados do teste de Valores não disponíveis ou corrompidos.</p>';
+        }
+        return;
+      }
+      
       const dominant = results.dominant;
       const profile = VALUES_INSIGHTS[dominant];
       
@@ -1228,7 +1267,7 @@
       if (valuesDominant) valuesDominant.textContent = `${profile.name}: ${results.percentages[dominant]}%`;
       
       const valuesAchievement = safeGetElement('valuesAchievement');
-      if (valuesAchievement) valuesAchievement.textContent = dominant === 'realizacao' ? 'Orientado a metas e conquistas' : dominant === 'proposito' ? 'Orientado a significado e impacto' : 'Perfil equilibrado com foco em ${profile.name.toLowerCase()}';
+      if (valuesAchievement) valuesAchievement.textContent = dominant === 'realizacao' ? 'Orientado a metas e conquistas' : dominant === 'proposito' ? 'Orientado a significado e impacto' : `Perfil equilibrado com foco em ${profile.name.toLowerCase()}`;
       
       // Gráficos
       renderValuesCharts(results.percentages);
