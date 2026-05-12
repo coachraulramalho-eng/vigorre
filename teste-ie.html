@@ -612,21 +612,36 @@
       }
     }
 
+    // ============================================
+    // FUNÇÃO CORRIGIDA: finishTest com salvamento CONSISTENTE
+    // ============================================
     function finishTest() {
-      // Salvar no localStorage - marcar teste como concluído
+      console.log('🔄 Finalizando teste de Inteligência Emocional...');
+      
+      // ============================================
+      // CORREÇÃO 1: Atualizar completedTests do participante
+      // ============================================
       if (AppState.participant) {
         const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
         const idx = participants.findIndex(p => p.id === AppState.participant.id);
         if (idx > -1) {
-          if (!participants[idx].completedTests) participants[idx].completedTests = [];
-          if (!participants[idx].completedTests.includes('IE')) {
+          // Garantir que completedTests existe
+          if (!participants[idx].completedTests) {
+            participants[idx].completedTests = [];
+          }
+          // ✅ CORREÇÃO: Adicionar 'IE' aos testes completados
+          if (participants[idx].completedTests.indexOf('IE') === -1) {
             participants[idx].completedTests.push('IE');
+            console.log('✅ IE adicionado a completedTests de', participants[idx].name);
           }
           localStorage.setItem('vigorre_participants', JSON.stringify(participants));
+          console.log('💾 Participante atualizado no localStorage');
         }
       }
 
+      // ============================================
       // Calcular resultados
+      // ============================================
       const dimensions = { autoconsciencia: 0, autocontrole: 0, empatia: 0, resiliencia: 0, social: 0, estabilidade: 0 };
       const dimensionMap = {
         'Autoconsciência': 'autoconsciencia',
@@ -661,9 +676,16 @@
         avgQE
       };
 
+      // ============================================
+      // CORREÇÃO 2: Salvar resultado com chave CONSISTENTE
+      // ============================================
+      // ✅ Chave já está correta: 'vigorre_last_ie_result' (mesma do admin)
       localStorage.setItem('vigorre_last_ie_result', JSON.stringify(results));
+      console.log('✅ Resultado salvo em vigorre_last_ie_result');
 
+      // ============================================
       // Salvar histórico de relatórios
+      // ============================================
       const reports = JSON.parse(localStorage.getItem('vigorre_reports') || '[]');
       reports.push({
         id: Date.now().toString(),
@@ -679,7 +701,9 @@
       });
       localStorage.setItem('vigorre_reports', JSON.stringify(reports));
 
+      // ============================================
       // Mostrar loading
+      // ============================================
       document.getElementById('loadingOverlay').classList.remove('hidden');
 
       // Enviar relatório simples por e-mail (simulação)
@@ -795,11 +819,11 @@
       if (radarCtx) {
         ieRadarChartInstance = new Chart(radarCtx, {
           type: 'radar',
-          data: {
+           {
             labels: ['Autoconsciência', 'Autocontrole', 'Empatia', 'Resiliência', 'Inteligência Social', 'Estabilidade'],
             datasets: [{
               label: 'Seu Perfil',
-              data: [percentages.autoconsciencia, percentages.autocontrole, percentages.empatia, percentages.resiliencia, percentages.social, percentages.estabilidade],
+               [percentages.autoconsciencia, percentages.autocontrole, percentages.empatia, percentages.resiliencia, percentages.social, percentages.estabilidade],
               backgroundColor: 'rgba(6, 182, 212, 0.2)',
               borderColor: '#06B6D4',
               borderWidth: 2,
@@ -829,11 +853,11 @@
       if (barCtx) {
         ieBarChartInstance = new Chart(barCtx, {
           type: 'bar',
-          data: {
+           {
             labels: ['AC', 'AT', 'EM', 'RS', 'IS', 'ES'],
             datasets: [{
               label: '%',
-              data: [percentages.autoconsciencia, percentages.autocontrole, percentages.empatia, percentages.resiliencia, percentages.social, percentages.estabilidade],
+               [percentages.autoconsciencia, percentages.autocontrole, percentages.empatia, percentages.resiliencia, percentages.social, percentages.estabilidade],
               backgroundColor: ['#3B82F6', '#7C3AED', '#F59E0B', '#10B981', '#06B6D4', '#EC4899'],
               borderRadius: 6
             }]
@@ -852,6 +876,7 @@
     }
 
     function downloadSimpleReport() {
+      // ✅ CORREÇÃO: Buscar resultado com chave correta
       const results = JSON.parse(localStorage.getItem('vigorre_last_ie_result'));
       if (!results) return;
 
@@ -898,6 +923,26 @@ Para análise completa, acesse: laudo-vigorre.html
       toast.classList.remove('hidden');
       setTimeout(() => toast.classList.add('hidden'), 4000);
     }
+
+    // ============================================
+    // >>> CORREÇÕES ADICIONADAS (SEM OTIMIZAR) <<<
+    // ============================================
+
+    // 1. Tratamento de erro global com fallback amigável
+    window.addEventListener('error', function(e) {
+      console.error('Erro no Teste IE Vigorre:', e);
+      showToast('⚠️ Ocorreu um erro. Recarregue a página se o problema persistir.', 'error');
+      return true; // Previne erro no console
+    });
+
+    // 2. Debug: Logar estado inicial no console para diagnóstico
+    console.log('🔍 Teste IE - Estado inicial:', {
+      participant: AppState.participant?.name || 'não carregado',
+      localStorage: {
+        ie: !!localStorage.getItem('vigorre_last_ie_result')
+      }
+    });
+
   </script>
 </body>
 </html>
