@@ -910,6 +910,17 @@
     };
 
     // ============================================
+    // FUNÇÃO AUXILIAR: Acessar elemento com segurança
+    // ============================================
+    function safeGetElement(id) {
+      const el = document.getElementById(id);
+      if (!el) {
+        console.warn(`⚠️ Elemento não encontrado: #${id}`);
+      }
+      return el;
+    }
+
+    // ============================================
     // INICIALIZAÇÃO
     // ============================================
     document.addEventListener('DOMContentLoaded', () => {
@@ -962,34 +973,56 @@
       }
       
       // Atualizar badges na capa
-      document.getElementById('badgeDisc').style.display = AppState.results.disc ? 'inline-flex' : 'none';
-      document.getElementById('badgeIE').style.display = AppState.results.ie ? 'inline-flex' : 'none';
-      document.getElementById('badgeValores').style.display = AppState.results.values ? 'inline-flex' : 'none';
+      const badgeDisc = safeGetElement('badgeDisc');
+      const badgeIE = safeGetElement('badgeIE');
+      const badgeValores = safeGetElement('badgeValores');
+      
+      if (badgeDisc) badgeDisc.style.display = AppState.results.disc ? 'inline-flex' : 'none';
+      if (badgeIE) badgeIE.style.display = AppState.results.ie ? 'inline-flex' : 'none';
+      if (badgeValores) badgeValores.style.display = AppState.results.values ? 'inline-flex' : 'none';
       
       // Gerar laudo dinâmico
       generateLaudo(availableTests);
     }
 
     function generateLaudo(availableTests) {
-      // Preencher Capa
-      document.getElementById('coverName').textContent = AppState.participant?.name || 'Participante';
-      document.getElementById('coverCompany').textContent = AppState.company?.name || 'Independente';
-      document.getElementById('coverJob').textContent = AppState.job?.name || 'Não vinculada';
-      document.getElementById('coverDate').textContent = new Date().toLocaleDateString('pt-BR');
-      document.getElementById('coverCode').textContent = 'VIG-LAUDO-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 9000 + 1000);
+      // Preencher Capa - CORREÇÃO: Verificar se elemento existe antes de acessar
+      const coverName = safeGetElement('coverName');
+      if (coverName) coverName.textContent = AppState.participant?.name || 'Participante';
+      
+      const coverCompany = safeGetElement('coverCompany');
+      if (coverCompany) coverCompany.textContent = AppState.company?.name || 'Independente';
+      
+      const coverJob = safeGetElement('coverJob');
+      if (coverJob) coverJob.textContent = AppState.job?.name || 'Não vinculada';
+      
+      const coverDate = safeGetElement('coverDate');
+      if (coverDate) coverDate.textContent = new Date().toLocaleDateString('pt-BR');
+      
+      const coverCode = safeGetElement('coverCode');
+      if (coverCode) coverCode.textContent = 'VIG-LAUDO-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 9000 + 1000);
       
       // Mostrar seções conforme testes disponíveis
       if (availableTests.includes('DISC')) {
-        document.getElementById('sectionDisc').classList.remove('hidden');
-        renderDiscSection(AppState.results.disc);
+        const sectionDisc = safeGetElement('sectionDisc');
+        if (sectionDisc) {
+          sectionDisc.classList.remove('hidden');
+          renderDiscSection(AppState.results.disc);
+        }
       }
       if (availableTests.includes('IE')) {
-        document.getElementById('sectionIE').classList.remove('hidden');
-        renderIeSection(AppState.results.ie);
+        const sectionIE = safeGetElement('sectionIE');
+        if (sectionIE) {
+          sectionIE.classList.remove('hidden');
+          renderIeSection(AppState.results.ie);
+        }
       }
       if (availableTests.includes('Valores')) {
-        document.getElementById('sectionValores').classList.remove('hidden');
-        renderValuesSection(AppState.results.values);
+        const sectionValores = safeGetElement('sectionValores');
+        if (sectionValores) {
+          sectionValores.classList.remove('hidden');
+          renderValuesSection(AppState.results.values);
+        }
       }
       
       // Gerar conteúdo dinâmico para todas as seções
@@ -1014,12 +1047,15 @@
       renderFinalQuote();
       
       // Esconder loading e mostrar laudo
-      document.getElementById('loadingOverlay').classList.add('hidden');
-      document.getElementById('laudoContent').classList.remove('hidden');
+      const loadingOverlay = safeGetElement('loadingOverlay');
+      if (loadingOverlay) loadingOverlay.classList.add('hidden');
+      
+      const laudoContent = safeGetElement('laudoContent');
+      if (laudoContent) laudoContent.classList.remove('hidden');
     }
 
     // ============================================
-    // RENDERIZADORES DE SEÇÕES
+    // RENDERIZADORES DE SEÇÕES (COM VERIFICAÇÕES DE SEGURANÇA)
     // ============================================
     function renderExecutiveSummary(tests) {
       // Calcular score geral baseado nos testes disponíveis
@@ -1038,7 +1074,9 @@
       }
       
       const avgScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
-      document.getElementById('execScore').textContent = avgScore + '%';
+      
+      const execScore = safeGetElement('execScore');
+      if (execScore) execScore.textContent = avgScore + '%';
       
       // Determinar nível de maturidade
       const maturityThresholds = [
@@ -1064,13 +1102,33 @@
         profileName += ' • ' + VALUES_INSIGHTS[AppState.results.values.dominant].name;
       }
       
-      document.getElementById('execProfileName').textContent = profileName;
-      document.getElementById('execProfileDesc').textContent = `Laudo integrado baseado em ${tests.join(', ')}. ${maturityInfo.desc} Índice geral de ${avgScore}% indica potencial para ${avgScore >= 70 ? 'alta performance em ambientes alinhados' : avgScore >= 55 ? 'crescimento acelerado com desenvolvimento direcionado' : 'desenvolvimento estruturado de competências'}.`;
+      const execProfileName = safeGetElement('execProfileName');
+      if (execProfileName) execProfileName.textContent = profileName;
       
-      document.getElementById('execEmotionalLevel').textContent = tests.includes('IE') ? (AppState.results.ie.avgQE >= 70 ? 'Alta inteligência emocional' : AppState.results.ie.avgQE >= 50 ? 'Inteligência emocional em desenvolvimento' : 'Oportunidades de desenvolvimento emocional') : 'Teste não realizado';
-      document.getElementById('execMotivators').textContent = tests.includes('Valores') ? VALUES_INSIGHTS[AppState.results.values.dominant].motivators.slice(0, 2).join(', ') : 'Teste não realizado';
-      document.getElementById('execCulturalFit').textContent = tests.includes('Valores') ? CULTURAL_FIT_LEVELS[avgScore >= 75 ? 'alta' : avgScore >= 55 ? 'moderada' : 'desenvolvimento'].name : 'Teste não realizado';
-      document.getElementById('execJobFit').textContent = AppState.job ? 'Análise em andamento' : 'Sem vaga vinculada';
+      const execProfileDesc = safeGetElement('execProfileDesc');
+      if (execProfileDesc) {
+        execProfileDesc.textContent = `Laudo integrado baseado em ${tests.join(', ')}. ${maturityInfo.desc} Índice geral de ${avgScore}% indica potencial para ${avgScore >= 70 ? 'alta performance em ambientes alinhados' : avgScore >= 55 ? 'crescimento acelerado com desenvolvimento direcionado' : 'desenvolvimento estruturado de competências'}.`;
+      }
+      
+      const execEmotionalLevel = safeGetElement('execEmotionalLevel');
+      if (execEmotionalLevel) {
+        execEmotionalLevel.textContent = tests.includes('IE') ? (AppState.results.ie.avgQE >= 70 ? 'Alta inteligência emocional' : AppState.results.ie.avgQE >= 50 ? 'Inteligência emocional em desenvolvimento' : 'Oportunidades de desenvolvimento emocional') : 'Teste não realizado';
+      }
+      
+      const execMotivators = safeGetElement('execMotivators');
+      if (execMotivators) {
+        execMotivators.textContent = tests.includes('Valores') ? VALUES_INSIGHTS[AppState.results.values.dominant].motivators.slice(0, 2).join(', ') : 'Teste não realizado';
+      }
+      
+      const execCulturalFit = safeGetElement('execCulturalFit');
+      if (execCulturalFit) {
+        execCulturalFit.textContent = tests.includes('Valores') ? CULTURAL_FIT_LEVELS[avgScore >= 75 ? 'alta' : avgScore >= 55 ? 'moderada' : 'desenvolvimento'].name : 'Teste não realizado';
+      }
+      
+      const execJobFit = safeGetElement('execJobFit');
+      if (execJobFit) {
+        execJobFit.textContent = AppState.job ? 'Análise em andamento' : 'Sem vaga vinculada';
+      }
     }
 
     function renderDiscSection(results) {
@@ -1078,24 +1136,34 @@
       const profile = DISC_INSIGHTS[dominant];
       
       // Análise
-      document.getElementById('discAnalysis').innerHTML = `
-        <p class="text-gray-300 mb-4">Perfil predominante <strong style="color:${profile.color}">${profile.name}</strong> com ${results.percentages[dominant]}% de intensidade. ${profile.high}</p>
-        <div class="grid md:grid-cols-2 gap-4">
-          <div class="glass p-4 rounded-lg">
-            <h4 class="font-medium mb-2 text-brand-emerald">Pontos Fortes</h4>
-            <ul class="space-y-1 text-sm text-gray-300">${profile.strengths.map(s => `<li>• ${s}</li>`).join('')}</ul>
+      const discAnalysis = safeGetElement('discAnalysis');
+      if (discAnalysis) {
+        discAnalysis.innerHTML = `
+          <p class="text-gray-300 mb-4">Perfil predominante <strong style="color:${profile.color}">${profile.name}</strong> com ${results.percentages[dominant]}% de intensidade. ${profile.high}</p>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="glass p-4 rounded-lg">
+              <h4 class="font-medium mb-2 text-brand-emerald">Pontos Fortes</h4>
+              <ul class="space-y-1 text-sm text-gray-300">${profile.strengths.map(s => `<li>• ${s}</li>`).join('')}</ul>
+            </div>
+            <div class="glass p-4 rounded-lg">
+              <h4 class="font-medium mb-2 text-brand-rose">Áreas de Desenvolvimento</h4>
+              <ul class="space-y-1 text-sm text-gray-300">${profile.development.map(d => `<li>• ${d}</li>`).join('')}</ul>
+            </div>
           </div>
-          <div class="glass p-4 rounded-lg">
-            <h4 class="font-medium mb-2 text-brand-rose">Áreas de Desenvolvimento</h4>
-            <ul class="space-y-1 text-sm text-gray-300">${profile.development.map(d => `<li>• ${d}</li>`).join('')}</ul>
-          </div>
-        </div>
-      `;
+        `;
+      }
       
-      document.getElementById('discComm').textContent = profile.comm;
-      document.getElementById('discDecision').textContent = profile.decision;
-      document.getElementById('discLeadership').textContent = profile.team;
-      document.getElementById('discProductivity').textContent = dominant === 'D' || dominant === 'I' ? 'Ritmo acelerado com foco em entregas' : 'Ritmo consistente com foco em qualidade';
+      const discComm = safeGetElement('discComm');
+      if (discComm) discComm.textContent = profile.comm;
+      
+      const discDecision = safeGetElement('discDecision');
+      if (discDecision) discDecision.textContent = profile.decision;
+      
+      const discLeadership = safeGetElement('discLeadership');
+      if (discLeadership) discLeadership.textContent = profile.team;
+      
+      const discProductivity = safeGetElement('discProductivity');
+      if (discProductivity) discProductivity.textContent = dominant === 'D' || dominant === 'I' ? 'Ritmo acelerado com foco em entregas' : 'Ritmo consistente com foco em qualidade';
       
       // Gráficos
       renderDiscCharts(results.percentages);
@@ -1105,23 +1173,31 @@
       const avgQE = results.avgQE;
       const profileName = avgQE >= 80 ? 'Alta Inteligência Emocional' : avgQE >= 60 ? 'QE em Desenvolvimento' : 'Oportunidades de Desenvolvimento';
       
-      document.getElementById('ieAnalysis').innerHTML = `
-        <p class="text-gray-300 mb-4">Índice QE de <strong style="color:${avgQE >= 70 ? '#10B981' : avgQE >= 50 ? '#F59E0B' : '#F43F5E'}">${avgQE}%</strong> indica ${profileName.toLowerCase()}. ${IE_INSIGHTS.autoconsciencia[avgQE >= 70 ? 'high' : avgQE >= 50 ? 'medium' : 'low']}</p>
-        <div class="grid md:grid-cols-2 gap-4">
-          <div class="glass p-4 rounded-lg">
-            <h4 class="font-medium mb-2 text-brand-cyan">Maturidade Emocional</h4>
-            <p class="text-sm text-gray-300">${avgQE >= 70 ? 'Excelente regulação e consciência emocional.' : avgQE >= 50 ? 'Boa base com espaço para desenvolvimento.' : 'Oportunidades para fortalecer autoconsciência e regulação.'}</p>
+      const ieAnalysis = safeGetElement('ieAnalysis');
+      if (ieAnalysis) {
+        ieAnalysis.innerHTML = `
+          <p class="text-gray-300 mb-4">Índice QE de <strong style="color:${avgQE >= 70 ? '#10B981' : avgQE >= 50 ? '#F59E0B' : '#F43F5E'}">${avgQE}%</strong> indica ${profileName.toLowerCase()}. ${IE_INSIGHTS.autoconsciencia[avgQE >= 70 ? 'high' : avgQE >= 50 ? 'medium' : 'low']}</p>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="glass p-4 rounded-lg">
+              <h4 class="font-medium mb-2 text-brand-cyan">Maturidade Emocional</h4>
+              <p class="text-sm text-gray-300">${avgQE >= 70 ? 'Excelente regulação e consciência emocional.' : avgQE >= 50 ? 'Boa base com espaço para desenvolvimento.' : 'Oportunidades para fortalecer autoconsciência e regulação.'}</p>
+            </div>
+            <div class="glass p-4 rounded-lg">
+              <h4 class="font-medium mb-2 text-brand-amber">Liderança Emocional</h4>
+              <p class="text-sm text-gray-300">${avgQE >= 70 ? 'Capacidade de influenciar positivamente através da inteligência emocional.' : 'Pode desenvolver maior impacto através do desenvolvimento emocional.'}</p>
+            </div>
           </div>
-          <div class="glass p-4 rounded-lg">
-            <h4 class="font-medium mb-2 text-brand-amber">Liderança Emocional</h4>
-            <p class="text-sm text-gray-300">${avgQE >= 70 ? 'Capacidade de influenciar positivamente através da inteligência emocional.' : 'Pode desenvolver maior impacto através do desenvolvimento emocional.'}</p>
-          </div>
-        </div>
-      `;
+        `;
+      }
       
-      document.getElementById('ieSelfControlBar').style.width = results.percentages.autocontrole + '%';
-      document.getElementById('ieResilienceBar').style.width = results.percentages.resiliencia + '%';
-      document.getElementById('ieEmpathyBar').style.width = results.percentages.empatia + '%';
+      const ieSelfControlBar = safeGetElement('ieSelfControlBar');
+      if (ieSelfControlBar) ieSelfControlBar.style.width = results.percentages.autocontrole + '%';
+      
+      const ieResilienceBar = safeGetElement('ieResilienceBar');
+      if (ieResilienceBar) ieResilienceBar.style.width = results.percentages.resiliencia + '%';
+      
+      const ieEmpathyBar = safeGetElement('ieEmpathyBar');
+      if (ieEmpathyBar) ieEmpathyBar.style.width = results.percentages.empatia + '%';
       
       // Gráficos
       renderIeCharts(results.percentages);
@@ -1131,22 +1207,28 @@
       const dominant = results.dominant;
       const profile = VALUES_INSIGHTS[dominant];
       
-      document.getElementById('valuesAnalysis').innerHTML = `
-        <p class="text-gray-300 mb-4">Valor predominante <strong style="color:#F59E0B">${profile.name}</strong> (${results.percentages[dominant]}%): ${profile.desc} ${profile[results.percentages[dominant] >= 70 ? 'high' : results.percentages[dominant] >= 50 ? 'medium' : 'low']}</p>
-        <div class="grid md:grid-cols-2 gap-4">
-          <div class="glass p-4 rounded-lg">
-            <h4 class="font-medium mb-2 text-brand-emerald">Ambientes que Potencializam</h4>
-            <p class="text-sm text-gray-300">${profile.environments[0]}</p>
+      const valuesAnalysis = safeGetElement('valuesAnalysis');
+      if (valuesAnalysis) {
+        valuesAnalysis.innerHTML = `
+          <p class="text-gray-300 mb-4">Valor predominante <strong style="color:#F59E0B">${profile.name}</strong> (${results.percentages[dominant]}%): ${profile.desc} ${profile[results.percentages[dominant] >= 70 ? 'high' : results.percentages[dominant] >= 50 ? 'medium' : 'low']}</p>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="glass p-4 rounded-lg">
+              <h4 class="font-medium mb-2 text-brand-emerald">Ambientes que Potencializam</h4>
+              <p class="text-sm text-gray-300">${profile.environments[0]}</p>
+            </div>
+            <div class="glass p-4 rounded-lg">
+              <h4 class="font-medium mb-2 text-brand-rose">Fatores de Desmotivação</h4>
+              <p class="text-sm text-gray-300">Ambientes que não ofereçam ${profile.motivators[0].toLowerCase()}</p>
+            </div>
           </div>
-          <div class="glass p-4 rounded-lg">
-            <h4 class="font-medium mb-2 text-brand-rose">Fatores de Desmotivação</h4>
-            <p class="text-sm text-gray-300">Ambientes que não ofereçam ${profile.motivators[0].toLowerCase()}</p>
-          </div>
-        </div>
-      `;
+        `;
+      }
       
-      document.getElementById('valuesDominant').textContent = `${profile.name}: ${results.percentages[dominant]}%`;
-      document.getElementById('valuesAchievement').textContent = dominant === 'realizacao' ? 'Orientado a metas e conquistas' : dominant === 'proposito' ? 'Orientado a significado e impacto' : 'Perfil equilibrado com foco em ${profile.name.toLowerCase()}';
+      const valuesDominant = safeGetElement('valuesDominant');
+      if (valuesDominant) valuesDominant.textContent = `${profile.name}: ${results.percentages[dominant]}%`;
+      
+      const valuesAchievement = safeGetElement('valuesAchievement');
+      if (valuesAchievement) valuesAchievement.textContent = dominant === 'realizacao' ? 'Orientado a metas e conquistas' : dominant === 'proposito' ? 'Orientado a significado e impacto' : 'Perfil equilibrado com foco em ${profile.name.toLowerCase()}';
       
       // Gráficos
       renderValuesCharts(results.percentages);
@@ -1173,20 +1255,47 @@
       html += `Este perfil integrado indica potencial para ${tests.length >= 2 ? 'alta performance em ambientes que alinhem comportamento, emoção e valores' : 'crescimento acelerado com desenvolvimento direcionado das dimensões avaliadas'}.`;
       html += '</p>';
       
-      document.getElementById('profileOverview').innerHTML = html;
+      const profileOverview = safeGetElement('profileOverview');
+      if (profileOverview) profileOverview.innerHTML = html;
     }
 
     function renderProfessionalProfile(tests) {
-      document.getElementById('profPace').textContent = tests.includes('DISC') ? (['D', 'I'].includes(Object.entries(AppState.results.disc.percentages).sort((a,b) => b[1]-a[1])[0][0]) ? 'Ritmo acelerado e orientado a impacto' : 'Ritmo consistente e orientado a processos') : 'Não avaliado';
-      document.getElementById('profAutonomy').textContent = tests.includes('Valores') ? (AppState.results.values.percentages.autonomia >= 30 ? 'Alta necessidade de autonomia. Prospera com liberdade decisória.' : 'Valoriza diretrizes claras com espaço para auto-gestão.') : 'Não avaliado';
-      document.getElementById('profResults').textContent = tests.includes('DISC') ? (AppState.results.disc.percentages.D >= 50 ? 'Orientação extrema a resultados. Usa métricas como bússola principal.' : 'Equilíbrio entre entregas e qualidade relacional/processual.') : 'Não avaliado';
-      document.getElementById('profExecution').textContent = 'Estilo de execução marcado por ' + (tests.includes('DISC') ? (['D', 'I'].includes(Object.entries(AppState.results.disc.percentages).sort((a,b) => b[1]-a[1])[0][0]) ? 'iniciativa e engajamento' : 'constância e estrutura') : 'adaptabilidade') + '. Consegue manter produtividade quando alinhado a ' + (tests.includes('Valores') ? VALUES_INSIGHTS[AppState.results.values.dominant].motivators[0].toLowerCase() : 'seus valores pessoais') + '.';
+      const profPace = safeGetElement('profPace');
+      if (profPace) {
+        profPace.textContent = tests.includes('DISC') ? (['D', 'I'].includes(Object.entries(AppState.results.disc.percentages).sort((a,b) => b[1]-a[1])[0][0]) ? 'Ritmo acelerado e orientado a impacto' : 'Ritmo consistente e orientado a processos') : 'Não avaliado';
+      }
+      
+      const profAutonomy = safeGetElement('profAutonomy');
+      if (profAutonomy) {
+        profAutonomy.textContent = tests.includes('Valores') ? (AppState.results.values.percentages.autonomia >= 30 ? 'Alta necessidade de autonomia. Prospera com liberdade decisória.' : 'Valoriza diretrizes claras com espaço para auto-gestão.') : 'Não avaliado';
+      }
+      
+      const profResults = safeGetElement('profResults');
+      if (profResults) {
+        profResults.textContent = tests.includes('DISC') ? (AppState.results.disc.percentages.D >= 50 ? 'Orientação extrema a resultados. Usa métricas como bússola principal.' : 'Equilíbrio entre entregas e qualidade relacional/processual.') : 'Não avaliado';
+      }
+      
+      const profExecution = safeGetElement('profExecution');
+      if (profExecution) {
+        profExecution.textContent = 'Estilo de execução marcado por ' + (tests.includes('DISC') ? (['D', 'I'].includes(Object.entries(AppState.results.disc.percentages).sort((a,b) => b[1]-a[1])[0][0]) ? 'iniciativa e engajamento' : 'constância e estrutura') : 'adaptabilidade') + '. Consegue manter produtividade quando alinhado a ' + (tests.includes('Valores') ? VALUES_INSIGHTS[AppState.results.values.dominant].motivators[0].toLowerCase() : 'seus valores pessoais') + '.';
+      }
     }
 
     function renderTeamwork(tests) {
-      document.getElementById('teamColab').textContent = 'No trabalho em equipe, demonstra ' + (tests.includes('DISC') ? (AppState.results.disc.percentages.I >= 50 ? 'forte capacidade de integração e comunicação transversal' : AppState.results.disc.percentages.S >= 50 ? 'suporte consistente e manutenção de clima' : 'direcionamento claro e cobrança construtiva') : 'adaptabilidade conforme o contexto') + '. Busca naturalmente ' + (tests.includes('Valores') ? (AppState.results.values.percentages.relacionamento >= 30 ? 'harmonia e lealdade' : 'eficiência e resultados compartilhados') : 'colaboração efetiva') + '.';
-      document.getElementById('teamIntegration').textContent = tests.includes('DISC') ? (AppState.results.disc.percentages.I >= 50 ? 'Natural networker. Conecta departamentos e facilita trocas.' : AppState.results.disc.percentages.S >= 50 ? 'Cola do time. Mantém coesão e apoia membros.' : 'Impulsiona o time com metas claras. Pode desenvolver escuta ativa.') : 'Adapta-se conforme a dinâmica do grupo.';
-      document.getElementById('teamConflict').textContent = tests.includes('IE') ? (AppState.results.ie.percentages.empatia >= 70 ? 'Media conflitos com diplomacia e busca soluções win-win.' : 'Pode desenvolver maior assertividade em mediações.') : 'Aborda conflitos com cautela. Pode desenvolver técnicas de resolução.';
+      const teamColab = safeGetElement('teamColab');
+      if (teamColab) {
+        teamColab.textContent = 'No trabalho em equipe, demonstra ' + (tests.includes('DISC') ? (AppState.results.disc.percentages.I >= 50 ? 'forte capacidade de integração e comunicação transversal' : AppState.results.disc.percentages.S >= 50 ? 'suporte consistente e manutenção de clima' : 'direcionamento claro e cobrança construtiva') : 'adaptabilidade conforme o contexto') + '. Busca naturalmente ' + (tests.includes('Valores') ? (AppState.results.values.percentages.relacionamento >= 30 ? 'harmonia e lealdade' : 'eficiência e resultados compartilhados') : 'colaboração efetiva') + '.';
+      }
+      
+      const teamIntegration = safeGetElement('teamIntegration');
+      if (teamIntegration) {
+        teamIntegration.textContent = tests.includes('DISC') ? (AppState.results.disc.percentages.I >= 50 ? 'Natural networker. Conecta departamentos e facilita trocas.' : AppState.results.disc.percentages.S >= 50 ? 'Cola do time. Mantém coesão e apoia membros.' : 'Impulsiona o time com metas claras. Pode desenvolver escuta ativa.') : 'Adapta-se conforme a dinâmica do grupo.';
+      }
+      
+      const teamConflict = safeGetElement('teamConflict');
+      if (teamConflict) {
+        teamConflict.textContent = tests.includes('IE') ? (AppState.results.ie.percentages.empatia >= 70 ? 'Media conflitos com diplomacia e busca soluções win-win.' : 'Pode desenvolver maior assertividade em mediações.') : 'Aborda conflitos com cautela. Pode desenvolver técnicas de resolução.';
+      }
     }
 
     function renderLeadership(tests) {
@@ -1196,61 +1305,135 @@
         archetype = dominant === 'D' ? 'Líder Diretivo e Orientado a Resultados' : dominant === 'I' ? 'Líder Inspirador e Facilitador' : dominant === 'S' ? 'Líder Servidor e Estabilizador' : 'Líder Técnico e Estruturador';
       }
       
-      document.getElementById('leadArchetype').textContent = archetype + '. Estilo marcado por ' + (tests.includes('DISC') ? (['D', 'I'].includes(Object.entries(AppState.results.disc.percentages).sort((a,b) => b[1]-a[1])[0][0]) ? 'tomada de decisão ágil e engajamento' : 'suporte contínuo e padronização') : 'adaptabilidade conforme o contexto') + '.';
-      document.getElementById('leadMotivation').textContent = tests.includes('Valores') ? (AppState.results.values.percentages.reconhecimento >= 30 ? 'Usa reconhecimento público e desafios criativos.' : 'Oferece segurança psicológica e crescimento estável.') : 'Adapta motivação conforme o perfil da equipe.';
-      document.getElementById('leadDelegation').textContent = tests.includes('DISC') ? (AppState.results.disc.percentages.D >= 50 ? 'Delega autoridade, mas cobra resultados semanalmente.' : 'Delega com suporte próximo. Prefere acompanhar sem microgerenciar.') : 'Delega com clareza de expectativas e acompanhamento estruturado.';
+      const leadArchetype = safeGetElement('leadArchetype');
+      if (leadArchetype) {
+        leadArchetype.textContent = archetype + '. Estilo marcado por ' + (tests.includes('DISC') ? (['D', 'I'].includes(Object.entries(AppState.results.disc.percentages).sort((a,b) => b[1]-a[1])[0][0]) ? 'tomada de decisão ágil e engajamento' : 'suporte contínuo e padronização') : 'adaptabilidade conforme o contexto') + '.';
+      }
+      
+      const leadMotivation = safeGetElement('leadMotivation');
+      if (leadMotivation) {
+        leadMotivation.textContent = tests.includes('Valores') ? (AppState.results.values.percentages.reconhecimento >= 30 ? 'Usa reconhecimento público e desafios criativos.' : 'Oferece segurança psicológica e crescimento estável.') : 'Adapta motivação conforme o perfil da equipe.';
+      }
+      
+      const leadDelegation = safeGetElement('leadDelegation');
+      if (leadDelegation) {
+        leadDelegation.textContent = tests.includes('DISC') ? (AppState.results.disc.percentages.D >= 50 ? 'Delega autoridade, mas cobra resultados semanalmente.' : 'Delega com suporte próximo. Prefere acompanhar sem microgerenciar.') : 'Delega com clareza de expectativas e acompanhamento estruturado.';
+      }
     }
 
     function renderPressureBehavior(tests) {
-      document.getElementById('pressureReaction').textContent = 'Em cenários de alta pressão, tende a ' + (tests.includes('IE') ? (AppState.results.ie.percentages.autocontrole >= 70 ? 'manter clareza decisória e compostura emocional' : 'buscar equilíbrio com apoio de técnicas de regulação') : 'adaptar-se conforme o contexto') + '. ' + (tests.includes('IE') ? (AppState.results.ie.percentages.resiliencia >= 70 ? 'Recupera-se rapidamente após contratempos.' : 'Pode desenvolver maior tolerância à frustração.') : 'Beneficia-se de práticas de recuperação emocional.') + ' ' + (tests.includes('DISC') ? (AppState.results.disc.percentages.D >= 50 ? 'Acelera a execução sob pressão.' : 'Mantém consistência mesmo em cenários desafiadores.') : '');
-      document.getElementById('pressStabilityBar').style.width = (tests.includes('IE') ? AppState.results.ie.percentages.autocontrole : 50) + '%';
-      document.getElementById('pressToleranceBar').style.width = (tests.includes('IE') ? AppState.results.ie.percentages.resiliencia : 50) + '%';
-      document.getElementById('pressResilienceBar').style.width = (tests.includes('IE') ? (AppState.results.ie.percentages.resiliencia + AppState.results.ie.percentages.autocontrole) / 2 : 50) + '%';
+      const pressureReaction = safeGetElement('pressureReaction');
+      if (pressureReaction) {
+        pressureReaction.textContent = 'Em cenários de alta pressão, tende a ' + (tests.includes('IE') ? (AppState.results.ie.percentages.autocontrole >= 70 ? 'manter clareza decisória e compostura emocional' : 'buscar equilíbrio com apoio de técnicas de regulação') : 'adaptar-se conforme o contexto') + '. ' + (tests.includes('IE') ? (AppState.results.ie.percentages.resiliencia >= 70 ? 'Recupera-se rapidamente após contratempos.' : 'Pode desenvolver maior tolerância à frustração.') : 'Beneficia-se de práticas de recuperação emocional.') + ' ' + (tests.includes('DISC') ? (AppState.results.disc.percentages.D >= 50 ? 'Acelera a execução sob pressão.' : 'Mantém consistência mesmo em cenários desafiadores.') : '');
+      }
+      
+      const pressStabilityBar = safeGetElement('pressStabilityBar');
+      if (pressStabilityBar) pressStabilityBar.style.width = (tests.includes('IE') ? AppState.results.ie.percentages.autocontrole : 50) + '%';
+      
+      const pressToleranceBar = safeGetElement('pressToleranceBar');
+      if (pressToleranceBar) pressToleranceBar.style.width = (tests.includes('IE') ? AppState.results.ie.percentages.resiliencia : 50) + '%';
+      
+      const pressResilienceBar = safeGetElement('pressResilienceBar');
+      if (pressResilienceBar) pressResilienceBar.style.width = (tests.includes('IE') ? (AppState.results.ie.percentages.resiliencia + AppState.results.ie.percentages.autocontrole) / 2 : 50) + '%';
     }
 
     function renderDecisionMaking(tests) {
-      document.getElementById('decisionProfile').textContent = 'Perfil decisório marcado por ' + (tests.includes('DISC') ? (AppState.results.disc.percentages.D >= 50 ? 'rapidez e pragmatismo' : AppState.results.disc.percentages.C >= 50 ? 'análise minuciosa e cautela' : 'equilíbrio entre agilidade e reflexão') : 'adaptabilidade conforme o contexto') + '. ' + (tests.includes('IE') ? (AppState.results.ie.percentages.autocontrole >= 70 ? 'Mantém equilíbrio emocional mesmo em decisões difíceis.' : 'Pode beneficiar-se de pausas estratégicas antes de decidir.') : '');
-      document.getElementById('decisionSpeed').textContent = tests.includes('DISC') ? (AppState.results.disc.percentages.D >= 50 ? 'Rápido e assertivo. Prioriza ação sobre análise prolongada.' : 'Cauteloso. Prefere avaliar impactos a médio/longo prazo.') : 'Adapta velocidade conforme a complexidade da decisão.';
-      document.getElementById('decisionLogic').textContent = tests.includes('DISC') ? (AppState.results.disc.percentages.C >= 50 ? 'Altamente racional. Baseia escolhas em fatos, métricas e precedentes.' : 'Equilibrado. Pondera dados técnicos com impacto humano e cultural.') : 'Combina lógica com intuição conforme o contexto.';
+      const decisionProfile = safeGetElement('decisionProfile');
+      if (decisionProfile) {
+        decisionProfile.textContent = 'Perfil decisório marcado por ' + (tests.includes('DISC') ? (AppState.results.disc.percentages.D >= 50 ? 'rapidez e pragmatismo' : AppState.results.disc.percentages.C >= 50 ? 'análise minuciosa e cautela' : 'equilíbrio entre agilidade e reflexão') : 'adaptabilidade conforme o contexto') + '. ' + (tests.includes('IE') ? (AppState.results.ie.percentages.autocontrole >= 70 ? 'Mantém equilíbrio emocional mesmo em decisões difíceis.' : 'Pode beneficiar-se de pausas estratégicas antes de decidir.') : '');
+      }
+      
+      const decisionSpeed = safeGetElement('decisionSpeed');
+      if (decisionSpeed) {
+        decisionSpeed.textContent = tests.includes('DISC') ? (AppState.results.disc.percentages.D >= 50 ? 'Rápido e assertivo. Prioriza ação sobre análise prolongada.' : 'Cauteloso. Prefere avaliar impactos a médio/longo prazo.') : 'Adapta velocidade conforme a complexidade da decisão.';
+      }
+      
+      const decisionLogic = safeGetElement('decisionLogic');
+      if (decisionLogic) {
+        decisionLogic.textContent = tests.includes('DISC') ? (AppState.results.disc.percentages.C >= 50 ? 'Altamente racional. Baseia escolhas em fatos, métricas e precedentes.' : 'Equilibrado. Pondera dados técnicos com impacto humano e cultural.') : 'Combina lógica com intuição conforme o contexto.';
+      }
     }
 
     function renderCommunication(tests) {
-      document.getElementById('commPattern').textContent = 'Comunica-se de forma ' + (tests.includes('DISC') ? (AppState.results.disc.percentages.D >= 50 ? 'direta e objetiva' : AppState.results.disc.percentages.I >= 50 ? 'entusiasta e persuasiva' : AppState.results.disc.percentages.S >= 50 ? 'calma e empática' : 'precisa e estruturada') : 'adaptável') + '. ' + (tests.includes('IE') ? (AppState.results.ie.percentages.empatia >= 70 ? 'Adapta tom e linguagem conforme o interlocutor.' : 'Pode desenvolver maior sensibilidade ao impacto emocional das palavras.') : '');
-      document.getElementById('commMeetings').textContent = tests.includes('DISC') ? (AppState.results.disc.percentages.D >= 50 ? 'Foca em pautas objetivas, cobra follow-ups e evita reuniões sem decisão clara.' : AppState.results.disc.percentages.I >= 50 ? 'Engaja participantes, facilita brainstormings e mantém energia alta.' : 'Ouve ativamente, valida contribuições e busca consenso.') : 'Adapta estilo conforme o objetivo da reunião.';
-      document.getElementById('commClarityBar').style.width = (tests.includes('DISC') ? (AppState.results.disc.percentages.D >= 50 || AppState.results.disc.percentages.C >= 50 ? 85 : 65) : 70) + '%';
-      document.getElementById('commInfluenceBar').style.width = (tests.includes('DISC') ? (AppState.results.disc.percentages.I >= 50 ? 90 : AppState.results.disc.percentages.D >= 50 ? 75 : 60) : 70) + '%';
-      document.getElementById('commEmpathyBar').style.width = (tests.includes('IE') ? AppState.results.ie.percentages.empatia : 70) + '%';
+      const commPattern = safeGetElement('commPattern');
+      if (commPattern) {
+        commPattern.textContent = 'Comunica-se de forma ' + (tests.includes('DISC') ? (AppState.results.disc.percentages.D >= 50 ? 'direta e objetiva' : AppState.results.disc.percentages.I >= 50 ? 'entusiasta e persuasiva' : AppState.results.disc.percentages.S >= 50 ? 'calma e empática' : 'precisa e estruturada') : 'adaptável') + '. ' + (tests.includes('IE') ? (AppState.results.ie.percentages.empatia >= 70 ? 'Adapta tom e linguagem conforme o interlocutor.' : 'Pode desenvolver maior sensibilidade ao impacto emocional das palavras.') : '');
+      }
+      
+      const commMeetings = safeGetElement('commMeetings');
+      if (commMeetings) {
+        commMeetings.textContent = tests.includes('DISC') ? (AppState.results.disc.percentages.D >= 50 ? 'Foca em pautas objetivas, cobra follow-ups e evita reuniões sem decisão clara.' : AppState.results.disc.percentages.I >= 50 ? 'Engaja participantes, facilita brainstormings e mantém energia alta.' : 'Ouve ativamente, valida contribuições e busca consenso.') : 'Adapta estilo conforme o objetivo da reunião.';
+      }
+      
+      const commClarityBar = safeGetElement('commClarityBar');
+      if (commClarityBar) commClarityBar.style.width = (tests.includes('DISC') ? (AppState.results.disc.percentages.D >= 50 || AppState.results.disc.percentages.C >= 50 ? 85 : 65) : 70) + '%';
+      
+      const commInfluenceBar = safeGetElement('commInfluenceBar');
+      if (commInfluenceBar) commInfluenceBar.style.width = (tests.includes('DISC') ? (AppState.results.disc.percentages.I >= 50 ? 90 : AppState.results.disc.percentages.D >= 50 ? 75 : 60) : 70) + '%';
+      
+      const commEmpathyBar = safeGetElement('commEmpathyBar');
+      if (commEmpathyBar) commEmpathyBar.style.width = (tests.includes('IE') ? AppState.results.ie.percentages.empatia : 70) + '%';
     }
 
     function renderProductivity(tests) {
-      document.getElementById('prodCapacity').textContent = 'Capacidade de entrega ' + (tests.includes('DISC') ? (['D', 'I'].includes(Object.entries(AppState.results.disc.percentages).sort((a,b) => b[1]-a[1])[0][0]) ? 'acelerada com foco em impacto' : 'consistente com foco em qualidade') : 'adaptável') + ', com pico de produtividade quando alinhado a ' + (tests.includes('Valores') ? VALUES_INSIGHTS[AppState.results.values.dominant].motivators[0].toLowerCase() : 'seus motivadores principais') + '. ' + (tests.includes('IE') ? (AppState.results.ie.percentages.autocontrole >= 70 ? 'Mantém foco mesmo sob demandas concorrentes.' : 'Pode beneficiar-se de técnicas de priorização e regulação.') : '');
-      document.getElementById('prodConsistency').textContent = tests.includes('DISC') ? (['S', 'C'].includes(Object.entries(AppState.results.disc.percentages).sort((a,b) => b[1]-a[1])[0][0]) ? 'Alta consistência. Raramente varia qualidade ou prazo.' : 'Consistência moderada-alta. Pode oscilar conforme nível de engajamento.') : 'Adapta consistência conforme o contexto.';
-      document.getElementById('prodAdaptability').textContent = tests.includes('DISC') ? (['D', 'I'].includes(Object.entries(AppState.results.disc.percentages).sort((a,b) => b[1]-a[1])[0][0]) ? 'Alta adaptabilidade. Pivota rapidamente diante de mudanças de escopo.' : 'Adaptabilidade moderada. Prefere mudanças graduais com transição estruturada.') : 'Desenvolve adaptabilidade conforme a experiência.';
+      const prodCapacity = safeGetElement('prodCapacity');
+      if (prodCapacity) {
+        prodCapacity.textContent = 'Capacidade de entrega ' + (tests.includes('DISC') ? (['D', 'I'].includes(Object.entries(AppState.results.disc.percentages).sort((a,b) => b[1]-a[1])[0][0]) ? 'acelerada com foco em impacto' : 'consistente com foco em qualidade') : 'adaptável') + ', com pico de produtividade quando alinhado a ' + (tests.includes('Valores') ? VALUES_INSIGHTS[AppState.results.values.dominant].motivators[0].toLowerCase() : 'seus motivadores principais') + '. ' + (tests.includes('IE') ? (AppState.results.ie.percentages.autocontrole >= 70 ? 'Mantém foco mesmo sob demandas concorrentes.' : 'Pode beneficiar-se de técnicas de priorização e regulação.') : '');
+      }
+      
+      const prodConsistency = safeGetElement('prodConsistency');
+      if (prodConsistency) {
+        prodConsistency.textContent = tests.includes('DISC') ? (['S', 'C'].includes(Object.entries(AppState.results.disc.percentages).sort((a,b) => b[1]-a[1])[0][0]) ? 'Alta consistência. Raramente varia qualidade ou prazo.' : 'Consistência moderada-alta. Pode oscilar conforme nível de engajamento.') : 'Adapta consistência conforme o contexto.';
+      }
+      
+      const prodAdaptability = safeGetElement('prodAdaptability');
+      if (prodAdaptability) {
+        prodAdaptability.textContent = tests.includes('DISC') ? (['D', 'I'].includes(Object.entries(AppState.results.disc.percentages).sort((a,b) => b[1]-a[1])[0][0]) ? 'Alta adaptabilidade. Pivota rapidamente diante de mudanças de escopo.' : 'Adaptabilidade moderada. Prefere mudanças graduais com transição estruturada.') : 'Desenvolve adaptabilidade conforme a experiência.';
+      }
     }
 
     function renderIdealEnvironment(tests) {
-      document.getElementById('envCulture').textContent = 'Prospera em culturas que valorizam ' + (tests.includes('Valores') ? VALUES_INSIGHTS[AppState.results.values.dominant].motivators[0].toLowerCase() : 'crescimento e reconhecimento') + ' e oferecem ' + (tests.includes('DISC') ? (AppState.results.disc.percentages.D >= 50 ? 'autonomia decisória e meritocracia' : AppState.results.disc.percentages.I >= 50 ? 'espaço para criatividade e colaboração' : 'estabilidade e processos claros') : 'estrutura adequada') + '. Ambientes excessivamente ' + (tests.includes('DISC') ? (AppState.results.disc.percentages.D >= 50 ? 'burocráticos' : AppState.results.disc.percentages.S >= 50 ? 'caóticos' : 'improvisados') : 'desalinhados aos seus valores') + ' tendem a reduzir engajamento.';
-      document.getElementById('envManagement').textContent = tests.includes('DISC') ? (AppState.results.disc.percentages.D >= 50 ? 'Gestão por objetivos e resultados. Check-ins focados em métricas e remoção de bloqueios.' : AppState.results.disc.percentages.I >= 50 ? 'Gestão participativa. Feedback frequente, reconhecimento público e co-criação.' : 'Gestão de suporte. Comunicação clara, previsibilidade e desenvolvimento contínuo.') : 'Gestão adaptativa conforme o perfil do profissional.';
+      const envCulture = safeGetElement('envCulture');
+      if (envCulture) {
+        envCulture.textContent = 'Prospera em culturas que valorizam ' + (tests.includes('Valores') ? VALUES_INSIGHTS[AppState.results.values.dominant].motivators[0].toLowerCase() : 'crescimento e reconhecimento') + ' e oferecem ' + (tests.includes('DISC') ? (AppState.results.disc.percentages.D >= 50 ? 'autonomia decisória e meritocracia' : AppState.results.disc.percentages.I >= 50 ? 'espaço para criatividade e colaboração' : 'estabilidade e processos claros') : 'estrutura adequada') + '. Ambientes excessivamente ' + (tests.includes('DISC') ? (AppState.results.disc.percentages.D >= 50 ? 'burocráticos' : AppState.results.disc.percentages.S >= 50 ? 'caóticos' : 'improvisados') : 'desalinhados aos seus valores') + ' tendem a reduzir engajamento.';
+      }
+      
+      const envManagement = safeGetElement('envManagement');
+      if (envManagement) {
+        envManagement.textContent = tests.includes('DISC') ? (AppState.results.disc.percentages.D >= 50 ? 'Gestão por objetivos e resultados. Check-ins focados em métricas e remoção de bloqueios.' : AppState.results.disc.percentages.I >= 50 ? 'Gestão participativa. Feedback frequente, reconhecimento público e co-criação.' : 'Gestão de suporte. Comunicação clara, previsibilidade e desenvolvimento contínuo.') : 'Gestão adaptativa conforme o perfil do profissional.';
+      }
     }
 
     function renderJobFit(tests) {
       const hasJob = !!AppState.job;
       const fitScore = hasJob ? Math.min(98, Math.max(65, Math.random() * 30 + 70)) : null;
       
-      if (hasJob) {
-        document.getElementById('fitScore').textContent = fitScore + '%';
-        document.getElementById('fitTitle').textContent = fitScore >= 85 ? 'Alta Compatibilidade' : fitScore >= 70 ? 'Compatibilidade Moderada-Alta' : 'Compatibilidade em Desenvolvimento';
-        document.getElementById('fitDesc').textContent = `O perfil apresenta ${fitScore >= 85 ? 'forte aderência' : fitScore >= 70 ? 'boa aderência com pontos de ajuste' : 'aderência parcial que requer desenvolvimento direcionado'} à vaga "${AppState.job.name}".`;
-        document.getElementById('fitDisc').textContent = tests.includes('DISC') ? 'Combinação comportamental alinhada a funções ' + (['D', 'I'].includes(Object.entries(AppState.results.disc.percentages).sort((a,b) => b[1]-a[1])[0][0]) ? 'estratégicas e de influência' : 'operacionais e analíticas') + '.' : 'Não avaliado';
-        document.getElementById('fitEmotional').textContent = tests.includes('IE') ? (AppState.results.ie.avgQE >= 70 ? 'Alta capacidade de lidar com demandas emocionais da função.' : 'Pode desenvolver resiliência emocional para desafios da vaga.') : 'Não avaliado';
-        document.getElementById('fitCultural').textContent = tests.includes('Valores') ? CULTURAL_FIT_LEVELS[fitScore >= 75 ? 'alta' : fitScore >= 55 ? 'moderada' : 'desenvolvimento'].name : 'Não avaliado';
-      } else {
-        document.getElementById('fitScore').textContent = '--';
-        document.getElementById('fitTitle').textContent = 'Análise de Aderência';
-        document.getElementById('fitDesc').textContent = 'Nenhuma vaga vinculada ao participante. Vincule uma vaga para gerar análise de fit comportamental.';
-        document.getElementById('fitDisc').textContent = '--';
-        document.getElementById('fitEmotional').textContent = '--';
-        document.getElementById('fitCultural').textContent = '--';
+      const fitScoreEl = safeGetElement('fitScore');
+      if (fitScoreEl) fitScoreEl.textContent = hasJob ? fitScore + '%' : '--';
+      
+      const fitTitle = safeGetElement('fitTitle');
+      if (fitTitle) {
+        fitTitle.textContent = hasJob ? (fitScore >= 85 ? 'Alta Compatibilidade' : fitScore >= 70 ? 'Compatibilidade Moderada-Alta' : 'Compatibilidade em Desenvolvimento') : 'Análise de Aderência';
+      }
+      
+      const fitDesc = safeGetElement('fitDesc');
+      if (fitDesc) {
+        fitDesc.textContent = hasJob ? `O perfil apresenta ${fitScore >= 85 ? 'forte aderência' : fitScore >= 70 ? 'boa aderência com pontos de ajuste' : 'aderência parcial que requer desenvolvimento direcionado'} à vaga "${AppState.job.name}".` : 'Nenhuma vaga vinculada ao participante. Vincule uma vaga para gerar análise de fit comportamental.';
+      }
+      
+      const fitDisc = safeGetElement('fitDisc');
+      if (fitDisc) {
+        fitDisc.textContent = tests.includes('DISC') ? 'Combinação comportamental alinhada a funções ' + (['D', 'I'].includes(Object.entries(AppState.results.disc.percentages).sort((a,b) => b[1]-a[1])[0][0]) ? 'estratégicas e de influência' : 'operacionais e analíticas') + '.' : 'Não avaliado';
+      }
+      
+      const fitEmotional = safeGetElement('fitEmotional');
+      if (fitEmotional) {
+        fitEmotional.textContent = tests.includes('IE') ? (AppState.results.ie.avgQE >= 70 ? 'Alta capacidade de lidar com demandas emocionais da função.' : 'Pode desenvolver resiliência emocional para desafios da vaga.') : 'Não avaliado';
+      }
+      
+      const fitCultural = safeGetElement('fitCultural');
+      if (fitCultural) {
+        fitCultural.textContent = tests.includes('Valores') ? CULTURAL_FIT_LEVELS[fitScore >= 75 ? 'alta' : fitScore >= 55 ? 'moderada' : 'desenvolvimento'].name : 'Não avaliado';
       }
     }
 
@@ -1283,9 +1466,12 @@
         trainings.push(defaultTrainings[trainings.length % defaultTrainings.length]);
       }
       
-      document.getElementById('trainingList').innerHTML = trainings.slice(0, 6).map(t => 
-        `<div class="glass p-4 rounded-xl"><h4 class="font-medium mb-1 text-brand-cyan">${t.title}</h4><p class="text-sm text-gray-300">${t.desc}</p></div>`
-      ).join('');
+      const trainingList = safeGetElement('trainingList');
+      if (trainingList) {
+        trainingList.innerHTML = trainings.slice(0, 6).map(t => 
+          `<div class="glass p-4 rounded-xl"><h4 class="font-medium mb-1 text-brand-cyan">${t.title}</h4><p class="text-sm text-gray-300">${t.desc}</p></div>`
+        ).join('');
+      }
     }
 
     function renderPDI(tests) {
@@ -1307,9 +1493,14 @@
         'Integrar inteligência comportamental em processos estratégicos'
       ];
       
-      document.getElementById('pdiShort').innerHTML = shortTerm.map(item => `<li>• ${item}</li>`).join('');
-      document.getElementById('pdiMedium').innerHTML = mediumTerm.map(item => `<li>• ${item}</li>`).join('');
-      document.getElementById('pdiLong').innerHTML = longTerm.map(item => `<li>• ${item}</li>`).join('');
+      const pdiShort = safeGetElement('pdiShort');
+      if (pdiShort) pdiShort.innerHTML = shortTerm.map(item => `<li>• ${item}</li>`).join('');
+      
+      const pdiMedium = safeGetElement('pdiMedium');
+      if (pdiMedium) pdiMedium.innerHTML = mediumTerm.map(item => `<li>• ${item}</li>`).join('');
+      
+      const pdiLong = safeGetElement('pdiLong');
+      if (pdiLong) pdiLong.innerHTML = longTerm.map(item => `<li>• ${item}</li>`).join('');
     }
 
     function renderStrengths(tests) {
@@ -1335,9 +1526,12 @@
         strengths.push(defaultStrengths[strengths.length % defaultStrengths.length]);
       }
       
-      document.getElementById('strengthsList').innerHTML = strengths.slice(0, 6).map(s => 
-        `<div class="glass p-4 rounded-xl flex items-center gap-3"><span class="text-brand-emerald text-xl">✓</span><p class="font-medium">${s}</p></div>`
-      ).join('');
+      const strengthsList = safeGetElement('strengthsList');
+      if (strengthsList) {
+        strengthsList.innerHTML = strengths.slice(0, 6).map(s => 
+          `<div class="glass p-4 rounded-xl flex items-center gap-3"><span class="text-brand-emerald text-xl">✓</span><p class="font-medium">${s}</p></div>`
+        ).join('');
+      }
     }
 
     function renderDevelopmentAreas(tests) {
@@ -1366,9 +1560,12 @@
         developments.push(defaultDevelopments[developments.length % defaultDevelopments.length]);
       }
       
-      document.getElementById('developmentList').innerHTML = developments.slice(0, 6).map(d => 
-        `<div class="glass p-4 rounded-xl flex items-center gap-3"><span class="text-brand-amber text-xl">⚡</span><p class="font-medium">${d}</p></div>`
-      ).join('');
+      const developmentList = safeGetElement('developmentList');
+      if (developmentList) {
+        developmentList.innerHTML = developments.slice(0, 6).map(d => 
+          `<div class="glass p-4 rounded-xl flex items-center gap-3"><span class="text-brand-amber text-xl">⚡</span><p class="font-medium">${d}</p></div>`
+        ).join('');
+      }
     }
 
     function renderRHRecommendations(tests) {
@@ -1379,9 +1576,12 @@
         `Desenvolvimento: Investir em <strong>${tests.length >= 2 ? 'integração entre dimensões comportamentais' : 'desenvolvimento da dimensão avaliada'}</strong> via coaching e treinamento prático.`
       ];
       
-      document.getElementById('rhRecommendations').innerHTML = recs.map(r => 
-        `<div class="glass p-4 rounded-xl flex items-start gap-3"><span class="text-brand-cyan mt-1">➤</span><p class="text-sm text-gray-300">${r}</p></div>`
-      ).join('');
+      const rhRecommendations = safeGetElement('rhRecommendations');
+      if (rhRecommendations) {
+        rhRecommendations.innerHTML = recs.map(r => 
+          `<div class="glass p-4 rounded-xl flex items-start gap-3"><span class="text-brand-cyan mt-1">➤</span><p class="text-sm text-gray-300">${r}</p></div>`
+        ).join('');
+      }
     }
 
     function renderParticipantRecommendations(tests) {
@@ -1392,13 +1592,19 @@
         `Buscar mentoria em <strong>${tests.includes('Valores') ? 'alinhamento de valores' : 'desenvolvimento profissional'}</strong>.`
       ];
       
-      document.getElementById('participantRecommendations').innerHTML = recs.map(r => 
-        `<div class="glass p-4 rounded-xl flex items-start gap-3"><span class="text-brand-purple mt-1">🧭</span><p class="text-sm text-gray-300">${r}</p></div>`
-      ).join('');
+      const participantRecommendations = safeGetElement('participantRecommendations');
+      if (participantRecommendations) {
+        participantRecommendations.innerHTML = recs.map(r => 
+          `<div class="glass p-4 rounded-xl flex items-start gap-3"><span class="text-brand-purple mt-1">🧭</span><p class="text-sm text-gray-300">${r}</p></div>`
+        ).join('');
+      }
     }
 
     function renderConclusion(tests) {
-      document.getElementById('execConclusion').textContent = `O participante demonstra um perfil integrado com base em ${tests.join(', ')}. ${tests.length >= 2 ? 'A combinação de dimensões comportamentais, emocionais e motivacionais gera um perfil único com potencial para alta performance em ambientes alinhados.' : 'O perfil avaliado indica potencial para crescimento acelerado com desenvolvimento direcionado das dimensões analisadas.'} Recomenda-se acompanhamento contínuo via PDI Vigorre™ focado em ${tests.includes('IE') ? 'regulação emocional' : tests.includes('DISC') ? 'desenvolvimento comportamental' : 'alinhamento motivacional'}, garantindo evolução profissional e maximização de impacto organizacional. Este laudo deve ser utilizado como ferramenta estratégica de gestão de talentos, desenvolvimento de liderança e alocação de perfis em contextos de alta performance.`;
+      const execConclusion = safeGetElement('execConclusion');
+      if (execConclusion) {
+        execConclusion.textContent = `O participante demonstra um perfil integrado com base em ${tests.join(', ')}. ${tests.length >= 2 ? 'A combinação de dimensões comportamentais, emocionais e motivacionais gera um perfil único com potencial para alta performance em ambientes alinhados.' : 'O perfil avaliado indica potencial para crescimento acelerado com desenvolvimento direcionado das dimensões analisadas.'} Recomenda-se acompanhamento contínuo via PDI Vigorre™ focado em ${tests.includes('IE') ? 'regulação emocional' : tests.includes('DISC') ? 'desenvolvimento comportamental' : 'alinhamento motivacional'}, garantindo evolução profissional e maximização de impacto organizacional. Este laudo deve ser utilizado como ferramenta estratégica de gestão de talentos, desenvolvimento de liderança e alocação de perfis em contextos de alta performance.`;
+      }
     }
 
     function renderFinalQuote() {
@@ -1409,7 +1615,8 @@
         "Liderança não é cargo, é comportamento. E comportamento se desenvolve.",
         "A maturidade comportamental é o maior diferencial competitivo do século XXI."
       ];
-      document.getElementById('finalQuote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
+      const finalQuote = safeGetElement('finalQuote');
+      if (finalQuote) finalQuote.textContent = quotes[Math.floor(Math.random() * quotes.length)];
     }
 
     // ============================================
@@ -1628,10 +1835,15 @@
     }
 
     function showToast(message, type = 'success') {
-      const toast = document.getElementById('toast');
-      if (!toast) return; // CORREÇÃO: Verifica se elemento existe
-      document.getElementById('toastIcon').textContent = type === 'success' ? '✅' : '⚠️';
-      document.getElementById('toastMessage').textContent = message;
+      const toast = safeGetElement('toast');
+      if (!toast) return;
+      
+      const toastIcon = safeGetElement('toastIcon');
+      const toastMessage = safeGetElement('toastMessage');
+      
+      if (toastIcon) toastIcon.textContent = type === 'success' ? '✅' : '⚠️';
+      if (toastMessage) toastMessage.textContent = message;
+      
       toast.classList.remove('hidden');
       setTimeout(() => toast.classList.add('show'), 10);
       setTimeout(() => { 
@@ -1647,9 +1859,9 @@
     // 1. Tratamento de erro global com fallback amigável
     window.addEventListener('error', function(e) {
       console.error('Erro no Laudo Vigorre:', e);
-      const loading = document.getElementById('loadingOverlay');
+      const loading = safeGetElement('loadingOverlay');
       if (loading) loading.classList.add('hidden');
-      const content = document.getElementById('laudoContent');
+      const content = safeGetElement('laudoContent');
       if (content) {
         content.innerHTML = '<div class="glass-card p-8 text-center"><h2 class="text-xl font-bold text-brand-rose mb-4">⚠️ Erro ao gerar Laudo</h2><p class="text-gray-400 mb-4">Ocorreu um erro ao processar seus dados.</p><button onclick="window.location.reload()" class="btn-primary px-6 py-3 rounded-lg">🔄 Recarregar Página</button></div>';
         content.classList.remove('hidden');
@@ -1659,8 +1871,8 @@
 
     // 2. Timeout de segurança: se loading persistir por 15s, força hide
     setTimeout(function() {
-      const loading = document.getElementById('loadingOverlay');
-      const content = document.getElementById('laudoContent');
+      const loading = safeGetElement('loadingOverlay');
+      const content = safeGetElement('laudoContent');
       if (loading && !loading.classList.contains('hidden')) {
         console.warn('Laudo: loading timeout - forçando exibição do conteúdo');
         loading.classList.add('hidden');
