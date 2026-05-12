@@ -1148,18 +1148,41 @@
     }
 
     // ============================================
-    // FUNÇÃO: Verificar status de qualquer teste
+    // FUNÇÃO: Verificar status de qualquer teste (CORRIGIDA)
     // ============================================
     function checkTestStatus(participantId, testType) {
       var participant = DB.participants.find(function(p) { return p.id === participantId; });
-      if (!participant) return { completed: false, hasResult: false };
+      if (!participant) {
+        console.warn('⚠️ Participante não encontrado:', participantId);
+        return { completed: false, hasResult: false, canAccess: false };
+      }
       
+      // Verificar se teste está na lista de completados
       var completedTests = participant.completedTests || [];
       var hasCompleted = completedTests.includes(testType);
       
-      // CORREÇÃO: Garantir que a chave do localStorage esteja em minúsculo para 'Valores'
-      var resultKey = 'vigorre_last_' + testType.toLowerCase() + '_result';
+      // CORREÇÃO: Usar chaves CONSISTENTES em português para localStorage
+      var resultKey = '';
+      if (testType === 'DISC') {
+        resultKey = 'vigorre_last_disc_result';
+      } else if (testType === 'IE') {
+        resultKey = 'vigorre_last_ie_result';
+      } else if (testType === 'Valores') {
+        // CORREÇÃO CRÍTICA: Sempre usar 'valores' em português, nunca 'values'
+        resultKey = 'vigorre_last_valores_result';
+      }
+      
       var hasResult = !!localStorage.getItem(resultKey);
+      
+      // Debug log para diagnóstico
+      console.log('🔍 checkTestStatus:', {
+        participantId: participantId,
+        testType: testType,
+        hasCompleted: hasCompleted,
+        hasResult: hasResult,
+        resultKey: resultKey,
+        completedTests: completedTests
+      });
       
       return {
         completed: hasCompleted,
@@ -1176,7 +1199,10 @@
         var status = checkTestStatus(participantId, reportType);
         
         if (!status.canAccess) {
-          showToast('Participante ainda não completou o teste de ' + reportType + ' ou resultado não encontrado.', 'error');
+          var msg = 'Participante ainda não completou o teste de ' + reportType + '.';
+          if (!status.completed) msg += ' Teste não completado.';
+          if (!status.hasResult) msg += ' Resultado não encontrado.';
+          showToast(msg, 'error');
           return;
         }
         
@@ -1188,89 +1214,113 @@
         var reportFile = '';
         var reportName = '';
         
-        // CORREÇÃO: Garantir nomes de arquivo corretos para todos os relatórios
+        // CORREÇÃO: Garantir nomes de arquivo corretos
         if (reportType === 'DISC') {
           reportFile = 'relatorio-disc-vigorre.html';
-          reportName = 'Relatório Completo DISC Vigorre';
+          reportName = 'Relatório DISC';
         } else if (reportType === 'IE') {
           reportFile = 'relatorio-ie-vigorre.html';
-          reportName = 'Relatório de Inteligência Emocional Vigorre';
+          reportName = 'Relatório IE';
         } else if (reportType === 'Valores') {
           reportFile = 'relatorio-valores-vigorre.html';
-          reportName = 'Relatório de Valores Pessoais Vigorre';
+          reportName = 'Relatório Valores';
         }
         
         if (reportFile) {
-          window.open(reportFile + '?participantId=' + participantId, '_blank');
-          showToast('📊 Abrindo ' + reportName + '...', 'success');
+          var newWindow = window.open(reportFile + '?participantId=' + participantId, '_blank');
+          if (newWindow) {
+            showToast('📊 Abrindo ' + reportName + '...', 'success');
+          } else {
+            showToast('⚠️ Bloqueador de pop-up pode estar impedindo.', 'error');
+          }
         } else {
           showToast('Arquivo de relatório não encontrado.', 'error');
         }
       } catch (e) {
         console.error('Erro ao abrir relatório:', e);
-        showToast('Erro ao abrir relatório. Verifique o console para detalhes.', 'error');
+        showToast('Erro ao abrir relatório.', 'error');
       }
     }
 
     // ============================================
-    // PARTICIPANTES - RENDERIZAR
+    // PARTICIPANTES - RENDERIZAR (CORRIGIDA)
     // ============================================
     function renderParticipants() {
       var tbody = document.getElementById('participantsTableBody');
+      if (!tbody) {
+        console.error('❌ participantsTableBody não encontrado!');
+        return;
+      }
+      
       if (DB.participants.length === 0) { 
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#94a3b8;">Nenhum participante cadastrado</td></tr>'; 
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#94a3b8;padding:20px;">Nenhum participante cadastrado</td></tr>'; 
         return; 
       }
+      
+      console.log('🔍 Renderizando', DB.participants.length, 'participantes...');
+      
       tbody.innerHTML = DB.participants.map(function(p) {
-        var comp = DB.companies.find(function(c) { return c.id === p.compId; });
-        var tests = (p.tests || []).map(function(t) { 
-          return '<span class="badge" style="background:#e0e7ff; color:#3730a3; margin-right:4px; padding:2px 6px; border-radius:4px; font-size:0.75rem;">' + t + '</span>'; 
-        }).join('') || '<span style="color:#ef4444;font-size:0.8rem;">Nenhum</span>';
-        
         // Verificar status dos testes
         var discStatus = checkTestStatus(p.id, 'DISC');
         var ieStatus = checkTestStatus(p.id, 'IE');
         var valoresStatus = checkTestStatus(p.id, 'Valores');
         
-        // Badges de status combinados
+        console.log('📊 Status para', p.name, ':', {
+          DISC: discStatus,
+          IE: ieStatus,
+          Valores: valoresStatus
+        });
+        
+        // Badges de testes liberados
+        var tests = (p.tests || []).map(function(t) { 
+          return '<span class="badge" style="background:#e0e7ff;color:#3730a3;padding:2px 6px;border-radius:4px;font-size:0.75rem;margin-right:4px">' + t + '</span>'; 
+        }).join('') || '<span style="color:#ef4444;font-size:0.8rem">Nenhum</span>';
+        
+        // Badges de status (completado ou pendente)
         var statusBadges = [
-          discStatus.completed ? '<span class="badge-pill badge-disc badge-completed">DISC ✅</span>' : '<span class="badge-pill badge-disc badge-pending">DISC ⏳</span>',
-          ieStatus.completed ? '<span class="badge-pill badge-ie badge-completed">IE ✅</span>' : '<span class="badge-pill badge-ie badge-pending">IE ⏳</span>',
-          valoresStatus.completed ? '<span class="badge-pill badge-valores badge-completed">Val ✅</span>' : '<span class="badge-pill badge-valores badge-pending">Val ⏳</span>'
+          discStatus.completed 
+            ? '<span class="badge-pill badge-disc badge-completed" title="DISC Completado">DISC ✅</span>' 
+            : '<span class="badge-pill badge-disc badge-pending" title="DISC Pendente">DISC ⏳</span>',
+          ieStatus.completed 
+            ? '<span class="badge-pill badge-ie badge-completed" title="IE Completado">IE ✅</span>' 
+            : '<span class="badge-pill badge-ie badge-pending" title="IE Pendente">IE ⏳</span>',
+          valoresStatus.completed 
+            ? '<span class="badge-pill badge-valores badge-completed" title="Valores Completado">Val ✅</span>' 
+            : '<span class="badge-pill badge-valores badge-pending" title="Valores Pendente">Val ⏳</span>'
         ].join(' ');
         
-        // Botões dos relatórios
+        // Botões de relatório - CORREÇÃO: Mostrar quando canAccess = true
         var reportBtns = '';
         if (discStatus.canAccess) {
-          reportBtns += '<button class="btn-report" onclick="openVigorreReport(\'' + p.id + '\', \'DISC\')" title="Relatório DISC">📊</button> ';
+          reportBtns += '<button class="btn-report" onclick="openVigorreReport(\'' + p.id + '\', \'DISC\')" title="Gerar Relatório DISC">📊 DISC</button> ';
         }
         if (ieStatus.canAccess) {
-          reportBtns += '<button class="btn-report btn-report-ie" onclick="openVigorreReport(\'' + p.id + '\', \'IE\')" title="Relatório IE">🧠</button> ';
+          reportBtns += '<button class="btn-report btn-report-ie" onclick="openVigorreReport(\'' + p.id + '\', \'IE\')" title="Gerar Relatório IE">🧠 IE</button> ';
         }
         if (valoresStatus.canAccess) {
-          reportBtns += '<button class="btn-report btn-report-valores" onclick="openVigorreReport(\'' + p.id + '\', \'Valores\')" title="Relatório Valores">💎</button>';
+          reportBtns += '<button class="btn-report btn-report-valores" onclick="openVigorreReport(\'' + p.id + '\', \'Valores\')" title="Gerar Relatório Valores">💎 Valores</button>';
         }
         if (!reportBtns) {
-          reportBtns = '<span class="badge-pill badge-pending">Aguardando</span>';
+          reportBtns = '<span class="badge-pill badge-pending" title="Aguardando conclusão dos testes">Aguardando</span>';
         }
         
         return '<tr>' +
           '<td><strong>' + p.name + '</strong></td>' +
-          '<td>' + p.email + '<br><small style="color:#64748b;">Tel: ' + p.phone + '</small></td>' +
-          '<td style="font-family:monospace; font-size:0.85rem; background:#f1f5f9; padding:8px; border-radius:6px;">' +
-            'U: ' + (p.user || '-') + '<br>S: ' + (p.pass || '-') + '<br>V: ' + (p.exp || '-') +
-          '</td>' +
+          '<td>' + p.email + '<br><small style="color:#64748b">Tel: ' + p.phone + '</small></td>' +
+          '<td style="font-family:monospace;font-size:0.85rem;background:#f1f5f9;padding:8px;border-radius:6px">U:' + (p.user||'-') + '<br>S:' + (p.pass||'-') + '<br>V:' + (p.exp||'-') + '</td>' +
           '<td>' + tests + '</td>' +
           '<td>' + statusBadges + '</td>' +
           '<td>' + reportBtns + '</td>' +
           '<td>' +
-            '<button class="btn btn-warning btn-sm" onclick="editParticipant(\'' + p.id + '\')">✏️ Editar</button>' +
-            '<button class="btn btn-primary btn-sm" onclick="resendTest(\'' + p.id + '\')">📧 Reenviar Teste</button>' +
-            '<button class="btn btn-secondary btn-sm" onclick="openVigorreLaudo(\'' + p.id + '\')">💎 Laudo Vigorre</button>' +
-            '<button class="btn btn-danger btn-sm" onclick="deleteItem(\'participants\',\'' + p.id + '\')">🗑️ Excluir</button>' +
+            '<button class="btn btn-warning btn-sm" onclick="editParticipant(\'' + p.id + '\')">✏️ Editar</button> ' +
+            '<button class="btn btn-primary btn-sm" onclick="resendTest(\'' + p.id + '\')">📧 Reenviar</button> ' +
+            '<button class="btn btn-secondary btn-sm" onclick="openVigorreLaudo(\'' + p.id + '\')">💎 Laudo</button> ' +
+            '<button class="btn btn-danger btn-sm" onclick="deleteItem(\'participants\',\'' + p.id + '\')">🗑️</button>' +
           '</td>' +
         '</tr>';
       }).join('');
+      
+      console.log('✅ Participantes renderizados com sucesso');
     }
 
     // ============================================
