@@ -572,6 +572,11 @@
     </div>
   </div>
 
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="fixed top-4 right-4 glass px-4 py-3 rounded-lg z-50 flex items-center gap-2 hidden">
+    <span id="toastIcon">✅</span><span id="toastMessage">Ação realizada!</span>
+  </div>
+
   <script>
     // ============================================
     // ESTADO E DADOS
@@ -767,64 +772,76 @@
     }
 
     function renderCharts(percentages) {
-      if (AppState.charts.radar) AppState.charts.radar.destroy();
-      if (AppState.charts.bar) AppState.charts.bar.destroy();
+      // CORREÇÃO: Destruir instâncias anteriores antes de criar novas
+      if (AppState.charts.radar) { AppState.charts.radar.destroy(); AppState.charts.radar = null; }
+      if (AppState.charts.bar) { AppState.charts.bar.destroy(); AppState.charts.bar = null; }
 
-      const ctxRadar = document.getElementById('discRadarChart').getContext('2d');
-      AppState.charts.radar = new Chart(ctxRadar, {
-        type: 'radar',
-        data: {
-          labels: ['Dominância', 'Influência', 'Estabilidade', 'Conformidade'],
-          datasets: [{
-            label: 'Perfil Comportamental',
-            data: [percentages.D, percentages.I, percentages.S, percentages.C],
-            backgroundColor: 'rgba(124, 58, 237, 0.25)',
-            borderColor: '#7C3AED',
-            borderWidth: 3,
-            pointBackgroundColor: '#fff',
-            pointBorderColor: '#7C3AED',
-            pointHoverBackgroundColor: '#7C3AED',
-            pointHoverBorderColor: '#fff'
-          }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          scales: {
-            r: {
-              angleLines: { color: 'rgba(255,255,255,0.1)' },
-              grid: { color: 'rgba(255,255,255,0.1)' },
-              pointLabels: { color: '#F8FAFC', font: { size: 12, weight: '600' } },
-              ticks: { display: false, backdropColor: 'transparent' },
-              suggestedMin: 0, suggestedMax: 100
+      // CORREÇÃO: Verificar se elemento existe antes de getContext
+      const radarCanvas = document.getElementById('discRadarChart');
+      if (radarCanvas) {
+        const ctxRadar = radarCanvas.getContext('2d');
+        if (ctxRadar) {
+          AppState.charts.radar = new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+              labels: ['Dominância', 'Influência', 'Estabilidade', 'Conformidade'],
+              datasets: [{
+                label: 'Perfil Comportamental',
+                data: [percentages.D, percentages.I, percentages.S, percentages.C],
+                backgroundColor: 'rgba(124, 58, 237, 0.25)',
+                borderColor: '#7C3AED',
+                borderWidth: 3,
+                pointBackgroundColor: '#fff',
+                pointBorderColor: '#7C3AED',
+                pointHoverBackgroundColor: '#7C3AED',
+                pointHoverBorderColor: '#fff'
+              }]
+            },
+            options: {
+              responsive: true, maintainAspectRatio: false,
+              scales: {
+                r: {
+                  angleLines: { color: 'rgba(255,255,255,0.1)' },
+                  grid: { color: 'rgba(255,255,255,0.1)' },
+                  pointLabels: { color: '#F8FAFC', font: { size: 12, weight: '600' } },
+                  ticks: { display: false, backdropColor: 'transparent' },
+                  suggestedMin: 0, suggestedMax: 100
+                }
+              },
+              plugins: { legend: { display: false } }
             }
-          },
-          plugins: { legend: { display: false } }
+          });
         }
-      });
+      }
 
-      const ctxBar = document.getElementById('discBarChart').getContext('2d');
-      AppState.charts.bar = new Chart(ctxBar, {
-        type: 'bar',
-        data: {
-          labels: ['D - Dominância', 'I - Influência', 'S - Estabilidade', 'C - Conformidade'],
-          datasets: [{
-            label: 'Intensidade',
-            data: [percentages.D, percentages.I, percentages.S, percentages.C],
-            backgroundColor: ['rgba(239, 68, 68, 0.8)', 'rgba(59, 130, 246, 0.8)', 'rgba(16, 185, 129, 0.8)', 'rgba(124, 58, 237, 0.8)'],
-            borderColor: ['#EF4444', '#3B82F6', '#10B981', '#7C3AED'],
-            borderWidth: 2,
-            borderRadius: 8
-          }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          scales: {
-            y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94A3B8' } },
-            x: { grid: { display: false }, ticks: { color: '#F8FAFC', font: { weight: 'bold' } } }
-          },
-          plugins: { legend: { display: false } }
+      const barCanvas = document.getElementById('discBarChart');
+      if (barCanvas) {
+        const ctxBar = barCanvas.getContext('2d');
+        if (ctxBar) {
+          AppState.charts.bar = new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+              labels: ['D - Dominância', 'I - Influência', 'S - Estabilidade', 'C - Conformidade'],
+              datasets: [{
+                label: 'Intensidade',
+                data: [percentages.D, percentages.I, percentages.S, percentages.C],
+                backgroundColor: ['rgba(239, 68, 68, 0.8)', 'rgba(59, 130, 246, 0.8)', 'rgba(16, 185, 129, 0.8)', 'rgba(124, 58, 237, 0.8)'],
+                borderColor: ['#EF4444', '#3B82F6', '#10B981', '#7C3AED'],
+                borderWidth: 2,
+                borderRadius: 8
+              }]
+            },
+            options: {
+              responsive: true, maintainAspectRatio: false,
+              scales: {
+                y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94A3B8' } },
+                x: { grid: { display: false }, ticks: { color: '#F8FAFC', font: { weight: 'bold' } } }
+              },
+              plugins: { legend: { display: false } }
+            }
+          });
         }
-      });
+      }
     }
 
     function renderProfileOverview(r, dom, sec) {
@@ -997,8 +1014,11 @@
 
     function showToast(message, type = 'success') {
       const toast = document.getElementById('toast');
-      toast.querySelector('span:first-child').textContent = type === 'success' ? '✅' : '⚠️';
-      document.getElementById('toastMessage').textContent = message;
+      if (!toast) return; // CORREÇÃO: Verificar se elemento existe
+      const iconEl = toast.querySelector('span:first-child');
+      const msgEl = document.getElementById('toastMessage');
+      if (iconEl) iconEl.textContent = type === 'success' ? '✅' : '⚠️';
+      if (msgEl) msgEl.textContent = message;
       toast.classList.remove('hidden');
       setTimeout(() => toast.classList.add('show'), 10);
       setTimeout(() => { 
@@ -1006,6 +1026,42 @@
         setTimeout(() => toast.classList.add('hidden'), 300); 
       }, 4000);
     }
+
+    // ============================================
+    // >>> CORREÇÕES ADICIONADAS (SEM OTIMIZAR) <<<
+    // ============================================
+
+    // 1. Tratamento de erro global com fallback amigável
+    window.addEventListener('error', function(e) {
+      console.error('Erro no relatório DISC:', e);
+      const loading = document.getElementById('loadingOverlay');
+      if (loading) loading.classList.add('hidden');
+      const content = document.getElementById('reportContent');
+      if (content) {
+        content.innerHTML = '<div class="glass-card p-8 text-center"><h2 class="text-xl font-bold text-brand-rose mb-4">⚠️ Erro ao carregar relatório</h2><p class="text-gray-400 mb-4">Ocorreu um erro ao processar seus dados.</p><button onclick="window.location.reload()" class="btn-primary px-6 py-3 rounded-lg">🔄 Recarregar Página</button></div>';
+        content.classList.remove('hidden');
+      }
+      return true; // Previne erro no console
+    });
+
+    // 2. Timeout de segurança: se loading persistir por 10s, força hide
+    setTimeout(function() {
+      const loading = document.getElementById('loadingOverlay');
+      const content = document.getElementById('reportContent');
+      if (loading && !loading.classList.contains('hidden')) {
+        console.warn('Loading timeout - forçando exibição do conteúdo');
+        loading.classList.add('hidden');
+        if (content) content.classList.remove('hidden');
+        showToast('⚠️ Tempo de carregamento excedido. Verifique seus dados.', 'error');
+      }
+    }, 10000);
+
+    // 3. Debug: Logar resultados disponíveis no console para diagnóstico
+    console.log('🔍 Resultados DISC disponíveis:', {
+      hasResult: !!localStorage.getItem('vigorre_last_disc_result'),
+      participant: AppState.participant?.name || 'não carregado'
+    });
+
   </script>
 </body>
 </html>
