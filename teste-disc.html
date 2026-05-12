@@ -1656,53 +1656,50 @@
     // SALVAR RESULTADOS NO PARTICIPANTE
     // ============================================
     function saveParticipantResults(results) {
-      if (!AppState.participant) return;
+  if (!AppState.participant) return;
+  
+  try {
+    const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+    const idx = participants.findIndex(p => p.id === AppState.participant.id);
+    
+    if (idx > -1) {
+      // ... código existente ...
       
-      try {
-        const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-        const idx = participants.findIndex(p => p.id === AppState.participant.id);
-        
-        if (idx > -1) {
-          // Garantir arrays existentes
-          if (!participants[idx].completedTests) {
-            participants[idx].completedTests = [];
-          }
-          if (!participants[idx].testResults) {
-            participants[idx].testResults = {};
-          }
-          
-          // Marcar DISC como concluído se ainda não estiver
-          if (!participants[idx].completedTests.includes('DISC')) {
-            participants[idx].completedTests.push('DISC');
-          }
-          
-          // Salvar resultados do teste
-          participants[idx].testResults.DISC = {
-            date: new Date().toISOString(),
-            scores: results.scores,
-            percentages: results.percentages,
-            dominant: Object.entries(results.percentages).sort((a, b) => b[1] - a[1])[0][0]
-          };
-          
-          // Salvar no localStorage
-          localStorage.setItem('vigorre_participants', JSON.stringify(participants));
-          
-          // ✅ CORREÇÃO: Salvar também na chave que o laudo espera encontrar
-          localStorage.setItem('vigorre_last_disc_result', JSON.stringify({
-            scores: results.scores,
-            percentages: results.percentages,
-            dominant: Object.entries(results.percentages).sort((a, b) => b[1] - a[1])[0][0],
-            date: new Date().toISOString()
-          }));
-          
-          // Atualizar estado local
-          AppState.participant = participants[idx];
-        }
-      } catch (e) {
-        console.error('Erro ao salvar resultados:', e);
+      // ❌ ONDE ESTÁ ASSIM (provavelmente):
+      participants[idx].testResults.DISC = { ... };
+      
+      // ✅ MUDE PARA ASSIM:
+      if (!participants[idx].completedTests) {
+        participants[idx].completedTests = [];
       }
+      
+      if (!participants[idx].completedTests.includes('DISC')) {
+        participants[idx].completedTests.push('DISC');
+        console.log('✅ DISC adicionado a completedTests');
+      }
+      
+      participants[idx].testResults.DISC = {
+        date: new Date().toISOString(),
+        scores: results.scores,
+        percentages: results.percentages,
+        dominant: Object.entries(results.percentages).sort((a, b) => b[1] - a[1])[0][0]
+      };
+      
+      localStorage.setItem('vigorre_participants', JSON.stringify(participants));
+      
+      localStorage.setItem('vigorre_last_disc_result', JSON.stringify({
+        scores: results.scores,
+        percentages: results.percentages,
+        dominant: Object.entries(results.percentages).sort((a, b) => b[1] - a[1])[0][0],
+        date: new Date().toISOString()
+      }));
+      
+      AppState.participant = participants[idx];
     }
-
+  } catch (e) {
+    console.error('Erro ao salvar resultados:', e);
+  }
+}
     // ============================================
     // ENVIAR RELATÓRIO SIMPLES POR E-MAIL (SIMULADO)
     // ============================================
