@@ -1324,10 +1324,12 @@
     }
 
     // ============================================
-    // PARTICIPANTES - SALVAR (FUNÇÃO CRUCIAL - CORRIGIDA)
+    // PARTICIPANTES - SALVAR (FUNÇÃO CRUCIAL - CORRIGIDA FINAL)
     // ============================================
     function saveParticipant(e) {
       e.preventDefault();
+      
+      console.log('💾 Salvando participante...');
       
       // Captura o ID do participante (novo ou existente)
       var id = document.getElementById('pId').value || Date.now().toString();
@@ -1340,7 +1342,13 @@
       // 🔍 Busca participante existente para preservar histórico
       var existingParticipant = DB.participants.find(function(x) { return x.id === id; });
       
-      // Monta o objeto com todos os dados do participante
+      console.log('🔍 existingParticipant:', existingParticipant ? 'ENCONTRADO' : 'NOVO');
+      if (existingParticipant) {
+        console.log('📋 completedTests existente:', existingParticipant.completedTests);
+        console.log('📋 testResults existente:', existingParticipant.testResults);
+      }
+      
+      // Monta o objeto com todos os dados do participante (SEM completedTests/testResults)
       var data = { 
         id: id, 
         name: document.getElementById('pName').value, 
@@ -1352,7 +1360,7 @@
         exp: document.getElementById('pExp').value, 
         tests: tests,
         assignedTests: tests
-        // ✅ NÃO definir completedTests ou testResults aqui - serão preservados abaixo
+        // ✅ NÃO definir completedTests ou testResults aqui!
       };
       
       // Busca o índice do participante no banco local (se existir)
@@ -1360,14 +1368,23 @@
       
       // Atualiza ou adiciona o participante no banco
       if (idx > -1) {
+        console.log('✏️ Atualizando participante existente...');
+        
         // ✅ PRESERVAR dados históricos ao atualizar participante existente
+        // Primeiro fazemos o merge dos dados
         DB.participants[idx] = { 
-          ...DB.participants[idx],  // Mantém TODOS os dados existentes (completedTests, testResults, etc.)
-          ...data,                   // Sobrescreve APENAS com novos dados do formulário
-          completedTests: existingParticipant ? (existingParticipant.completedTests || []) : [],
-          testResults: existingParticipant ? (existingParticipant.testResults || {}) : {}
+          ...DB.participants[idx],  // Mantém TODOS os dados existentes
+          ...data                    // Sobrescreve APENAS com novos dados do formulário
         };
+        
+        // ✅ GARANTIR que completedTests e testResults sejam preservados EXPLICITAMENTE
+        DB.participants[idx].completedTests = existingParticipant ? (existingParticipant.completedTests || []) : [];
+        DB.participants[idx].testResults = existingParticipant ? (existingParticipant.testResults || {}) : {};
+        
+        console.log('✅ completedTests preservado:', DB.participants[idx].completedTests);
+        console.log('✅ testResults preservado:', DB.participants[idx].testResults);
       } else {
+        console.log('➕ Criando novo participante...');
         // Novo participante: inicializa arrays vazios
         data.completedTests = [];
         data.testResults = {};
@@ -1382,6 +1399,8 @@
       
       // Exibe mensagem de sucesso
       showToast('Participante salvo com sucesso!');
+      
+      console.log('💾 Participante salvo com sucesso!');
     }
 
     // ============================================
