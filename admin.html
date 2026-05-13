@@ -1357,7 +1357,7 @@
         name: document.getElementById('pName').value, 
         phone: document.getElementById('pPhone').value, 
         email: document.getElementById('pEmail').value.toLowerCase(), 
-        compId: document.getElementById('pComp').value,  // ✅ Vinculo com empresa
+        compId: document.getElementById('pComp').value,  // ✅ Pode ser vazio "" se selecionar "Independente"
         user: document.getElementById('pUser').value.toLowerCase(), 
         pass: document.getElementById('pPass').value, 
         exp: document.getElementById('pExp').value, 
@@ -1365,6 +1365,8 @@
         assignedTests: tests
         // ✅ NÃO definir completedTests ou testResults aqui!
       };
+      
+      console.log('📋 Dados do formulário:', data);
       
       // Busca o índice do participante no banco local (se existir)
       var idx = DB.participants.findIndex(function(x) { return x.id === id; });
@@ -1376,12 +1378,11 @@
         // ✅ PRESERVAR TODOS os dados existentes ANTES de fazer merge
         var existingCompletedTests = existingParticipant.completedTests || [];
         var existingTestResults = existingParticipant.testResults || {};
-        var existingCompId = existingParticipant.compId || '';
         
         console.log('📋 Preservando dados:');
         console.log('  - completedTests:', existingCompletedTests);
         console.log('  - testResults:', existingTestResults);
-        console.log('  - compId:', existingCompId);
+        console.log('  - compId (formulário):', data.compId);
         
         // Primeiro fazemos o merge dos dados do formulário
         DB.participants[idx] = { 
@@ -1392,8 +1393,10 @@
         // ✅ GARANTIR que dados críticos sejam preservados EXPLICITAMENTE
         DB.participants[idx].completedTests = existingCompletedTests;
         DB.participants[idx].testResults = existingTestResults;
-        // ✅ GARANTIR que compId seja preservado (vínculo com empresa)
-        DB.participants[idx].compId = data.compId || existingCompId;
+        
+        // ✅ CORREÇÃO CRÍTICA: SEMPRE usar o compId do formulário (mesmo que vazio)
+        // Isso permite desvincular a empresa selecionando "Independente"
+        DB.participants[idx].compId = data.compId;
         
         console.log('✅ Dados preservados após salvamento:');
         console.log('  - completedTests:', DB.participants[idx].completedTests);
