@@ -1324,7 +1324,7 @@
     }
 
     // ============================================
-    // PARTICIPANTES - SALVAR (FUNÇÃO CRUCIAL - CORRIGIDA FINAL)
+    // PARTICIPANTES - SALVAR (FUNÇÃO CRUCIAL - CORRIGIDA FINAL COM VÍNCULO DE EMPRESA)
     // ============================================
     function saveParticipant(e) {
       e.preventDefault();
@@ -1344,8 +1344,11 @@
       
       console.log('🔍 existingParticipant:', existingParticipant ? 'ENCONTRADO' : 'NOVO');
       if (existingParticipant) {
-        console.log('📋 completedTests existente:', existingParticipant.completedTests);
-        console.log('📋 testResults existente:', existingParticipant.testResults);
+        console.log('📋 Dados existentes:');
+        console.log('  - completedTests:', existingParticipant.completedTests);
+        console.log('  - testResults:', existingParticipant.testResults);
+        console.log('  - compId:', existingParticipant.compId);
+        console.log('  - tests:', existingParticipant.tests);
       }
       
       // Monta o objeto com todos os dados do participante (SEM completedTests/testResults)
@@ -1354,7 +1357,7 @@
         name: document.getElementById('pName').value, 
         phone: document.getElementById('pPhone').value, 
         email: document.getElementById('pEmail').value.toLowerCase(), 
-        compId: document.getElementById('pComp').value, 
+        compId: document.getElementById('pComp').value,  // ✅ Vinculo com empresa
         user: document.getElementById('pUser').value.toLowerCase(), 
         pass: document.getElementById('pPass').value, 
         exp: document.getElementById('pExp').value, 
@@ -1370,19 +1373,32 @@
       if (idx > -1) {
         console.log('✏️ Atualizando participante existente...');
         
-        // ✅ PRESERVAR dados históricos ao atualizar participante existente
-        // Primeiro fazemos o merge dos dados
+        // ✅ PRESERVAR TODOS os dados existentes ANTES de fazer merge
+        var existingCompletedTests = existingParticipant.completedTests || [];
+        var existingTestResults = existingParticipant.testResults || {};
+        var existingCompId = existingParticipant.compId || '';
+        
+        console.log('📋 Preservando dados:');
+        console.log('  - completedTests:', existingCompletedTests);
+        console.log('  - testResults:', existingTestResults);
+        console.log('  - compId:', existingCompId);
+        
+        // Primeiro fazemos o merge dos dados do formulário
         DB.participants[idx] = { 
           ...DB.participants[idx],  // Mantém TODOS os dados existentes
           ...data                    // Sobrescreve APENAS com novos dados do formulário
         };
         
-        // ✅ GARANTIR que completedTests e testResults sejam preservados EXPLICITAMENTE
-        DB.participants[idx].completedTests = existingParticipant ? (existingParticipant.completedTests || []) : [];
-        DB.participants[idx].testResults = existingParticipant ? (existingParticipant.testResults || {}) : {};
+        // ✅ GARANTIR que dados críticos sejam preservados EXPLICITAMENTE
+        DB.participants[idx].completedTests = existingCompletedTests;
+        DB.participants[idx].testResults = existingTestResults;
+        // ✅ GARANTIR que compId seja preservado (vínculo com empresa)
+        DB.participants[idx].compId = data.compId || existingCompId;
         
-        console.log('✅ completedTests preservado:', DB.participants[idx].completedTests);
-        console.log('✅ testResults preservado:', DB.participants[idx].testResults);
+        console.log('✅ Dados preservados após salvamento:');
+        console.log('  - completedTests:', DB.participants[idx].completedTests);
+        console.log('  - testResults:', DB.participants[idx].testResults);
+        console.log('  - compId:', DB.participants[idx].compId);
       } else {
         console.log('➕ Criando novo participante...');
         // Novo participante: inicializa arrays vazios
