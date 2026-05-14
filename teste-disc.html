@@ -378,9 +378,9 @@
   </div>
   
   <!-- ============================================
-       LANDING PAGE / HERO SECTION
+       LANDING PAGE / HERO SECTION (OCULTA PARA PARTICIPANTES LOGADOS)
        ============================================ -->
-  <div id="landingPage" class="min-h-screen flex flex-col">
+  <div id="landingPage" class="min-h-screen flex flex-col hidden">
     
     <!-- Header -->
     <header class="glass border-b border-white/10 sticky top-0 z-50">
@@ -1294,6 +1294,13 @@
       // Carregar sessão do participante
       loadSession();
       
+      // ✅ CORREÇÃO: Se já estiver logado, vai direto para as instruções
+      if (AppState.session && AppState.session.id) {
+        showView('instructionsPage');
+      } else {
+        showView('landingPage');
+      }
+      
       // Configurar observers para animações
       setupScrollAnimations();
       
@@ -1656,50 +1663,52 @@
     // SALVAR RESULTADOS NO PARTICIPANTE
     // ============================================
     function saveParticipantResults(results) {
-  if (!AppState.participant) return;
-  
-  try {
-    const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-    const idx = participants.findIndex(p => p.id === AppState.participant.id);
-    
-    if (idx > -1) {
-      // ... código existente ...
+      if (!AppState.participant) return;
       
-      // ❌ ONDE ESTÁ ASSIM (provavelmente):
-      participants[idx].testResults.DISC = { ... };
-      
-      // ✅ MUDE PARA ASSIM:
-      if (!participants[idx].completedTests) {
-        participants[idx].completedTests = [];
+      try {
+        const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+        const idx = participants.findIndex(p => p.id === AppState.participant.id);
+        
+        if (idx > -1) {
+          // Garantir que completedTests exista
+          if (!participants[idx].completedTests) {
+            participants[idx].completedTests = [];
+          }
+          
+          // Adicionar DISC aos testes concluídos se ainda não estiver
+          if (!participants[idx].completedTests.includes('DISC')) {
+            participants[idx].completedTests.push('DISC');
+            console.log('✅ DISC adicionado a completedTests');
+          }
+          
+          // Salvar resultados do teste
+          participants[idx].testResults = participants[idx].testResults || {};
+          participants[idx].testResults.DISC = {
+            date: new Date().toISOString(),
+            scores: results.scores,
+            percentages: results.percentages,
+            dominant: Object.entries(results.percentages).sort((a, b) => b[1] - a[1])[0][0]
+          };
+          
+          // Salvar no localStorage
+          localStorage.setItem('vigorre_participants', JSON.stringify(participants));
+          
+          // Salvar resultado no localStorage para relatórios
+          localStorage.setItem('vigorre_last_disc_result', JSON.stringify({
+            scores: results.scores,
+            percentages: results.percentages,
+            dominant: Object.entries(results.percentages).sort((a, b) => b[1] - a[1])[0][0],
+            date: new Date().toISOString()
+          }));
+          
+          // Atualizar participant no AppState
+          AppState.participant = participants[idx];
+        }
+      } catch (e) {
+        console.error('Erro ao salvar resultados:', e);
       }
-      
-      if (!participants[idx].completedTests.includes('DISC')) {
-        participants[idx].completedTests.push('DISC');
-        console.log('✅ DISC adicionado a completedTests');
-      }
-      
-      participants[idx].testResults.DISC = {
-        date: new Date().toISOString(),
-        scores: results.scores,
-        percentages: results.percentages,
-        dominant: Object.entries(results.percentages).sort((a, b) => b[1] - a[1])[0][0]
-      };
-      
-      localStorage.setItem('vigorre_participants', JSON.stringify(participants));
-      
-      localStorage.setItem('vigorre_last_disc_result', JSON.stringify({
-        scores: results.scores,
-        percentages: results.percentages,
-        dominant: Object.entries(results.percentages).sort((a, b) => b[1] - a[1])[0][0],
-        date: new Date().toISOString()
-      }));
-      
-      AppState.participant = participants[idx];
     }
-  } catch (e) {
-    console.error('Erro ao salvar resultados:', e);
-  }
-}
+
     // ============================================
     // ENVIAR RELATÓRIO SIMPLES POR E-MAIL (SIMULADO)
     // ============================================
