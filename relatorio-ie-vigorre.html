@@ -739,6 +739,17 @@
     };
 
     // ============================================
+    // FUNÇÃO AUXILIAR: Acessar elemento com segurança
+    // ============================================
+    function safeGetElement(id) {
+      const el = document.getElementById(id);
+      if (!el) {
+        console.warn(`⚠️ Elemento não encontrado: #${id}`);
+      }
+      return el;
+    }
+
+    // ============================================
     // INICIALIZAÇÃO
     // ============================================
     document.addEventListener('DOMContentLoaded', () => {
@@ -788,16 +799,27 @@
       }
 
       // Preencher Capa
-      document.getElementById('coverName').textContent = AppState.participant?.name || 'Participante';
-      document.getElementById('coverCompany').textContent = AppState.company?.name || 'Independente';
-      document.getElementById('coverDate').textContent = new Date().toLocaleDateString('pt-BR');
-      document.getElementById('coverCode').textContent = 'VIG-IE-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 9000 + 1000);
-      document.getElementById('printDate').textContent = new Date().toLocaleDateString('pt-BR');
+      const coverName = safeGetElement('coverName');
+      if (coverName) coverName.textContent = AppState.participant?.name || 'Participante';
+      
+      const coverCompany = safeGetElement('coverCompany');
+      if (coverCompany) coverCompany.textContent = AppState.company?.name || 'Independente';
+      
+      const coverDate = safeGetElement('coverDate');
+      if (coverDate) coverDate.textContent = new Date().toLocaleDateString('pt-BR');
+      
+      const coverCode = safeGetElement('coverCode');
+      if (coverCode) coverCode.textContent = 'VIG-IE-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 9000 + 1000);
+      
+      const printDate = safeGetElement('printDate');
+      if (printDate) printDate.textContent = new Date().toLocaleDateString('pt-BR');
 
       // Calcular Score Geral de IE
       const scores = Object.values(r.percentages);
       const avgIE = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
-      document.getElementById('ieScore').textContent = avgIE + '%';
+      
+      const ieScore = safeGetElement('ieScore');
+      if (ieScore) ieScore.textContent = avgIE + '%';
 
       // Determinar nível de maturidade
       const maturityThresholds = [
@@ -810,9 +832,14 @@
       const maturity = maturityThresholds.find(t => avgIE >= t.min).level;
       const maturityInfo = MATURITY_LEVELS[maturity];
       
-      document.getElementById('maturityScore').textContent = avgIE;
-      document.getElementById('maturityLevel').textContent = 'Nível: ' + maturityInfo.name;
-      document.getElementById('maturityDesc').textContent = maturityInfo.desc;
+      const maturityScore = safeGetElement('maturityScore');
+      if (maturityScore) maturityScore.textContent = avgIE;
+      
+      const maturityLevel = safeGetElement('maturityLevel');
+      if (maturityLevel) maturityLevel.textContent = 'Nível: ' + maturityInfo.name;
+      
+      const maturityDesc = safeGetElement('maturityDesc');
+      if (maturityDesc) maturityDesc.textContent = maturityInfo.desc;
 
       // Gerar Conteúdo Dinâmico para todas as seções
       renderExecutiveSummary(r, avgIE, maturity);
@@ -831,35 +858,96 @@
       renderFinalQuote();
 
       // Esconder loading e mostrar relatório
-      document.getElementById('loadingOverlay').classList.add('hidden');
-      document.getElementById('reportContent').style.display = 'block';
-      document.getElementById('reportContent').classList.remove('hidden');
+      const loadingOverlay = safeGetElement('loadingOverlay');
+      if (loadingOverlay) loadingOverlay.classList.add('hidden');
+      
+      const reportContent = safeGetElement('reportContent');
+      if (reportContent) {
+        reportContent.style.display = 'block';
+        reportContent.classList.remove('hidden');
+      }
     }
 
     // ============================================
-    // RENDERIZADORES DE SEÇÕES (COMPLETOS)
+    // RENDERIZADORES DE SEÇÕES (COM VERIFICAÇÕES DE SEGURANÇA)
     // ============================================
     function renderExecutiveSummary(r, avgIE, maturity) {
+      // CORREÇÃO: Verificar se r e r.percentages existem
+      if (!r || !r.percentages) {
+        console.error('❌ Dados de percentuais não disponíveis:', r);
+        return;
+      }
+
       const profileName = avgIE >= 85 ? 'Inteligência Emocional Executiva' : 
                          avgIE >= 70 ? 'Inteligência Emocional Avançada' : 
                          avgIE >= 55 ? 'Inteligência Emocional em Desenvolvimento' : 'Inteligência Emocional em Construção';
       
-      document.getElementById('ieProfileName').textContent = profileName;
-      document.getElementById('ieProfileDesc').textContent = `O participante apresenta um perfil emocional com índice geral de ${avgIE}%, classificado como ${maturity.toLowerCase()}. ${MATURITY_LEVELS[maturity].desc}`;
-      document.getElementById('execStability').textContent = r.percentages.autocontrole >= 70 ? 'Alta estabilidade emocional. Mantém compostura em cenários de pressão.' : r.percentages.autocontrole >= 50 ? 'Estabilidade moderada. Beneficia-se de técnicas de regulação em picos de demanda.' : 'Desenvolvimento de estabilidade. Recomenda-se práticas de pausa estratégica.';
-      document.getElementById('execRelational').textContent = r.percentages.empatia >= 70 ? 'Excelente inteligência relacional. Adapta comunicação com sensibilidade.' : r.percentages.empatia >= 50 ? 'Boa sensibilidade interpessoal. Pode desenvolver escuta ativa mais profunda.' : 'Desenvolvimento de empatia. Recomenda-se práticas de perspectiva-taking.';
-      document.getElementById('execMaturity').textContent = `Nível ${maturity.toLowerCase()}: ${MATURITY_LEVELS[maturity].desc}`;
-      document.getElementById('execAdaptability').textContent = r.percentages.adaptabilidade >= 70 ? 'Alta flexibilidade emocional. Pivota rapidamente sem perder foco.' : r.percentages.adaptabilidade >= 50 ? 'Adaptabilidade moderada. Beneficia-se de exposição gradual a mudanças.' : 'Desenvolvimento de flexibilidade. Recomenda-se prática de cenários.';
+      const ieProfileName = safeGetElement('ieProfileName');
+      if (ieProfileName) ieProfileName.textContent = profileName;
       
-      // Badges
-      const badgesHtml = Object.entries(r.percentages).map(([k, v]) => 
-        `<span class="badge-pill" style="background:${IE_INSIGHTS[k].color}20; color:${IE_INSIGHTS[k].color}; border:1px solid ${IE_INSIGHTS[k].color}40;">${IE_INSIGHTS[k].name}: ${v}%</span>`
-      ).join('');
-      document.getElementById('ieBadges').innerHTML = badgesHtml;
+      const ieProfileDesc = safeGetElement('ieProfileDesc');
+      if (ieProfileDesc) {
+        ieProfileDesc.textContent = `O participante apresenta um perfil emocional com índice geral de ${avgIE}%, classificado como ${maturity.toLowerCase()}. ${MATURITY_LEVELS[maturity].desc}`;
+      }
+      
+      const execStability = safeGetElement('execStability');
+      if (execStability) {
+        const autocontrole = r.percentages.autocontrole || 0;
+        execStability.textContent = autocontrole >= 70 ? 'Alta estabilidade emocional. Mantém compostura em cenários de pressão.' : 
+                                    autocontrole >= 50 ? 'Estabilidade moderada. Beneficia-se de técnicas de regulação em picos de demanda.' : 
+                                    'Desenvolvimento de estabilidade. Recomenda-se práticas de pausa estratégica.';
+      }
+      
+      const execRelational = safeGetElement('execRelational');
+      if (execRelational) {
+        const empatia = r.percentages.empatia || 0;
+        execRelational.textContent = empatia >= 70 ? 'Excelente inteligência relacional. Adapta comunicação com sensibilidade.' : 
+                                     empatia >= 50 ? 'Boa sensibilidade interpessoal. Pode desenvolver escuta ativa mais profunda.' : 
+                                     'Desenvolvimento de empatia. Recomenda-se práticas de perspectiva-taking.';
+      }
+      
+      const execMaturity = safeGetElement('execMaturity');
+      if (execMaturity) {
+        execMaturity.textContent = `Nível ${maturity.toLowerCase()}: ${MATURITY_LEVELS[maturity].desc}`;
+      }
+      
+      const execAdaptability = safeGetElement('execAdaptability');
+      if (execAdaptability) {
+        const adaptabilidade = r.percentages.adaptabilidade || 0;
+        execAdaptability.textContent = adaptabilidade >= 70 ? 'Alta flexibilidade emocional. Pivota rapidamente sem perder foco.' : 
+                                       adaptabilidade >= 50 ? 'Adaptabilidade moderada. Beneficia-se de exposição gradual a mudanças.' : 
+                                       'Desenvolvimento de flexibilidade. Recomenda-se prática de cenários.';
+      }
+      
+      // CORREÇÃO: Badges com verificação de segurança
+      const badgesContainer = safeGetElement('ieBadges');
+      if (badgesContainer && r.percentages) {
+        try {
+          const badgesHtml = Object.entries(r.percentages).map(([k, v]) => {
+            // CORREÇÃO: Verificar se IE_INSIGHTS[k] existe
+            const insight = IE_INSIGHTS[k];
+            if (!insight) {
+              console.warn(`⚠️ Insight não encontrado para: ${k}`);
+              return `<span class="badge-pill" style="background:#64748B20; color:#64748B; border:1px solid #64748B40;">${k}: ${v}%</span>`;
+            }
+            return `<span class="badge-pill" style="background:${insight.color}20; color:${insight.color}; border:1px solid ${insight.color}40;">${insight.name}: ${v}%</span>`;
+          }).join('');
+          badgesContainer.innerHTML = badgesHtml;
+        } catch (error) {
+          console.error('❌ Erro ao renderizar badges:', error);
+          badgesContainer.innerHTML = '<p class="text-gray-400 text-sm">Dados insuficientes para gerar badges</p>';
+        }
+      }
     }
 
     function renderCharts(percentages) {
-      // CORREÇÃO: Destruir instâncias anteriores antes de criar novas
+      // CORREÇÃO: Verificar se percentages existe e é válido
+      if (!percentages || typeof percentages !== 'object') {
+        console.error('❌ Percentuais inválidos para gráficos:', percentages);
+        return;
+      }
+
+      // Destruir instâncias anteriores
       if (AppState.charts.radar) { 
         AppState.charts.radar.destroy(); 
         AppState.charts.radar = null; 
@@ -868,6 +956,16 @@
         AppState.charts.bar.destroy(); 
         AppState.charts.bar = null; 
       }
+
+      // CORREÇÃO: Valores padrão se não existirem
+      const data = {
+        autoconsciencia: percentages.autoconsciencia || 0,
+        autocontrole: percentages.autocontrole || 0,
+        empatia: percentages.empatia || 0,
+        resiliencia: percentages.resiliencia || 0,
+        social: percentages.social || 0,
+        adaptabilidade: percentages.adaptabilidade || 0
+      };
 
       const radarCanvas = document.getElementById('ieRadarChart');
       if (radarCanvas) {
@@ -879,7 +977,7 @@
               labels: ['Autoconsciência', 'Autocontrole', 'Empatia', 'Resiliência', 'Inteligência Social', 'Adaptabilidade'],
               datasets: [{
                 label: 'Perfil Emocional',
-                data: [percentages.autoconsciencia, percentages.autocontrole, percentages.empatia, percentages.resiliencia, percentages.social, percentages.adaptabilidade],
+                data: [data.autoconsciencia, data.autocontrole, data.empatia, data.resiliencia, data.social, data.adaptabilidade],
                 backgroundColor: 'rgba(6, 182, 212, 0.25)',
                 borderColor: '#06B6D4',
                 borderWidth: 3,
@@ -891,7 +989,7 @@
             },
             options: {
               responsive: true,
-              maintainAspectRatio: false, // CRUCIAL: impede expansão infinita
+              maintainAspectRatio: false,
               scales: {
                 r: {
                   angleLines: { color: 'rgba(255,255,255,0.1)' },
@@ -917,16 +1015,16 @@
               labels: ['Autoconsciência', 'Autocontrole', 'Empatia', 'Resiliência', 'Social', 'Adaptabilidade'],
               datasets: [{
                 label: 'Intensidade',
-                data: [percentages.autoconsciencia, percentages.autocontrole, percentages.empatia, percentages.resiliencia, percentages.social, percentages.adaptabilidade],
-                backgroundColor: ['rgba(16, 185, 129, 0.8)', 'rgba(59, 130, 246, 0.8)', 'rgba(245, 158, 11, 0.8)', 'rgba(124, 58, 237, 0.8)', 'rgba(6, 182, 212, 0.8)', 'rgba(236, 72, 153, 0.8)'],
-                borderColor: ['#10B981', '#3B82F6', '#F59E0B', '#7C3AED', '#06B6D4', '#EC4899'],
+                data: [data.autoconsciencia, data.autocontrole, data.empatia, data.resiliencia, data.social, data.adaptabilidade],
+                backgroundColor: ['#10B981', '#3B82F6', '#F59E0B', '#7C3AED', '#06B6D4', '#EC4899'],
+                borderColor: ['#059669', '#2563EB', '#D97706', '#6D28D9', '#0891B2', '#DB2777'],
                 borderWidth: 2,
                 borderRadius: 8
               }]
             },
             options: {
               responsive: true,
-              maintainAspectRatio: false, // CRUCIAL: impede expansão infinita
+              maintainAspectRatio: false,
               scales: {
                 y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94A3B8' } },
                 x: { grid: { display: false }, ticks: { color: '#F8FAFC', font: { weight: 'bold' } } }
@@ -939,74 +1037,167 @@
     }
 
     function renderSelfAwareness(r) {
+      // CORREÇÃO: Verificar se r e r.percentages existem
+      if (!r || !r.percentages) return;
+      
       const ins = IE_INSIGHTS.autoconsciencia;
-      const level = r.percentages.autoconsciencia >= 70 ? 'high' : r.percentages.autoconsciencia >= 50 ? 'medium' : 'low';
+      const score = r.percentages.autoconsciencia || 0;
+      const level = score >= 70 ? 'high' : score >= 50 ? 'medium' : 'low';
       const desc = level === 'high' ? ins.high : level === 'medium' ? ins.medium : ins.low;
       
-      document.getElementById('selfAwarenessDesc').textContent = desc;
-      document.getElementById('awarenessPerceptionBar').style.width = Math.min(100, r.percentages.autoconsciencia + 10) + '%';
-      document.getElementById('awarenessPatternsBar').style.width = Math.min(100, r.percentages.autoconsciencia + 5) + '%';
-      document.getElementById('awarenessClarityBar').style.width = r.percentages.autoconsciencia + '%';
-      document.getElementById('awarenessStrengths').textContent = ins.strengths.slice(0, 2).join(' • ');
-      document.getElementById('awarenessDevelopment').textContent = ins.development.slice(0, 2).join(' • ');
+      const selfAwarenessDesc = safeGetElement('selfAwarenessDesc');
+      if (selfAwarenessDesc) selfAwarenessDesc.textContent = desc;
+      
+      const awarenessPerceptionBar = safeGetElement('awarenessPerceptionBar');
+      if (awarenessPerceptionBar) awarenessPerceptionBar.style.width = Math.min(100, score + 10) + '%';
+      
+      const awarenessPatternsBar = safeGetElement('awarenessPatternsBar');
+      if (awarenessPatternsBar) awarenessPatternsBar.style.width = Math.min(100, score + 5) + '%';
+      
+      const awarenessClarityBar = safeGetElement('awarenessClarityBar');
+      if (awarenessClarityBar) awarenessClarityBar.style.width = score + '%';
+      
+      const awarenessStrengths = safeGetElement('awarenessStrengths');
+      if (awarenessStrengths) awarenessStrengths.textContent = ins.strengths.slice(0, 2).join(' • ');
+      
+      const awarenessDevelopment = safeGetElement('awarenessDevelopment');
+      if (awarenessDevelopment) awarenessDevelopment.textContent = ins.development.slice(0, 2).join(' • ');
     }
 
     function renderSelfControl(r) {
+      if (!r || !r.percentages) return;
+      
       const ins = IE_INSIGHTS.autocontrole;
-      const level = r.percentages.autocontrole >= 70 ? 'high' : r.percentages.autocontrole >= 50 ? 'medium' : 'low';
+      const score = r.percentages.autocontrole || 0;
+      const level = score >= 70 ? 'high' : score >= 50 ? 'medium' : 'low';
       const desc = level === 'high' ? ins.high : level === 'medium' ? ins.medium : ins.low;
       
-      document.getElementById('selfControlPattern').textContent = desc;
-      document.getElementById('selfControlTolerance').textContent = r.percentages.autocontrole >= 70 ? 'Alta tolerância à frustração. Mantém equilíbrio mesmo sob críticas ou contratempos.' : r.percentages.autocontrole >= 50 ? 'Tolerância moderada. Beneficia-se de técnicas de pausa antes de reagir.' : 'Desenvolvimento de tolerância. Recomenda-se práticas de regulação emocional.';
-      document.getElementById('controlImpulseBar').style.width = (100 - r.percentages.autocontrole) + '%';
-      document.getElementById('controlStabilityBar').style.width = r.percentages.autocontrole + '%';
-      document.getElementById('controlCriticismBar').style.width = Math.min(100, r.percentages.autocontrole + 15) + '%';
+      const selfControlPattern = safeGetElement('selfControlPattern');
+      if (selfControlPattern) selfControlPattern.textContent = desc;
+      
+      const selfControlTolerance = safeGetElement('selfControlTolerance');
+      if (selfControlTolerance) {
+        selfControlTolerance.textContent = score >= 70 ? 'Alta tolerância à frustração. Mantém equilíbrio mesmo sob críticas ou contratempos.' : 
+                                           score >= 50 ? 'Tolerância moderada. Beneficia-se de técnicas de pausa antes de reagir.' : 
+                                           'Desenvolvimento de tolerância. Recomenda-se práticas de regulação emocional.';
+      }
+      
+      const controlImpulseBar = safeGetElement('controlImpulseBar');
+      if (controlImpulseBar) controlImpulseBar.style.width = (100 - score) + '%';
+      
+      const controlStabilityBar = safeGetElement('controlStabilityBar');
+      if (controlStabilityBar) controlStabilityBar.style.width = score + '%';
+      
+      const controlCriticismBar = safeGetElement('controlCriticismBar');
+      if (controlCriticismBar) controlCriticismBar.style.width = Math.min(100, score + 15) + '%';
     }
 
     function renderResilience(r) {
+      if (!r || !r.percentages) return;
+      
       const ins = IE_INSIGHTS.resiliencia;
-      const level = r.percentages.resiliencia >= 70 ? 'high' : r.percentages.resiliencia >= 50 ? 'medium' : 'low';
+      const score = r.percentages.resiliencia || 0;
+      const level = score >= 70 ? 'high' : score >= 50 ? 'medium' : 'low';
       const desc = level === 'high' ? ins.high : level === 'medium' ? ins.medium : ins.low;
       
-      document.getElementById('resilienceProfile').textContent = desc;
-      document.getElementById('resilienceRecovery').textContent = r.percentages.resiliencia >= 70 ? 'Recuperação rápida após adversidades. Transforma desafios em aprendizado.' : r.percentages.resiliencia >= 50 ? 'Recuperação moderada. Beneficia-se de rede de apoio e reframing cognitivo.' : 'Desenvolvimento de recuperação. Recomenda-se plano de contingência emocional.';
-      document.getElementById('resiliencePersistence').textContent = r.percentages.resiliencia >= 70 ? 'Persistência consistente em metas de longo prazo, mesmo com obstáculos.' : 'Persistência moderada. Beneficia-se de quebra de metas em marcos menores.';
+      const resilienceProfile = safeGetElement('resilienceProfile');
+      if (resilienceProfile) resilienceProfile.textContent = desc;
+      
+      const resilienceRecovery = safeGetElement('resilienceRecovery');
+      if (resilienceRecovery) {
+        resilienceRecovery.textContent = score >= 70 ? 'Recuperação rápida após adversidades. Transforma desafios em aprendizado.' : 
+                                         score >= 50 ? 'Recuperação moderada. Beneficia-se de rede de apoio e reframing cognitivo.' : 
+                                         'Desenvolvimento de recuperação. Recomenda-se plano de contingência emocional.';
+      }
+      
+      const resiliencePersistence = safeGetElement('resiliencePersistence');
+      if (resiliencePersistence) {
+        resiliencePersistence.textContent = score >= 70 ? 'Persistência consistente em metas de longo prazo, mesmo com obstáculos.' : 
+                                            'Persistência moderada. Beneficia-se de quebra de metas em marcos menores.';
+      }
     }
 
     function renderEmpathyRelational(r) {
+      if (!r || !r.percentages) return;
+      
       const ins = IE_INSIGHTS.empatia;
-      const level = r.percentages.empatia >= 70 ? 'high' : r.percentages.empatia >= 50 ? 'medium' : 'low';
+      const score = r.percentages.empatia || 0;
+      const social = r.percentages.social || 0;
+      const level = score >= 70 ? 'high' : score >= 50 ? 'medium' : 'low';
       const desc = level === 'high' ? ins.high : level === 'medium' ? ins.medium : ins.low;
       
-      document.getElementById('empathyRelational').textContent = desc + ' ' + (r.percentages.social >= 70 ? 'Combinado com alta inteligência social, gera influência positiva em grupos.' : '');
-      document.getElementById('empathyListening').textContent = r.percentages.empatia >= 70 ? 'Escuta ativa genuína. Valida emoções alheias sem julgamento.' : r.percentages.empatia >= 50 ? 'Escuta atenta. Pode desenvolver validação emocional mais explícita.' : 'Desenvolvimento de escuta. Recomenda-se prática de escuta sem interrupção.';
-      document.getElementById('empathyConflict').textContent = r.percentages.empatia >= 70 ? 'Media conflitos com diplomacia e busca soluções win-win.' : r.percentages.empatia >= 50 ? 'Aborda conflitos com cautela. Pode desenvolver assertividade em mediações.' : 'Desenvolvimento de gestão de conflitos. Recomenda-se treinamento em comunicação não-violenta.';
+      const empathyRelational = safeGetElement('empathyRelational');
+      if (empathyRelational) {
+        empathyRelational.textContent = desc + ' ' + (social >= 70 ? 'Combinado com alta inteligência social, gera influência positiva em grupos.' : '');
+      }
+      
+      const empathyListening = safeGetElement('empathyListening');
+      if (empathyListening) {
+        empathyListening.textContent = score >= 70 ? 'Escuta ativa genuína. Valida emoções alheias sem julgamento.' : 
+                                       score >= 50 ? 'Escuta atenta. Pode desenvolver validação emocional mais explícita.' : 
+                                       'Desenvolvimento de escuta. Recomenda-se prática de escuta sem interrupção.';
+      }
+      
+      const empathyConflict = safeGetElement('empathyConflict');
+      if (empathyConflict) {
+        empathyConflict.textContent = score >= 70 ? 'Media conflitos com diplomacia e busca soluções win-win.' : 
+                                      score >= 50 ? 'Aborda conflitos com cautela. Pode desenvolver assertividade em mediações.' : 
+                                      'Desenvolvimento de gestão de conflitos. Recomenda-se treinamento em comunicação não-violenta.';
+      }
     }
 
     function renderPressureBehavior(r) {
-      const autocontrole = r.percentages.autocontrole;
-      const resiliencia = r.percentages.resiliencia;
-      const adaptabilidade = r.percentages.adaptabilidade;
+      if (!r || !r.percentages) return;
       
-      document.getElementById('pressureReaction').textContent = `Em cenários de alta pressão, o participante tende a ${autocontrole >= 70 ? 'manter clareza decisória e compostura emocional' : autocontrole >= 50 ? 'buscar equilíbrio com apoio de técnicas de regulação' : 'beneficiar-se de pausas estratégicas antes de reagir'}. ${resiliencia >= 70 ? 'Recupera-se rapidamente após contratempos.' : resiliencia >= 50 ? 'Recupera-se com suporte de rede e reframing.' : 'Pode desenvolver maior tolerância à frustração.'} ${adaptabilidade >= 70 ? 'Adapta-se com agilidade a mudanças de escopo.' : adaptabilidade >= 50 ? 'Adapta-se com estrutura e transição gradual.' : 'Pode desenvolver maior flexibilidade diante de imprevistos.'}`;
+      const autocontrole = r.percentages.autocontrole || 0;
+      const resiliencia = r.percentages.resiliencia || 0;
+      const adaptabilidade = r.percentages.adaptabilidade || 0;
       
-      document.getElementById('pressStabilityBar').style.width = autocontrole + '%';
-      document.getElementById('pressImpulseBar').style.width = (100 - autocontrole) + '%';
-      document.getElementById('pressDecisionBar').style.width = Math.min(100, (autocontrole + resiliencia) / 2 + 10) + '%';
+      const pressureReaction = safeGetElement('pressureReaction');
+      if (pressureReaction) {
+        pressureReaction.textContent = `Em cenários de alta pressão, o participante tende a ${autocontrole >= 70 ? 'manter clareza decisória e compostura emocional' : autocontrole >= 50 ? 'buscar equilíbrio com apoio de técnicas de regulação' : 'beneficiar-se de pausas estratégicas antes de reagir'}. ${resiliencia >= 70 ? 'Recupera-se rapidamente após contratempos.' : resiliencia >= 50 ? 'Recupera-se com suporte de rede e reframing.' : 'Pode desenvolver maior tolerância à frustração.'} ${adaptabilidade >= 70 ? 'Adapta-se com agilidade a mudanças de escopo.' : adaptabilidade >= 50 ? 'Adapta-se com estrutura e transição gradual.' : 'Pode desenvolver maior flexibilidade diante de imprevistos.'}`;
+      }
+      
+      const pressStabilityBar = safeGetElement('pressStabilityBar');
+      if (pressStabilityBar) pressStabilityBar.style.width = autocontrole + '%';
+      
+      const pressImpulseBar = safeGetElement('pressImpulseBar');
+      if (pressImpulseBar) pressImpulseBar.style.width = (100 - autocontrole) + '%';
+      
+      const pressDecisionBar = safeGetElement('pressDecisionBar');
+      if (pressDecisionBar) pressDecisionBar.style.width = Math.min(100, (autocontrole + resiliencia) / 2 + 10) + '%';
     }
 
     function renderEmotionalLeadership(r) {
-      const empatia = r.percentages.empatia;
-      const social = r.percentages.social;
-      const autocontrole = r.percentages.autocontrole;
+      if (!r || !r.percentages) return;
       
-      document.getElementById('leadEmotionalStyle').textContent = `Estilo de liderança emocional marcado por ${empatia >= 70 ? 'empatia genuína e validação emocional' : empatia >= 50 ? 'sensibilidade interpessoal em desenvolvimento' : 'oportunidade de desenvolver escuta ativa'}, combinado com ${social >= 70 ? 'influência positiva e construção de redes' : social >= 50 ? 'capacidade relacional em crescimento' : 'desenvolvimento de inteligência social'}. ${autocontrole >= 70 ? 'Mantém estabilidade emocional mesmo ao cobrar resultados.' : autocontrole >= 50 ? 'Pode desenvolver maior compostura ao dar feedbacks desafiadores.' : 'Beneficia-se de técnicas de regulação antes de conversas difíceis.'}`;
+      const empatia = r.percentages.empatia || 0;
+      const social = r.percentages.social || 0;
+      const autocontrole = r.percentages.autocontrole || 0;
       
-      document.getElementById('leadInfluence').textContent = social >= 70 ? 'Constrói influência autêntica através de conexões genuínas e reconhecimento do valor alheio.' : social >= 50 ? 'Desenvolve influência com foco em colaboração e benefícios mútuos.' : 'Pode desenvolver networking intencional e comunicação assertiva.';
-      document.getElementById('leadCommunication').textContent = empatia >= 70 ? 'Adapta tom, linguagem e canal conforme o interlocutor, garantindo compreensão e engajamento.' : empatia >= 50 ? 'Comunica-se com clareza. Pode desenvolver maior sensibilidade ao impacto emocional das palavras.' : 'Beneficia-se de prática de comunicação não-violenta e validação emocional.';
+      const leadEmotionalStyle = safeGetElement('leadEmotionalStyle');
+      if (leadEmotionalStyle) {
+        leadEmotionalStyle.textContent = `Estilo de liderança emocional marcado por ${empatia >= 70 ? 'empatia genuína e validação emocional' : empatia >= 50 ? 'sensibilidade interpessoal em desenvolvimento' : 'oportunidade de desenvolver escuta ativa'}, combinado com ${social >= 70 ? 'influência positiva e construção de redes' : social >= 50 ? 'capacidade relacional em crescimento' : 'desenvolvimento de inteligência social'}. ${autocontrole >= 70 ? 'Mantém estabilidade emocional mesmo ao cobrar resultados.' : autocontrole >= 50 ? 'Pode desenvolver maior compostura ao dar feedbacks desafiadores.' : 'Beneficia-se de técnicas de regulação antes de conversas difíceis.'}`;
+      }
+      
+      const leadInfluence = safeGetElement('leadInfluence');
+      if (leadInfluence) {
+        leadInfluence.textContent = social >= 70 ? 'Constrói influência autêntica através de conexões genuínas e reconhecimento do valor alheio.' : 
+                                    social >= 50 ? 'Desenvolve influência com foco em colaboração e benefícios mútuos.' : 
+                                    'Pode desenvolver networking intencional e comunicação assertiva.';
+      }
+      
+      const leadCommunication = safeGetElement('leadCommunication');
+      if (leadCommunication) {
+        leadCommunication.textContent = empatia >= 70 ? 'Adapta tom, linguagem e canal conforme o interlocutor, garantindo compreensão e engajamento.' : 
+                                        empatia >= 50 ? 'Comunica-se com clareza. Pode desenvolver maior sensibilidade ao impacto emocional das palavras.' : 
+                                        'Beneficia-se de prática de comunicação não-violenta e validação emocional.';
+      }
     }
 
     function renderEnergyMap(r) {
+      if (!r || !r.percentages) return;
+      
       const energizers = [];
       const drains = [];
       
@@ -1029,19 +1220,46 @@
       if (energizers.length === 0) energizers.push('Ambientes que ofereçam crescimento e reconhecimento');
       if (drains.length === 0) drains.push('Ambientes com alta ambiguidade e falta de estrutura');
       
-      document.getElementById('energyPositive').innerHTML = energizers.map(e => `<li>• ${e}</li>`).join('');
-      document.getElementById('energyNegative').innerHTML = drains.map(d => `<li>• ${d}</li>`).join('');
-      document.getElementById('energyTriggers').textContent = `Gatilhos de desgaste incluem ${drains.slice(0, 2).join(' e ').toLowerCase()}. Para manter alta performance, recomenda-se ambientes que ofereçam ${energizers.slice(0, 2).join(' e ').toLowerCase()}.`;
+      const energyPositive = safeGetElement('energyPositive');
+      if (energyPositive) energyPositive.innerHTML = energizers.map(e => `<li>• ${e}</li>`).join('');
+      
+      const energyNegative = safeGetElement('energyNegative');
+      if (energyNegative) energyNegative.innerHTML = drains.map(d => `<li>• ${d}</li>`).join('');
+      
+      const energyTriggers = safeGetElement('energyTriggers');
+      if (energyTriggers) {
+        energyTriggers.textContent = `Gatilhos de desgaste incluem ${drains.slice(0, 2).join(' e ').toLowerCase()}. Para manter alta performance, recomenda-se ambientes que ofereçam ${energizers.slice(0, 2).join(' e ').toLowerCase()}.`;
+      }
     }
 
     function renderMaturityIndicators(r, maturity) {
-      document.getElementById('maturityStability').textContent = r.percentages.autocontrole >= 70 ? 'Alta' : r.percentages.autocontrole >= 50 ? 'Moderada' : 'Em Desenvolvimento';
-      document.getElementById('maturityResponsibility').textContent = r.percentages.resiliencia >= 70 ? 'Alta' : r.percentages.resiliencia >= 50 ? 'Moderada' : 'Em Desenvolvimento';
-      document.getElementById('maturityRelational').textContent = r.percentages.empatia >= 70 ? 'Alta' : r.percentages.empatia >= 50 ? 'Moderada' : 'Em Desenvolvimento';
-      document.getElementById('maturityCoherence').textContent = (r.percentages.autoconsciencia + r.percentages.autocontrole) / 2 >= 70 ? 'Alta' : (r.percentages.autoconsciencia + r.percentages.autocontrole) / 2 >= 50 ? 'Moderada' : 'Em Desenvolvimento';
+      if (!r || !r.percentages) return;
+      
+      const maturityStability = safeGetElement('maturityStability');
+      if (maturityStability) {
+        maturityStability.textContent = r.percentages.autocontrole >= 70 ? 'Alta' : r.percentages.autocontrole >= 50 ? 'Moderada' : 'Em Desenvolvimento';
+      }
+      
+      const maturityResponsibility = safeGetElement('maturityResponsibility');
+      if (maturityResponsibility) {
+        maturityResponsibility.textContent = r.percentages.resiliencia >= 70 ? 'Alta' : r.percentages.resiliencia >= 50 ? 'Moderada' : 'Em Desenvolvimento';
+      }
+      
+      const maturityRelational = safeGetElement('maturityRelational');
+      if (maturityRelational) {
+        maturityRelational.textContent = r.percentages.empatia >= 70 ? 'Alta' : r.percentages.empatia >= 50 ? 'Moderada' : 'Em Desenvolvimento';
+      }
+      
+      const maturityCoherence = safeGetElement('maturityCoherence');
+      if (maturityCoherence) {
+        const avg = ((r.percentages.autoconsciencia || 0) + (r.percentages.autocontrole || 0)) / 2;
+        maturityCoherence.textContent = avg >= 70 ? 'Alta' : avg >= 50 ? 'Moderada' : 'Em Desenvolvimento';
+      }
     }
 
     function renderBehavioralRisks(r) {
+      if (!r || !r.percentages) return;
+      
       const risks = [];
       
       if (r.percentages.autocontrole < 50) {
@@ -1068,12 +1286,17 @@
         risks.push({ title: 'Manutenção de Alta Performance', desc: 'Manter práticas de desenvolvimento contínuo para sustentar inteligência emocional.', color: 'emerald' });
       }
       
-      document.getElementById('risksList').innerHTML = risks.map(risk => 
-        `<div class="glass p-4 rounded-xl border-l-4 border-${risk.color}-500"><h4 class="font-medium mb-1 text-${risk.color}-400">${risk.title}</h4><p class="text-sm text-gray-300">${risk.desc}</p></div>`
-      ).join('');
+      const risksList = safeGetElement('risksList');
+      if (risksList) {
+        risksList.innerHTML = risks.map(risk => 
+          `<div class="glass p-4 rounded-xl border-l-4 border-${risk.color}-500"><h4 class="font-medium mb-1 text-${risk.color}-400">${risk.title}</h4><p class="text-sm text-gray-300">${risk.desc}</p></div>`
+        ).join('');
+      }
     }
 
     function renderRecommendations(r, maturity) {
+      if (!r || !r.percentages) return;
+      
       const recs = [];
       
       // Recomendações baseadas no nível de maturidade
@@ -1101,13 +1324,22 @@
       if (r.percentages.social < 60) recs.push('Desenvolver inteligência social com networking intencional e influência positiva.');
       if (r.percentages.adaptabilidade < 60) recs.push('Ampliar adaptabilidade com exposição gradual a mudanças e prática de cenários.');
       
-      document.getElementById('ieRecommendations').innerHTML = recs.map(rec => 
-        `<div class="glass p-4 rounded-xl flex items-start gap-3"><span class="text-brand-cyan mt-1">➤</span><p class="text-sm text-gray-300">${rec}</p></div>`
-      ).join('');
+      const ieRecommendations = safeGetElement('ieRecommendations');
+      if (ieRecommendations) {
+        ieRecommendations.innerHTML = recs.map(rec => 
+          `<div class="glass p-4 rounded-xl flex items-start gap-3"><span class="text-brand-cyan mt-1">➤</span><p class="text-sm text-gray-300">${rec}</p></div>`
+        ).join('');
+      }
     }
 
     function renderConclusion(r, avgIE, maturity) {
-      document.getElementById('ieConclusion').textContent = `O participante demonstra um perfil de inteligência emocional com índice de ${avgIE}%, classificado como ${MATURITY_LEVELS[maturity].name.toLowerCase()}. ${MATURITY_LEVELS[maturity].desc} Este perfil indica potencial para ${avgIE >= 70 ? 'liderança emocional, influência positiva e alta performance em ambientes dinâmicos' : avgIE >= 55 ? 'crescimento acelerado com desenvolvimento direcionado de dimensões específicas' : 'desenvolvimento estruturado de consciência e regulação emocional'}. Recomenda-se acompanhamento contínuo via PDI emocional focado em ${Object.entries(r.percentages).sort((a,b) => a[1] - b[1])[0][0].toLowerCase()} e práticas de ${maturity === 'inicial' ? 'auto-observação' : maturity === 'desenvolvimento' ? 'regulação aplicada' : maturity === 'avancado' ? 'influência emocional' : 'modelagem organizacional'}, garantindo evolução comportamental e maximização de impacto profissional. Este relatório deve ser utilizado como ferramenta estratégica de desenvolvimento humano, gestão de talentos e alocação de perfis em contextos de alta performance.`;
+      if (!r || !r.percentages) return;
+      
+      const ieConclusion = safeGetElement('ieConclusion');
+      if (ieConclusion) {
+        const lowest = Object.entries(r.percentages).sort((a,b) => a[1] - b[1])[0][0];
+        ieConclusion.textContent = `O participante demonstra um perfil de inteligência emocional com índice de ${avgIE}%, classificado como ${MATURITY_LEVELS[maturity].name.toLowerCase()}. ${MATURITY_LEVELS[maturity].desc} Este perfil indica potencial para ${avgIE >= 70 ? 'liderança emocional, influência positiva e alta performance em ambientes dinâmicos' : avgIE >= 55 ? 'crescimento acelerado com desenvolvimento direcionado de dimensões específicas' : 'desenvolvimento estruturado de consciência e regulação emocional'}. Recomenda-se acompanhamento contínuo via PDI emocional focado em ${lowest} e práticas de ${maturity === 'inicial' ? 'auto-observação' : maturity === 'desenvolvimento' ? 'regulação aplicada' : maturity === 'avancado' ? 'influência emocional' : 'modelagem organizacional'}, garantindo evolução comportamental e maximização de impacto profissional. Este relatório deve ser utilizado como ferramenta estratégica de desenvolvimento humano, gestão de talentos e alocação de perfis em contextos de alta performance.`;
+      }
     }
 
     function renderFinalQuote() {
@@ -1118,7 +1350,8 @@
         "Liderança não é controlar outros, é dominar a si mesmo primeiro.",
         "Emoções bem geridas criam culturas de excelência e inovação."
       ];
-      document.getElementById('finalQuote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
+      const finalQuote = safeGetElement('finalQuote');
+      if (finalQuote) finalQuote.textContent = quotes[Math.floor(Math.random() * quotes.length)];
     }
 
     // ============================================
@@ -1132,12 +1365,15 @@
     }
 
     function showToast(message, type = 'success') {
-      const toast = document.getElementById('toast');
+      const toast = safeGetElement('toast');
       if (!toast) return;
-      const iconEl = toast.querySelector('span:first-child');
-      const msgEl = document.getElementById('toastMessage');
-      if (iconEl) iconEl.textContent = type === 'success' ? '✅' : '⚠️';
-      if (msgEl) msgEl.textContent = message;
+      
+      const toastIcon = safeGetElement('toastIcon');
+      const toastMessage = safeGetElement('toastMessage');
+      
+      if (toastIcon) toastIcon.textContent = type === 'success' ? '✅' : '⚠️';
+      if (toastMessage) toastMessage.textContent = message;
+      
       toast.classList.remove('hidden');
       setTimeout(() => toast.classList.add('show'), 10);
       setTimeout(() => { 
@@ -1153,20 +1389,21 @@
     // 1. Tratamento de erro global com fallback amigável
     window.addEventListener('error', function(e) {
       console.error('Erro no relatório IE:', e);
-      const loading = document.getElementById('loadingOverlay');
+      const loading = safeGetElement('loadingOverlay');
       if (loading) loading.classList.add('hidden');
-      const content = document.getElementById('reportContent');
+      const content = safeGetElement('reportContent');
       if (content) {
         content.style.display = 'block';
         content.innerHTML = '<div class="glass-card p-8 text-center"><h2 class="text-xl font-bold text-brand-rose mb-4">⚠️ Erro ao carregar relatório</h2><p class="text-gray-400 mb-4">Ocorreu um erro ao processar seus dados.</p><button onclick="window.location.reload()" class="btn-primary px-6 py-3 rounded-lg">🔄 Recarregar Página</button></div>';
+        content.classList.remove('hidden');
       }
       return true; // Previne erro no console
     });
 
     // 2. Timeout de segurança: se loading persistir por 10s, força hide
     setTimeout(function() {
-      const loading = document.getElementById('loadingOverlay');
-      const content = document.getElementById('reportContent');
+      const loading = safeGetElement('loadingOverlay');
+      const content = safeGetElement('reportContent');
       if (loading && !loading.classList.contains('hidden')) {
         console.warn('Loading timeout - forçando exibição do conteúdo');
         loading.classList.add('hidden');
