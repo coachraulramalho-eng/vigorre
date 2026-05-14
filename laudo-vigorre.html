@@ -165,24 +165,144 @@
     .pulse-slow { animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
 
     /* ============================================
-       PRINT OPTIMIZATION - ENTERPRISE
+       PRINT OPTIMIZATION - ENTERPRISE PREMIUM
        ============================================ */
     @media print {
-      body { background: white; color: #111; }
+      body { 
+        background: white !important; 
+        color: #111 !important;
+        font-size: 11pt;
+        line-height: 1.5;
+      }
       .no-print { display: none !important; }
       .glass, .glass-card { 
-        background: white !important; border: 1px solid #ddd !important; 
-        box-shadow: none !important; backdrop-filter: none !important; color: #111 !important;
+        background: white !important; 
+        border: 1px solid #ddd !important; 
+        box-shadow: none !important; 
+        backdrop-filter: none !important; 
+        color: #111 !important;
+        break-inside: avoid;
       }
-      .gradient-text { -webkit-text-fill-color: #1D4ED8 !important; color: #1D4ED8 !important; }
-      .chart-container { height: 300px !important; page-break-inside: avoid; }
-      section { page-break-inside: avoid; margin-bottom: 2rem; }
-      h1, h2, h3 { color: #111 !important; border-bottom: 2px solid #eee; padding-bottom: 0.5rem; }
+      .gradient-text { 
+        -webkit-text-fill-color: #1D4ED8 !important; 
+        color: #1D4ED8 !important;
+      }
+      .chart-container { 
+        height: 300px !important; 
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+      section { 
+        page-break-inside: avoid; 
+        margin-bottom: 2rem;
+        break-inside: avoid;
+      }
+      h1, h2, h3 { 
+        color: #111 !important; 
+        border-bottom: 2px solid #eee; 
+        padding-bottom: 0.5rem;
+      }
       p, li, td { color: #333 !important; }
-      .badge-pill { border: 1px solid #ccc; color: #333 !important; background: #f5f5f5 !important; }
-      .score-ring { background: #eee !important; animation: none !important; }
+      .badge-pill { 
+        border: 1px solid #ccc; 
+        color: #333 !important; 
+        background: #f5f5f5 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .score-ring { 
+        background: #eee !important; 
+        animation: none !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
       .score-ring::before { background: white !important; }
       .score-value { color: #1D4ED8 !important; }
+      
+      /* Header de impressão com fundo branco */
+      .print-header {
+        display: block !important;
+        background: white !important;
+        border-bottom: 3px solid #1D4ED8 !important;
+        padding: 20px 0;
+        margin-bottom: 30px;
+        text-align: center;
+      }
+      .print-header .logo-v {
+        display: inline-block;
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #1D4ED8, #7C3AED);
+        color: white;
+        border-radius: 12px;
+        font-size: 28pt;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .print-header h1 {
+        font-size: 20pt;
+        color: #111 !important;
+        margin: 0 0 5px 0;
+      }
+      .print-header p {
+        font-size: 10pt;
+        color: #666 !important;
+        margin: 0;
+      }
+      
+      /* Marca d'água Vigorre */
+      .print-watermark {
+        display: block !important;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-45deg);
+        font-size: 100pt;
+        color: rgba(29, 78, 216, 0.03);
+        font-weight: bold;
+        pointer-events: none;
+        z-index: -1;
+        white-space: nowrap;
+      }
+      
+      /* Rodapé de impressão */
+      .print-footer {
+        display: block !important;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 8pt;
+        color: #999 !important;
+        padding: 15px;
+        border-top: 1px solid #eee;
+        background: white;
+      }
+      
+      /* Garantir que gráficos imprimam corretamente */
+      canvas {
+        max-width: 100% !important;
+        height: auto !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+    
+    /* Header de impressão (oculto na tela) */
+    .print-header {
+      display: none;
+    }
+    .print-watermark {
+      display: none;
+    }
+    .print-footer {
+      display: none;
     }
 
     /* Custom Scrollbar */
@@ -205,12 +325,25 @@
 <body class="antialiased">
 
   <!-- ============================================
+       HEADER DE IMPRESSÃO (SÓ APARECE NO PRINT)
+       ============================================ -->
+  <div class="print-header">
+    <div class="logo-v">V</div>
+    <h1>Vigorre People Analytics</h1>
+    <p>Laudo Comportamental Enterprise • Análise Integrada Premium</p>
+  </div>
+  
+  <!-- Marca d'água para impressão -->
+  <div class="print-watermark">VIGORRE</div>
+
+  <!-- ============================================
        HEADER / CONTROLS PREMIUM
        ============================================ -->
   <header class="glass border-b border-white/10 sticky top-0 z-50 no-print">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center font-bold text-white text-lg shadow-lg">V</div>
+        <!-- ✅ LOGO VIGORRE COM FALLBACK -->
+        <img src="logo-vigorre.png" alt="Vigorre" class="w-10 h-10 rounded-xl shadow-lg" onerror="this.outerHTML='<div class=\'w-10 h-10 rounded-xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center font-bold text-white text-lg shadow-lg\'>V</div>'">
         <div>
           <h1 class="font-bold text-lg tracking-tight">Vigorre</h1>
           <p class="text-xs text-gray-400">People Analytics • Laudo Comportamental Enterprise</p>
@@ -233,7 +366,7 @@
   <!-- ============================================
        MAIN LAUDO CONTENT
        ============================================ -->
-  <main class="max-w-6xl mx-auto px-4 py-8 space-y-8" id="laudoContent">
+  <main class="max-w-6xl mx-auto px-4 py-8 space-y-8" id="laudoContent" style="display:none;">
     
     <!-- CAPA PREMIUM ENTERPRISE -->
     <section class="glass-card p-8 md:p-12 text-center slide-up gradient-border">
@@ -261,8 +394,8 @@
           <p class="font-semibold" id="coverJob">Não vinculada</p>
         </div>
         <div class="glass p-4 rounded-xl text-left">
-          <p class="text-xs text-gray-500 mb-1">Código</p>
-          <p class="font-mono text-sm text-brand-cyan" id="coverCode">VIG-LAUDO-2024-000</p>
+          <p class="text-xs text-gray-500 mb-1">Data</p>
+          <p class="font-semibold" id="coverDate">--/--/----</p>
         </div>
       </div>
       
@@ -676,6 +809,12 @@
       <p class="mt-2 text-xs">Documento confidencial. Uso exclusivo para desenvolvimento profissional, gestão de talentos e recrutamento estratégico.</p>
     </div>
   </footer>
+  
+  <!-- Rodapé de impressão -->
+  <div class="print-footer">
+    © 2024 Vigorre People Analytics • Relatório gerado em <span id="printDate"></span> • www.vigorre.com.br<br>
+    Documento confidencial • Metodologia proprietária de people analytics validada internacionalmente
+  </div>
 
   <!-- LOADING OVERLAY PREMIUM -->
   <div id="loadingOverlay" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
@@ -703,7 +842,7 @@
       participant: null,
       company: null,
       job: null,
-      results: { disc: null, ie: null, values: null },
+      results: { disc: null, ie: null, valores: null },
       charts: { discRadar: null, discBar: null, ieRadar: null, ieBar: null, valuesRadar: null, valuesBar: null }
     };
 
@@ -951,20 +1090,20 @@
     }
 
     function loadAllResults() {
-      // Carregar resultados de todos os testes disponíveis
+      // Carregar resultados de todos os testes disponíveis - ✅ CHAVES CONSISTENTES EM PORTUGUÊS
       const discData = localStorage.getItem('vigorre_last_disc_result');
       const ieData = localStorage.getItem('vigorre_last_ie_result');
-      const valuesData = localStorage.getItem('vigorre_last_values_result');
+      const valoresData = localStorage.getItem('vigorre_last_valores_result'); // ✅ português
       
       if (discData) AppState.results.disc = JSON.parse(discData);
       if (ieData) AppState.results.ie = JSON.parse(ieData);
-      if (valuesData) AppState.results.values = JSON.parse(valuesData);
+      if (valoresData) AppState.results.valores = JSON.parse(valoresData);
       
       // Verificar quais testes estão disponíveis
       const availableTests = [];
       if (AppState.results.disc) availableTests.push('DISC');
       if (AppState.results.ie) availableTests.push('IE');
-      if (AppState.results.values) availableTests.push('Valores');
+      if (AppState.results.valores) availableTests.push('Valores');
       
       if (availableTests.length === 0) {
         showToast('Nenhum resultado de teste encontrado. Complete pelo menos um teste para gerar o laudo.', 'error');
@@ -979,7 +1118,7 @@
       
       if (badgeDisc) badgeDisc.style.display = AppState.results.disc ? 'inline-flex' : 'none';
       if (badgeIE) badgeIE.style.display = AppState.results.ie ? 'inline-flex' : 'none';
-      if (badgeValores) badgeValores.style.display = AppState.results.values ? 'inline-flex' : 'none';
+      if (badgeValores) badgeValores.style.display = AppState.results.valores ? 'inline-flex' : 'none';
       
       // Gerar laudo dinâmico
       generateLaudo(availableTests);
@@ -1002,6 +1141,9 @@
       const coverCode = safeGetElement('coverCode');
       if (coverCode) coverCode.textContent = 'VIG-LAUDO-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 9000 + 1000);
       
+      const printDate = safeGetElement('printDate');
+      if (printDate) printDate.textContent = new Date().toLocaleDateString('pt-BR');
+      
       // Mostrar seções conforme testes disponíveis
       if (availableTests.includes('DISC')) {
         const sectionDisc = safeGetElement('sectionDisc');
@@ -1021,7 +1163,7 @@
         const sectionValores = safeGetElement('sectionValores');
         if (sectionValores) {
           sectionValores.classList.remove('hidden');
-          renderValuesSection(AppState.results.values);
+          renderValuesSection(AppState.results.valores);
         }
       }
       
@@ -1051,7 +1193,10 @@
       if (loadingOverlay) loadingOverlay.classList.add('hidden');
       
       const laudoContent = safeGetElement('laudoContent');
-      if (laudoContent) laudoContent.classList.remove('hidden');
+      if (laudoContent) {
+        laudoContent.style.display = 'block';
+        laudoContent.classList.remove('hidden');
+      }
     }
 
     // ============================================
@@ -1068,8 +1213,8 @@
         const ieScores = Object.values(AppState.results.ie.percentages);
         scores.push(...ieScores);
       }
-      if (tests.includes('Valores') && AppState.results.values?.percentages) {
-        const valuesScores = Object.values(AppState.results.values.percentages);
+      if (tests.includes('Valores') && AppState.results.valores?.percentages) {
+        const valuesScores = Object.values(AppState.results.valores.percentages);
         scores.push(...valuesScores);
       }
       
@@ -1098,8 +1243,8 @@
       if (tests.includes('IE') && AppState.results.ie) {
         profileName += ' • ' + (AppState.results.ie.avgQE >= 70 ? 'Alta IE' : 'IE em Desenvolvimento');
       }
-      if (tests.includes('Valores') && AppState.results.values) {
-        profileName += ' • ' + VALUES_INSIGHTS[AppState.results.values.dominant]?.name || 'Valores';
+      if (tests.includes('Valores') && AppState.results.valores) {
+        profileName += ' • ' + (VALUES_INSIGHTS[AppState.results.valores.dominant]?.name || 'Valores');
       }
       
       const execProfileName = safeGetElement('execProfileName');
@@ -1117,7 +1262,7 @@
       
       const execMotivators = safeGetElement('execMotivators');
       if (execMotivators) {
-        execMotivators.textContent = tests.includes('Valores') ? VALUES_INSIGHTS[AppState.results.values.dominant]?.motivators?.slice(0, 2).join(', ') || 'Não disponível' : 'Teste não realizado';
+        execMotivators.textContent = tests.includes('Valores') ? (VALUES_INSIGHTS[AppState.results.valores.dominant]?.motivators?.slice(0, 2).join(', ') || 'Não disponível') : 'Teste não realizado';
       }
       
       const execCulturalFit = safeGetElement('execCulturalFit');
@@ -1313,8 +1458,8 @@
         html += `Emocionalmente, demonstra ${avgQE >= 70 ? 'alta inteligência emocional' : avgQE >= 50 ? 'inteligência emocional em desenvolvimento' : 'oportunidades de desenvolvimento emocional'}, com ${avgQE >= 70 ? 'excelente regulação sob pressão' : 'capacidade de crescimento através de práticas direcionadas'}. `;
       }
       
-      if (tests.includes('Valores') && AppState.results.values) {
-        const dominant = AppState.results.values.dominant;
+      if (tests.includes('Valores') && AppState.results.valores) {
+        const dominant = AppState.results.valores.dominant;
         html += `Motivacionalmente, é direcionado por <strong>${VALUES_INSIGHTS[dominant]?.name || 'Valores'}</strong>, buscando ${VALUES_INSIGHTS[dominant]?.motivators?.[0]?.toLowerCase() || 'seus motivadores principais'}. `;
       }
       
@@ -1333,7 +1478,7 @@
       
       const profAutonomy = safeGetElement('profAutonomy');
       if (profAutonomy) {
-        profAutonomy.textContent = tests.includes('Valores') ? (AppState.results.values?.percentages?.autonomia >= 30 ? 'Alta necessidade de autonomia. Prospera com liberdade decisória.' : 'Valoriza diretrizes claras com espaço para auto-gestão.') : 'Não avaliado';
+        profAutonomy.textContent = tests.includes('Valores') ? (AppState.results.valores?.percentages?.autonomia >= 30 ? 'Alta necessidade de autonomia. Prospera com liberdade decisória.' : 'Valoriza diretrizes claras com espaço para auto-gestão.') : 'Não avaliado';
       }
       
       const profResults = safeGetElement('profResults');
@@ -1343,14 +1488,14 @@
       
       const profExecution = safeGetElement('profExecution');
       if (profExecution) {
-        profExecution.textContent = 'Estilo de execução marcado por ' + (tests.includes('DISC') ? (['D', 'I'].includes(Object.entries(AppState.results.disc.percentages).sort((a,b) => b[1]-a[1])[0][0]) ? 'iniciativa e engajamento' : 'constância e estrutura') : 'adaptabilidade') + '. Consegue manter produtividade quando alinhado a ' + (tests.includes('Valores') ? VALUES_INSIGHTS[AppState.results.values?.dominant]?.motivators?.[0]?.toLowerCase() || 'seus valores pessoais' : 'seus valores pessoais') + '.';
+        profExecution.textContent = 'Estilo de execução marcado por ' + (tests.includes('DISC') ? (['D', 'I'].includes(Object.entries(AppState.results.disc.percentages).sort((a,b) => b[1]-a[1])[0][0]) ? 'iniciativa e engajamento' : 'constância e estrutura') : 'adaptabilidade') + '. Consegue manter produtividade quando alinhado a ' + (tests.includes('Valores') ? VALUES_INSIGHTS[AppState.results.valores?.dominant]?.motivators?.[0]?.toLowerCase() || 'seus valores pessoais' : 'seus valores pessoais') + '.';
       }
     }
 
     function renderTeamwork(tests) {
       const teamColab = safeGetElement('teamColab');
       if (teamColab) {
-        teamColab.textContent = 'No trabalho em equipe, demonstra ' + (tests.includes('DISC') ? (AppState.results.disc?.percentages?.I >= 50 ? 'forte capacidade de integração e comunicação transversal' : AppState.results.disc?.percentages?.S >= 50 ? 'suporte consistente e manutenção de clima' : 'direcionamento claro e cobrança construtiva') : 'adaptabilidade conforme o contexto') + '. Busca naturalmente ' + (tests.includes('Valores') ? (AppState.results.values?.percentages?.relacionamento >= 30 ? 'harmonia e lealdade' : 'eficiência e resultados compartilhados') : 'colaboração efetiva') + '.';
+        teamColab.textContent = 'No trabalho em equipe, demonstra ' + (tests.includes('DISC') ? (AppState.results.disc?.percentages?.I >= 50 ? 'forte capacidade de integração e comunicação transversal' : AppState.results.disc?.percentages?.S >= 50 ? 'suporte consistente e manutenção de clima' : 'direcionamento claro e cobrança construtiva') : 'adaptabilidade conforme o contexto') + '. Busca naturalmente ' + (tests.includes('Valores') ? (AppState.results.valores?.percentages?.relacionamento >= 30 ? 'harmonia e lealdade' : 'eficiência e resultados compartilhados') : 'colaboração efetiva') + '.';
       }
       
       const teamIntegration = safeGetElement('teamIntegration');
@@ -1378,7 +1523,7 @@
       
       const leadMotivation = safeGetElement('leadMotivation');
       if (leadMotivation) {
-        leadMotivation.textContent = tests.includes('Valores') ? (AppState.results.values?.percentages?.reconhecimento >= 30 ? 'Usa reconhecimento público e desafios criativos.' : 'Oferece segurança psicológica e crescimento estável.') : 'Adapta motivação conforme o perfil da equipe.';
+        leadMotivation.textContent = tests.includes('Valores') ? (AppState.results.valores?.percentages?.reconhecimento >= 30 ? 'Usa reconhecimento público e desafios criativos.' : 'Oferece segurança psicológica e crescimento estável.') : 'Adapta motivação conforme o perfil da equipe.';
       }
       
       const leadDelegation = safeGetElement('leadDelegation');
@@ -1390,7 +1535,7 @@
     function renderPressureBehavior(tests) {
       const pressureReaction = safeGetElement('pressureReaction');
       if (pressureReaction) {
-        pressureReaction.textContent = 'Em cenários de alta pressão, tende a ' + (tests.includes('IE') ? (AppState.results.ie?.percentages?.autocontrole >= 70 ? 'manter clareza decisória e compostura emocional' : 'buscar equilíbrio com apoio de técnicas de regulação') : 'adaptar-se conforme o contexto') + '. ' + (tests.includes('IE') ? (AppState.results.ie?.percentages?.resiliencia >= 70 ? 'Recupera-se rapidamente após contratempos.' : 'Pode desenvolver maior tolerância à frustração.') : 'Beneficia-se de práticas de recuperação emocional.') + ' ' + (tests.includes('DISC') ? (AppState.results.disc?.percentages?.D >= 50 ? 'Acelera a execução sob pressão.' : 'Mantém consistência mesmo em cenários desafiadores.') : '');
+        pressureReaction.textContent = 'Em cenários de alta pressão, tende a ' + (tests.includes('IE') ? (AppState.results.ie?.percentages?.autocontrole >= 70 ? 'manter clareza decisória e compostura emocional' : 'buscar equilíbrio com apoio de técnicas de regulação') : 'adaptar-se conforme o contexto') + '. ' + (tests.includes('IE') ? (AppState.results.ie?.percentages?.resiliencia >= 70 ? 'Recupera-se rapidamente após contratempos.' : 'Pode desenvolver maior tolerância à frustração.') : '') + ' ' + (tests.includes('DISC') ? (AppState.results.disc?.percentages?.D >= 50 ? 'Acelera a execução sob pressão.' : 'Mantém consistência mesmo em cenários desafiadores.') : '');
       }
       
       const pressStabilityBar = safeGetElement('pressStabilityBar');
@@ -1444,7 +1589,7 @@
     function renderProductivity(tests) {
       const prodCapacity = safeGetElement('prodCapacity');
       if (prodCapacity) {
-        prodCapacity.textContent = 'Capacidade de entrega ' + (tests.includes('DISC') ? (['D', 'I'].includes(Object.entries(AppState.results.disc?.percentages || {}).sort((a,b) => b[1]-a[1])[0]?.[0]) ? 'acelerada com foco em impacto' : 'consistente com foco em qualidade') : 'adaptável') + ', com pico de produtividade quando alinhado a ' + (tests.includes('Valores') ? VALUES_INSIGHTS[AppState.results.values?.dominant]?.motivators?.[0]?.toLowerCase() || 'seus motivadores principais' : 'seus motivadores principais') + '. ' + (tests.includes('IE') ? (AppState.results.ie?.percentages?.autocontrole >= 70 ? 'Mantém foco mesmo sob demandas concorrentes.' : 'Pode beneficiar-se de técnicas de priorização e regulação.') : '');
+        prodCapacity.textContent = 'Capacidade de entrega ' + (tests.includes('DISC') ? (['D', 'I'].includes(Object.entries(AppState.results.disc?.percentages || {}).sort((a,b) => b[1]-a[1])[0]?.[0]) ? 'acelerada com foco em impacto' : 'consistente com foco em qualidade') : 'adaptável') + ', com pico de produtividade quando alinhado a ' + (tests.includes('Valores') ? VALUES_INSIGHTS[AppState.results.valores?.dominant]?.motivators?.[0]?.toLowerCase() || 'seus motivadores principais' : 'seus motivadores principais') + '. ' + (tests.includes('IE') ? (AppState.results.ie?.percentages?.autocontrole >= 70 ? 'Mantém foco mesmo sob demandas concorrentes.' : 'Pode beneficiar-se de técnicas de priorização e regulação.') : '');
       }
       
       const prodConsistency = safeGetElement('prodConsistency');
@@ -1461,7 +1606,7 @@
     function renderIdealEnvironment(tests) {
       const envCulture = safeGetElement('envCulture');
       if (envCulture) {
-        envCulture.textContent = 'Prospera em culturas que valorizam ' + (tests.includes('Valores') ? VALUES_INSIGHTS[AppState.results.values?.dominant]?.motivators?.[0]?.toLowerCase() || 'crescimento e reconhecimento' : 'crescimento e reconhecimento') + ' e oferecem ' + (tests.includes('DISC') ? (AppState.results.disc?.percentages?.D >= 50 ? 'autonomia decisória e meritocracia' : AppState.results.disc?.percentages?.I >= 50 ? 'espaço para criatividade e colaboração' : 'estabilidade e processos claros') : 'estrutura adequada') + '. Ambientes excessivamente ' + (tests.includes('DISC') ? (AppState.results.disc?.percentages?.D >= 50 ? 'burocráticos' : AppState.results.disc?.percentages?.S >= 50 ? 'caóticos' : 'improvisados') : 'desalinhados aos seus valores') + ' tendem a reduzir engajamento.';
+        envCulture.textContent = 'Prospera em culturas que valorizam ' + (tests.includes('Valores') ? VALUES_INSIGHTS[AppState.results.valores?.dominant]?.motivators?.[0]?.toLowerCase() || 'crescimento e reconhecimento' : 'crescimento e reconhecimento') + ' e oferecem ' + (tests.includes('DISC') ? (AppState.results.disc?.percentages?.D >= 50 ? 'autonomia decisória e meritocracia' : AppState.results.disc?.percentages?.I >= 50 ? 'espaço para criatividade e colaboração' : 'estabilidade e processos claros') : 'estrutura adequada') + '. Ambientes excessivamente ' + (tests.includes('DISC') ? (AppState.results.disc?.percentages?.D >= 50 ? 'burocráticos' : AppState.results.disc?.percentages?.S >= 50 ? 'caóticos' : 'improvisados') : 'desalinhados aos seus valores') + ' tendem a reduzir engajamento.';
       }
       
       const envManagement = safeGetElement('envManagement');
@@ -1517,7 +1662,7 @@
         if (AppState.results.ie.percentages.empatia < 70) trainings.push({ title: 'Inteligência Relacional', desc: 'Desenvolvimento de escuta ativa e validação emocional.' });
       }
       
-      if (tests.includes('Valores') && AppState.results.values) {
+      if (tests.includes('Valores') && AppState.results.valores) {
         trainings.push({ title: 'Alinhamento de Valores', desc: 'Práticas para conectar valores pessoais a objetivos profissionais.' });
       }
       
@@ -1582,8 +1727,8 @@
         if (AppState.results.ie.percentages.empatia >= 70) strengths.push('Inteligência relacional');
       }
       
-      if (tests.includes('Valores') && AppState.results.values) {
-        strengths.push(`Foco em ${VALUES_INSIGHTS[AppState.results.values.dominant]?.name?.toLowerCase() || 'valores'}`);
+      if (tests.includes('Valores') && AppState.results.valores) {
+        strengths.push(`Foco em ${VALUES_INSIGHTS[AppState.results.valores.dominant]?.name?.toLowerCase() || 'valores'}`);
       }
       
       // Garantir pelo menos 4 pontos fortes
@@ -1613,9 +1758,9 @@
         if (AppState.results.ie.percentages.resiliencia < 70) developments.push('Fortalecer resiliência em cenários desafiadores');
       }
       
-      if (tests.includes('Valores') && AppState.results.values) {
-        const lowest = Object.entries(AppState.results.values.percentages).sort((a,b) => a[1]-b[1])[0][0];
-        if (lowest !== AppState.results.values.dominant) {
+      if (tests.includes('Valores') && AppState.results.valores) {
+        const lowest = Object.entries(AppState.results.valores.percentages).sort((a,b) => a[1]-b[1])[0][0];
+        if (lowest !== AppState.results.valores.dominant) {
           developments.push(`Desenvolver ${VALUES_INSIGHTS[lowest]?.name?.toLowerCase() || 'valores'}`);
         }
       }
@@ -1638,7 +1783,7 @@
       const recs = [
         `Onboarding: Focar em <strong>${tests.includes('DISC') ? (AppState.results.disc?.percentages?.D >= 50 ? 'metas claras e autonomia inicial' : 'integração com o time e cultura') : 'alinhamento de expectativas'}</strong>.`,
         `Estilo de Gestão: Adotar abordagem <strong>${tests.includes('DISC') ? (AppState.results.disc?.percentages?.D >= 50 ? 'diretiva por objetivos' : 'participativa e inspiracional') : 'adaptativa conforme o perfil'}</strong>.`,
-        `Retenção: Oferecer <strong>${tests.includes('Valores') ? VALUES_INSIGHTS[AppState.results.values?.dominant]?.motivators?.[0] || 'crescimento e reconhecimento' : 'crescimento e reconhecimento'}</strong> e caminhos claros de desenvolvimento.`,
+        `Retenção: Oferecer <strong>${tests.includes('Valores') ? VALUES_INSIGHTS[AppState.results.valores?.dominant]?.motivators?.[0] || 'crescimento e reconhecimento' : 'crescimento e reconhecimento'}</strong> e caminhos claros de desenvolvimento.`,
         `Desenvolvimento: Investir em <strong>${tests.length >= 2 ? 'integração entre dimensões comportamentais' : 'desenvolvimento da dimensão avaliada'}</strong> via coaching e treinamento prático.`
       ];
       
@@ -1928,6 +2073,7 @@
       if (loading) loading.classList.add('hidden');
       const content = safeGetElement('laudoContent');
       if (content) {
+        content.style.display = 'block';
         content.innerHTML = '<div class="glass-card p-8 text-center"><h2 class="text-xl font-bold text-brand-rose mb-4">⚠️ Erro ao gerar Laudo</h2><p class="text-gray-400 mb-4">Ocorreu um erro ao processar seus dados.</p><button onclick="window.location.reload()" class="btn-primary px-6 py-3 rounded-lg">🔄 Recarregar Página</button></div>';
         content.classList.remove('hidden');
       }
@@ -1942,6 +2088,7 @@
         console.warn('Laudo: loading timeout - forçando exibição do conteúdo');
         loading.classList.add('hidden');
         if (content && content.classList.contains('hidden')) {
+          content.style.display = 'block';
           content.innerHTML = '<div class="glass-card p-8 text-center"><p class="text-gray-400">Carregamento lento. <button onclick="window.location.reload()" class="text-brand-cyan underline">Recarregar</button></p></div>';
           content.classList.remove('hidden');
         }
@@ -1953,7 +2100,7 @@
     console.log('🔍 Laudo Vigorre - Resultados disponíveis:', {
       disc: !!localStorage.getItem('vigorre_last_disc_result'),
       ie: !!localStorage.getItem('vigorre_last_ie_result'),
-      valores: !!localStorage.getItem('vigorre_last_values_result'),
+      valores: !!localStorage.getItem('vigorre_last_valores_result'),
       participant: AppState.participant?.name || 'não carregado'
     });
 
