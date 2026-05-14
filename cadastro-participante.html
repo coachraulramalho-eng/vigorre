@@ -38,6 +38,11 @@
       gap: 10px; 
       font-weight: 700; 
     }
+    .logo-img {
+      height: 40px;
+      width: auto;
+      border-radius: 8px;
+    }
     .logo-icon { 
       width: 35px; 
       height: 35px; 
@@ -210,7 +215,7 @@
        ============================================ -->
   <header>
     <div class="logo">
-      <div class="logo-icon">V</div>
+      <img src="logo-vigorre.png" alt="Vigorre" class="logo-img" onerror="this.outerHTML='<div class=\'logo-icon\'>V</div>'">
       <span>Vigorre - Área do Participante</span>
     </div>
     <button class="btn-logout" onclick="logout()">Sair do Sistema</button>
