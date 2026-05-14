@@ -103,18 +103,122 @@
       z-index: 9999; transform: translateX(400px); transition: transform 0.3s ease;
     }
     #toast.show { transform: translateX(0); }
+    
+    /* ============================================
+       PRINT OPTIMIZATION - PREMIUM VIGORRE
+       ============================================ */
     @media print {
-      body { background: white; color: #111; }
+      body { 
+        background: white !important; 
+        color: #111 !important;
+        font-size: 11pt;
+      }
       .no-print { display: none !important; }
+      .glass, .glass-card { 
+        background: white !important; 
+        border: 1px solid #ccc !important; 
+        box-shadow: none !important; 
+        backdrop-filter: none !important; 
+      }
+      .gradient-text { 
+        -webkit-text-fill-color: #1D4ED8 !important; 
+        color: #1D4ED8 !important;
+      }
+      .results-view { 
+        max-width: 100% !important; 
+        padding: 20px !important; 
+      }
+      /* Logo Vigorre no cabeçalho de impressão */
+      .print-header {
+        display: block !important;
+        text-align: center;
+        padding: 20px 0;
+        border-bottom: 3px solid #1D4ED8;
+        margin-bottom: 20px;
+      }
+      .print-header .logo-v {
+        font-size: 24pt;
+        font-weight: bold;
+        color: #1D4ED8;
+        display: inline-block;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #1D4ED8, #7C3AED);
+        color: white;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 10px;
+      }
+      .print-header h1 {
+        font-size: 18pt;
+        color: #111;
+        margin: 0;
+      }
+      .print-header p {
+        font-size: 10pt;
+        color: #666;
+        margin: 5px 0 0;
+      }
+      /* Marca d'água Vigorre */
+      .print-watermark {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-45deg);
+        font-size: 80pt;
+        color: rgba(29, 78, 216, 0.05);
+        font-weight: bold;
+        pointer-events: none;
+        z-index: -1;
+        white-space: nowrap;
+      }
+      /* Rodapé de impressão */
+      .print-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 8pt;
+        color: #999;
+        padding: 10px;
+        border-top: 1px solid #eee;
+      }
+    }
+    
+    /* Header de impressão (oculto na tela) */
+    .print-header {
+      display: none;
+    }
+    .print-watermark {
+      display: none;
+    }
+    .print-footer {
+      display: none;
     }
   </style>
 </head>
 <body class="antialiased">
 
+  <!-- ============================================
+       HEADER DE IMPRESSÃO (SÓ APARECE NO PRINT)
+       ============================================ -->
+  <div class="print-header">
+    <div class="logo-v">V</div>
+    <h1>Vigorre People Analytics</h1>
+    <p>Valores Pessoais • Relatório Profissional</p>
+  </div>
+  
+  <!-- Marca d'água para impressão -->
+  <div class="print-watermark">VIGORRE</div>
+
   <header class="glass border-b border-white/10 sticky top-0 z-50 no-print">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center font-bold text-white">V</div>
+        <!-- ✅ LOGO VIGORRE COM FALLBACK -->
+        <img src="logo-vigorre.png" alt="Vigorre" class="w-10 h-10 rounded-xl" onerror="this.outerHTML='<div class=\'w-10 h-10 rounded-xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center font-bold text-white\'>V</div>'">
         <div>
           <h1 class="font-bold text-lg">Vigorre</h1>
           <p class="text-xs text-gray-400">Valores Pessoais • People Analytics</p>
@@ -185,6 +289,11 @@
         <p class="text-sm text-gray-400 mb-4">Laudo detalhado + fit cultural + plano de desenvolvimento</p>
         <button onclick="window.location.href='laudo-vigorre.html?test=Valores'" class="btn-secondary px-6 py-3 rounded-lg font-semibold w-full">Ver Laudo Vigorre</button>
       </div>
+    </div>
+    
+    <!-- Rodapé de impressão -->
+    <div class="print-footer">
+      © 2024 Vigorre People Analytics • Relatório gerado em <span id="printDate"></span> • www.vigorre.com.br
     </div>
   </div>
 
@@ -411,7 +520,14 @@
     document.addEventListener('DOMContentLoaded', function() {
       console.log('DOM carregado, inicializando...');
       loadSession();
-      renderQuestion();
+      
+      // ✅ CORREÇÃO: Se já estiver logado, vai direto para o teste
+      if (AppState.session && AppState.session.id) {
+        renderQuestion();
+      } else {
+        // Se não estiver logado, redireciona para login
+        window.location.href = 'login.html';
+      }
     });
 
     function loadSession() {
@@ -602,6 +718,10 @@
       document.getElementById('recommendations').innerHTML = '<ul class="space-y-2 text-sm text-gray-300"><li class="flex gap-2"><span class="text-brand-emerald">➤</span> Alinhe seu trabalho atual com seu valor predominante (' + dominant.name + ').</li><li class="flex gap-2"><span class="text-brand-emerald">➤</span> Busque ambientes que respeitem seu perfil motivacional.</li><li class="flex gap-2"><span class="text-brand-emerald">➤</span> Considere o laudo completo Vigorre para análise integrada com DISC e IE.</li><li class="flex gap-2"><span class="text-brand-emerald">➤</span> Desenvolva seu valor secundário para maior flexibilidade profissional.</li></ul>';
 
       renderCharts(results.percentages);
+      
+      // ✅ Definir data de impressão
+      document.getElementById('printDate').textContent = new Date().toLocaleDateString('pt-BR');
+      
       window.scrollTo(0, 0);
     }
 
@@ -718,7 +838,7 @@
       } else {
         reportContent += 'Ambiente alinhado ao seu valor predominante';
       }
-      reportContent += '\n\nPara análise completa, acesse: laudo-vigorre.html';
+      reportContent += '\n\nPara análise completa, acesse: laudo-vigorre.html\n\n© 2024 Vigorre People Analytics - Metodologia validada internacionalmente';
       
       const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8' });
       const url = URL.createObjectURL(blob);
