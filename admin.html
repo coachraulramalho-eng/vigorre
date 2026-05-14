@@ -1423,19 +1423,27 @@
     }
 
     // ============================================
-    // PARTICIPANTES - EDITAR
+    // PARTICIPANTES - EDITAR (CORRIGIDA - ORDEM CORRETA)
     // ============================================
     function editParticipant(id) {
       var p = DB.participants.find(function(x) { return x.id === id; }); 
       if (!p) return;
+      
+      // ✅ PRIMEIRO: Preenche os campos básicos do formulário
       document.getElementById('pId').value = p.id; 
       document.getElementById('pName').value = p.name;
       document.getElementById('pPhone').value = p.phone; 
       document.getElementById('pEmail').value = p.email;
-      document.getElementById('pComp').value = p.compId || ''; 
       document.getElementById('pUser').value = p.user || '';
       document.getElementById('pPass').value = p.pass || ''; 
       document.getElementById('pExp').value = p.exp || '';
+      
+      // ✅ POPULA o select de empresas ANTES de definir o valor
+      updateSelects();
+      
+      // ✅ AGORA SIM define o valor do select (depois que ele já foi populado)
+      document.getElementById('pComp').value = p.compId || '';
+      
       document.querySelectorAll('.test-check').forEach(function(cb) { 
         cb.checked = p.tests && p.tests.includes(cb.value); 
       });
