@@ -892,10 +892,17 @@
       }
     }
 
-    function openModal(id) { 
+    // ============================================
+    // FUNÇÃO: Abrir modal (COM PARÂMETRO PARA EVITAR updateSelects)
+    // ============================================
+    function openModal(id, skipUpdateSelects) { 
       document.getElementById(id).classList.add('active'); 
-      updateSelects(); 
+      // Só chama updateSelects se NÃO for para pular
+      if (!skipUpdateSelects) {
+        updateSelects(); 
+      }
     }
+    
     function closeModal(id) { 
       document.getElementById(id).classList.remove('active'); 
       document.querySelectorAll('form').forEach(function(f) { f.reset(); }); 
@@ -1423,13 +1430,25 @@
     }
 
     // ============================================
-    // PARTICIPANTES - EDITAR (CORRIGIDA - ORDEM CORRETA)
+    // PARTICIPANTES - EDITAR (CORREÇÃO FINAL - EVITA SOBRESCREVER SELECT)
     // ============================================
     function editParticipant(id) {
       var p = DB.participants.find(function(x) { return x.id === id; }); 
       if (!p) return;
       
-      // ✅ PRIMEIRO: Preenche os campos básicos do formulário
+      console.log('✏️ Editando participante:', p.name);
+      console.log('📋 compId atual:', p.compId);
+      
+      // ✅ 1. PRIMEIRO: Popula o select de empresas MANUALMENTE
+      var pSel = document.getElementById('pComp');
+      pSel.innerHTML = '<option value="">Independente</option>' + 
+                        DB.companies.map(function(c) { 
+                          return '<option value="' + c.id + '">' + c.name + '</option>'; 
+                        }).join('');
+      
+      console.log('✅ Select populado com', DB.companies.length, 'empresas');
+      
+      // ✅ 2. AGORA define os valores do formulário
       document.getElementById('pId').value = p.id; 
       document.getElementById('pName').value = p.name;
       document.getElementById('pPhone').value = p.phone; 
@@ -1438,17 +1457,19 @@
       document.getElementById('pPass').value = p.pass || ''; 
       document.getElementById('pExp').value = p.exp || '';
       
-      // ✅ POPULA o select de empresas ANTES de definir o valor
-      updateSelects();
-      
-      // ✅ AGORA SIM define o valor do select (depois que ele já foi populado)
+      // ✅ 3. Define o valor do select DEPOIS de populado
       document.getElementById('pComp').value = p.compId || '';
+      console.log('🎯 Select definido para:', document.getElementById('pComp').value);
       
+      // ✅ 4. Marca os checkboxes dos testes
       document.querySelectorAll('.test-check').forEach(function(cb) { 
         cb.checked = p.tests && p.tests.includes(cb.value); 
       });
+      
       document.getElementById('partTitle').textContent = 'Editar Participante';
-      openModal('partModal');
+      
+      // ✅ 5. Abre o modal MANUALMENTE (SEM chamar updateSelects de novo!)
+      document.getElementById('partModal').classList.add('active');
     }
 
     function resendTest(id) {
