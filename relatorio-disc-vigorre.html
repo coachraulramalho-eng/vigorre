@@ -28,7 +28,7 @@
               amber: '#F59E0B',
               rose: '#F43F5E',
               slate: '#64748B',
-              light: '#F8FAFC' // Cor de fundo clara para o relatório
+              light: '#F8FAFC'
             }
           }
         }
@@ -43,8 +43,8 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
       font-family: 'Inter', sans-serif; 
-      background: #F1F5F9; /* Fundo claro profissional */
-      color: #1e293b; /* Texto escuro para leitura */
+      background: #F1F5F9;
+      color: #1e293b;
       min-height: 100vh; 
       line-height: 1.6;
       -webkit-print-color-adjust: exact !important;
@@ -74,7 +74,6 @@
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     }
     
-    /* Texto gradiente para títulos */
     .gradient-text { 
       background: linear-gradient(135deg, #1e40af, #7c3aed); 
       -webkit-background-clip: text; 
@@ -128,27 +127,51 @@
       }
       .no-print { display: none !important; }
       
-      /* Header de impressão */
-      header {
+      /* Header de impressão Vigorre Premium */
+      .print-header {
+        display: flex !important;
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         background: white !important;
-        color: black !important;
         border-bottom: 2px solid #1e40af !important;
-        padding: 15px 0 !important;
+        padding: 10px 20px !important;
         box-shadow: none !important;
         z-index: 9999;
         -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
-      header h1, header p {
+      .print-header .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .print-header .logo-box {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #1D4ED8, #7C3AED);
+        color: white;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 20px;
+      }
+      .print-header h1 {
+        font-size: 14pt;
         color: #000000 !important;
+        font-weight: 700;
+      }
+      .print-header p {
+        font-size: 9pt;
+        color: #6b7280 !important;
       }
       
       /* Layout do conteúdo */
       main {
-        margin-top: 100px; /* Espaço para o header fixo */
+        margin-top: 60px;
       }
       .glass-card { 
         background: #ffffff !important; 
@@ -161,10 +184,12 @@
       /* Gráficos */
       .chart-container {
         page-break-inside: avoid;
+        max-width: 100% !important;
       }
       canvas {
         max-width: 100% !important;
         -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
       
       /* Textos */
@@ -176,23 +201,48 @@
       }
       p, li, td { color: #334155 !important; }
       
-      /* Rodapé de impressão */
+      /* Rodapé de impressão Vigorre Premium */
       .print-footer {
-        display: block !important;
+        display: flex !important;
         position: fixed;
         bottom: 0;
         left: 0;
         right: 0;
-        text-align: center;
-        font-size: 9pt;
-        color: #6b7280 !important;
-        padding: 10px 0;
+        background: white !important;
         border-top: 1px solid #e2e8f0;
-        background: white;
+        padding: 8px 20px;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 8pt;
+        color: #6b7280 !important;
+        z-index: 9999;
+      }
+      
+      /* Marca d'água Vigorre */
+      .print-watermark {
+        display: block !important;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-45deg);
+        font-size: 150pt;
+        color: rgba(30, 64, 175, 0.03);
+        font-weight: 900;
+        pointer-events: none;
+        z-index: 0;
+        white-space: nowrap;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
     }
     
+    .print-header {
+      display: none;
+    }
     .print-footer {
+      display: none;
+    }
+    .print-watermark {
       display: none;
     }
   </style>
@@ -200,13 +250,13 @@
 <body class="antialiased">
 
   <!-- ============================================
-       HEADER / CONTROLS
+       HEADER VIGORRE PREMIUM (VISÍVEL NA TELA)
        ============================================ -->
   <header class="no-print sticky top-0 z-50 py-4">
     <div class="max-w-6xl mx-auto px-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <!-- Logo com fundo branco para contraste -->
-        <img src="logo-vigorre.png" alt="Vigorre" class="w-10 h-10 rounded-lg shadow-sm" onerror="this.outerHTML='<div class=\'w-10 h-10 rounded-lg bg-brand-blue flex items-center justify-center font-bold text-white\'>V</div>'">
+        <!-- Logo Vigorre -->
+        <img src="logo-vigorre.png" alt="Vigorre" class="w-10 h-10 rounded-lg shadow-sm" onerror="this.outerHTML='<div class=\'w-10 h-10 rounded-lg bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center font-bold text-white\'>V</div>'">
         <div>
           <h1 class="font-bold text-xl text-gray-900 tracking-tight">Vigorre People Analytics</h1>
           <p class="text-xs text-gray-500 font-medium">Relatório DISC Completo • Inteligência Comportamental</p>
@@ -226,11 +276,23 @@
     </div>
   </header>
 
-  <!-- Header para Impressão -->
-  <div class="print-footer">
-    <p><strong>Vigorre People Analytics</strong> • Relatório DISC Completo</p>
-    <p>Gerado automaticamente por Vigorre People Analytics • Metodologia proprietária validada</p>
+  <!-- ============================================
+       HEADER DE IMPRESSÃO VIGORRE PREMIUM
+       ============================================ -->
+  <div class="print-header">
+    <div class="logo-container">
+      <div class="logo-box">V</div>
+      <div>
+        <h1>Vigorre People Analytics</h1>
+        <p>Relatório DISC Completo • Inteligência Comportamental Aplicada</p>
+      </div>
+    </div>
   </div>
+  
+  <!-- ============================================
+       MARCA D'ÁGUA VIGORRE
+       ============================================ -->
+  <div class="print-watermark">VIGORRE</div>
 
   <!-- ============================================
        MAIN REPORT CONTENT
@@ -243,9 +305,10 @@
       <div class="absolute bottom-0 left-0 w-64 h-64 bg-brand-purple/5 rounded-full -ml-32 -mb-32"></div>
       
       <div class="relative z-10">
+        <!-- Logo na Capa -->
         <div class="flex justify-center mb-8">
           <div class="w-24 h-24 rounded-2xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center shadow-xl">
-            <span class="text-5xl font-bold text-white">V</span>
+            <img src="logo-vigorre.png" alt="Vigorre" class="w-16 h-16" onerror="this.outerHTML='<span class=\'text-5xl font-bold text-white\'>V</span>'">
           </div>
         </div>
         
@@ -562,7 +625,15 @@
 
   </main>
 
-  <!-- FOOTER PREMIUM -->
+  <!-- ============================================
+       RODAPÉ DE IMPRESSÃO VIGORRE PREMIUM
+       ============================================ -->
+  <div class="print-footer">
+    <p><strong>Vigorre People Analytics</strong> • Relatório DISC Completo</p>
+    <p>Gerado automaticamente por Vigorre People Analytics • Metodologia proprietária validada • Documento confidencial</p>
+  </div>
+
+  <!-- FOOTER PREMIUM (TELA) -->
   <footer class="glass-card border-t border-gray-200 py-8 mt-8 no-print">
     <div class="max-w-5xl mx-auto px-4 text-center text-sm text-gray-500">
       <p class="mb-3 font-semibold text-base text-gray-700">Vigorre People Analytics</p>
