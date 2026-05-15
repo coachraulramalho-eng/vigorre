@@ -48,8 +48,6 @@
       color: #1e293b;
       min-height: 100vh; 
       line-height: 1.6;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
     }
 
     /* ============================================
@@ -83,7 +81,7 @@
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
       margin-bottom: 30px;
       overflow: hidden;
-      break-inside: avoid;
+      break-inside: avoid; /* Evita que o card seja cortado na impressão */
     }
     
     .vigorre-card .card-header {
@@ -159,14 +157,14 @@
     @media print {
       @page {
         size: A4 portrait;
-        margin: 20mm 15mm;
+        margin: 15mm 15mm;
       }
       
       body { 
         background: #ffffff !important;
         color: #000000 !important;
-        font-size: 11pt;
-        line-height: 1.5;
+        font-size: 10pt; /* Tamanho levemente menor para caber melhor */
+        line-height: 1.4;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
@@ -211,23 +209,24 @@
         background: #ffffff !important;
         color: #0A1628;
         border-radius: 8px;
-        display: flex;
+        display: flex !important;
         align-items: center;
         justify-content: center;
         font-weight: 900;
         font-size: 20px;
         border: 2px solid rgba(255,255,255,0.3);
+        -webkit-print-color-adjust: exact !important;
       }
       
       .print-header h1 {
-        font-size: 16pt;
+        font-size: 14pt;
         font-weight: 800;
         margin: 0;
         color: white !important;
       }
       
       .print-header p {
-        font-size: 9pt;
+        font-size: 8pt;
         margin: 0;
         opacity: 0.9;
         color: rgba(255,255,255,0.9) !important;
@@ -235,21 +234,21 @@
       
       .print-header .print-method {
         text-align: right;
-        font-size: 9pt;
+        font-size: 8pt;
         color: rgba(255,255,255,0.9) !important;
       }
       
       .print-header .print-method strong {
-        font-size: 14pt;
+        font-size: 12pt;
         letter-spacing: 2px;
         display: block;
         color: white !important;
       }
       
-      /* Conteúdo principal com margem para header/footer - CORREÇÃO */
+      /* Conteúdo principal com margem para header/footer */
       main {
-        margin-top: 100px !important;
-        margin-bottom: 100px !important;
+        margin-top: 90px !important;
+        margin-bottom: 90px !important;
         padding: 0 !important;
       }
       
@@ -258,9 +257,10 @@
         background: #ffffff !important;
         border: 1px solid #e2e8f0 !important;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
-        break-inside: avoid;
-        page-break-inside: avoid;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
         margin-bottom: 20px !important;
+        page-break-after: auto;
       }
       
       .vigorre-card .card-header {
@@ -270,7 +270,7 @@
       
       /* Gráficos na impressão */
       .chart-container {
-        height: 300px !important;
+        height: 280px !important;
         max-width: 100% !important;
         page-break-inside: avoid;
       }
@@ -284,6 +284,7 @@
       /* Textos na impressão */
       h1, h2, h3, h4 {
         color: #0F172A !important;
+        page-break-after: avoid;
       }
       
       p, li, td { 
@@ -303,6 +304,11 @@
         z-index: 9999;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
+      }
+      
+      /* Forçar texto branco no rodapé */
+      .print-footer p, .print-footer div, .print-footer * {
+        color: white !important;
       }
       
       .print-footer .print-footer-content {
@@ -374,7 +380,9 @@
   <div class="print-header">
     <div class="print-header-content">
       <div class="print-logo">
-        <div class="print-logo-box">V</div>
+        <div class="print-logo-box">
+            <img src="logo-vigorre.png" style="width:100%; height:100%; object-fit:contain;" onerror="this.outerHTML='<span style=\'color:#0A1628; font-weight:900; font-size:18px;\'>V</span>'">
+        </div>
         <div>
           <h1>Vigorre People Analytics</h1>
           <p>Relatório DISC Completo • Inteligência Comportamental</p>
@@ -400,15 +408,15 @@
       <div style="display: flex; align-items: center; gap: 10px;">
         <div style="width: 30px; height: 30px; background: #ffffff; color: #0A1628; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px;">V</div>
         <div>
-          <p style="margin: 0; font-weight: 700; color: white;">Vigorre People Analytics</p>
-          <p style="margin: 0; font-size: 8pt; opacity: 0.8; color: rgba(255,255,255,0.8);">Inteligência e Gestão Estratégica</p>
+          <p style="margin: 0; font-weight: 700;">Vigorre People Analytics</p>
+          <p style="margin: 0; font-size: 8pt; opacity: 0.8;">Inteligência e Gestão Estratégica</p>
         </div>
       </div>
-      <div style="text-align: center; color: rgba(255,255,255,0.8);">
+      <div style="text-align: center;">
         <p style="margin: 0; font-size: 9pt;">Relatório DISC Completo • Gerado automaticamente</p>
         <p style="margin: 0; font-size: 8pt; opacity: 0.7;">Documento confidencial • Vigorre People Analytics</p>
       </div>
-      <div style="text-align: right; color: rgba(255,255,255,0.8);">
+      <div style="text-align: right;">
         <p style="margin: 0; font-size: 9pt;">contato@vigorre.com.br</p>
         <p style="margin: 0; font-size: 8pt; opacity: 0.7;">vigorre.com.br</p>
       </div>
@@ -941,42 +949,66 @@
     // ============================================
     document.addEventListener('DOMContentLoaded', () => {
       console.log('🔹 Inicializando Relatório DISC Vigorre™...');
-      loadSession();
+      loadReportData(); // Carrega os dados do participante
       loadDiscResults();
     });
 
-    function loadSession() {
-      try {
-        // Carregar sessão atual
-        const session = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
-        if (session?.id) {
-          AppState.session = session;
-          
-          // Carregar participantes
-          const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-          AppState.participant = participants.find(p => p.id === session.id);
-          
-          // Carregar empresas
-          const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
-          if (AppState.participant?.companyId) {
-            AppState.company = companies.find(c => c.id === AppState.participant.companyId);
-          }
-          
-          // Carregar vagas/cargos
-          const jobs = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]');
-          if (AppState.participant?.jobId) {
-            AppState.job = jobs.find(j => j.id === AppState.participant.jobId);
-          }
-          
-          console.log('✅ Sessão carregada:', {
-            participant: AppState.participant?.name,
-            company: AppState.company?.name,
-            job: AppState.job?.name || AppState.job?.title
-          });
+    // ============================================
+    // CARREGAR DADOS DO PARTICIPANTE (CORREÇÃO)
+    // ============================================
+    function loadReportData() {
+        // 1. Pegar o ID da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const participantId = urlParams.get('participantId');
+
+        if (!participantId) {
+            console.error("Nenhum participantId encontrado na URL");
+            return;
         }
-      } catch (e) { 
-        console.error('❌ Erro ao carregar sessão:', e); 
-      }
+
+        console.log('Buscando participante com ID:', participantId);
+
+        // 2. Buscar participantes no localStorage (mesma chave do Admin)
+        const participantsData = localStorage.getItem('vigorre_participants');
+        const participants = participantsData ? JSON.parse(participantsData) : [];
+        
+        const participant = participants.find(p => p.id === participantId);
+        
+        if (participant) {
+            console.log("✅ Participante encontrado:", participant);
+            AppState.participant = participant;
+            
+            // Preencher nome
+            document.getElementById('coverName').textContent = participant.name || 'Participante';
+            
+            // 3. Buscar empresas para pegar o nome da empresa vinculada
+            const companiesData = localStorage.getItem('vigorre_companies');
+            const companies = companiesData ? JSON.parse(companiesData) : [];
+            
+            if (participant.companyId && participant.companyId !== '') {
+                const company = companies.find(c => c.id === participant.companyId);
+                if (company) {
+                    console.log("✅ Empresa encontrada:", company.name);
+                    document.getElementById('coverCompany').textContent = company.name;
+                } else {
+                    document.getElementById('coverCompany').textContent = 'Empresa não encontrada';
+                }
+            } else {
+                document.getElementById('coverCompany').textContent = 'Independente';
+            }
+
+            // 4. Preencher Vaga/Cargo (se houver)
+            if (participant.jobTitle) {
+                 document.getElementById('coverJob').textContent = participant.jobTitle;
+            } else if (participant.jobName) {
+                 document.getElementById('coverJob').textContent = participant.jobName;
+            } else {
+                 document.getElementById('coverJob').textContent = 'Não vinculada';
+            }
+
+        } else {
+            console.warn("❌ Participante não encontrado no localStorage");
+        }
     }
 
     function loadDiscResults() {
@@ -1006,9 +1038,6 @@
       }
 
       console.log('🎨 Gerando relatório DISC...');
-
-      // ✅ CORREÇÃO CRÍTICA: Preencher dados do participante COM VERIFICAÇÃO
-      updateParticipantInfo();
 
       // Calcular score e determinar perfil dominante
       const scores = Object.entries(r.percentages);
@@ -1041,49 +1070,6 @@
     }
 
     // ============================================
-    // ✅ CORREÇÃO CRÍTICA: Atualizar informações do participante
-    // ============================================
-    function updateParticipantInfo() {
-      console.log('📝 Atualizando informações do participante...');
-      console.log('Dados disponíveis:', {
-        participant: AppState.participant,
-        company: AppState.company,
-        job: AppState.job
-      });
-      
-      // Nome do participante
-      const coverName = safeGetElement('coverName');
-      if (coverName) {
-        const participantName = AppState.participant?.name || 'Participante';
-        coverName.textContent = participantName;
-        console.log('✓ Nome:', participantName);
-      }
-      
-      // Empresa
-      const coverCompany = safeGetElement('coverCompany');
-      if (coverCompany) {
-        const companyName = AppState.company?.name || 'Independente';
-        coverCompany.textContent = companyName;
-        console.log('✓ Empresa:', companyName);
-      }
-      
-      // Vaga/Cargo
-      const coverJob = safeGetElement('coverJob');
-      if (coverJob) {
-        // Tentar diferentes campos possíveis para o cargo/vaga
-        const jobName = AppState.job?.name || AppState.job?.title || AppState.participant?.jobTitle || 'Não vinculada';
-        coverJob.textContent = jobName;
-        console.log('✓ Vaga/Cargo:', jobName);
-      }
-      
-      // Código
-      const coverCode = safeGetElement('coverCode');
-      if (coverCode) {
-        coverCode.textContent = 'VIG-DISC-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 9000 + 1000);
-      }
-    }
-
-    // ============================================
     // ✅ NOVA SEÇÃO: ANÁLISE DE ADERÊNCIA À VAGA
     // ============================================
     function renderAderenciaVaga(dominant, percentages) {
@@ -1091,11 +1077,6 @@
       if (!container) return;
 
       // Calcular percentual de aderência baseado no perfil dominante e intensidade
-      // PERFIL D: Melhor para liderança, vendas agressivas, gestão de crise
-      // PERFIL I: Melhor para comunicação, marketing, relações públicas
-      // PERFIL S: Melhor para suporte, atendimento, operações estáveis
-      // PERFIL C: Melhor para análise técnica, qualidade, compliance
-
       const jobRequirements = {
         D: { leadership: 95, sales: 90, crisis: 95, innovation: 75, analysis: 40, support: 30 },
         I: { leadership: 80, sales: 85, crisis: 60, innovation: 85, analysis: 45, support: 70 },
