@@ -53,7 +53,7 @@
     }
 
     /* ============================================
-       LOGO BOX COM FUNDO BRANCO (SOLICITAÇÃO)
+       LOGO BOX COM FUNDO BRANCO
        ============================================ */
     .vigorre-logo-box {
       background-color: #ffffff !important;
@@ -125,64 +125,184 @@
     }
 
     /* ============================================
-       PRINT OPTIMIZATION - ALTA QUALIDADE
+       PRINT OPTIMIZATION - ULTRA PREMIUM
        ============================================ */
     @media print {
       @page {
         size: A4 portrait;
-        margin: 10mm;
+        margin: 15mm;
       }
+      
       body { 
         background: #ffffff !important;
+        color: #000000 !important;
         font-size: 11pt;
+        line-height: 1.5;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
+      
+      /* Esconder elementos não impressos */
       .no-print { display: none !important; }
       
-      /* Header de impressão */
+      /* Header de impressão - AZUL COMO NA TELA */
       .print-header {
         display: flex !important;
-        background: white !important;
-        border-bottom: 2px solid #1D4ED8 !important;
-        padding: 10px 0;
+        background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
+        color: white !important;
+        padding: 15px 25px !important;
         position: fixed;
-        top: 0; left: 0; right: 0;
+        top: 0;
+        left: 0;
+        right: 0;
         z-index: 9999;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3) !important;
       }
       
-      /* Conteúdo com margem para o header fixo */
+      .print-header .print-header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 210mm;
+        margin: 0 auto;
+      }
+      
+      .print-header .print-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      
+      .print-header .print-logo-box {
+        width: 40px;
+        height: 40px;
+        background: #ffffff !important;
+        color: #0A1628;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        font-size: 20px;
+        border: 2px solid rgba(255,255,255,0.3);
+      }
+      
+      .print-header h1 {
+        font-size: 16pt;
+        font-weight: 800;
+        margin: 0;
+        color: white !important;
+      }
+      
+      .print-header p {
+        font-size: 9pt;
+        margin: 0;
+        opacity: 0.9;
+        color: rgba(255,255,255,0.9) !important;
+      }
+      
+      .print-header .print-method {
+        text-align: right;
+        font-size: 9pt;
+        color: rgba(255,255,255,0.9) !important;
+      }
+      
+      .print-header .print-method strong {
+        font-size: 14pt;
+        letter-spacing: 2px;
+        display: block;
+        color: white !important;
+      }
+      
+      /* Conteúdo principal com margem para header/footer */
       main {
-        margin-top: 80px;
+        margin-top: 90px !important;
+        margin-bottom: 80px !important;
+        padding: 0 !important;
       }
       
+      /* Cards na impressão */
       .vigorre-card {
-        border: 1px solid #ccc !important;
-        box-shadow: none !important;
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+        break-inside: avoid;
+        page-break-inside: avoid;
+        margin-bottom: 20px !important;
+      }
+      
+      .vigorre-card .card-header {
+        background: #F8FAFC !important;
+        border-bottom: 2px solid #E2E8F0 !important;
+      }
+      
+      /* Gráficos na impressão */
+      .chart-container {
+        height: 300px !important;
+        max-width: 100% !important;
+        page-break-inside: avoid;
+      }
+      
+      canvas {
+        max-width: 100% !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      
+      /* Textos na impressão */
+      h1, h2, h3, h4 {
+        color: #0F172A !important;
+      }
+      
+      p, li, td { 
+        color: #334155 !important; 
+      }
+      
+      /* Rodapé de impressão - AZUL COMO NA TELA */
+      .print-footer {
+        display: flex !important;
+        background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
+        color: white !important;
+        padding: 15px 25px !important;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      
+      .print-footer .print-footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 9pt;
+        width: 100%;
+        max-width: 210mm;
+        margin: 0 auto;
+        color: white !important;
+      }
+      
+      .print-footer .print-footer-content div {
+        color: rgba(255,255,255,0.9) !important;
       }
       
       /* Marca d'água */
       .print-watermark {
         display: block !important;
         position: fixed;
-        top: 50%; left: 50%;
+        top: 50%;
+        left: 50%;
         transform: translate(-50%, -50%) rotate(-30deg);
-        font-size: 140pt;
-        color: rgba(15, 23, 42, 0.03);
+        font-size: 120pt;
+        color: rgba(15, 23, 42, 0.03) !important;
         font-weight: 900;
         pointer-events: none;
         z-index: 0;
-      }
-
-      /* Rodapé de impressão */
-      .print-footer {
-        display: flex !important;
-        background: white !important;
-        border-top: 1px solid #ccc;
-        padding: 10px 0;
-        position: fixed;
-        bottom: 0; left: 0; right: 0;
-        font-size: 8pt;
-        color: #64748B;
-        justify-content: space-between;
       }
     }
     
@@ -220,37 +340,50 @@
   </header>
 
   <!-- ============================================
-       HEADER DE IMPRESSÃO (BRANCO COM LOGO)
+       HEADER DE IMPRESSÃO (AZUL COMO NA TELA)
        ============================================ -->
   <div class="print-header">
-    <div class="max-w-6xl mx-auto px-6 flex items-center justify-between w-full">
-      <div class="flex items-center gap-3">
-        <!-- LOGO PRINT COM FUNDO BRANCO -->
-        <div style="background:#fff; border:1px solid #ccc; padding:2px; border-radius:4px; width:40px; height:40px; display:flex; align-items:center; justify-content:center;">
-           <img src="logo-vigorre.png" style="max-width:90%; max-height:90%;" onerror="this.outerHTML='<span style=\'color:#0F172A; font-weight:900; font-size:18px;\'>V</span>'">
-        </div>
+    <div class="print-header-content">
+      <div class="print-logo">
+        <div class="print-logo-box">V</div>
         <div>
-          <h1 style="font-size:16pt; font-weight:800; color:#0F172A; margin:0;">Vigorre People Analytics</h1>
-          <p style="font-size:8pt; color:#64748B; margin:0; text-transform:uppercase; letter-spacing:1px;">Relatório DISC Completo</p>
+          <h1>Vigorre People Analytics</h1>
+          <p>Relatório DISC Completo • Inteligência Comportamental</p>
         </div>
       </div>
-      <div style="text-align:right;">
-        <p style="margin:0; font-weight:700; color:#1D4ED8;">MÉTODO V.I.G.O.R.</p>
+      <div class="print-method">
+        <strong>MÉTODO V.I.G.O.R.</strong>
+        <span>Inteligência que transforma</span>
       </div>
     </div>
   </div>
-
+  
   <!-- ============================================
        MARCA D'ÁGUA
        ============================================ -->
   <div class="print-watermark">VIGORRE</div>
 
   <!-- ============================================
-       RODAPÉ DE IMPRESSÃO
+       RODAPÉ DE IMPRESSÃO (AZUL COMO NA TELA)
        ============================================ -->
   <div class="print-footer">
-    <span>Vigorre People Analytics • Inteligência e Gestão Estratégica</span>
-    <span>contato@vigorre.com.br • vigorre.com.br</span>
+    <div class="print-footer-content">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="width: 30px; height: 30px; background: #ffffff; color: #0A1628; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px;">V</div>
+        <div>
+          <p style="margin: 0; font-weight: 700; color: white;">Vigorre People Analytics</p>
+          <p style="margin: 0; font-size: 8pt; opacity: 0.8; color: rgba(255,255,255,0.8);">Inteligência e Gestão Estratégica</p>
+        </div>
+      </div>
+      <div style="text-align: center; color: rgba(255,255,255,0.8);">
+        <p style="margin: 0; font-size: 9pt;">Relatório DISC Completo • Gerado automaticamente</p>
+        <p style="margin: 0; font-size: 8pt; opacity: 0.7;">Documento confidencial • Vigorre People Analytics</p>
+      </div>
+      <div style="text-align: right; color: rgba(255,255,255,0.8);">
+        <p style="margin: 0; font-size: 9pt;">contato@vigorre.com.br</p>
+        <p style="margin: 0; font-size: 8pt; opacity: 0.7;">vigorre.com.br</p>
+      </div>
+    </div>
   </div>
 
   <!-- ============================================
@@ -1167,7 +1300,7 @@
 
     function renderMotivators(r, dominant) {
       const profile = PREMIUM_CONTENT[dominant];
-      const icons = ['🎯', '🚀', '🤝', '📈', '🏆', '💡', '🛡️', '🌱'];
+      const icons = ['🎯', '🚀', '🤝', '', '🏆', '💡', '🛡️', '🌱'];
       
       const motivatorsGrid = safeGetElement('motivatorsGrid');
       if (motivatorsGrid) {
