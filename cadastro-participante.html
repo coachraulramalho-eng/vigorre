@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Minha Área - Vigorre</title>
+  <title>Cadastro de Participante - Vigorre</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     /* ============================================
@@ -88,7 +88,7 @@
     }
     .card h2 { 
       color: #1e40af; 
-      margin-bottom: 1rem; 
+      margin-bottom: 1.5rem; 
       font-size: 1.4rem; 
       display: flex; 
       align-items: center; 
@@ -96,116 +96,77 @@
     }
     
     /* ============================================
-       GRID DE INFORMAÇÕES
+       FORMULÁRIO
        ============================================ */
-    .info-grid { 
+    .form-grid { 
       display: grid; 
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-      gap: 1rem; 
-    }
-    .info-item { 
-      background: #f8fafc; 
-      padding: 1rem; 
-      border-radius: 10px; 
-      border-left: 4px solid #3b82f6; 
-    }
-    .info-item label { 
-      display: block; 
-      font-size: 0.85rem; 
-      color: #64748b; 
-      margin-bottom: 4px; 
-      font-weight: 600; 
-    }
-    .info-item span { 
-      font-size: 1rem; 
-      color: #1e293b; 
-      font-weight: 500; 
-    }
-    
-    /* ============================================
-       GRID DE TESTES
-       ============================================ */
-    .tests-grid { 
-      display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
       gap: 1.5rem; 
     }
-    .test-card { 
-      border: 2px solid #e2e8f0; 
-      border-radius: 12px; 
-      padding: 1.5rem; 
-      text-align: center; 
-      transition: all 0.3s; 
-      position: relative; 
+    .form-group { 
+      display: flex; 
+      flex-direction: column; 
     }
-    .test-card:hover { 
-      border-color: #3b82f6; 
-      transform: translateY(-3px); 
-      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.15); 
-    }
-    .test-card.completed { 
-      border-color: #22c55e; 
-      background: #f0fdf4; 
-    }
-    .test-icon { 
-      font-size: 2.5rem; 
-      margin-bottom: 1rem; 
-    }
-    .test-title { 
-      font-size: 1.2rem; 
-      font-weight: 700; 
-      color: #1e293b; 
-      margin-bottom: 0.5rem; 
-    }
-    .test-status { 
+    .form-group label { 
       font-size: 0.9rem; 
-      color: #64748b; 
-      margin-bottom: 1rem; 
-      font-weight: 500; 
+      color: #475569; 
+      margin-bottom: 6px; 
+      font-weight: 600; 
     }
-    .test-status.realizado { 
-      color: #166534; 
-      font-weight: 700; 
+    .form-group input,
+    .form-group select { 
+      padding: 10px 14px; 
+      border: 2px solid #e2e8f0; 
+      border-radius: 8px; 
+      font-size: 1rem; 
+      transition: all 0.3s; 
+    }
+    .form-group input:focus,
+    .form-group select:focus { 
+      outline: none; 
+      border-color: #3b82f6; 
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); 
+    }
+    .form-group input:disabled,
+    .form-group select:disabled { 
+      background: #f1f5f9; 
+      cursor: not-allowed; 
     }
     
     /* ============================================
        BOTÕES
        ============================================ */
-    .btn-start { 
-      width: 100%; 
-      padding: 12px; 
-      border-radius: 8px; 
+    .btn-save { 
+      background: linear-gradient(135deg, #3b82f6, #1e40af); 
+      color: white; 
+      padding: 14px 28px; 
       border: none; 
+      border-radius: 8px; 
       font-weight: 700; 
       font-size: 1rem; 
       cursor: pointer; 
       transition: all 0.3s; 
-      background: linear-gradient(135deg, #3b82f6, #1e40af); 
-      color: white; 
+      margin-top: 1rem; 
     }
-    .btn-start:hover { 
+    .btn-save:hover { 
       transform: translateY(-2px); 
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4); 
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4); 
     }
-    .btn-start:disabled { 
+    .btn-cancel { 
+      background: #e2e8f0; 
+      color: #475569; 
+      padding: 14px 28px; 
+      border: none; 
+      border-radius: 8px; 
+      font-weight: 700; 
+      font-size: 1rem; 
+      cursor: pointer; 
+      transition: all 0.3s; 
+      margin-top: 1rem; 
+      margin-left: 10px; 
+    }
+    .btn-cancel:hover { 
       background: #cbd5e1; 
-      color: #64748b; 
-      cursor: not-allowed; 
-      transform: none; 
-      box-shadow: none; 
-    }
-    
-    /* ============================================
-       ESTADO VAZIO
-       ============================================ */
-    .empty-state { 
-      text-align: center; 
-      padding: 3rem; 
-      color: #64748b; 
-    }
-    .empty-state h3 { 
-      color: #94a3b8; 
-      margin-bottom: 0.5rem; 
     }
   </style>
 </head>
@@ -216,7 +177,7 @@
   <header>
     <div class="logo">
       <img src="logo-vigorre.png" alt="Vigorre" class="logo-img" onerror="this.outerHTML='<div class=\'logo-icon\'>V</div>'">
-      <span>Vigorre - Área do Participante</span>
+      <span>Vigorre - Cadastro de Participante</span>
     </div>
     <button class="btn-logout" onclick="logout()">Sair do Sistema</button>
   </header>
@@ -225,20 +186,64 @@
        CONTEÚDO PRINCIPAL
        ============================================ -->
   <main>
-    <!-- Card de Informações Pessoais -->
+    <!-- Card de Cadastro -->
     <div class="card">
-      <h2>👤 Seus Dados</h2>
-      <div class="info-grid" id="personalInfo">
-        <!-- Preenchido via JavaScript -->
-      </div>
-    </div>
+      <h2>👤 Dados do Participante</h2>
+      <form id="participantForm">
+        <div class="form-grid">
+          <!-- Nome Completo -->
+          <div class="form-group" style="grid-column: 1 / -1;">
+            <label for="name">Nome Completo *</label>
+            <input type="text" id="name" required placeholder="Digite o nome completo">
+          </div>
 
-    <!-- Card de Testes Liberados -->
-    <div class="card">
-      <h2>📝 Testes Liberados</h2>
-      <div class="tests-grid" id="testsContainer">
-        <!-- Preenchido via JavaScript -->
-      </div>
+          <!-- E-mail -->
+          <div class="form-group">
+            <label for="email">E-mail *</label>
+            <input type="email" id="email" required placeholder="exemplo@email.com">
+          </div>
+
+          <!-- Telefone -->
+          <div class="form-group">
+            <label for="phone">Telefone / WhatsApp</label>
+            <input type="tel" id="phone" placeholder="(00) 00000-0000">
+          </div>
+
+          <!-- Empresa -->
+          <div class="form-group">
+            <label for="companyId">Empresa *</label>
+            <select id="companyId" required onchange="loadJobs()">
+              <option value="">Selecione a empresa...</option>
+            </select>
+          </div>
+
+          <!-- Vaga/Cargo (NOVO CAMPO) -->
+          <div class="form-group">
+            <label for="jobId">Vaga / Cargo</label>
+            <select id="jobId">
+              <option value="">Selecione a vaga...</option>
+            </select>
+          </div>
+
+          <!-- Usuário -->
+          <div class="form-group">
+            <label for="user">Usuário de Acesso *</label>
+            <input type="text" id="user" required placeholder="Nome de usuário">
+          </div>
+
+          <!-- Senha -->
+          <div class="form-group">
+            <label for="password">Senha de Acesso *</label>
+            <input type="password" id="password" required placeholder="********">
+          </div>
+        </div>
+
+        <!-- Botões -->
+        <div style="margin-top: 2rem;">
+          <button type="submit" class="btn-save">💾 Salvar Participante</button>
+          <button type="button" class="btn-cancel" onclick="cancel()">❌ Cancelar</button>
+        </div>
+      </form>
     </div>
   </main>
 
@@ -246,252 +251,184 @@
     // ============================================
     // VARIÁVEIS GLOBAIS
     // ============================================
-    
-    // Obtém a sessão do usuário logado do localStorage
-    const session = JSON.parse(localStorage.getItem('vigorre_current_user'));
-    
-    // ============================================
-    // VERIFICAÇÃO DE SESSÃO - SEGURANÇA
-    // ============================================
-    // Se não houver sessão ou ID, redireciona para login
-    if (!session || !session.id) {
-      window.location.href = 'login.html';
-    }
+    const participantId = new URLSearchParams(window.location.search).get('id');
+    let companies = [];
+    let jobs = [];
 
     // ============================================
-    // BUSCAR DADOS DO PARTICIPANTE NO LOCALSTORAGE
+    // CARREGAR EMPRESAS NO SELECT
     // ============================================
-    // Obtém a lista completa de participantes
-    const allParticipants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-    
-    // Encontra o participante com o ID da sessão atual
-    const participant = allParticipants.find(p => p.id === session.id);
-
-    // Se não encontrar o participante, exibe erro e faz logout
-    if (!participant) {
-      alert('Erro ao carregar perfil. Faça login novamente.');
-      logout();
-    }
-
-    // ============================================
-    // FUNÇÃO: RENDERIZAR INFORMAÇÕES PESSOAIS
-    // ============================================
-    function renderPersonalInfo() {
-      const container = document.getElementById('personalInfo');
+    function loadCompanies() {
+      companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+      const select = document.getElementById('companyId');
       
-      // Busca a lista de empresas para exibir o nome da empresa vinculada
-      const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
-      const company = companies.find(c => c.id === participant.compId);
+      // Limpa opções existentes (mantém a primeira)
+      select.innerHTML = '<option value="">Selecione a empresa...</option>';
       
-      // Monta o HTML com os dados do participante
-      container.innerHTML = `
-        <div class="info-item">
-          <label>Nome Completo</label>
-          <span>${participant.name}</span>
-        </div>
-        <div class="info-item">
-          <label>E-mail</label>
-          <span>${participant.email}</span>
-        </div>
-        <div class="info-item">
-          <label>Telefone / WhatsApp</label>
-          <span>${participant.phone || 'Não informado'}</span>
-        </div>
-        <div class="info-item">
-          <label>Empresa Vinculada</label>
-          <span>${company ? company.name : 'Independente'}</span>
-        </div>
-        <div class="info-item">
-          <label>Usuário de Acesso</label>
-          <span>${participant.user}</span>
-        </div>
-        <div class="info-item">
-          <label>Status da Conta</label>
-          <span style="color: #22c55e; font-weight: 700;">Ativo</span>
-        </div>
-      `;
-    }
-
-    // ============================================
-    // FUNÇÃO: RENDERIZAR TESTES LIBERADOS
-    // ============================================
-    function renderTests() {
-      const container = document.getElementById('testsContainer');
-      container.innerHTML = '';
-
-      // Lista completa de testes disponíveis no sistema
-      // IDs devem bater EXATAMENTE com os valores salvos no admin.html
-      const testsList = [
-        { id: 'DISC', name: 'Teste DISC', icon: '📊', url: 'teste-disc.html' },
-        { id: 'IE', name: 'Inteligência Emocional', icon: '🧠', url: 'teste-ie.html' },
-        { id: 'Valores', name: 'Valores Pessoais', icon: '💎', url: 'teste-valores.html' }
-      ];
-
-      // ============================================
-      // CORREÇÃO CRÍTICA: Normalizar os arrays de testes
-      // O admin.html salva em 'tests', mas também usamos 'assignedTests' como fallback
-      // ============================================
-      
-      // Se o participante não tem o array 'tests', cria vazio
-      if (!participant.tests) {
-        participant.tests = [];
-      }
-      
-      // Se não tem 'assignedTests', usa 'tests' como fallback
-      if (!participant.assignedTests) {
-        participant.assignedTests = [...participant.tests];
-      }
-      
-      // Se não tem 'completedTests', cria vazio
-      if (!participant.completedTests) {
-        participant.completedTests = [];
-      }
-
-      // Flag para verificar se há algum teste para exibir
-      let hasAnyTest = false;
-
-      // Percorre cada teste disponível no sistema
-      testsList.forEach(test => {
-        // ============================================
-        // VERIFICAÇÃO DE TESTE LIBERADO
-        // Verifica em DOIS campos para garantir compatibilidade:
-        // 1. 'tests' (campo principal salvo pelo admin)
-        // 2. 'assignedTests' (fallback para compatibilidade)
-        // ============================================
-        const isAssigned = participant.tests.includes(test.id) || 
-                          participant.assignedTests.includes(test.id);
-        
-        // Verifica se o teste já foi concluído pelo participante
-        const isCompleted = participant.completedTests.includes(test.id);
-
-        // Só exibe o card se o teste foi liberado para o participante
-        if (isAssigned) {
-          hasAnyTest = true;
-          
-          // Cria o elemento do card do teste
-          const card = document.createElement('div');
-          card.className = `test-card ${isCompleted ? 'completed' : ''}`;
-          
-          // Define o texto de status conforme o estado do teste
-          const statusText = isCompleted ? '✅ Teste Realizado' : '⏳ Disponível para Iniciar';
-          const statusClass = isCompleted ? 'realizado' : '';
-          
-          // Define o texto do botão conforme o estado
-          const btnText = isCompleted ? 'Concluído' : 'Iniciar Teste';
-          
-          // Define se o botão deve estar desabilitado
-          const isDisabled = isCompleted ? 'disabled' : '';
-          
-          // Define a ação de clique apenas se o teste não estiver concluído
-          const clickAction = isCompleted ? '' : `onclick="startTest('${test.url}')"`;
-
-          // Monta o HTML interno do card
-          card.innerHTML = `
-            <div class="test-icon">${test.icon}</div>
-            <div class="test-title">${test.name}</div>
-            <div class="test-status ${statusClass}">${statusText}</div>
-            <button class="btn-start" ${isDisabled} ${clickAction}>${btnText}</button>
-          `;
-          
-          // Adiciona o card ao container
-          container.appendChild(card);
-        }
+      // Adiciona empresas
+      companies.forEach(company => {
+        const option = document.createElement('option');
+        option.value = company.id;
+        option.textContent = company.name;
+        select.appendChild(option);
       });
 
-      // Se não houver nenhum teste liberado, exibe mensagem de estado vazio
-      if (!hasAnyTest) {
-        container.innerHTML = `
-          <div class="empty-state" style="grid-column: 1 / -1;">
-            <h3>Nenhum teste liberado ainda</h3>
-            <p>Entre em contato com o administrador para liberar seus testes comportamentais.</p>
-          </div>
-        `;
+      // Se estiver editando, seleciona a empresa atual
+      if (participantId) {
+        const allParticipants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+        const participant = allParticipants.find(p => p.id === participantId);
+        if (participant && participant.companyId) {
+          select.value = participant.companyId;
+          loadJobs(); // Carrega vagas da empresa selecionada
+        }
       }
     }
 
     // ============================================
-    // FUNÇÃO: INICIAR TESTE
+    // CARREGAR VAGAS NO SELECT (NOVA FUNÇÃO)
     // ============================================
-    function startTest(url) {
-      // Redireciona para a URL do teste selecionado
-      window.location.href = url;
-    }
-
-    // ============================================
-    // FUNÇÃO: FINALIZAR TESTE E MARCAR COMO CONCLUÍDO
-    // Esta função deve ser chamada nos arquivos de teste (teste-disc.html, etc.)
-    // ao clicar no botão "Finalizar"
-    // ============================================
-    function finalizarTesteERedirecionar(testId) {
-      // Busca a lista atualizada de participantes
-      const allParticipants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+    function loadJobs() {
+      const companyId = document.getElementById('companyId').value;
+      const jobSelect = document.getElementById('jobId');
       
-      // Encontra o índice do participante atual na lista
-      const idx = allParticipants.findIndex(p => p.id === session.id);
-
-      // Se encontrar o participante
-      if (idx > -1) {
-        // Garante que o array de testes concluídos exista
-        if (!allParticipants[idx].completedTests) {
-          allParticipants[idx].completedTests = [];
-        }
-        
-        // Marca o teste como concluído se ainda não estiver
-        // Verifica se o ID já está no array antes de adicionar
-        if (!allParticipants[idx].completedTests.includes(testId)) {
-          allParticipants[idx].completedTests.push(testId);
-        }
-        
-        // Salva a lista atualizada no localStorage
-        localStorage.setItem('vigorre_participants', JSON.stringify(allParticipants));
+      // Limpa opções de vagas
+      jobSelect.innerHTML = '<option value="">Selecione a vaga...</option>';
+      
+      if (!companyId) {
+        jobSelect.disabled = true;
+        return;
       }
-
-      // Redireciona de volta para o painel do participante
-      window.location.href = 'cadastro-participante.html';
+      
+      // Busca vagas do localStorage
+      jobs = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]');
+      
+      // Filtra vagas da empresa selecionada
+      const companyJobs = jobs.filter(job => job.companyId === companyId);
+      
+      if (companyJobs.length === 0) {
+        const option = document.createElement('option');
+        option.value = '';
+        option.textContent = 'Nenhuma vaga cadastrada';
+        option.disabled = true;
+        jobSelect.appendChild(option);
+        jobSelect.disabled = true;
+        return;
+      }
+      
+      // Adiciona vagas no select
+      companyJobs.forEach(job => {
+        const option = document.createElement('option');
+        option.value = job.id;
+        option.textContent = job.title || job.name;
+        jobSelect.appendChild(option);
+      });
+      
+      jobSelect.disabled = false;
+      
+      // Se estiver editando, seleciona a vaga atual
+      if (participantId) {
+        const allParticipants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+        const participant = allParticipants.find(p => p.id === participantId);
+        if (participant && participant.jobId) {
+          jobSelect.value = participant.jobId;
+        }
+      }
     }
 
     // ============================================
-    // FUNÇÃO: LOGOUT
+    // SALVAR PARTICIPANTE
+    // ============================================
+    document.getElementById('participantForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Coleta dados do formulário
+      const participantData = {
+        id: participantId || Date.now().toString(),
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        companyId: document.getElementById('companyId').value,
+        jobId: document.getElementById('jobId').value || null, // NOVO: Salva o jobId
+        user: document.getElementById('user').value,
+        password: document.getElementById('password').value,
+        tests: participantId ? 
+          (JSON.parse(localStorage.getItem('vigorre_participants') || '[]')
+            .find(p => p.id === participantId)?.tests || []) : [],
+        completedTests: participantId ? 
+          (JSON.parse(localStorage.getItem('vigorre_participants') || '[]')
+            .find(p => p.id === participantId)?.completedTests || []) : [],
+        createdAt: participantId ? 
+          (JSON.parse(localStorage.getItem('vigorre_participants') || '[]')
+            .find(p => p.id === participantId)?.createdAt) : new Date().toISOString()
+      };
+
+      // Busca participantes existentes
+      let participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+      
+      // Verifica se já existe
+      const existingIndex = participants.findIndex(p => p.id === participantData.id);
+      
+      if (existingIndex > -1) {
+        // Atualiza participante existente
+        participants[existingIndex] = participantData;
+        alert('✅ Participante atualizado com sucesso!');
+      } else {
+        // Adiciona novo participante
+        participants.push(participantData);
+        alert('✅ Participante cadastrado com sucesso!');
+      }
+      
+      // Salva no localStorage
+      localStorage.setItem('vigorre_participants', JSON.stringify(participants));
+      
+      // Redireciona para lista
+      window.location.href = 'admin.html';
+    });
+
+    // ============================================
+    // CARREGAR DADOS PARA EDIÇÃO
+    // ============================================
+    function loadParticipantData() {
+      if (!participantId) return;
+      
+      const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+      const participant = participants.find(p => p.id === participantId);
+      
+      if (participant) {
+        document.getElementById('name').value = participant.name || '';
+        document.getElementById('email').value = participant.email || '';
+        document.getElementById('phone').value = participant.phone || '';
+        document.getElementById('companyId').value = participant.companyId || '';
+        document.getElementById('jobId').value = participant.jobId || '';
+        document.getElementById('user').value = participant.user || '';
+        document.getElementById('password').value = participant.password || '';
+      }
+    }
+
+    // ============================================
+    // CANCELAR
+    // ============================================
+    function cancel() {
+      if (confirm('Deseja cancelar? Os dados não serão salvos.')) {
+        window.location.href = 'admin.html';
+      }
+    }
+
+    // ============================================
+    // LOGOUT
     // ============================================
     function logout() {
-      // Remove a sessão do localStorage
       localStorage.removeItem('vigorre_current_user');
-      
-      // Redireciona para a página de login
       window.location.href = 'login.html';
     }
 
     // ============================================
-    // INICIALIZAÇÃO DA PÁGINA
+    // INICIALIZAÇÃO
     // ============================================
-    // Renderiza as informações pessoais ao carregar a página
-    renderPersonalInfo();
-    
-    // Renderiza os testes liberados ao carregar a página
-    renderTests();
-
-    // ============================================
-    // LISTENER PARA ATUALIZAÇÃO EM TEMPO REAL
-    // ============================================
-    // Escuta mudanças no localStorage para atualizar os testes automaticamente
-    // Isso é útil quando o admin libera um novo teste enquanto o participante está logado
-    window.addEventListener('storage', () => {
-      // Busca a lista atualizada de participantes
-      const updated = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-      
-      // Encontra o participante atual na lista atualizada
-      const fresh = updated.find(p => p.id === session.id);
-      
-      // Se encontrar o participante atualizado
-      if (fresh) {
-        // Atualiza os arrays de testes com os dados mais recentes
-        // Mantém compatibilidade com ambos os campos
-        participant.tests = fresh.tests || [];
-        participant.assignedTests = fresh.assignedTests || [...participant.tests];
-        participant.completedTests = fresh.completedTests || [];
-        
-        // Re-renderiza os testes para refletir as mudanças
-        renderTests();
+    window.addEventListener('DOMContentLoaded', () => {
+      loadCompanies();
+      if (participantId) {
+        loadParticipantData();
       }
     });
   </script>
