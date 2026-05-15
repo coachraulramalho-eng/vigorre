@@ -134,6 +134,55 @@
     }
     
     /* ============================================
+       ESTILO PARA LISTA DE VAGAS SELECIONADAS (NOVO)
+       ============================================ */
+    .selected-jobs-container {
+      margin-top: 10px;
+      padding: 12px;
+      background: #f8fafc;
+      border-radius: 8px;
+      border: 2px solid #e2e8f0;
+      display: none;
+    }
+    .selected-jobs-container.active {
+      display: block;
+    }
+    .selected-jobs-title {
+      font-weight: 600;
+      color: #475569;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+    .selected-job-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      background: white;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      border-left: 4px solid #3b82f6;
+      font-size: 0.95rem;
+    }
+    .selected-job-item:last-child {
+      margin-bottom: 0;
+    }
+    .btn-remove-job {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 4px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    .btn-remove-job:hover {
+      background: #dc2626;
+    }
+    
+    /* ============================================
        BOTÕES
        ============================================ */
     .btn-save { 
@@ -167,6 +216,27 @@
     }
     .btn-cancel:hover { 
       background: #cbd5e1; 
+    }
+    .btn-add-job {
+      background: #10b981;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-add-job:hover {
+      background: #059669;
+    }
+    .btn-add-job:disabled {
+      background: #cbd5e1;
+      cursor: not-allowed;
     }
   </style>
 </head>
@@ -212,17 +282,28 @@
           <!-- Empresa -->
           <div class="form-group">
             <label for="companyId">Empresa *</label>
-            <select id="companyId" required onchange="loadJobs()">
+            <select id="companyId" required onchange="loadAvailableJobs()">
               <option value="">Selecione a empresa...</option>
             </select>
           </div>
 
-          <!-- Vaga/Cargo (NOVO CAMPO) -->
+          <!-- Vaga/Cargo - Seleção e Inclusão (NOVO) -->
           <div class="form-group">
-            <label for="jobId">Vaga / Cargo</label>
-            <select id="jobId">
+            <label for="availableJobSelect">Vaga / Cargo Disponível</label>
+            <select id="availableJobSelect">
               <option value="">Selecione a vaga...</option>
             </select>
+            <button type="button" class="btn-add-job" id="btnAddJob" onclick="addJobToParticipant()" disabled>
+              ➕ Incluir Vaga
+            </button>
+            
+            <!-- Lista de vagas já vinculadas ao participante -->
+            <div id="selectedJobsContainer" class="selected-jobs-container">
+              <div class="selected-jobs-title">Vagas Vinculadas:</div>
+              <div id="selectedJobsList">
+                <!-- Vagas serão adicionadas aqui dinamicamente -->
+              </div>
+            </div>
           </div>
 
           <!-- Usuário -->
@@ -238,7 +319,7 @@
           </div>
         </div>
 
-        <!-- Botões -->
+        <!-- Botões de Ação -->
         <div style="margin-top: 2rem;">
           <button type="submit" class="btn-save">💾 Salvar Participante</button>
           <button type="button" class="btn-cancel" onclick="cancel()">❌ Cancelar</button>
@@ -253,160 +334,258 @@
     // ============================================
     const participantId = new URLSearchParams(window.location.search).get('id');
     let companies = [];
-    let jobs = [];
+    let allJobs = [];
+    let selectedJobs = []; // Array para armazenar vagas selecionadas para este participante
 
     // ============================================
     // CARREGAR EMPRESAS NO SELECT
     // ============================================
     function loadCompanies() {
+      // Busca empresas do localStorage
       companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
-      const select = document.getElementById('companyId');
+      const companySelect = document.getElementById('companyId');
       
-      // Limpa opções existentes (mantém a primeira)
-      select.innerHTML = '<option value="">Selecione a empresa...</option>';
+      // Limpa opções existentes (mantém a primeira opção padrão)
+      companySelect.innerHTML = '<option value="">Selecione a empresa...</option>';
       
-      // Adiciona empresas
-      companies.forEach(company => {
+      // Adiciona cada empresa como opção no select
+      companies.forEach(function(company) {
         const option = document.createElement('option');
         option.value = company.id;
         option.textContent = company.name;
-        select.appendChild(option);
+        companySelect.appendChild(option);
       });
 
-      // Se estiver editando, seleciona a empresa atual
+      // Se estiver editando um participante existente, seleciona a empresa atual
       if (participantId) {
         const allParticipants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-        const participant = allParticipants.find(p => p.id === participantId);
+        const participant = allParticipants.find(function(p) { return p.id === participantId; });
         if (participant && participant.companyId) {
-          select.value = participant.companyId;
-          loadJobs(); // Carrega vagas da empresa selecionada
+          companySelect.value = participant.companyId;
+          // Carrega as vagas disponíveis para esta empresa
+          loadAvailableJobs();
+          
+          // Carrega as vagas já vinculadas a este participante
+          if (participant.jobs && Array.isArray(participant.jobs) && participant.jobs.length > 0) {
+            selectedJobs = JSON.parse(JSON.stringify(participant.jobs)); // Clone do array
+            renderSelectedJobsList();
+          }
         }
       }
     }
 
     // ============================================
-    // CARREGAR VAGAS NO SELECT (NOVA FUNÇÃO)
+    // CARREGAR VAGAS DISPONÍVEIS NO SELECT
     // ============================================
-    function loadJobs() {
+    function loadAvailableJobs() {
       const companyId = document.getElementById('companyId').value;
-      const jobSelect = document.getElementById('jobId');
+      const jobSelect = document.getElementById('availableJobSelect');
+      const btnAddJob = document.getElementById('btnAddJob');
       
       // Limpa opções de vagas
       jobSelect.innerHTML = '<option value="">Selecione a vaga...</option>';
       
+      // Se não houver empresa selecionada, desabilita o select de vagas
       if (!companyId) {
         jobSelect.disabled = true;
+        btnAddJob.disabled = true;
         return;
       }
       
-      // Busca vagas do localStorage
-      jobs = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]');
+      // Busca todas as vagas do localStorage
+      allJobs = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]');
       
-      // Filtra vagas da empresa selecionada
-      const companyJobs = jobs.filter(job => job.companyId === companyId);
+      // Filtra vagas da empresa selecionada que ainda NÃO foram adicionadas ao participante
+      const availableJobs = allJobs.filter(function(job) {
+        return job.companyId === companyId && 
+               !selectedJobs.find(function(selected) { return selected.id === job.id; });
+      });
       
-      if (companyJobs.length === 0) {
+      // Se não houver vagas disponíveis, mostra mensagem e desabilita
+      if (availableJobs.length === 0) {
         const option = document.createElement('option');
         option.value = '';
-        option.textContent = 'Nenhuma vaga cadastrada';
+        option.textContent = 'Nenhuma vaga disponível';
         option.disabled = true;
         jobSelect.appendChild(option);
         jobSelect.disabled = true;
+        btnAddJob.disabled = true;
         return;
       }
       
-      // Adiciona vagas no select
-      companyJobs.forEach(job => {
+      // Adiciona cada vaga disponível como opção no select
+      availableJobs.forEach(function(job) {
         const option = document.createElement('option');
         option.value = job.id;
-        option.textContent = job.title || job.name;
+        option.textContent = job.title || job.name || 'Sem título';
         jobSelect.appendChild(option);
       });
       
+      // Habilita o select e o botão de adicionar
       jobSelect.disabled = false;
+      btnAddJob.disabled = false;
+    }
+
+    // ============================================
+    // ADICIONAR VAGA AO PARTICIPANTE
+    // ============================================
+    function addJobToParticipant() {
+      const jobSelect = document.getElementById('availableJobSelect');
+      const jobId = jobSelect.value;
       
-      // Se estiver editando, seleciona a vaga atual
-      if (participantId) {
-        const allParticipants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-        const participant = allParticipants.find(p => p.id === participantId);
-        if (participant && participant.jobId) {
-          jobSelect.value = participant.jobId;
-        }
+      // Validação: verifica se uma vaga foi selecionada
+      if (!jobId) {
+        alert('⚠️ Por favor, selecione uma vaga para incluir.');
+        return;
+      }
+      
+      // Busca a vaga selecionada no array de todas as vagas
+      const job = allJobs.find(function(j) { return j.id === jobId; });
+      
+      // Verifica se a vaga existe e ainda não foi adicionada
+      if (job && !selectedJobs.find(function(sj) { return sj.id === jobId; })) {
+        // Adiciona a vaga ao array de selecionadas
+        selectedJobs.push({
+          id: job.id,
+          title: job.title || job.name || 'Sem título',
+          companyId: job.companyId,
+          description: job.description || ''
+        });
+        
+        // Renderiza a lista atualizada de vagas selecionadas
+        renderSelectedJobsList();
+        
+        // Recarrega as vagas disponíveis (para remover a que foi adicionada)
+        loadAvailableJobs();
+        
+        // Limpa a seleção do dropdown
+        jobSelect.value = '';
       }
     }
 
     // ============================================
-    // SALVAR PARTICIPANTE
+    // REMOVER VAGA DO PARTICIPANTE
+    // ============================================
+    function removeJobFromParticipant(jobId) {
+      // Filtra o array para remover a vaga com o ID especificado
+      selectedJobs = selectedJobs.filter(function(j) { return j.id !== jobId; });
+      
+      // Renderiza a lista atualizada
+      renderSelectedJobsList();
+      
+      // Recarrega as vagas disponíveis (para mostrar a que foi removida)
+      loadAvailableJobs();
+    }
+
+    // ============================================
+    // RENDERIZAR LISTA DE VAGAS SELECIONADAS
+    // ============================================
+    function renderSelectedJobsList() {
+      const container = document.getElementById('selectedJobsContainer');
+      const list = document.getElementById('selectedJobsList');
+      
+      // Se não houver vagas selecionadas, esconde o container
+      if (selectedJobs.length === 0) {
+        container.classList.remove('active');
+        return;
+      }
+      
+      // Mostra o container
+      container.classList.add('active');
+      
+      // Limpa a lista atual
+      list.innerHTML = '';
+      
+      // Renderiza cada vaga selecionada
+      selectedJobs.forEach(function(job) {
+        const jobDiv = document.createElement('div');
+        jobDiv.className = 'selected-job-item';
+        jobDiv.innerHTML = 
+          '<span style="font-weight: 500;">' + (job.title || job.name || 'Sem título') + '</span>' +
+          '<button type="button" class="btn-remove-job" onclick="removeJobFromParticipant(\'' + job.id + '\')">' +
+            '🗑️ Remover' +
+          '</button>';
+        list.appendChild(jobDiv);
+      });
+    }
+
+    // ============================================
+    // SALVAR PARTICIPANTE (SUBMIT DO FORMULÁRIO)
     // ============================================
     document.getElementById('participantForm').addEventListener('submit', function(e) {
       e.preventDefault();
       
-      // Coleta dados do formulário
+      // Coleta todos os dados do formulário
       const participantData = {
         id: participantId || Date.now().toString(),
         name: document.getElementById('name').value,
         email: document.getElementById('email').value,
         phone: document.getElementById('phone').value,
         companyId: document.getElementById('companyId').value,
-        jobId: document.getElementById('jobId').value || null, // NOVO: Salva o jobId
+        jobs: selectedJobs, // NOVO: Salva array de objetos de vagas
         user: document.getElementById('user').value,
         password: document.getElementById('password').value,
         tests: participantId ? 
           (JSON.parse(localStorage.getItem('vigorre_participants') || '[]')
-            .find(p => p.id === participantId)?.tests || []) : [],
+            .find(function(p) { return p.id === participantId; })?.tests || []) : [],
         completedTests: participantId ? 
           (JSON.parse(localStorage.getItem('vigorre_participants') || '[]')
-            .find(p => p.id === participantId)?.completedTests || []) : [],
+            .find(function(p) { return p.id === participantId; })?.completedTests || []) : [],
         createdAt: participantId ? 
           (JSON.parse(localStorage.getItem('vigorre_participants') || '[]')
-            .find(p => p.id === participantId)?.createdAt) : new Date().toISOString()
+            .find(function(p) { return p.id === participantId; })?.createdAt) : new Date().toISOString()
       };
 
-      // Busca participantes existentes
+      // Busca lista atual de participantes do localStorage
       let participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
       
-      // Verifica se já existe
-      const existingIndex = participants.findIndex(p => p.id === participantData.id);
+      // Verifica se o participante já existe (edição) ou é novo (cadastro)
+      const existingIndex = participants.findIndex(function(p) { return p.id === participantData.id; });
       
       if (existingIndex > -1) {
         // Atualiza participante existente
         participants[existingIndex] = participantData;
         alert('✅ Participante atualizado com sucesso!');
       } else {
-        // Adiciona novo participante
+        // Adiciona novo participante à lista
         participants.push(participantData);
         alert('✅ Participante cadastrado com sucesso!');
       }
       
-      // Salva no localStorage
+      // Salva a lista atualizada no localStorage
       localStorage.setItem('vigorre_participants', JSON.stringify(participants));
       
-      // Redireciona para lista
+      // Redireciona para a página do admin
       window.location.href = 'admin.html';
     });
 
     // ============================================
-    // CARREGAR DADOS PARA EDIÇÃO
+    // CARREGAR DADOS DO PARTICIPANTE PARA EDIÇÃO
     // ============================================
     function loadParticipantData() {
       if (!participantId) return;
       
       const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-      const participant = participants.find(p => p.id === participantId);
+      const participant = participants.find(function(p) { return p.id === participantId; });
       
       if (participant) {
         document.getElementById('name').value = participant.name || '';
         document.getElementById('email').value = participant.email || '';
         document.getElementById('phone').value = participant.phone || '';
         document.getElementById('companyId').value = participant.companyId || '';
-        document.getElementById('jobId').value = participant.jobId || '';
         document.getElementById('user').value = participant.user || '';
         document.getElementById('password').value = participant.password || '';
+        
+        // Carrega vagas já vinculadas ao participante
+        if (participant.jobs && Array.isArray(participant.jobs) && participant.jobs.length > 0) {
+          selectedJobs = JSON.parse(JSON.stringify(participant.jobs)); // Clone para evitar referência
+          renderSelectedJobsList();
+        }
       }
     }
 
     // ============================================
-    // CANCELAR
+    // CANCELAR EDIÇÃO/CADASTRO
     // ============================================
     function cancel() {
       if (confirm('Deseja cancelar? Os dados não serão salvos.')) {
@@ -415,7 +594,7 @@
     }
 
     // ============================================
-    // LOGOUT
+    // LOGOUT DO SISTEMA
     // ============================================
     function logout() {
       localStorage.removeItem('vigorre_current_user');
@@ -423,9 +602,9 @@
     }
 
     // ============================================
-    // INICIALIZAÇÃO
+    // INICIALIZAÇÃO DA PÁGINA
     // ============================================
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', function() {
       loadCompanies();
       if (participantId) {
         loadParticipantData();
