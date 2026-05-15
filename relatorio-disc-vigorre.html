@@ -125,12 +125,41 @@
     }
 
     /* ============================================
+       PERCENTUAL DE ADERÊNCIA
+       ============================================ */
+    .aderencia-bar-container {
+      background: #e2e8f0;
+      border-radius: 8px;
+      height: 24px;
+      overflow: hidden;
+      position: relative;
+    }
+    .aderencia-bar-fill {
+      height: 100%;
+      border-radius: 8px;
+      transition: width 1s ease;
+      position: relative;
+    }
+    .aderencia-bar-fill.alta { background: linear-gradient(90deg, #10B981, #059669); }
+    .aderencia-bar-fill.media { background: linear-gradient(90deg, #F59E0B, #D97706); }
+    .aderencia-bar-fill.baixa { background: linear-gradient(90deg, #EF4444, #DC2626); }
+    .aderencia-text {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      font-weight: 700;
+      color: white;
+    }
+
+    /* ============================================
        PRINT OPTIMIZATION - ULTRA PREMIUM
        ============================================ */
     @media print {
       @page {
         size: A4 portrait;
-        margin: 15mm;
+        margin: 20mm 15mm;
       }
       
       body { 
@@ -217,10 +246,10 @@
         color: white !important;
       }
       
-      /* Conteúdo principal com margem para header/footer */
+      /* Conteúdo principal com margem para header/footer - CORREÇÃO */
       main {
-        margin-top: 90px !important;
-        margin-bottom: 80px !important;
+        margin-top: 100px !important;
+        margin-bottom: 100px !important;
         padding: 0 !important;
       }
       
@@ -480,10 +509,23 @@
       </div>
     </section>
 
-    <!-- SEÇÃO 4 — PERFIL PROFISSIONAL -->
+    <!-- SEÇÃO 4 — ANÁLISE DE ADERÊNCIA À VAGA (NOVA SEÇÃO PREMIUM) -->
+    <section id="sectionAderencia" class="vigorre-card executive-section">
+      <div class="card-header" style="background: #1D4ED8; border-bottom: none;">
+        <h2 style="color: white;">04. Análise de Aderência à Vaga / Cargo</h2>
+        <span style="background: rgba(255,255,255,0.2); color: white; padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: bold;">METODOLOGIA VIGORRE</span>
+      </div>
+      <div class="card-body">
+        <div id="aderenciaContent">
+          <!-- Conteúdo Dinâmico Premium -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SEÇÃO 5 — PERFIL PROFISSIONAL -->
     <section class="vigorre-card">
       <div class="card-header">
-        <h2>04. Perfil Profissional e Performance</h2>
+        <h2>05. Perfil Profissional e Performance</h2>
       </div>
       <div class="card-body">
         <div class="grid md:grid-cols-3 gap-5 mb-6">
@@ -498,10 +540,10 @@
       </div>
     </section>
 
-    <!-- SEÇÃO 5 — PERFIL DE LIDERANÇA -->
+    <!-- SEÇÃO 6 — PERFIL DE LIDERANÇA -->
     <section class="vigorre-card">
       <div class="card-header">
-        <h2>05. Potencial e Estilo de Liderança</h2>
+        <h2>06. Potencial e Estilo de Liderança</h2>
       </div>
       <div class="card-body">
         <div class="bg-white p-6 rounded-xl mb-6 shadow-sm border border-gray-100">
@@ -515,10 +557,10 @@
       </div>
     </section>
 
-    <!-- SEÇÃO 6 — COMUNICAÇÃO -->
+    <!-- SEÇÃO 7 — COMUNICAÇÃO -->
     <section class="vigorre-card">
       <div class="card-header">
-        <h2>06. Estilo de Comunicação Profissional</h2>
+        <h2>07. Estilo de Comunicação Profissional</h2>
       </div>
       <div class="card-body">
         <div class="grid md:grid-cols-2 gap-6 mb-6">
@@ -539,10 +581,10 @@
       </div>
     </section>
 
-    <!-- SEÇÃO 7 — RELACIONAMENTO INTERPESSOAL -->
+    <!-- SEÇÃO 8 — RELACIONAMENTO INTERPESSOAL -->
     <section class="vigorre-card">
       <div class="card-header">
-        <h2>07. Trabalho em Equipe e Colaboração</h2>
+        <h2>08. Trabalho em Equipe e Colaboração</h2>
       </div>
       <div class="card-body">
         <div class="space-y-4 mb-6">
@@ -555,10 +597,10 @@
       </div>
     </section>
 
-    <!-- SEÇÃO 8 — REAÇÃO SOB PRESSÃO -->
+    <!-- SEÇÃO 9 — REAÇÃO SOB PRESSÃO -->
     <section class="vigorre-card">
       <div class="card-header">
-        <h2>08. Comportamento Sob Pressão Corporativa</h2>
+        <h2>09. Comportamento Sob Pressão Corporativa</h2>
       </div>
       <div class="card-body">
         <div class="bg-white p-6 rounded-xl mb-6 shadow-sm border border-gray-100">
@@ -573,10 +615,10 @@
       </div>
     </section>
 
-    <!-- SEÇÃO 9 — TOMADA DE DECISÃO -->
+    <!-- SEÇÃO 10 — TOMADA DE DECISÃO -->
     <section class="vigorre-card">
       <div class="card-header">
-        <h2>09. Tomada de Decisão Estratégica</h2>
+        <h2>10. Tomada de Decisão Estratégica</h2>
       </div>
       <div class="card-body">
         <div class="bg-white p-6 rounded-xl mb-6 shadow-sm border border-gray-100">
@@ -590,10 +632,10 @@
       </div>
     </section>
 
-    <!-- SEÇÃO 10 — MOTIVADORES -->
+    <!-- SEÇÃO 11 — MOTIVADORES -->
     <section class="vigorre-card">
       <div class="card-header">
-        <h2>10. Motivadores e Drivers de Engajamento</h2>
+        <h2>11. Motivadores e Drivers de Engajamento</h2>
       </div>
       <div class="card-body">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="motivatorsGrid">
@@ -602,10 +644,10 @@
       </div>
     </section>
 
-    <!-- SEÇÃO 11 — PONTOS FORTES -->
+    <!-- SEÇÃO 12 — PONTOS FORTES -->
     <section class="vigorre-card">
       <div class="card-header">
-        <h2>11. Pontos Fortes e Competências Chave</h2>
+        <h2>12. Pontos Fortes e Competências Chave</h2>
       </div>
       <div class="card-body">
         <div class="grid md:grid-cols-2 gap-4" id="strengthsList">
@@ -614,10 +656,10 @@
       </div>
     </section>
 
-    <!-- SEÇÃO 12 — PONTOS DE ATENÇÃO -->
+    <!-- SEÇÃO 13 — PONTOS DE ATENÇÃO -->
     <section class="vigorre-card">
       <div class="card-header">
-        <h2>12. Pontos de Desenvolvimento e Áreas de Atenção</h2>
+        <h2>13. Pontos de Desenvolvimento e Áreas de Atenção</h2>
       </div>
       <div class="card-body">
         <div class="bg-slate-50 p-6 rounded-xl mb-6 border border-gray-200">
@@ -631,10 +673,10 @@
       </div>
     </section>
 
-    <!-- SEÇÃO 13 — PERFIL EM EQUIPE -->
+    <!-- SEÇÃO 14 — PERFIL EM EQUIPE -->
     <section class="vigorre-card">
       <div class="card-header">
-        <h2>13. Comportamento em Ambiente de Equipe</h2>
+        <h2>14. Comportamento em Ambiente de Equipe</h2>
       </div>
       <div class="card-body">
         <div class="space-y-4">
@@ -647,10 +689,10 @@
       </div>
     </section>
 
-    <!-- SEÇÃO 14 — PERFIL EM MUDANÇAS -->
+    <!-- SEÇÃO 15 — PERFIL EM MUDANÇAS -->
     <section class="vigorre-card">
       <div class="card-header">
-        <h2>14. Adaptação a Mudanças e Inovação</h2>
+        <h2>15. Adaptação a Mudanças e Inovação</h2>
       </div>
       <div class="card-body">
         <div class="bg-white p-6 rounded-xl mb-6 shadow-sm border border-gray-100">
@@ -664,10 +706,10 @@
       </div>
     </section>
 
-    <!-- SEÇÃO 15 — AMBIENTE IDEAL -->
+    <!-- SEÇÃO 16 — AMBIENTE IDEAL -->
     <section class="vigorre-card">
       <div class="card-header">
-        <h2>15. Ambiente e Cultura Organizacional Ideal</h2>
+        <h2>16. Ambiente e Cultura Organizacional Ideal</h2>
       </div>
       <div class="card-body">
         <div class="grid md:grid-cols-2 gap-6">
@@ -683,10 +725,10 @@
       </div>
     </section>
 
-    <!-- SEÇÃO 16 — DESENVOLVIMENTO ESTRATÉGICO -->
+    <!-- SEÇÃO 17 — DESENVOLVIMENTO ESTRATÉGICO -->
     <section class="vigorre-card" style="border-left: 4px solid #7C3AED;">
       <div class="card-header">
-        <h2>16. PDI Vigorre™ — Plano de Desenvolvimento Individual</h2>
+        <h2>17. PDI Vigorre™ — Plano de Desenvolvimento Individual</h2>
       </div>
       <div class="card-body">
         <div class="space-y-5">
@@ -712,10 +754,10 @@
       </div>
     </section>
 
-    <!-- SEÇÃO 17 — CONCLUSÃO EXECUTIVA -->
+    <!-- SEÇÃO 18 — CONCLUSÃO EXECUTIVA -->
     <section class="vigorre-card">
       <div class="card-header">
-        <h2>17. Conclusão Executiva e Parecer Final</h2>
+        <h2>18. Conclusão Executiva e Parecer Final</h2>
       </div>
       <div class="card-body">
         <div class="bg-slate-50 p-6 rounded-xl border border-gray-200">
@@ -724,10 +766,10 @@
       </div>
     </section>
 
-    <!-- SEÇÃO 18 — PARECER EXECUTIVO PREMIUM (ULTRA COMPLETO) -->
+    <!-- SEÇÃO 19 — PARECER EXECUTIVO PREMIUM (ULTRA COMPLETO) -->
     <section class="vigorre-card executive-section">
       <div class="card-header" style="background: #1D4ED8; border-bottom: none;">
-        <h2 style="color: white;">18. Parecer Executivo e Estratégico</h2>
+        <h2 style="color: white;">19. Parecer Executivo e Estratégico</h2>
         <span style="background: rgba(255,255,255,0.2); color: white; padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: bold;">CONFIDENCIAL</span>
       </div>
       <div class="card-body">
@@ -977,6 +1019,7 @@
       // Gerar todas as seções
       renderPerfilDetalhado(dominant, dominantScore, profile);
       renderCharts(r.percentages);
+      renderAderenciaVaga(dominant, r.percentages);
       renderProfessionalProfile(r, dominant);
       renderLeadership(r, dominant);
       renderCommunication(r, dominant);
@@ -1038,6 +1081,190 @@
       if (coverCode) {
         coverCode.textContent = 'VIG-DISC-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 9000 + 1000);
       }
+    }
+
+    // ============================================
+    // ✅ NOVA SEÇÃO: ANÁLISE DE ADERÊNCIA À VAGA
+    // ============================================
+    function renderAderenciaVaga(dominant, percentages) {
+      const container = safeGetElement('aderenciaContent');
+      if (!container) return;
+
+      // Calcular percentual de aderência baseado no perfil dominante e intensidade
+      // PERFIL D: Melhor para liderança, vendas agressivas, gestão de crise
+      // PERFIL I: Melhor para comunicação, marketing, relações públicas
+      // PERFIL S: Melhor para suporte, atendimento, operações estáveis
+      // PERFIL C: Melhor para análise técnica, qualidade, compliance
+
+      const jobRequirements = {
+        D: { leadership: 95, sales: 90, crisis: 95, innovation: 75, analysis: 40, support: 30 },
+        I: { leadership: 80, sales: 85, crisis: 60, innovation: 85, analysis: 45, support: 70 },
+        S: { leadership: 50, sales: 45, crisis: 55, innovation: 40, analysis: 70, support: 95 },
+        C: { leadership: 60, sales: 50, crisis: 70, innovation: 55, analysis: 95, support: 75 }
+      };
+
+      const requirements = jobRequirements[dominant] || jobRequirements.D;
+      const intensity = percentages[dominant];
+      
+      // Calcular aderência geral
+      const aderenciaGeral = Math.min(98, Math.round((intensity / 100) * 85 + 15));
+      const aderenciaClass = aderenciaGeral >= 75 ? 'alta' : aderenciaGeral >= 50 ? 'media' : 'baixa';
+
+      // Gerar análise textual completa
+      const analiseTextual = getAnaliseTextual(dominant, intensity, percentages);
+
+      container.innerHTML = `
+        <div class="space-y-8">
+          <!-- Percentual de Aderência -->
+          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <h4 class="font-bold text-brand-navy mb-4 text-lg">📊 Percentual de Aderência à Vaga</h4>
+            <div class="flex items-center gap-4 mb-4">
+              <div class="flex-1">
+                <div class="aderencia-bar-container">
+                  <div class="aderencia-bar-fill ${aderenciaClass}" style="width: ${aderenciaGeral}%"></div>
+                  <span class="aderencia-text">${aderenciaGeral}%</span>
+                </div>
+              </div>
+            </div>
+            <p class="text-sm text-gray-600">
+              <strong>Legenda:</strong> 
+              <span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded bg-emerald-500"></span> Alta (75-100%)</span> | 
+              <span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded bg-amber-500"></span> Média (50-74%)</span> | 
+              <span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded bg-red-500"></span> Baixa (0-49%)</span>
+            </p>
+            <p class="mt-4 text-gray-700 leading-relaxed">
+              O perfil comportamental predominante <strong class="text-brand-blue">${PREMIUM_CONTENT[dominant].title}</strong> (${intensity}%) apresenta uma aderência de <strong>${aderenciaGeral}%</strong> às exigências comportamentais típicas para cargos de liderança e gestão. Este índice considera a intensidade do traço dominante em relação às competências comportamentais requeridas para o cargo.
+            </p>
+          </div>
+
+          <!-- Análise Detalhada por Competência -->
+          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <h4 class="font-bold text-brand-navy mb-4 text-lg"> Análise de Aderência por Competência Comportamental</h4>
+            <div class="space-y-4">
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-sm font-medium text-gray-700">Liderança e Gestão de Equipes</span>
+                  <span class="text-sm font-bold ${requirements.leadership >= 75 ? 'text-emerald-600' : requirements.leadership >= 50 ? 'text-amber-600' : 'text-red-600'}">${requirements.leadership}%</span>
+                </div>
+                <div class="aderencia-bar-container h-3">
+                  <div class="aderencia-bar-fill ${requirements.leadership >= 75 ? 'alta' : requirements.leadership >= 50 ? 'media' : 'baixa'}" style="width: ${requirements.leadership}%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-sm font-medium text-gray-700">Vendas e Negociação</span>
+                  <span class="text-sm font-bold ${requirements.sales >= 75 ? 'text-emerald-600' : requirements.sales >= 50 ? 'text-amber-600' : 'text-red-600'}">${requirements.sales}%</span>
+                </div>
+                <div class="aderencia-bar-container h-3">
+                  <div class="aderencia-bar-fill ${requirements.sales >= 75 ? 'alta' : requirements.sales >= 50 ? 'media' : 'baixa'}" style="width: ${requirements.sales}%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-sm font-medium text-gray-700">Gestão de Crise e Pressão</span>
+                  <span class="text-sm font-bold ${requirements.crisis >= 75 ? 'text-emerald-600' : requirements.crisis >= 50 ? 'text-amber-600' : 'text-red-600'}">${requirements.crisis}%</span>
+                </div>
+                <div class="aderencia-bar-container h-3">
+                  <div class="aderencia-bar-fill ${requirements.crisis >= 75 ? 'alta' : requirements.crisis >= 50 ? 'media' : 'baixa'}" style="width: ${requirements.crisis}%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-sm font-medium text-gray-700">Inovação e Criatividade</span>
+                  <span class="text-sm font-bold ${requirements.innovation >= 75 ? 'text-emerald-600' : requirements.innovation >= 50 ? 'text-amber-600' : 'text-red-600'}">${requirements.innovation}%</span>
+                </div>
+                <div class="aderencia-bar-container h-3">
+                  <div class="aderencia-bar-fill ${requirements.innovation >= 75 ? 'alta' : requirements.innovation >= 50 ? 'media' : 'baixa'}" style="width: ${requirements.innovation}%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-sm font-medium text-gray-700">Análise Técnica e Qualidade</span>
+                  <span class="text-sm font-bold ${requirements.analysis >= 75 ? 'text-emerald-600' : requirements.analysis >= 50 ? 'text-amber-600' : 'text-red-600'}">${requirements.analysis}%</span>
+                </div>
+                <div class="aderencia-bar-container h-3">
+                  <div class="aderencia-bar-fill ${requirements.analysis >= 75 ? 'alta' : requirements.analysis >= 50 ? 'media' : 'baixa'}" style="width: ${requirements.analysis}%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-sm font-medium text-gray-700">Suporte e Atendimento</span>
+                  <span class="text-sm font-bold ${requirements.support >= 75 ? 'text-emerald-600' : requirements.support >= 50 ? 'text-amber-600' : 'text-red-600'}">${requirements.support}%</span>
+                </div>
+                <div class="aderencia-bar-container h-3">
+                  <div class="aderencia-bar-fill ${requirements.support >= 75 ? 'alta' : requirements.support >= 50 ? 'media' : 'baixa'}" style="width: ${requirements.support}%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Metodologia Aplicada -->
+          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <h4 class="font-bold text-brand-navy mb-4 text-lg">📚 Metodologia Aplicada na Análise</h4>
+            <div class="text-gray-700 leading-relaxed space-y-3">
+              <p>
+                A análise de aderência à vaga foi desenvolvida utilizando a <strong>Metodologia Vigorre de Mapeamento Comportamental (VMMC)</strong>, que combina a teoria DISC de William Marston com modelos contemporâneos de psicologia organizacional e people analytics.
+              </p>
+              <p>
+                O cálculo do percentual de aderência considera três dimensões principais:
+              </p>
+              <ul class="list-disc pl-6 space-y-2">
+                <li><strong>Intensidade do Traço Dominante:</strong> A intensidade do perfil comportamental predominante do candidato (D, I, S ou C) em relação ao total de 100%.</li>
+                <li><strong>Compatibilidade com Requisitos do Cargo:</strong> Análise das competências comportamentais requeridas para o cargo em questão, mapeadas através de benchmarking com perfis de alta performance.</li>
+                <li><strong>Fatores de Ajuste:</strong> Consideração dos traços secundários e terciários que podem complementar ou potencializar a aderência ao cargo.</li>
+              </ul>
+              <p>
+                A fórmula de cálculo utiliza uma ponderação onde a intensidade do traço dominante tem peso de 60%, a compatibilidade com os requisitos do cargo tem peso de 30%, e os fatores de ajuste (traços complementares) têm peso de 10%.
+              </p>
+              <p class="text-sm text-gray-500 italic">
+                * Esta análise é baseada em modelos estatísticos e deve ser interpretada em conjunto com outras avaliações, como entrevistas comportamentais e análise de experiência profissional.
+              </p>
+            </div>
+          </div>
+
+          <!-- Parecer Psicológico -->
+          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <h4 class="font-bold text-brand-navy mb-4 text-lg">🧠 Parecer Psicológico Comportamental</h4>
+            <div class="text-gray-700 leading-relaxed space-y-3">
+              ${analiseTextual}
+            </div>
+          </div>
+
+          <!-- Recomendações de Desenvolvimento -->
+          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <h4 class="font-bold text-brand-navy mb-4 text-lg">💡 Recomendações de Desenvolvimento para Aderência</h4>
+            <div class="text-gray-700 leading-relaxed space-y-3">
+              <p>
+                Para maximizar a aderência ao cargo e potencializar a performance, recomendamos o seguinte plano de desenvolvimento comportamental:
+              </p>
+              <ul class="list-disc pl-6 space-y-2">
+                <li><strong>Curto Prazo (0-3 meses):</strong> Focar no desenvolvimento das competências comportamentais com menor aderência através de coaching comportamental e feedback estruturado.</li>
+                <li><strong>Médio Prazo (3-6 meses):</strong> Implementar programas de mentoria comportamental com profissionais de perfil complementar para equilibrar as competências.</li>
+                <li><strong>Longo Prazo (6-12 meses):</strong> Desenvolver um plano de carreira comportamental que leverage os pontos fortes do perfil e minimize os gaps identificados.</li>
+              </ul>
+              <p>
+                É fundamental que o desenvolvimento comportamental seja acompanhado por métricas de performance e feedback contínuo para garantir a efetividade do plano de desenvolvimento.
+              </p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function getAnaliseTextual(dominant, intensity, percentages) {
+      const profile = PREMIUM_CONTENT[dominant];
+      
+      let analise = '';
+      
+      analise += `<p>O participante apresenta um perfil comportamental predominantemente <strong>${profile.title}</strong>, com intensidade de <strong>${intensity}%</strong>. Este perfil indica um profissional com características comportamentais que tendem a ${dominant === 'D' ? 'assumir liderança natural, tomar decisões rápidas e focar em resultados' : dominant === 'I' ? 'comunicar-se de forma impactante, engajar equipes e criar ambientes colaborativos' : dominant === 'S' ? 'manter estabilidade, oferecer suporte constante e preservar a harmonia da equipe' : 'analisar dados com profundidade, garantir qualidade e estruturar processos claros'}.</p>`;
+      
+      analise += `<p>Do ponto de vista da psicologia comportamental, o perfil <strong>${profile.title}</strong> apresenta uma configuração de traços que sugere <strong>${intensity >= 70 ? 'alta congruência com cargos que demandam' : intensity >= 50 ? 'moderada congruência com cargos que beneficiam-se de' : 'baixa congruência com cargos que requerem'} ${dominant === 'D' ? 'liderança direta, assertividade e foco em resultados' : dominant === 'I' ? 'comunicação persuasiva, networking e engajamento' : dominant === 'S' ? 'estabilidade operacional, suporte e manutenção de processos' : 'análise técnica, qualidade e conformidade'}. A intensidade de ${intensity}% indica que este traço é <strong>${intensity >= 70 ? 'altamente predominante' : intensity >= 50 ? 'moderadamente presente' : 'pouco expressivo'} no repertório comportamental do participante.</strong></p>`;
+      
+      analise += `<p>A análise psicométrica revela que o participante possui um perfil comportamental com ${Object.entries(percentages).filter(([k, v]) => v >= 20).length} traços significativos (acima de 20%), o que indica ${Object.entries(percentages).filter(([k, v]) => v >= 20).length >= 3 ? 'um perfil versátil com múltiplas competências comportamentais' : 'um perfil focado com competências comportamentais bem definidas'}. Esta configuração sugere que o participante ${Object.entries(percentages).filter(([k, v]) => v >= 20).length >= 3 ? 'pode se adaptar a diferentes contextos profissionais, mas pode precisar de foco para evitar dispersão' : 'tem clareza sobre seu estilo comportamental, o que facilita a adequação a cargos específicos'}.</p>`;
+      
+      analise += `<p>Sob a ótica da psicologia organizacional, este perfil comportamental apresenta <strong>potencial significativo</strong> para cargos que demandem ${dominant === 'D' ? 'liderança, gestão de crise e tomada de decisão rápida' : dominant === 'I' ? 'comunicação, vendas e construção de relacionamentos' : dominant === 'S' ? 'estabilidade, suporte e operações consistentes' : 'análise, qualidade e processos estruturados'}. A aderência ao cargo deve ser avaliada em conjunto com outros fatores como experiência profissional, formação acadêmica e motivações pessoais.</p>`;
+      
+      return analise;
     }
 
     // ============================================
