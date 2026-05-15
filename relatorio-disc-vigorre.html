@@ -905,17 +905,22 @@
 
     function loadSession() {
       try {
+        // Carregar sessão atual
         const session = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
         if (session?.id) {
           AppState.session = session;
+          
+          // Carregar participantes
           const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
           AppState.participant = participants.find(p => p.id === session.id);
           
+          // Carregar empresas
           const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
-          if (AppState.participant?.compId) {
-            AppState.company = companies.find(c => c.id === AppState.participant.compId);
+          if (AppState.participant?.companyId) {
+            AppState.company = companies.find(c => c.id === AppState.participant.companyId);
           }
           
+          // Carregar vagas/cargos
           const jobs = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]');
           if (AppState.participant?.jobId) {
             AppState.job = jobs.find(j => j.id === AppState.participant.jobId);
@@ -924,7 +929,7 @@
           console.log('✅ Sessão carregada:', {
             participant: AppState.participant?.name,
             company: AppState.company?.name,
-            job: AppState.job?.name
+            job: AppState.job?.name || AppState.job?.title
           });
         }
       } catch (e) { 
@@ -997,6 +1002,11 @@
     // ============================================
     function updateParticipantInfo() {
       console.log('📝 Atualizando informações do participante...');
+      console.log('Dados disponíveis:', {
+        participant: AppState.participant,
+        company: AppState.company,
+        job: AppState.job
+      });
       
       // Nome do participante
       const coverName = safeGetElement('coverName');
@@ -1014,12 +1024,13 @@
         console.log('✓ Empresa:', companyName);
       }
       
-      // Vaga
+      // Vaga/Cargo
       const coverJob = safeGetElement('coverJob');
       if (coverJob) {
-        const jobName = AppState.job?.name || 'Não vinculada';
+        // Tentar diferentes campos possíveis para o cargo/vaga
+        const jobName = AppState.job?.name || AppState.job?.title || AppState.participant?.jobTitle || 'Não vinculada';
         coverJob.textContent = jobName;
-        console.log('✓ Vaga:', jobName);
+        console.log('✓ Vaga/Cargo:', jobName);
       }
       
       // Código
@@ -1300,7 +1311,7 @@
 
     function renderMotivators(r, dominant) {
       const profile = PREMIUM_CONTENT[dominant];
-      const icons = ['🎯', '🚀', '🤝', '', '🏆', '💡', '🛡️', '🌱'];
+      const icons = ['🎯', '', '🤝', '', '🏆', '', '🛡️', '🌱'];
       
       const motivatorsGrid = safeGetElement('motivatorsGrid');
       if (motivatorsGrid) {
@@ -1566,6 +1577,7 @@
       disc: !!localStorage.getItem('vigorre_last_disc_result'),
       participant: AppState.participant?.name || 'não carregado',
       company: AppState.company?.name || 'não carregada',
+      job: AppState.job?.name || AppState.job?.title || 'não carregada',
       allKeys: Object.keys(localStorage).filter(k => k.includes('vigorre'))
     });
 
