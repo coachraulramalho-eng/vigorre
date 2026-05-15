@@ -206,6 +206,24 @@
       padding: 5px 10px; 
       font-size: 0.75rem; 
     }
+    .btn-add-job {
+      background: #10b981;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+    .btn-add-job:hover {
+      background: #059669;
+    }
+    .btn-add-job:disabled {
+      background: #cbd5e1;
+      cursor: not-allowed;
+    }
     
     /* ============================================
        MODALS
@@ -310,6 +328,55 @@
     }
     
     /* ============================================
+       ESTILO PARA LISTA DE VAGAS SELECIONADAS
+       ============================================ */
+    .selected-jobs-container {
+      margin-top: 10px;
+      padding: 12px;
+      background: #f8fafc;
+      border-radius: 8px;
+      border: 2px solid #e2e8f0;
+      display: none;
+    }
+    .selected-jobs-container.active {
+      display: block;
+    }
+    .selected-jobs-title {
+      font-weight: 600;
+      color: #475569;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+    .selected-job-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      background: white;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      border-left: 4px solid #3b82f6;
+      font-size: 0.95rem;
+    }
+    .selected-job-item:last-child {
+      margin-bottom: 0;
+    }
+    .btn-remove-job {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 4px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    .btn-remove-job:hover {
+      background: #dc2626;
+    }
+    
+    /* ============================================
        TOAST NOTIFICATIONS
        ============================================ */
     .toast { 
@@ -408,6 +475,17 @@
     }
     .btn-report-valores {
       background: linear-gradient(135deg, #F59E0B, #EC4899);
+    }
+    
+    .job-card {
+      background: #f8fafc;
+      padding: 1rem;
+      border-radius: 8px;
+      border-left: 4px solid #3b82f6;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
   </style>
 </head>
@@ -674,9 +752,26 @@
         </div>
         <div class="form-group">
           <label>Vincular à Empresa</label>
-          <select id="pComp">
+          <select id="pComp" onchange="loadAvailableJobsForParticipant()">
             <option value="">Independente</option>
           </select>
+        </div>
+        
+        <!-- NOVO: Seleção e Inclusão de Vagas -->
+        <div class="form-group">
+          <label>Vaga / Cargo Disponível</label>
+          <select id="availableJobSelect">
+            <option value="">Selecione a vaga...</option>
+          </select>
+          <button type="button" class="btn-add-job" id="btnAddJobParticipant" onclick="addJobToParticipant()" disabled>
+            ➕ Incluir Vaga
+          </button>
+          
+          <!-- Lista de vagas já vinculadas ao participante -->
+          <div id="participantSelectedJobsContainer" class="selected-jobs-container">
+            <div class="selected-jobs-title">Vagas Vinculadas:</div>
+            <div id="participantSelectedJobsList"></div>
+          </div>
         </div>
         
         <!-- Credenciais de Acesso -->
@@ -798,6 +893,7 @@
       reports: JSON.parse(localStorage.getItem('vigorre_reports') || '[]')
     };
     let currentCompanyId = null;
+    let participantSelectedJobs = []; // Array para armazenar vagas selecionadas no modal de participante
 
     // ============================================
     // PERFIS HMI/MBTI COMPLETOS (16 TIPOS)
@@ -1081,7 +1177,7 @@
     }
 
     // ============================================
-    // VAGAS - RENDERIZAR
+    // VAGAS - RENDERIZAR (COM BOTÕES EDITAR/EXCLUIR)
     // ============================================
     function renderJobs() {
       var list = document.getElementById('jobsList');
@@ -1091,20 +1187,43 @@
         return; 
       }
       list.innerHTML = jobs.map(function(j) {
-        return '<div style="background:white; padding:10px; margin-top:8px; border-radius:6px; display:flex; justify-content:space-between; align-items:center; border:1px solid #e2e8f0;">' +
+        return '<div class="job-card">' +
           '<div>' +
             '<strong style="color:#1e40af;">' + j.name + '</strong><br>' +
             '<small style="color:#64748b;">Perfil: ' + (j.profile || 'Não definido') + '</small>' +
           '</div>' +
-          '<button class="btn btn-danger btn-sm" onclick="deleteJob(\'' + j.id + '\')">X</button>' +
+          '<div>' +
+            '<button class="btn btn-warning btn-sm" onclick="editJob(\'' + j.id + '\')" style="margin-right:5px;">✏️ Editar</button>' +
+            '<button class="btn btn-danger btn-sm" onclick="deleteJob(\'' + j.id + '\')">🗑️ Excluir</button>' +
+          '</div>' +
         '</div>';
       }).join('');
     }
 
+    // ============================================
+    // VAGAS - EDITAR
+    // ============================================
+    function editJob(jobId) {
+      var job = DB.jobs.find(function(j) { return j.id === jobId; });
+      if (job) {
+        document.getElementById('jobName').value = job.name;
+        document.getElementById('jobProfile').value = job.profile || '';
+        // Remover vaga antiga para recriar com novos dados
+        DB.jobs = DB.jobs.filter(function(j) { return j.id !== jobId; });
+        showToast('Edite os dados e clique em Salvar Vaga');
+      }
+    }
+
+    // ============================================
+    // VAGAS - EXCLUIR
+    // ============================================
     function deleteJob(jid) {
-      DB.jobs = DB.jobs.filter(function(j) { return j.id !== jid; });
-      saveDB(); 
-      renderJobs();
+      if (confirm('Tem certeza que deseja excluir esta vaga?')) {
+        DB.jobs = DB.jobs.filter(function(j) { return j.id !== jid; });
+        saveDB(); 
+        renderJobs();
+        showToast('Vaga excluída com sucesso!');
+      }
     }
 
     // ============================================
@@ -1331,7 +1450,7 @@
     }
 
     // ============================================
-    // PARTICIPANTES - SALVAR (FUNÇÃO CRUCIAL - CORRIGIDA FINAL COM VÍNCULO DE EMPRESA)
+    // PARTICIPANTES - SALVAR (FUNÇÃO CRUCIAL - CORRIGIDA FINAL COM VÍNCULO DE EMPRESA E VAGAS)
     // ============================================
     function saveParticipant(e) {
       e.preventDefault();
@@ -1356,6 +1475,7 @@
         console.log('  - testResults:', existingParticipant.testResults);
         console.log('  - compId:', existingParticipant.compId);
         console.log('  - tests:', existingParticipant.tests);
+        console.log('  - jobs:', existingParticipant.jobs);
       }
       
       // Monta o objeto com todos os dados do participante (SEM completedTests/testResults)
@@ -1365,6 +1485,7 @@
         phone: document.getElementById('pPhone').value, 
         email: document.getElementById('pEmail').value.toLowerCase(), 
         compId: document.getElementById('pComp').value,  // ✅ Pode ser vazio "" se selecionar "Independente"
+        jobs: participantSelectedJobs, // ✅ NOVO: Salva array de vagas selecionadas
         user: document.getElementById('pUser').value.toLowerCase(), 
         pass: document.getElementById('pPass').value, 
         exp: document.getElementById('pExp').value, 
@@ -1390,6 +1511,7 @@
         console.log('  - completedTests:', existingCompletedTests);
         console.log('  - testResults:', existingTestResults);
         console.log('  - compId (formulário):', data.compId);
+        console.log('  - jobs (formulário):', data.jobs);
         
         // Primeiro fazemos o merge dos dados do formulário
         DB.participants[idx] = { 
@@ -1409,6 +1531,7 @@
         console.log('  - completedTests:', DB.participants[idx].completedTests);
         console.log('  - testResults:', DB.participants[idx].testResults);
         console.log('  - compId:', DB.participants[idx].compId);
+        console.log('  - jobs:', DB.participants[idx].jobs);
       } else {
         console.log('➕ Criando novo participante...');
         // Novo participante: inicializa arrays vazios
@@ -1438,6 +1561,7 @@
       
       console.log('✏️ Editando participante:', p.name);
       console.log('📋 compId atual:', p.compId);
+      console.log('📋 jobs atuais:', p.jobs);
       
       // ✅ 1. PRIMEIRO: Popula o select de empresas MANUALMENTE
       var pSel = document.getElementById('pComp');
@@ -1446,7 +1570,7 @@
                           return '<option value="' + c.id + '">' + c.name + '</option>'; 
                         }).join('');
       
-      console.log('✅ Select populado com', DB.companies.length, 'empresas');
+      console.log('✅ Select de empresas populado com', DB.companies.length, 'empresas');
       
       // ✅ 2. AGORA define os valores do formulário
       document.getElementById('pId').value = p.id; 
@@ -1459,17 +1583,168 @@
       
       // ✅ 3. Define o valor do select DEPOIS de populado
       document.getElementById('pComp').value = p.compId || '';
-      console.log('🎯 Select definido para:', document.getElementById('pComp').value);
+      console.log('🎯 Select de empresa definido para:', document.getElementById('pComp').value);
       
-      // ✅ 4. Marca os checkboxes dos testes
+      // ✅ 4. Carrega vagas já vinculadas ao participante
+      if (p.jobs && Array.isArray(p.jobs) && p.jobs.length > 0) {
+        participantSelectedJobs = JSON.parse(JSON.stringify(p.jobs)); // Clone para evitar referência
+        renderParticipantSelectedJobs();
+        console.log('🎯 Vagas vinculadas carregadas:', participantSelectedJobs);
+      } else {
+        participantSelectedJobs = [];
+        renderParticipantSelectedJobs();
+      }
+      
+      // ✅ 5. Carrega vagas disponíveis para a empresa selecionada
+      loadAvailableJobsForParticipant();
+      
+      // ✅ 6. Marca os checkboxes dos testes
       document.querySelectorAll('.test-check').forEach(function(cb) { 
         cb.checked = p.tests && p.tests.includes(cb.value); 
       });
       
       document.getElementById('partTitle').textContent = 'Editar Participante';
       
-      // ✅ 5. Abre o modal MANUALMENTE (SEM chamar updateSelects de novo!)
+      // ✅ 7. Abre o modal MANUALMENTE (SEM chamar updateSelects de novo!)
       document.getElementById('partModal').classList.add('active');
+    }
+
+    // ============================================
+    // CARREGAR VAGAS DISPONÍVEIS PARA PARTICIPANTE
+    // ============================================
+    function loadAvailableJobsForParticipant() {
+      const companyId = document.getElementById('pComp').value;
+      const jobSelect = document.getElementById('availableJobSelect');
+      const btnAdd = document.getElementById('btnAddJobParticipant');
+      
+      // Limpa opções de vagas
+      jobSelect.innerHTML = '<option value="">Selecione a vaga...</option>';
+      
+      // Se não houver empresa selecionada, desabilita o select de vagas
+      if (!companyId) {
+        jobSelect.disabled = true;
+        btnAdd.disabled = true;
+        return;
+      }
+      
+      // Busca todas as vagas do localStorage
+      var allJobs = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]');
+      
+      // Filtra vagas da empresa selecionada que ainda NÃO foram adicionadas ao participante
+      var availableJobs = allJobs.filter(function(job) {
+        return job.compId === companyId && 
+               !participantSelectedJobs.find(function(selected) { return selected.id === job.id; });
+      });
+      
+      // Se não houver vagas disponíveis, mostra mensagem e desabilita
+      if (availableJobs.length === 0) {
+        jobSelect.innerHTML = '<option value="" disabled>Nenhuma vaga disponível</option>';
+        jobSelect.disabled = true;
+        btnAdd.disabled = true;
+        return;
+      }
+      
+      // Adiciona cada vaga disponível como opção no select
+      availableJobs.forEach(function(job) {
+        const option = document.createElement('option');
+        option.value = job.id;
+        option.textContent = job.name || job.title || 'Sem título';
+        jobSelect.appendChild(option);
+      });
+      
+      // Habilita o select e o botão de adicionar
+      jobSelect.disabled = false;
+      btnAdd.disabled = false;
+    }
+
+    // ============================================
+    // ADICIONAR VAGA AO PARTICIPANTE
+    // ============================================
+    function addJobToParticipant() {
+      const jobSelect = document.getElementById('availableJobSelect');
+      const jobId = jobSelect.value;
+      
+      // Validação: verifica se uma vaga foi selecionada
+      if (!jobId) {
+        alert('⚠️ Por favor, selecione uma vaga para incluir.');
+        return;
+      }
+      
+      // Busca todas as vagas do localStorage
+      var allJobs = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]');
+      
+      // Busca a vaga selecionada no array de todas as vagas
+      const job = allJobs.find(function(j) { return j.id === jobId; });
+      
+      // Verifica se a vaga existe e ainda não foi adicionada
+      if (job && !participantSelectedJobs.find(function(sj) { return sj.id === jobId; })) {
+        // Adiciona a vaga ao array de selecionadas
+        participantSelectedJobs.push({
+          id: job.id,
+          name: job.name || job.title || 'Sem título',
+          compId: job.compId,
+          profile: job.profile || ''
+        });
+        
+        // Renderiza a lista atualizada de vagas selecionadas
+        renderParticipantSelectedJobs();
+        
+        // Recarrega as vagas disponíveis (para remover a que foi adicionada)
+        loadAvailableJobsForParticipant();
+        
+        // Limpa a seleção do dropdown
+        jobSelect.value = '';
+        
+        showToast('✅ Vaga "' + job.name + '" vinculada ao participante!');
+      }
+    }
+
+    // ============================================
+    // REMOVER VAGA DO PARTICIPANTE
+    // ============================================
+    function removeJobFromParticipant(jobId) {
+      // Filtra o array para remover a vaga com o ID especificado
+      participantSelectedJobs = participantSelectedJobs.filter(function(j) { return j.id !== jobId; });
+      
+      // Renderiza a lista atualizada
+      renderParticipantSelectedJobs();
+      
+      // Recarrega as vagas disponíveis (para mostrar a que foi removida)
+      loadAvailableJobsForParticipant();
+      
+      showToast('✅ Vaga removida do participante!');
+    }
+
+    // ============================================
+    // RENDERIZAR LISTA DE VAGAS SELECIONADAS
+    // ============================================
+    function renderParticipantSelectedJobs() {
+      const container = document.getElementById('participantSelectedJobsContainer');
+      const list = document.getElementById('participantSelectedJobsList');
+      
+      // Se não houver vagas selecionadas, esconde o container
+      if (participantSelectedJobs.length === 0) {
+        container.classList.remove('active');
+        return;
+      }
+      
+      // Mostra o container
+      container.classList.add('active');
+      
+      // Limpa a lista atual
+      list.innerHTML = '';
+      
+      // Renderiza cada vaga selecionada
+      participantSelectedJobs.forEach(function(job) {
+        const jobDiv = document.createElement('div');
+        jobDiv.className = 'selected-job-item';
+        jobDiv.innerHTML = 
+          '<span style="font-weight: 500;">' + (job.name || job.title || 'Sem título') + '</span>' +
+          '<button type="button" class="btn-remove-job" onclick="removeJobFromParticipant(\'' + job.id + '\')">' +
+            '🗑️ Remover' +
+          '</button>';
+        list.appendChild(jobDiv);
+      });
     }
 
     function resendTest(id) {
@@ -1655,6 +1930,7 @@
       staff: DB.staff.length,
       companies: DB.companies.length,
       participants: DB.participants.length,
+      jobs: DB.jobs.length,
       localStorage: {
         disc: !!localStorage.getItem('vigorre_last_disc_result'),
         ie: !!localStorage.getItem('vigorre_last_ie_result'),
