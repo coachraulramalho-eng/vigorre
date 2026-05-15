@@ -48,6 +48,8 @@
       color: #1e293b;
       min-height: 100vh; 
       line-height: 1.6;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
     }
 
     /* ============================================
@@ -81,7 +83,7 @@
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
       margin-bottom: 30px;
       overflow: hidden;
-      break-inside: avoid; /* Evita que o card seja cortado na impressão */
+      break-inside: avoid;
     }
     
     .vigorre-card .card-header {
@@ -163,8 +165,8 @@
       body { 
         background: #ffffff !important;
         color: #000000 !important;
-        font-size: 10pt; /* Tamanho levemente menor para caber melhor */
-        line-height: 1.4;
+        font-size: 11pt;
+        line-height: 1.5;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
@@ -215,18 +217,17 @@
         font-weight: 900;
         font-size: 20px;
         border: 2px solid rgba(255,255,255,0.3);
-        -webkit-print-color-adjust: exact !important;
       }
       
       .print-header h1 {
-        font-size: 14pt;
+        font-size: 16pt;
         font-weight: 800;
         margin: 0;
         color: white !important;
       }
       
       .print-header p {
-        font-size: 8pt;
+        font-size: 9pt;
         margin: 0;
         opacity: 0.9;
         color: rgba(255,255,255,0.9) !important;
@@ -234,21 +235,21 @@
       
       .print-header .print-method {
         text-align: right;
-        font-size: 8pt;
+        font-size: 9pt;
         color: rgba(255,255,255,0.9) !important;
       }
       
       .print-header .print-method strong {
-        font-size: 12pt;
+        font-size: 14pt;
         letter-spacing: 2px;
         display: block;
         color: white !important;
       }
       
-      /* Conteúdo principal com margem para header/footer */
+      /* Conteúdo principal com margem para header/footer - CORREÇÃO DAS MARGENS */
       main {
-        margin-top: 90px !important;
-        margin-bottom: 90px !important;
+        margin-top: 100px !important;
+        margin-bottom: 100px !important;
         padding: 0 !important;
       }
       
@@ -260,7 +261,6 @@
         break-inside: avoid !important;
         page-break-inside: avoid !important;
         margin-bottom: 20px !important;
-        page-break-after: auto;
       }
       
       .vigorre-card .card-header {
@@ -270,7 +270,7 @@
       
       /* Gráficos na impressão */
       .chart-container {
-        height: 280px !important;
+        height: 300px !important;
         max-width: 100% !important;
         page-break-inside: avoid;
       }
@@ -284,14 +284,13 @@
       /* Textos na impressão */
       h1, h2, h3, h4 {
         color: #0F172A !important;
-        page-break-after: avoid;
       }
       
       p, li, td { 
         color: #334155 !important; 
       }
       
-      /* Rodapé de impressão - AZUL COMO NA TELA */
+      /* Rodapé de impressão - AZUL COMO NA TELA COM LOGO */
       .print-footer {
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
@@ -304,11 +303,6 @@
         z-index: 9999;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
-      }
-      
-      /* Forçar texto branco no rodapé */
-      .print-footer p, .print-footer div, .print-footer * {
-        color: white !important;
       }
       
       .print-footer .print-footer-content {
@@ -324,6 +318,21 @@
       
       .print-footer .print-footer-content div {
         color: rgba(255,255,255,0.9) !important;
+      }
+      
+      /* Logo no rodapé */
+      .print-footer .footer-logo {
+        width: 30px;
+        height: 30px;
+        background: #ffffff !important;
+        color: #0A1628;
+        border-radius: 6px;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        font-size: 16px;
+        margin-right: 10px;
       }
       
       /* Marca d'água */
@@ -401,12 +410,12 @@
   <div class="print-watermark">VIGORRE</div>
 
   <!-- ============================================
-       RODAPÉ DE IMPRESSÃO (AZUL COMO NA TELA)
+       RODAPÉ DE IMPRESSÃO (AZUL COMO NA TELA COM LOGO)
        ============================================ -->
   <div class="print-footer">
     <div class="print-footer-content">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <div style="width: 30px; height: 30px; background: #ffffff; color: #0A1628; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px;">V</div>
+      <div style="display: flex; align-items: center;">
+        <div class="footer-logo">V</div>
         <div>
           <p style="margin: 0; font-weight: 700;">Vigorre People Analytics</p>
           <p style="margin: 0; font-size: 8pt; opacity: 0.8;">Inteligência e Gestão Estratégica</p>
@@ -930,7 +939,7 @@
       session: null,
       participant: null,
       company: null,
-      job: null,
+      jobs: [],
       discResults: null,
       charts: { radar: null, bar: null }
     };
@@ -949,66 +958,50 @@
     // ============================================
     document.addEventListener('DOMContentLoaded', () => {
       console.log('🔹 Inicializando Relatório DISC Vigorre™...');
-      loadReportData(); // Carrega os dados do participante
+      loadSession();
       loadDiscResults();
     });
 
-    // ============================================
-    // CARREGAR DADOS DO PARTICIPANTE (CORREÇÃO)
-    // ============================================
-    function loadReportData() {
-        // 1. Pegar o ID da URL
+    function loadSession() {
+      try {
+        // Pegar ID da URL
         const urlParams = new URLSearchParams(window.location.search);
         const participantId = urlParams.get('participantId');
-
+        
         if (!participantId) {
-            console.error("Nenhum participantId encontrado na URL");
-            return;
+          console.error('❌ Nenhum participantId na URL');
+          return;
         }
-
-        console.log('Buscando participante com ID:', participantId);
-
-        // 2. Buscar participantes no localStorage (mesma chave do Admin)
-        const participantsData = localStorage.getItem('vigorre_participants');
-        const participants = participantsData ? JSON.parse(participantsData) : [];
         
-        const participant = participants.find(p => p.id === participantId);
+        console.log('🔍 Buscando participante com ID:', participantId);
         
-        if (participant) {
-            console.log("✅ Participante encontrado:", participant);
-            AppState.participant = participant;
-            
-            // Preencher nome
-            document.getElementById('coverName').textContent = participant.name || 'Participante';
-            
-            // 3. Buscar empresas para pegar o nome da empresa vinculada
-            const companiesData = localStorage.getItem('vigorre_companies');
-            const companies = companiesData ? JSON.parse(companiesData) : [];
-            
-            if (participant.companyId && participant.companyId !== '') {
-                const company = companies.find(c => c.id === participant.companyId);
-                if (company) {
-                    console.log("✅ Empresa encontrada:", company.name);
-                    document.getElementById('coverCompany').textContent = company.name;
-                } else {
-                    document.getElementById('coverCompany').textContent = 'Empresa não encontrada';
-                }
-            } else {
-                document.getElementById('coverCompany').textContent = 'Independente';
-            }
-
-            // 4. Preencher Vaga/Cargo (se houver)
-            if (participant.jobTitle) {
-                 document.getElementById('coverJob').textContent = participant.jobTitle;
-            } else if (participant.jobName) {
-                 document.getElementById('coverJob').textContent = participant.jobName;
-            } else {
-                 document.getElementById('coverJob').textContent = 'Não vinculada';
-            }
-
-        } else {
-            console.warn("❌ Participante não encontrado no localStorage");
+        // Buscar participantes
+        const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+        AppState.participant = participants.find(p => p.id === participantId);
+        
+        if (!AppState.participant) {
+          console.error('❌ Participante não encontrado');
+          return;
         }
+        
+        console.log('✅ Participante encontrado:', AppState.participant);
+        
+        // Buscar empresas
+        const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+        if (AppState.participant.companyId) {
+          AppState.company = companies.find(c => c.id === AppState.participant.companyId);
+          console.log('✅ Empresa encontrada:', AppState.company);
+        }
+        
+        // Buscar vagas vinculadas
+        if (AppState.participant.jobs && Array.isArray(AppState.participant.jobs)) {
+          AppState.jobs = AppState.participant.jobs;
+          console.log('✅ Vagas vinculadas:', AppState.jobs);
+        }
+        
+      } catch (e) { 
+        console.error('❌ Erro ao carregar sessão:', e); 
+      }
     }
 
     function loadDiscResults() {
@@ -1038,6 +1031,9 @@
       }
 
       console.log('🎨 Gerando relatório DISC...');
+
+      // ✅ CORREÇÃO CRÍTICA: Preencher dados do participante COM VERIFICAÇÃO
+      updateParticipantInfo();
 
       // Calcular score e determinar perfil dominante
       const scores = Object.entries(r.percentages);
@@ -1070,6 +1066,53 @@
     }
 
     // ============================================
+    // ✅ CORREÇÃO CRÍTICA: Atualizar informações do participante
+    // ============================================
+    function updateParticipantInfo() {
+      console.log('📝 Atualizando informações do participante...');
+      console.log('Dados disponíveis:', {
+        participant: AppState.participant,
+        company: AppState.company,
+        jobs: AppState.jobs
+      });
+      
+      // Nome do participante
+      const coverName = safeGetElement('coverName');
+      if (coverName && AppState.participant) {
+        coverName.textContent = AppState.participant.name || 'Participante';
+        console.log('✓ Nome:', AppState.participant.name);
+      }
+      
+      // Empresa
+      const coverCompany = safeGetElement('coverCompany');
+      if (coverCompany) {
+        const companyName = AppState.company?.name || 'Independente';
+        coverCompany.textContent = companyName;
+        console.log('✓ Empresa:', companyName);
+      }
+      
+      // Vaga/Cargo - CORREÇÃO: Mostrar primeira vaga ou "Não vinculada"
+      const coverJob = safeGetElement('coverJob');
+      if (coverJob) {
+        if (AppState.jobs && AppState.jobs.length > 0) {
+          // Mostrar a primeira vaga vinculada
+          const jobName = AppState.jobs[0].name || AppState.jobs[0].title || 'Vaga vinculada';
+          coverJob.textContent = jobName;
+          console.log('✓ Vaga/Cargo:', jobName);
+        } else {
+          coverJob.textContent = 'Não vinculada';
+          console.log('✓ Vaga/Cargo: Não vinculada');
+        }
+      }
+      
+      // Código
+      const coverCode = safeGetElement('coverCode');
+      if (coverCode) {
+        coverCode.textContent = 'VIG-DISC-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 9000 + 1000);
+      }
+    }
+
+    // ============================================
     // ✅ NOVA SEÇÃO: ANÁLISE DE ADERÊNCIA À VAGA
     // ============================================
     function renderAderenciaVaga(dominant, percentages) {
@@ -1093,6 +1136,9 @@
 
       // Gerar análise textual completa
       const analiseTextual = getAnaliseTextual(dominant, intensity, percentages);
+      
+      // ✅ CORREÇÃO: Mostrar nome da vaga vinculada
+      const vagaNome = AppState.jobs && AppState.jobs.length > 0 ? AppState.jobs[0].name : 'Vaga não especificada';
 
       container.innerHTML = `
         <div class="space-y-8">
@@ -1785,7 +1831,7 @@
       disc: !!localStorage.getItem('vigorre_last_disc_result'),
       participant: AppState.participant?.name || 'não carregado',
       company: AppState.company?.name || 'não carregada',
-      job: AppState.job?.name || AppState.job?.title || 'não carregada',
+      jobs: AppState.jobs || 'não carregadas',
       allKeys: Object.keys(localStorage).filter(k => k.includes('vigorre'))
     });
 
