@@ -28,6 +28,7 @@
               amber: '#F59E0B',
               rose: '#F43F5E',
               slate: '#64748B',
+              navy: '#0A1628',
               light: '#F8FAFC'
             }
           }
@@ -47,38 +48,97 @@
       color: #1e293b;
       min-height: 100vh; 
       line-height: 1.6;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
     }
 
     /* ============================================
-       HEADER BRANCO PARA LOGO (CORREÇÃO)
+       HEADER VIGORRE PREMIUM
        ============================================ */
-    header {
-      background-color: #ffffff !important;
-      border-bottom: 1px solid #e2e8f0;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    .vigorre-header {
+      background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%);
+      color: white;
+      padding: 20px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .vigorre-header .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .vigorre-header .logo-box {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #1D4ED8, #7C3AED);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: 900;
+      color: white;
+      box-shadow: 0 4px 15px rgba(29, 78, 216, 0.4);
+    }
+    .vigorre-header h1 {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .vigorre-header p {
+      font-size: 13px;
+      opacity: 0.8;
+      margin-top: 2px;
+    }
+    .vigorre-header .method-badge {
+      background: rgba(255,255,255,0.1);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      text-align: right;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .vigorre-header .method-badge strong {
+      font-size: 20px;
+      letter-spacing: 3px;
+      display: block;
     }
 
     /* ============================================
-       GLASSMORPHISM & CARDS
+       CARDS
        ============================================ */
-    .glass-card { 
+    .vigorre-card { 
       background: #ffffff; 
       border: 1px solid #e2e8f0; 
-      border-radius: 16px; 
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); 
+      border-radius: 12px; 
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
       margin-bottom: 24px;
+      overflow: hidden;
     }
-    .glass-card:hover {
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    .vigorre-card .card-header {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      padding: 16px 24px;
+      border-bottom: 2px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
-    
-    .gradient-text { 
-      background: linear-gradient(135deg, #1e40af, #7c3aed); 
-      -webkit-background-clip: text; 
-      -webkit-text-fill-color: transparent; 
-      background-clip: text; 
+    .vigorre-card .card-header .icon-box {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .vigorre-card .card-header h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1e293b;
+    }
+    .vigorre-card .card-body {
+      padding: 24px;
     }
 
     /* ============================================
@@ -86,153 +146,250 @@
        ============================================ */
     .chart-container {
       position: relative;
-      height: 400px !important;
+      height: 350px !important;
       width: 100%;
-      overflow: hidden;
     }
 
     /* ============================================
-       BUTTONS & INTERACTIONS
+       BUTTONS
        ============================================ */
-    .btn-primary { 
+    .btn-vigorre { 
       background: linear-gradient(135deg, #1D4ED8, #7C3AED); 
-      transition: all 0.3s ease; position: relative; overflow: hidden; 
       color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(124, 58, 237, 0.4); }
+    .btn-vigorre:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4); }
     
-    .btn-secondary {
-      background: #ffffff;
+    .btn-outline {
+      background: white;
       border: 1px solid #cbd5e1;
       color: #475569;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
       transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
-    .btn-secondary:hover { background: #f8fafc; border-color: #94a3b8; }
+    .btn-outline:hover { background: #f8fafc; border-color: #94a3b8; }
 
     /* ============================================
-       PRINT OPTIMIZATION - ULTRA PREMIUM
+       FOOTER VIGORRE PREMIUM
+       ============================================ */
+    .vigorre-footer {
+      background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%);
+      color: white;
+      padding: 30px;
+      margin-top: 40px;
+      border-radius: 12px;
+    }
+    .vigorre-footer .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .vigorre-footer .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .vigorre-footer .footer-brand .logo-sm {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #1D4ED8, #7C3AED);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 900;
+    }
+    .vigorre-footer .footer-links {
+      display: flex;
+      gap: 20px;
+      font-size: 13px;
+      opacity: 0.8;
+    }
+    .vigorre-footer .footer-method {
+      text-align: right;
+    }
+    .vigorre-footer .footer-method strong {
+      font-size: 18px;
+      letter-spacing: 2px;
+    }
+
+    /* ============================================
+       PRINT OPTIMIZATION - VIGORRE PREMIUM
        ============================================ */
     @media print {
       @page {
-        size: A4;
-        margin: 15mm 10mm;
+        size: A4 portrait;
+        margin: 0;
       }
+      
       body { 
-        background: #ffffff !important; 
+        background: white !important;
         color: #000000 !important;
-        font-size: 12pt;
-        line-height: 1.5;
+        font-size: 11pt;
+        line-height: 1.4;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
+      
+      /* Esconder elementos não impressos */
       .no-print { display: none !important; }
       
-      /* Header de impressão Vigorre Premium */
+      /* Header de impressão Vigorre */
       .print-header {
-        display: flex !important;
+        display: block !important;
+        background: #0A1628 !important;
+        color: white !important;
+        padding: 15px 25px !important;
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
-        background: white !important;
-        border-bottom: 2px solid #1e40af !important;
-        padding: 10px 20px !important;
-        box-shadow: none !important;
         z-index: 9999;
         -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
       }
-      .print-header .logo-container {
+      .print-header .print-header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 210mm;
+        margin: 0 auto;
+      }
+      .print-header .print-logo {
         display: flex;
         align-items: center;
         gap: 10px;
       }
-      .print-header .logo-box {
-        width: 40px;
-        height: 40px;
+      .print-header .print-logo-box {
+        width: 35px;
+        height: 35px;
         background: linear-gradient(135deg, #1D4ED8, #7C3AED);
         color: white;
-        border-radius: 8px;
+        border-radius: 6px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: bold;
-        font-size: 20px;
+        font-weight: 900;
+        font-size: 18px;
       }
       .print-header h1 {
-        font-size: 14pt;
-        color: #000000 !important;
-        font-weight: 700;
+        font-size: 16pt;
+        font-weight: 800;
+        margin: 0;
       }
       .print-header p {
         font-size: 9pt;
-        color: #6b7280 !important;
+        margin: 0;
+        opacity: 0.8;
+      }
+      .print-header .print-method {
+        text-align: right;
+        font-size: 8pt;
+      }
+      .print-header .print-method strong {
+        font-size: 14pt;
+        letter-spacing: 2px;
+        display: block;
       }
       
-      /* Layout do conteúdo */
-      main {
-        margin-top: 60px;
+      /* Conteúdo principal com margem para header/footer */
+      .print-content {
+        margin-top: 70px;
+        margin-bottom: 60px;
+        padding: 20px 25px;
       }
-      .glass-card { 
-        background: #ffffff !important; 
-        border: 1px solid #e2e8f0 !important; 
-        box-shadow: none !important; 
+      
+      /* Cards na impressão */
+      .vigorre-card {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: none !important;
         break-inside: avoid;
         page-break-inside: avoid;
+        margin-bottom: 15px;
+      }
+      .vigorre-card .card-header {
+        background: #f8fafc !important;
+        border-bottom: 2px solid #e2e8f0 !important;
       }
       
-      /* Gráficos */
+      /* Gráficos na impressão */
       .chart-container {
-        page-break-inside: avoid;
+        height: 250px !important;
         max-width: 100% !important;
+        page-break-inside: avoid;
       }
       canvas {
         max-width: 100% !important;
         -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
       }
       
-      /* Textos */
+      /* Textos na impressão */
       h1, h2, h3, h4 {
         color: #111827 !important;
-        border-bottom: 2px solid #e2e8f0;
-        padding-bottom: 8px;
-        margin-bottom: 12px;
+        border-bottom: none !important;
       }
       p, li, td { color: #334155 !important; }
       
-      /* Rodapé de impressão Vigorre Premium */
+      /* Rodapé de impressão Vigorre */
       .print-footer {
-        display: flex !important;
+        display: block !important;
+        background: #0A1628 !important;
+        color: white !important;
+        padding: 12px 25px !important;
         position: fixed;
         bottom: 0;
         left: 0;
         right: 0;
-        background: white !important;
-        border-top: 1px solid #e2e8f0;
-        padding: 8px 20px;
+        z-index: 9999;
+        -webkit-print-color-adjust: exact !important;
+      }
+      .print-footer .print-footer-content {
+        display: flex;
         justify-content: space-between;
         align-items: center;
         font-size: 8pt;
-        color: #6b7280 !important;
-        z-index: 9999;
+        max-width: 210mm;
+        margin: 0 auto;
       }
       
-      /* Marca d'água Vigorre */
+      /* Marca d'água */
       .print-watermark {
         display: block !important;
         position: fixed;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%) rotate(-45deg);
-        font-size: 150pt;
-        color: rgba(30, 64, 175, 0.03);
+        transform: translate(-50%, -50%) rotate(-30deg);
+        font-size: 120pt;
+        color: rgba(29, 78, 216, 0.04);
         font-weight: 900;
         pointer-events: none;
         z-index: 0;
         white-space: nowrap;
+      }
+      
+      /* Badges e elementos coloridos */
+      .badge-pill {
+        border: 1px solid #ccc !important;
         -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
       }
     }
     
@@ -252,27 +409,25 @@
   <!-- ============================================
        HEADER VIGORRE PREMIUM (VISÍVEL NA TELA)
        ============================================ -->
-  <header class="no-print sticky top-0 z-50 py-4">
-    <div class="max-w-6xl mx-auto px-4 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <!-- Logo Vigorre -->
-        <img src="logo-vigorre.png" alt="Vigorre" class="w-10 h-10 rounded-lg shadow-sm" onerror="this.outerHTML='<div class=\'w-10 h-10 rounded-lg bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center font-bold text-white\'>V</div>'">
-        <div>
-          <h1 class="font-bold text-xl text-gray-900 tracking-tight">Vigorre People Analytics</h1>
-          <p class="text-xs text-gray-500 font-medium">Relatório DISC Completo • Inteligência Comportamental</p>
-        </div>
+  <header class="vigorre-header no-print">
+    <div class="logo-section">
+      <div class="logo-box">V</div>
+      <div>
+        <h1>Vigorre People Analytics</h1>
+        <p>Relatório DISC Completo • Inteligência Comportamental Aplicada</p>
       </div>
-      <div class="flex items-center gap-3">
-        <span class="bg-brand-blue/10 text-brand-blue border border-brand-blue/20 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">Ultra Premium</span>
-        <button onclick="window.print()" class="btn-secondary px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-          Imprimir
-        </button>
-        <button onclick="exportPDF()" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-          Exportar PDF
-        </button>
-      </div>
+    </div>
+    <div class="method-badge">
+      <strong>MÉTODO V.I.G.O.R.</strong>
+      <span style="font-size: 10px;">INTELIGÊNCIA QUE TRANSFORMA</span>
+    </div>
+    <div style="display: flex; gap: 10px; margin-left: 20px;">
+      <button onclick="window.print()" class="btn-outline" style="background: rgba(255,255,255,0.1); color: white; border-color: rgba(255,255,255,0.3);">
+        🖨️ Imprimir
+      </button>
+      <button onclick="exportPDF()" class="btn-vigorre">
+        📥 Exportar PDF
+      </button>
     </div>
   </header>
 
@@ -280,11 +435,17 @@
        HEADER DE IMPRESSÃO VIGORRE PREMIUM
        ============================================ -->
   <div class="print-header">
-    <div class="logo-container">
-      <div class="logo-box">V</div>
-      <div>
-        <h1>Vigorre People Analytics</h1>
-        <p>Relatório DISC Completo • Inteligência Comportamental Aplicada</p>
+    <div class="print-header-content">
+      <div class="print-logo">
+        <div class="print-logo-box">V</div>
+        <div>
+          <h1>Vigorre</h1>
+          <p>Relatório DISC Completo • Inteligência Comportamental</p>
+        </div>
+      </div>
+      <div class="print-method">
+        <strong>MÉTODO V.I.G.O.R.</strong>
+        <span>Inteligência que transforma. Estratégia que gera resultados.</span>
       </div>
     </div>
   </div>
@@ -297,25 +458,21 @@
   <!-- ============================================
        MAIN REPORT CONTENT
        ============================================ -->
-  <main class="max-w-5xl mx-auto px-4 py-8">
+  <main class="max-w-6xl mx-auto px-4 py-8 print-content">
     
     <!-- SEÇÃO 1 — CAPA EXECUTIVA PREMIUM -->
-    <section class="glass-card p-10 md:p-14 text-center bg-gradient-to-br from-white to-slate-50 border-0 relative overflow-hidden">
-      <div class="absolute top-0 right-0 w-64 h-64 bg-brand-blue/5 rounded-full -mr-32 -mt-32"></div>
-      <div class="absolute bottom-0 left-0 w-64 h-64 bg-brand-purple/5 rounded-full -ml-32 -mb-32"></div>
-      
-      <div class="relative z-10">
-        <!-- Logo na Capa -->
+    <section class="vigorre-card" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+      <div class="card-body text-center" style="padding: 40px;">
         <div class="flex justify-center mb-8">
-          <div class="w-24 h-24 rounded-2xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center shadow-xl">
-            <img src="logo-vigorre.png" alt="Vigorre" class="w-16 h-16" onerror="this.outerHTML='<span class=\'text-5xl font-bold text-white\'>V</span>'">
+          <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center shadow-xl">
+            <span class="text-4xl font-bold text-white">V</span>
           </div>
         </div>
         
-        <h1 class="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight text-gray-900">RELATÓRIO DISC VIGORRE™</h1>
+        <h1 class="text-4xl font-extrabold mb-4 tracking-tight text-gray-900">RELATÓRIO DISC VIGORRE™</h1>
         <p class="text-xl text-gray-600 mb-10">Inteligência Comportamental Aplicada à Performance Humana</p>
         
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mb-10">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-5 max-w-4xl mx-auto mb-10">
           <div class="bg-white p-5 rounded-xl text-left shadow-sm border border-gray-100">
             <p class="text-xs text-gray-500 mb-2 uppercase tracking-wider font-semibold">Participante</p>
             <p class="font-bold text-lg text-gray-900" id="coverName">Carregando...</p>
@@ -333,294 +490,325 @@
             <p class="font-mono text-sm text-brand-blue font-bold" id="coverCode">VIG-DISC-000</p>
           </div>
         </div>
+        
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-100 border border-gray-200">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span class="text-sm text-gray-600">Gerado automaticamente por Vigorre People Analytics</span>
+        </div>
       </div>
     </section>
 
     <!-- SEÇÃO 2 — INTRODUÇÃO AO DISC -->
-    <section class="glass-card p-8 md:p-10">
-      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-900">
-        <span class="w-8 h-8 rounded-lg bg-brand-blue/10 flex items-center justify-center text-brand-blue">📚</span>
-        2. Introdução à Metodologia DISC
-      </h2>
-      <div class="space-y-4 text-gray-600 leading-relaxed text-justify">
-        <p class="text-lg font-medium text-gray-800">
-          O <strong class="text-brand-blue">DISC</strong> é uma ferramenta globalmente reconhecida para análise comportamental. Desenvolvida por William Marston, mapeia padrões comportamentais através de quatro dimensões: <strong>Dominância (D)</strong>, <strong>Influência (I)</strong>, <strong>Estabilidade (S)</strong> e <strong>Conformidade (C)</strong>.
+    <section class="vigorre-card">
+      <div class="card-header">
+        <div class="icon-box bg-blue-100 text-blue-600">📚</div>
+        <h2>2. Introdução à Metodologia DISC</h2>
+      </div>
+      <div class="card-body space-y-4 text-gray-700 leading-relaxed">
+        <p class="text-lg font-medium">
+          O <strong class="text-brand-blue">DISC</strong> é uma das ferramentas mais respeitadas globalmente para análise comportamental. Mapeia padrões comportamentais através de quatro dimensões: <strong>Dominância (D)</strong>, <strong>Influência (I)</strong>, <strong>Estabilidade (S)</strong> e <strong>Conformidade (C)</strong>.
         </p>
-        <p>
-          Este relatório apresenta uma análise profunda do perfil comportamental do participante, revelando como ele toma decisões, lida com pressão e se relaciona em ambientes corporativos. O objetivo é fornecer insights estratégicos para maximizar performance e engajamento.
-        </p>
+        <p>Este relatório apresenta uma análise profunda do perfil comportamental do participante, revelando como ele toma decisões, lida com pressão e se relaciona em ambientes corporativos.</p>
       </div>
     </section>
 
     <!-- SEÇÃO 3 — PERFIL PREDOMINANTE -->
-    <section id="sectionPerfil" class="glass-card p-8 md:p-10 border-l-4 border-brand-blue">
-      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-900">
-        <span class="w-8 h-8 rounded-lg bg-brand-purple/10 flex items-center justify-center text-brand-purple">🎯</span>
-        3. Perfil Comportamental Predominante
-      </h2>
-      <div class="bg-slate-50 p-6 rounded-xl mb-6 border border-gray-200" id="perfilDetalhado">
-        <p class="text-gray-500 text-center py-8">Carregando análise comportamental profunda...</p>
+    <section class="vigorre-card">
+      <div class="card-header">
+        <div class="icon-box bg-purple-100 text-purple-600">🎯</div>
+        <h2>3. Perfil Comportamental Predominante</h2>
+      </div>
+      <div class="card-body">
+        <div class="bg-slate-50 p-6 rounded-xl mb-6 border border-gray-200" id="perfilDetalhado">
+          <p class="text-gray-500 text-center py-8">Carregando análise...</p>
+        </div>
       </div>
     </section>
 
     <!-- SEÇÃO 4 — GRÁFICO DISC PREMIUM -->
-    <section class="glass-card p-8 md:p-10">
-      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-900">
-        <span class="w-8 h-8 rounded-lg bg-brand-emerald/10 flex items-center justify-center text-brand-emerald">📊</span>
-        4. Radar e Distribuição DISC
-      </h2>
-      <div class="grid md:grid-cols-2 gap-8 mb-8">
-        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-          <h3 class="font-semibold mb-4 text-center text-gray-700">Radar Comportamental</h3>
-          <div class="chart-container"><canvas id="discRadarChart"></canvas></div>
-        </div>
-        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-          <h3 class="font-semibold mb-4 text-center text-gray-700">Intensidade por Fator</h3>
-          <div class="chart-container"><canvas id="discBarChart"></canvas></div>
-        </div>
+    <section class="vigorre-card">
+      <div class="card-header">
+        <div class="icon-box bg-emerald-100 text-emerald-600">📊</div>
+        <h2>4. Radar e Distribuição DISC</h2>
       </div>
-      <div class="bg-slate-50 p-6 rounded-xl border border-gray-200">
-        <h3 class="font-semibold mb-4 text-gray-800">Interpretação dos Fatores DISC</h3>
-        <div id="discInterpretation" class="space-y-3">
-          <!-- Inserido via JS -->
+      <div class="card-body">
+        <div class="grid md:grid-cols-2 gap-8 mb-8">
+          <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+            <h3 class="font-semibold mb-4 text-center text-gray-700">Radar Comportamental</h3>
+            <div class="chart-container"><canvas id="discRadarChart"></canvas></div>
+          </div>
+          <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+            <h3 class="font-semibold mb-4 text-center text-gray-700">Intensidade por Fator</h3>
+            <div class="chart-container"><canvas id="discBarChart"></canvas></div>
+          </div>
+        </div>
+        <div class="bg-slate-50 p-6 rounded-xl border border-gray-200">
+          <h3 class="font-semibold mb-4 text-gray-800">Interpretação dos Fatores DISC</h3>
+          <div id="discInterpretation" class="space-y-3">
+            <!-- Inserido via JS -->
+          </div>
         </div>
       </div>
     </section>
 
     <!-- SEÇÃO 5 — PERFIL PROFISSIONAL -->
-    <section class="glass-card p-8 md:p-10">
-      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-900">
-        <span class="w-8 h-8 rounded-lg bg-brand-cyan/10 flex items-center justify-center text-brand-cyan">💼</span>
-        5. Perfil Profissional e Performance
-      </h2>
-      <div class="grid md:grid-cols-3 gap-5 mb-6">
-        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100"><h4 class="font-semibold mb-2 text-gray-800">Ritmo de Trabalho</h4><p class="text-sm text-gray-600" id="profPace">--</p></div>
-        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100"><h4 class="font-semibold mb-2 text-gray-800">Nível de Autonomia</h4><p class="text-sm text-gray-600" id="profAutonomy">--</p></div>
-        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100"><h4 class="font-semibold mb-2 text-gray-800">Foco em Resultados</h4><p class="text-sm text-gray-600" id="profResults">--</p></div>
+    <section class="vigorre-card">
+      <div class="card-header">
+        <div class="icon-box bg-cyan-100 text-cyan-600">💼</div>
+        <h2>5. Perfil Profissional e Performance</h2>
       </div>
-      <div class="bg-slate-50 p-6 rounded-xl border border-gray-200">
-        <h3 class="font-semibold mb-3 text-gray-800">Estilo de Execução Profissional</h3>
-        <p class="text-gray-600 leading-relaxed" id="profExecution">--</p>
+      <div class="card-body">
+        <div class="grid md:grid-cols-3 gap-5 mb-6">
+          <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100"><h4 class="font-semibold mb-2 text-gray-800">Ritmo de Trabalho</h4><p class="text-sm text-gray-600" id="profPace">--</p></div>
+          <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100"><h4 class="font-semibold mb-2 text-gray-800">Nível de Autonomia</h4><p class="text-sm text-gray-600" id="profAutonomy">--</p></div>
+          <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100"><h4 class="font-semibold mb-2 text-gray-800">Foco em Resultados</h4><p class="text-sm text-gray-600" id="profResults">--</p></div>
+        </div>
+        <div class="bg-slate-50 p-6 rounded-xl border border-gray-200">
+          <h3 class="font-semibold mb-3 text-gray-800">Estilo de Execução Profissional</h3>
+          <p class="text-gray-600 leading-relaxed" id="profExecution">--</p>
+        </div>
       </div>
     </section>
 
     <!-- SEÇÃO 6 — PERFIL DE LIDERANÇA -->
-    <section class="glass-card p-8 md:p-10">
-      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-900">
-        <span class="w-8 h-8 rounded-lg bg-brand-amber/10 flex items-center justify-center text-brand-amber">👑</span>
-        6. Potencial e Estilo de Liderança
-      </h2>
-      <div class="bg-white p-6 rounded-xl mb-6 shadow-sm border border-gray-100">
-        <h3 class="font-semibold mb-3 text-gray-800">Arquétipo de Liderança Vigorre™</h3>
-        <p class="text-gray-600 leading-relaxed" id="leadArchetype">--</p>
+    <section class="vigorre-card">
+      <div class="card-header">
+        <div class="icon-box bg-amber-100 text-amber-600">👑</div>
+        <h2>6. Potencial e Estilo de Liderança</h2>
       </div>
-      <div class="grid md:grid-cols-2 gap-5">
-        <div class="bg-slate-50 p-5 rounded-xl border border-gray-200"><h4 class="font-semibold mb-2 text-gray-800">Motivação de Equipe</h4><p class="text-sm text-gray-600" id="leadMotivation">--</p></div>
-        <div class="bg-slate-50 p-5 rounded-xl border border-gray-200"><h4 class="font-semibold mb-2 text-gray-800">Delegação e Controle</h4><p class="text-sm text-gray-600" id="leadDelegation">--</p></div>
+      <div class="card-body">
+        <div class="bg-white p-6 rounded-xl mb-6 shadow-sm border border-gray-100">
+          <h3 class="font-semibold mb-3 text-gray-800">Arquétipo de Liderança Vigorre™</h3>
+          <p class="text-gray-600 leading-relaxed" id="leadArchetype">--</p>
+        </div>
+        <div class="grid md:grid-cols-2 gap-5">
+          <div class="bg-slate-50 p-5 rounded-xl border border-gray-200"><h4 class="font-semibold mb-2 text-gray-800">Motivação de Equipe</h4><p class="text-sm text-gray-600" id="leadMotivation">--</p></div>
+          <div class="bg-slate-50 p-5 rounded-xl border border-gray-200"><h4 class="font-semibold mb-2 text-gray-800">Delegação e Controle</h4><p class="text-sm text-gray-600" id="leadDelegation">--</p></div>
+        </div>
       </div>
     </section>
 
     <!-- SEÇÃO 7 — COMUNICAÇÃO -->
-    <section class="glass-card p-8 md:p-10">
-      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-900">
-        <span class="w-8 h-8 rounded-lg bg-brand-rose/10 flex items-center justify-center text-brand-rose">💬</span>
-        7. Estilo de Comunicação Profissional
-      </h2>
-      <div class="grid md:grid-cols-2 gap-6 mb-6">
-        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-          <h3 class="font-semibold mb-3 text-gray-800">Padrão Comunicacional</h3>
-          <p class="text-gray-600" id="commPattern">--</p>
-        </div>
-        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-          <h3 class="font-semibold mb-3 text-gray-800">Em Reuniões e Apresentações</h3>
-          <p class="text-gray-600" id="commMeetings">--</p>
-        </div>
+    <section class="vigorre-card">
+      <div class="card-header">
+        <div class="icon-box bg-rose-100 text-rose-600">💬</div>
+        <h2>7. Estilo de Comunicação Profissional</h2>
       </div>
-      <div class="grid md:grid-cols-3 gap-5">
-        <div class="bg-slate-50 p-5 rounded-xl border border-gray-200 text-center"><h4 class="text-xs text-gray-500 mb-2 uppercase font-bold">Clareza</h4><div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-brand-emerald h-2 rounded-full" id="commClarityBar" style="width:0%"></div></div></div>
-        <div class="bg-slate-50 p-5 rounded-xl border border-gray-200 text-center"><h4 class="text-xs text-gray-500 mb-2 uppercase font-bold">Influência</h4><div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-brand-blue h-2 rounded-full" id="commInfluenceBar" style="width:0%"></div></div></div>
-        <div class="bg-slate-50 p-5 rounded-xl border border-gray-200 text-center"><h4 class="text-xs text-gray-500 mb-2 uppercase font-bold">Empatia</h4><div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-brand-purple h-2 rounded-full" id="commEmpathyBar" style="width:0%"></div></div></div>
+      <div class="card-body">
+        <div class="grid md:grid-cols-2 gap-6 mb-6">
+          <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+            <h3 class="font-semibold mb-3 text-gray-800">Padrão Comunicacional</h3>
+            <p class="text-gray-600" id="commPattern">--</p>
+          </div>
+          <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+            <h3 class="font-semibold mb-3 text-gray-800">Em Reuniões e Apresentações</h3>
+            <p class="text-gray-600" id="commMeetings">--</p>
+          </div>
+        </div>
+        <div class="grid md:grid-cols-3 gap-5">
+          <div class="bg-slate-50 p-5 rounded-xl border border-gray-200 text-center"><h4 class="text-xs text-gray-500 mb-2 uppercase font-bold">Clareza</h4><div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-emerald-500 h-2 rounded-full" id="commClarityBar" style="width:0%"></div></div></div>
+          <div class="bg-slate-50 p-5 rounded-xl border border-gray-200 text-center"><h4 class="text-xs text-gray-500 mb-2 uppercase font-bold">Influência</h4><div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-blue-500 h-2 rounded-full" id="commInfluenceBar" style="width:0%"></div></div></div>
+          <div class="bg-slate-50 p-5 rounded-xl border border-gray-200 text-center"><h4 class="text-xs text-gray-500 mb-2 uppercase font-bold">Empatia</h4><div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-purple-500 h-2 rounded-full" id="commEmpathyBar" style="width:0%"></div></div></div>
+        </div>
       </div>
     </section>
 
     <!-- SEÇÃO 8 — RELACIONAMENTO INTERPESSOAL -->
-    <section class="glass-card p-8 md:p-10">
-      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-900">
-        <span class="w-8 h-8 rounded-lg bg-brand-blue/10 flex items-center justify-center text-brand-blue">🤝</span>
-        8. Trabalho em Equipe e Colaboração
-      </h2>
-      <div class="space-y-4 mb-6">
-        <p class="text-gray-600 leading-relaxed" id="teamColab">--</p>
+    <section class="vigorre-card">
+      <div class="card-header">
+        <div class="icon-box bg-blue-100 text-blue-600">🤝</div>
+        <h2>8. Trabalho em Equipe e Colaboração</h2>
       </div>
-      <div class="grid md:grid-cols-2 gap-5">
-        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100"><h4 class="font-semibold mb-2 text-gray-800">Integração no Grupo</h4><p class="text-sm text-gray-600" id="teamIntegration">--</p></div>
-        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100"><h4 class="font-semibold mb-2 text-gray-800">Gestão de Conflitos</h4><p class="text-sm text-gray-600" id="teamConflict">--</p></div>
+      <div class="card-body">
+        <div class="space-y-4 mb-6">
+          <p class="text-gray-600 leading-relaxed" id="teamColab">--</p>
+        </div>
+        <div class="grid md:grid-cols-2 gap-5">
+          <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100"><h4 class="font-semibold mb-2 text-gray-800">Integração no Grupo</h4><p class="text-sm text-gray-600" id="teamIntegration">--</p></div>
+          <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100"><h4 class="font-semibold mb-2 text-gray-800">Gestão de Conflitos</h4><p class="text-sm text-gray-600" id="teamConflict">--</p></div>
+        </div>
       </div>
     </section>
 
     <!-- SEÇÃO 9 — REAÇÃO SOB PRESSÃO -->
-    <section class="glass-card p-8 md:p-10">
-      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-900">
-        <span class="w-8 h-8 rounded-lg bg-brand-rose/10 flex items-center justify-center text-brand-rose">⚡</span>
-        9. Comportamento Sob Pressão Corporativa
-      </h2>
-      <div class="bg-white p-6 rounded-xl mb-6 shadow-sm border border-gray-100">
-        <h3 class="font-semibold mb-3 text-gray-800">Reação a Cenários de Alta Demanda</h3>
-        <p class="text-gray-600 leading-relaxed" id="pressureReaction">--</p>
+    <section class="vigorre-card">
+      <div class="card-header">
+        <div class="icon-box bg-rose-100 text-rose-600">⚡</div>
+        <h2>9. Comportamento Sob Pressão Corporativa</h2>
       </div>
-      <div class="grid md:grid-cols-3 gap-5">
-        <div class="bg-slate-50 p-5 rounded-xl border border-gray-200 text-center"><h4 class="text-xs text-gray-500 mb-2 uppercase font-bold">Estabilidade</h4><div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-brand-cyan h-2 rounded-full" id="pressStabilityBar" style="width:0%"></div></div></div>
-        <div class="bg-slate-50 p-5 rounded-xl border border-gray-200 text-center"><h4 class="text-xs text-gray-500 mb-2 uppercase font-bold">Tolerância</h4><div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-brand-emerald h-2 rounded-full" id="pressToleranceBar" style="width:0%"></div></div></div>
-        <div class="bg-slate-50 p-5 rounded-xl border border-gray-200 text-center"><h4 class="text-xs text-gray-500 mb-2 uppercase font-bold">Resiliência</h4><div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-brand-purple h-2 rounded-full" id="pressResilienceBar" style="width:0%"></div></div></div>
+      <div class="card-body">
+        <div class="bg-white p-6 rounded-xl mb-6 shadow-sm border border-gray-100">
+          <h3 class="font-semibold mb-3 text-gray-800">Reação a Cenários de Alta Demanda</h3>
+          <p class="text-gray-600 leading-relaxed" id="pressureReaction">--</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-5">
+          <div class="bg-slate-50 p-5 rounded-xl border border-gray-200 text-center"><h4 class="text-xs text-gray-500 mb-2 uppercase font-bold">Estabilidade</h4><div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-cyan-500 h-2 rounded-full" id="pressStabilityBar" style="width:0%"></div></div></div>
+          <div class="bg-slate-50 p-5 rounded-xl border border-gray-200 text-center"><h4 class="text-xs text-gray-500 mb-2 uppercase font-bold">Tolerância</h4><div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-emerald-500 h-2 rounded-full" id="pressToleranceBar" style="width:0%"></div></div></div>
+          <div class="bg-slate-50 p-5 rounded-xl border border-gray-200 text-center"><h4 class="text-xs text-gray-500 mb-2 uppercase font-bold">Resiliência</h4><div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-purple-500 h-2 rounded-full" id="pressResilienceBar" style="width:0%"></div></div></div>
+        </div>
       </div>
     </section>
 
     <!-- SEÇÃO 10 — TOMADA DE DECISÃO -->
-    <section class="glass-card p-8 md:p-10">
-      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-900">
-        <span class="w-8 h-8 rounded-lg bg-brand-purple/10 flex items-center justify-center text-brand-purple">🎯</span>
-        10. Tomada de Decisão Estratégica
-      </h2>
-      <div class="bg-white p-6 rounded-xl mb-6 shadow-sm border border-gray-100">
-        <h3 class="font-semibold mb-3 text-gray-800">Perfil Decisório Profissional</h3>
-        <p class="text-gray-600 leading-relaxed" id="decisionProfile">--</p>
+    <section class="vigorre-card">
+      <div class="card-header">
+        <div class="icon-box bg-purple-100 text-purple-600">🎯</div>
+        <h2>10. Tomada de Decisão Estratégica</h2>
       </div>
-      <div class="grid md:grid-cols-2 gap-5">
-        <div class="bg-slate-50 p-5 rounded-xl border border-gray-200"><h4 class="font-semibold mb-2 text-gray-800">Velocidade vs Cautela</h4><p class="text-sm text-gray-600" id="decisionSpeed">--</p></div>
-        <div class="bg-slate-50 p-5 rounded-xl border border-gray-200"><h4 class="font-semibold mb-2 text-gray-800">Racionalidade vs Intuição</h4><p class="text-sm text-gray-600" id="decisionLogic">--</p></div>
+      <div class="card-body">
+        <div class="bg-white p-6 rounded-xl mb-6 shadow-sm border border-gray-100">
+          <h3 class="font-semibold mb-3 text-gray-800">Perfil Decisório Profissional</h3>
+          <p class="text-gray-600 leading-relaxed" id="decisionProfile">--</p>
+        </div>
+        <div class="grid md:grid-cols-2 gap-5">
+          <div class="bg-slate-50 p-5 rounded-xl border border-gray-200"><h4 class="font-semibold mb-2 text-gray-800">Velocidade vs Cautela</h4><p class="text-sm text-gray-600" id="decisionSpeed">--</p></div>
+          <div class="bg-slate-50 p-5 rounded-xl border border-gray-200"><h4 class="font-semibold mb-2 text-gray-800">Racionalidade vs Intuição</h4><p class="text-sm text-gray-600" id="decisionLogic">--</p></div>
+        </div>
       </div>
     </section>
 
     <!-- SEÇÃO 11 — MOTIVADORES -->
-    <section class="glass-card p-8 md:p-10">
-      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-900">
-        <span class="w-8 h-8 rounded-lg bg-brand-emerald/10 flex items-center justify-center text-brand-emerald">🔥</span>
-        11. Motivadores e Drivers de Engajamento
-      </h2>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="motivatorsGrid">
-        <!-- Inserido via JS -->
+    <section class="vigorre-card">
+      <div class="card-header">
+        <div class="icon-box bg-emerald-100 text-emerald-600">🔥</div>
+        <h2>11. Motivadores e Drivers de Engajamento</h2>
+      </div>
+      <div class="card-body">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="motivatorsGrid">
+          <!-- Inserido via JS -->
+        </div>
       </div>
     </section>
 
     <!-- SEÇÃO 12 — PONTOS FORTES -->
-    <section class="glass-card p-8 md:p-10">
-      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-900">
-        <span class="w-8 h-8 rounded-lg bg-brand-emerald/10 flex items-center justify-center text-brand-emerald">✅</span>
-        12. Pontos Fortes e Competências Chave
-      </h2>
-      <div class="grid md:grid-cols-2 gap-4" id="strengthsList">
-        <!-- Inserido via JS -->
+    <section class="vigorre-card">
+      <div class="card-header">
+        <div class="icon-box bg-emerald-100 text-emerald-600">✅</div>
+        <h2>12. Pontos Fortes e Competências Chave</h2>
+      </div>
+      <div class="card-body">
+        <div class="grid md:grid-cols-2 gap-4" id="strengthsList">
+          <!-- Inserido via JS -->
+        </div>
       </div>
     </section>
 
     <!-- SEÇÃO 13 — PONTOS DE ATENÇÃO -->
-    <section class="glass-card p-8 md:p-10">
-      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-900">
-        <span class="w-8 h-8 rounded-lg bg-brand-amber/10 flex items-center justify-center text-brand-amber">⚠️</span>
-        13. Pontos de Desenvolvimento e Áreas de Atenção
-      </h2>
-      <div class="bg-slate-50 p-6 rounded-xl mb-6 border border-gray-200">
-        <p class="text-gray-600 text-sm leading-relaxed">
-          <strong class="text-brand-amber">Nota importante:</strong> Os pontos de desenvolvimento não são limitações, mas oportunidades de crescimento profissional. Identificar essas áreas é o primeiro passo para evoluir sua performance.
-        </p>
+    <section class="vigorre-card">
+      <div class="card-header">
+        <div class="icon-box bg-amber-100 text-amber-600">⚠️</div>
+        <h2>13. Pontos de Desenvolvimento</h2>
       </div>
-      <div class="grid md:grid-cols-2 gap-4" id="developmentList">
-        <!-- Inserido via JS -->
+      <div class="card-body">
+        <div class="bg-slate-50 p-6 rounded-xl mb-6 border border-gray-200">
+          <p class="text-gray-600 text-sm leading-relaxed">
+            <strong class="text-amber-600">Nota:</strong> Os pontos de desenvolvimento são oportunidades de crescimento profissional.
+          </p>
+        </div>
+        <div class="grid md:grid-cols-2 gap-4" id="developmentList">
+          <!-- Inserido via JS -->
+        </div>
       </div>
     </section>
 
     <!-- SEÇÃO 14 — PERFIL EM EQUIPE -->
-    <section class="glass-card p-8 md:p-10">
-      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-900">
-        <span class="w-8 h-8 rounded-lg bg-brand-cyan/10 flex items-center justify-center text-brand-cyan">👥</span>
-        14. Comportamento em Ambiente de Equipe
-      </h2>
-      <div class="space-y-4">
-        <p class="text-gray-600 leading-relaxed" id="teamBehavior">--</p>
-        <div class="grid md:grid-cols-2 gap-5">
-          <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100"><h4 class="font-semibold mb-2 text-gray-800">Contribuição para o Grupo</h4><p class="text-sm text-gray-600" id="teamContribution">--</p></div>
-          <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100"><h4 class="font-semibold mb-2 text-gray-800">Liderança Informal</h4><p class="text-sm text-gray-600" id="teamInformalLead">--</p></div>
+    <section class="vigorre-card">
+      <div class="card-header">
+        <div class="icon-box bg-cyan-100 text-cyan-600">👥</div>
+        <h2>14. Comportamento em Equipe</h2>
+      </div>
+      <div class="card-body">
+        <div class="space-y-4">
+          <p class="text-gray-600 leading-relaxed" id="teamBehavior">--</p>
+          <div class="grid md:grid-cols-2 gap-5">
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100"><h4 class="font-semibold mb-2 text-gray-800">Contribuição para o Grupo</h4><p class="text-sm text-gray-600" id="teamContribution">--</p></div>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100"><h4 class="font-semibold mb-2 text-gray-800">Liderança Informal</h4><p class="text-sm text-gray-600" id="teamInformalLead">--</p></div>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- SEÇÃO 15 — PERFIL EM MUDANÇAS -->
-    <section class="glass-card p-8 md:p-10">
-      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-900">
-        <span class="w-8 h-8 rounded-lg bg-brand-purple/10 flex items-center justify-center text-brand-purple">🔄</span>
-        15. Adaptação a Mudanças e Inovação
-      </h2>
-      <div class="bg-white p-6 rounded-xl mb-6 shadow-sm border border-gray-100">
-        <h3 class="font-semibold mb-3 text-gray-800">Resposta a Transformações Organizacionais</h3>
-        <p class="text-gray-600 leading-relaxed" id="changeProfile">--</p>
+    <section class="vigorre-card">
+      <div class="card-header">
+        <div class="icon-box bg-purple-100 text-purple-600">🔄</div>
+        <h2>15. Adaptação a Mudanças</h2>
       </div>
-      <div class="grid md:grid-cols-2 gap-5">
-        <div class="bg-slate-50 p-5 rounded-xl border border-gray-200"><h4 class="font-semibold mb-2 text-gray-800">Flexibilidade Cognitiva</h4><p class="text-sm text-gray-600" id="changeFlexibility">--</p></div>
-        <div class="bg-slate-50 p-5 rounded-xl border border-gray-200"><h4 class="font-semibold mb-2 text-gray-800">Abertura ao Novo</h4><p class="text-sm text-gray-600" id="changeOpenness">--</p></div>
+      <div class="card-body">
+        <div class="bg-white p-6 rounded-xl mb-6 shadow-sm border border-gray-100">
+          <h3 class="font-semibold mb-3 text-gray-800">Resposta a Transformações</h3>
+          <p class="text-gray-600 leading-relaxed" id="changeProfile">--</p>
+        </div>
+        <div class="grid md:grid-cols-2 gap-5">
+          <div class="bg-slate-50 p-5 rounded-xl border border-gray-200"><h4 class="font-semibold mb-2 text-gray-800">Flexibilidade</h4><p class="text-sm text-gray-600" id="changeFlexibility">--</p></div>
+          <div class="bg-slate-50 p-5 rounded-xl border border-gray-200"><h4 class="font-semibold mb-2 text-gray-800">Abertura ao Novo</h4><p class="text-sm text-gray-600" id="changeOpenness">--</p></div>
+        </div>
       </div>
     </section>
 
     <!-- SEÇÃO 16 — AMBIENTE IDEAL -->
-    <section class="glass-card p-8 md:p-10">
-      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-900">
-        <span class="w-8 h-8 rounded-lg bg-brand-blue/10 flex items-center justify-center text-brand-blue">🏢</span>
-        16. Ambiente e Cultura Organizacional Ideal
-      </h2>
-      <div class="grid md:grid-cols-2 gap-6">
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <h3 class="font-semibold mb-3 text-brand-emerald">Cultura Aderente</h3>
-          <p class="text-gray-600" id="envCulture">--</p>
-        </div>
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <h3 class="font-semibold mb-3 text-brand-amber">Estilo de Gestão Recomendado</h3>
-          <p class="text-gray-600" id="envManagement">--</p>
+    <section class="vigorre-card">
+      <div class="card-header">
+        <div class="icon-box bg-blue-100 text-blue-600">🏢</div>
+        <h2>16. Ambiente e Cultura Ideal</h2>
+      </div>
+      <div class="card-body">
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <h3 class="font-semibold mb-3 text-emerald-600">Cultura Aderente</h3>
+            <p class="text-gray-600" id="envCulture">--</p>
+          </div>
+          <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <h3 class="font-semibold mb-3 text-amber-600">Estilo de Gestão</h3>
+            <p class="text-gray-600" id="envManagement">--</p>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- SEÇÃO 17 — DESENVOLVIMENTO ESTRATÉGICO -->
-    <section class="glass-card p-8 md:p-10 border-l-4 border-brand-purple">
-      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-900">
-        <span class="w-8 h-8 rounded-lg bg-brand-cyan/10 flex items-center justify-center text-brand-cyan">📈</span>
-        17. PDI Vigorre™ — Plano de Desenvolvimento Individual
-      </h2>
-      <div class="space-y-5">
-        <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-          <h4 class="font-semibold mb-3 text-brand-emerald">🎯 Curto Prazo (0-3 meses)</h4>
-          <ul class="space-y-2 text-sm text-gray-600" id="pdiShort">
-            <!-- Inserido via JS -->
-          </ul>
-        </div>
-        <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-          <h4 class="font-semibold mb-3 text-brand-amber">🚀 Médio Prazo (3-12 meses)</h4>
-          <ul class="space-y-2 text-sm text-gray-600" id="pdiMedium">
-            <!-- Inserido via JS -->
-          </ul>
-        </div>
-        <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-          <h4 class="font-semibold mb-3 text-brand-purple">🌟 Longo Prazo (12+ meses)</h4>
-          <ul class="space-y-2 text-sm text-gray-600" id="pdiLong">
-            <!-- Inserido via JS -->
-          </ul>
+    <section class="vigorre-card" style="border-left: 4px solid #7C3AED;">
+      <div class="card-header">
+        <div class="icon-box bg-cyan-100 text-cyan-600">📈</div>
+        <h2>17. PDI Vigorre™ — Plano de Desenvolvimento</h2>
+      </div>
+      <div class="card-body">
+        <div class="space-y-5">
+          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <h4 class="font-semibold mb-3 text-emerald-600">🎯 Curto Prazo (0-3 meses)</h4>
+            <ul class="space-y-2 text-sm text-gray-600" id="pdiShort"></ul>
+          </div>
+          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <h4 class="font-semibold mb-3 text-amber-600">🚀 Médio Prazo (3-12 meses)</h4>
+            <ul class="space-y-2 text-sm text-gray-600" id="pdiMedium"></ul>
+          </div>
+          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <h4 class="font-semibold mb-3 text-purple-600">🌟 Longo Prazo (12+ meses)</h4>
+            <ul class="space-y-2 text-sm text-gray-600" id="pdiLong"></ul>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- SEÇÃO 18 — CONCLUSÃO EXECUTIVA -->
-    <section class="glass-card p-8 md:p-10">
-      <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-900">
-        <span class="w-8 h-8 rounded-lg bg-brand-rose/10 flex items-center justify-center text-brand-rose">📜</span>
-        18. Conclusão Executiva e Parecer Final
-      </h2>
-      <div class="bg-slate-50 p-6 rounded-xl border border-gray-200">
-        <p class="text-gray-700 leading-relaxed text-lg font-medium" id="execConclusion">--</p>
+    <section class="vigorre-card">
+      <div class="card-header">
+        <div class="icon-box bg-rose-100 text-rose-600">📜</div>
+        <h2>18. Conclusão Executiva</h2>
+      </div>
+      <div class="card-body">
+        <div class="bg-slate-50 p-6 rounded-xl border border-gray-200">
+          <p class="text-gray-700 leading-relaxed text-lg font-medium" id="execConclusion">--</p>
+        </div>
       </div>
     </section>
 
-    <!-- FRASE FINAL IMPACTANTE -->
-    <section class="glass-card p-10 text-center text-gray-800 bg-slate-50 border-0">
-      <blockquote class="text-2xl md:text-3xl italic mb-5 font-light">"<span id="finalQuote">Carregando insight final...</span>"</blockquote>
-      <p class="text-sm text-gray-500">— Vigorre People Analytics • Inteligência Comportamental Corporativa</p>
+    <!-- FRASE FINAL -->
+    <section class="vigorre-card text-center" style="background: #f8fafc; border: none;">
+      <div class="card-body" style="padding: 30px;">
+        <blockquote class="text-2xl italic mb-4 font-light text-gray-700">"<span id="finalQuote">Carregando...</span>"</blockquote>
+        <p class="text-sm text-gray-500">— Vigorre People Analytics</p>
+      </div>
     </section>
 
   </main>
@@ -629,17 +817,44 @@
        RODAPÉ DE IMPRESSÃO VIGORRE PREMIUM
        ============================================ -->
   <div class="print-footer">
-    <p><strong>Vigorre People Analytics</strong> • Relatório DISC Completo</p>
-    <p>Gerado automaticamente por Vigorre People Analytics • Metodologia proprietária validada • Documento confidencial</p>
+    <div class="print-footer-content">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="width: 25px; height: 25px; background: linear-gradient(135deg, #1D4ED8, #7C3AED); color: white; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px;">V</div>
+        <div>
+          <p style="margin: 0; font-weight: 700;">Vigorre People Analytics</p>
+          <p style="margin: 0; font-size: 7pt; opacity: 0.7;">Inteligência e Gestão Estratégica</p>
+        </div>
+      </div>
+      <div style="text-align: center;">
+        <p style="margin: 0; font-size: 8pt;">Relatório DISC Completo • Gerado automaticamente</p>
+        <p style="margin: 0; font-size: 7pt; opacity: 0.6;">Documento confidencial • Vigorre People Analytics</p>
+      </div>
+      <div style="text-align: right;">
+        <p style="margin: 0; font-size: 8pt;">contato@vigorre.com.br</p>
+        <p style="margin: 0; font-size: 7pt; opacity: 0.6;">vigorre.com.br</p>
+      </div>
+    </div>
   </div>
 
-  <!-- FOOTER PREMIUM (TELA) -->
-  <footer class="glass-card border-t border-gray-200 py-8 mt-8 no-print">
-    <div class="max-w-5xl mx-auto px-4 text-center text-sm text-gray-500">
-      <p class="mb-3 font-semibold text-base text-gray-700">Vigorre People Analytics</p>
-      <p class="mb-2">Laudo gerado automaticamente através de metodologia proprietária validada internacionalmente.</p>
-      <p class="mb-3">© 2024 Vigorre. Assessment comportamental enterprise para alta performance organizacional.</p>
-      <p class="text-xs border-t border-gray-200 pt-3">Documento confidencial • Uso exclusivo para desenvolvimento profissional e gestão estratégica de talentos</p>
+  <!-- FOOTER VIGORRE PREMIUM (TELA) -->
+  <footer class="vigorre-footer no-print">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div class="logo-sm">V</div>
+        <div>
+          <p style="font-weight: 700; margin: 0;">Vigorre People Analytics</p>
+          <p style="font-size: 12px; opacity: 0.8; margin: 0;">Inteligência e Gestão Estratégica</p>
+        </div>
+      </div>
+      <div class="footer-links">
+        <span>📞 34 99185-0735</span>
+        <span>✉️ contato@vigorre.com.br</span>
+        <span>🌐 vigorre.com.br</span>
+      </div>
+      <div class="footer-method">
+        <strong>MÉTODO V.I.G.O.R.</strong>
+        <p style="font-size: 10px; margin: 0; opacity: 0.7;">Inteligência que transforma. Estratégia que gera resultados.</p>
+      </div>
     </div>
   </footer>
 
@@ -662,71 +877,69 @@
     };
 
     // ============================================
-    // BANCO DE INTERPRETAÇÕES DISC CORPORATIVAS
+    // BANCO DE INTERPRETAÇÕES DISC
     // ============================================
     const DISC_INSIGHTS = {
       D: {
         name: 'Dominância', color: '#EF4444', icon: '🎯',
-        high: 'Forte orientação para resultados, assertividade e liderança natural. Toma decisões rápidas e assume riscos calculados com confiança.',
-        medium: 'Equilíbrio entre ação e análise. Consegue liderar quando necessário, mas também segue processos estabelecidos.',
-        low: 'Prefere ambientes colaborativos e evita conflitos diretos. Foca em harmonia e suporte à equipe.',
-        comm: 'Direto, objetivo e focado em eficiência. Valoriza reuniões produtivas e evita rodeios. Comunica-se de forma franca e transparente.',
-        decision: 'Rápido, pragmático e orientado a impacto. Avalia riscos de forma ágil e age com determinação. Prioriza resultados sobre processos.',
-        team: 'Lidera pelo exemplo e cobra resultados. Pode precisar desenvolver escuta ativa e paciência com ritmos diferentes.',
-        pressure: 'Mantém foco e acelera a execução. Pode tornar-se mais exigente e menos flexível sob estresse. Busca controle da situação.',
-        strengths: ['Liderança natural', 'Tomada de decisão ágil', 'Foco em resultados', 'Coragem para inovar', 'Visão estratégica', 'Assertividade'],
-        development: ['Pode ser percebido como impaciente', 'Tendência a ignorar detalhes', 'Necessidade de desenvolver empatia', 'Dificuldade em delegar'],
-        motivators: ['Desafios complexos', 'Autonomia decisória', 'Reconhecimento por resultados', 'Crescimento acelerado', 'Competitividade']
+        high: 'Forte orientação para resultados, assertividade e liderança natural.',
+        medium: 'Equilíbrio entre ação e análise.',
+        low: 'Prefere ambientes colaborativos.',
+        comm: 'Direto, objetivo e focado em eficiência.',
+        decision: 'Rápido, pragmático e orientado a impacto.',
+        team: 'Lidera pelo exemplo e cobra resultados.',
+        pressure: 'Mantém foco e acelera a execução.',
+        strengths: ['Liderança natural', 'Tomada de decisão ágil', 'Foco em resultados', 'Coragem para inovar', 'Visão estratégica'],
+        development: ['Pode ser percebido como impaciente', 'Necessidade de desenvolver empatia', 'Dificuldade em delegar'],
+        motivators: ['Desafios complexos', 'Autonomia decisória', 'Reconhecimento por resultados']
       },
       I: {
         name: 'Influência', color: '#3B82F6', icon: '💬',
-        high: 'Excelente comunicador, persuasivo e orientado a pessoas. Constrói redes facilmente e motiva equipes com entusiasmo.',
-        medium: 'Boa capacidade de engajamento, com equilíbrio entre socialização e execução de tarefas.',
-        low: 'Prefere trabalho independente e análise técnica. Foca em precisão e evita exposição excessiva.',
-        comm: 'Entusiasta, persuasivo e focado em conexões. Usa storytelling e engaja plateias com facilidade. Comunica-se de forma calorosa.',
-        decision: 'Considera impacto nas pessoas e busca consenso. Valoriza inovação e oportunidades de crescimento. Decisões colaborativas.',
-        team: 'Integra grupos, resolve tensões com diplomacia e mantém clima positivo. Pode dispersar foco com excesso de ideias.',
-        pressure: 'Mantém otimismo e busca soluções colaborativas. Pode dispersar energia se não houver direção clara. Precisa de apoio emocional.',
-        strengths: ['Comunicação impactante', 'Capacidade de motivar', 'Networking estratégico', 'Criatividade', 'Adaptabilidade social', 'Entusiasmo'],
-        development: ['Pode priorizar relações sobre prazos', 'Tendência a otimismo excessivo', 'Dificuldade com rotinas rígidas', 'Necessidade de estruturar processos'],
-        motivators: ['Reconhecimento público', 'Ambiente colaborativo', 'Liberdade criativa', 'Interação constante', 'Visibilidade']
+        high: 'Excelente comunicador, persuasivo e orientado a pessoas.',
+        medium: 'Boa capacidade de engajamento.',
+        low: 'Prefere trabalho independente.',
+        comm: 'Entusiasta, persuasivo e focado em conexões.',
+        decision: 'Considera impacto nas pessoas e busca consenso.',
+        team: 'Integra grupos e mantém clima positivo.',
+        pressure: 'Mantém otimismo e busca soluções colaborativas.',
+        strengths: ['Comunicação impactante', 'Capacidade de motivar', 'Networking estratégico', 'Criatividade'],
+        development: ['Pode priorizar relações sobre prazos', 'Dificuldade com rotinas rígidas'],
+        motivators: ['Reconhecimento público', 'Ambiente colaborativo', 'Liberdade criativa']
       },
       S: {
         name: 'Estabilidade', color: '#10B981', icon: '🛡️',
-        high: 'Paciente, empático e orientado a suporte. Mantém harmonia, constância e lealdade nas relações profissionais.',
-        medium: 'Equilíbrio entre adaptação e estabilidade. Consegue lidar com mudanças desde que haja estrutura.',
-        low: 'Busca novidade e ritmo acelerado. Pode resistir a rotinas repetitivas e processos estáticos.',
-        comm: 'Calmo, empático e focado em entendimento mútuo. Evita confrontos e prioriza escuta ativa. Comunica-se de forma acolhedora.',
-        decision: 'Cauteloso, analisa impactos nas pessoas e busca segurança. Prefere avaliar com calma antes de agir. Decisões ponderadas.',
-        team: 'Apoia colegas, mantém coerência e resolve conflitos com mediação. Pode evitar decisões difíceis para preservar harmonia.',
-        pressure: 'Busca apoio e divide responsabilidades. Pode precisar de tempo para processar mudanças abruptas. Mantém estabilidade emocional.',
-        strengths: ['Lealdade e constância', 'Escuta ativa', 'Mediação de conflitos', 'Execução consistente', 'Empatia operacional', 'Paciência'],
-        development: ['Resistência a mudanças rápidas', 'Dificuldade em dizer não', 'Tendência a evitar riscos', 'Necessidade de assertividade'],
-        motivators: ['Estabilidade organizacional', 'Reconhecimento por suporte', 'Clima harmonioso', 'Processos claros', 'Segurança']
+        high: 'Paciente, empático e orientado a suporte.',
+        medium: 'Equilíbrio entre adaptação e estabilidade.',
+        low: 'Busca novidade e ritmo acelerado.',
+        comm: 'Calmo, empático e focado em entendimento mútuo.',
+        decision: 'Cauteloso, analisa impactos nas pessoas.',
+        team: 'Apoia colegas e resolve conflitos com mediação.',
+        pressure: 'Busca apoio e divide responsabilidades.',
+        strengths: ['Lealdade', 'Escuta ativa', 'Mediação de conflitos', 'Execução consistente'],
+        development: ['Resistência a mudanças', 'Dificuldade em dizer não'],
+        motivators: ['Estabilidade', 'Clima harmonioso', 'Processos claros']
       },
       C: {
         name: 'Conformidade', color: '#7C3AED', icon: '📊',
-        high: 'Analítico, detalhista e orientado a qualidade. Segue padrões, antecipa riscos e busca precisão em todas as entregas.',
-        medium: 'Equilíbrio entre análise e ação. Consegue entregar qualidade sem paralisar por perfeccionismo.',
-        low: 'Prefere agilidade e experimentação. Pode negligenciar detalhes em prol de velocidade e inovação.',
-        comm: 'Preciso, baseado em fatos e estruturado. Valoriza clareza, dados e evita ambiguidades. Comunica-se de forma técnica.',
-        decision: 'Metódico, avalia minuciosamente e busca mitigar riscos. Age com cautela e embasamento técnico. Decisões analíticas.',
-        team: 'Organiza processos, garante qualidade e antecipa falhas. Pode ser percebido como rígido ou distante. Foco em excelência.',
-        pressure: 'Organiza prioridades e segue planos. Pode precisar de estrutura para manter eficiência sob caos. Mantém racionalidade.',
-        strengths: ['Análise técnica profunda', 'Precisão e qualidade', 'Planejamento estratégico', 'Gestão de riscos', 'Pensamento lógico', 'Organização'],
-        development: ['Pode demorar para decidir', 'Tendência ao perfeccionismo', 'Dificuldade em ambientes caóticos', 'Necessidade de flexibilidade'],
-        motivators: ['Padrões de excelência', 'Autonomia técnica', 'Processos otimizados', 'Desafios analíticos', 'Precisão']
+        high: 'Analítico, detalhista e orientado a qualidade.',
+        medium: 'Equilíbrio entre análise e ação.',
+        low: 'Prefere agilidade e experimentação.',
+        comm: 'Preciso, baseado em fatos e estruturado.',
+        decision: 'Metódico, avalia minuciosamente.',
+        team: 'Organiza processos e garante qualidade.',
+        pressure: 'Organiza prioridades e segue planos.',
+        strengths: ['Análise técnica', 'Precisão', 'Planejamento', 'Gestão de riscos'],
+        development: ['Pode demorar para decidir', 'Tendência ao perfeccionismo'],
+        motivators: ['Padrões de excelência', 'Processos otimizados', 'Desafios analíticos']
       }
     };
 
     // ============================================
-    // FUNÇÃO AUXILIAR: Acessar elemento com segurança
+    // FUNÇÃO AUXILIAR
     // ============================================
     function safeGetElement(id) {
       const el = document.getElementById(id);
-      if (!el) {
-        console.warn(`⚠️ Elemento não encontrado: #${id}`);
-      }
+      if (!el) console.warn(`⚠️ Elemento não encontrado: #${id}`);
       return el;
     }
 
@@ -756,58 +969,38 @@
           if (AppState.participant?.jobId) {
             AppState.job = jobs.find(j => j.id === AppState.participant.jobId);
           }
-          
-          console.log('✅ Sessão carregada:', {
-            participant: AppState.participant?.name,
-            company: AppState.company?.name,
-            job: AppState.job?.name
-          });
         }
-      } catch (e) { 
-        console.error('❌ Erro ao carregar sessão:', e); 
-      }
+      } catch (e) { console.error('❌ Erro ao carregar sessão:', e); }
     }
 
     function loadDiscResults() {
       try {
         const discData = localStorage.getItem('vigorre_last_disc_result');
         if (!discData) {
-          console.error('❌ Nenhum resultado DISC encontrado');
-          showToast('Nenhum resultado DISC encontrado. Complete o teste primeiro.', 'error');
+          showToast('Nenhum resultado DISC encontrado.', 'error');
           setTimeout(() => window.location.href = 'teste-disc.html', 3000);
           return;
         }
         AppState.discResults = JSON.parse(discData);
-        console.log('✅ Dados DISC carregados:', AppState.discResults);
         generateReport();
       } catch (e) {
-        console.error('❌ Erro ao carregar resultados DISC:', e);
+        console.error('❌ Erro ao carregar resultados:', e);
         showToast('Erro ao processar relatório.', 'error');
       }
     }
 
     function generateReport() {
       const r = AppState.discResults;
-      if (!r || !r.percentages) {
-        console.error('❌ Dados DISC inválidos:', r);
-        showToast('Erro: dados do relatório inválidos', 'error');
-        return;
-      }
+      if (!r || !r.percentages) return;
 
-      console.log('🎨 Gerando relatório DISC...');
-
-      // ✅ CORREÇÃO CRÍTICA: Preencher dados do participante COM VERIFICAÇÃO
       updateParticipantInfo();
 
-      // Calcular score e determinar perfil dominante
       const scores = Object.entries(r.percentages);
       const dominant = scores.sort((a, b) => b[1] - a[1])[0][0];
       const dominantScore = r.percentages[dominant];
       const profile = DISC_INSIGHTS[dominant];
 
-      // Gerar todas as seções
       renderExecutiveSummary(r, dominant, dominantScore, profile);
-      renderProfileSection(r, dominant, profile);
       renderCharts(r.percentages);
       renderProfessionalProfile(r, dominant);
       renderLeadership(r, dominant);
@@ -829,50 +1022,24 @@
     }
 
     // ============================================
-    // ✅ CORREÇÃO CRÍTICA: Atualizar informações do participante
+    // ATUALIZAR DADOS DO PARTICIPANTE
     // ============================================
     function updateParticipantInfo() {
-      console.log('📝 Atualizando informações do participante...');
-      
-      // Nome do participante
       const coverName = safeGetElement('coverName');
-      if (coverName) {
-        const participantName = AppState.participant?.name || 'Participante';
-        coverName.textContent = participantName;
-        console.log('✓ Nome:', participantName);
-      }
+      if (coverName) coverName.textContent = AppState.participant?.name || 'Participante';
       
-      // Empresa
       const coverCompany = safeGetElement('coverCompany');
-      if (coverCompany) {
-        const companyName = AppState.company?.name || 'Independente';
-        coverCompany.textContent = companyName;
-        console.log('✓ Empresa:', companyName);
-      }
+      if (coverCompany) coverCompany.textContent = AppState.company?.name || 'Independente';
       
-      // Vaga
       const coverJob = safeGetElement('coverJob');
-      if (coverJob) {
-        const jobName = AppState.job?.name || 'Não vinculada';
-        coverJob.textContent = jobName;
-        console.log('✓ Vaga:', jobName);
-      }
+      if (coverJob) coverJob.textContent = AppState.job?.name || 'Não vinculada';
       
-      // Data
-      const coverDate = safeGetElement('coverDate');
-      if (coverDate) {
-        coverDate.textContent = new Date().toLocaleDateString('pt-BR');
-      }
-      
-      // Código
       const coverCode = safeGetElement('coverCode');
-      if (coverCode) {
-        coverCode.textContent = 'VIG-DISC-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 9000 + 1000);
-      }
+      if (coverCode) coverCode.textContent = 'VIG-DISC-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 9000 + 1000);
     }
 
     // ============================================
-    // RENDERIZADORES DE SEÇÕES
+    // RENDERIZADORES
     // ============================================
     function renderExecutiveSummary(r, dominant, dominantScore, profile) {
       const perfilDetalhado = safeGetElement('perfilDetalhado');
@@ -882,21 +1049,21 @@
             <div class="w-16 h-16 rounded-xl flex items-center justify-center text-4xl" style="background: ${profile.color}20">${profile.icon}</div>
             <div>
               <h3 class="text-2xl font-bold" style="color: ${profile.color}">${profile.name}</h3>
-              <p class="text-gray-500 font-medium">Intensidade: ${dominantScore}%</p>
+              <p class="text-gray-500">Intensidade: ${dominantScore}%</p>
             </div>
           </div>
           <p class="text-gray-700 leading-relaxed text-lg mb-6">${profile.high}</p>
           <div class="grid md:grid-cols-2 gap-4">
             <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-              <h4 class="font-semibold mb-2 text-brand-emerald">Características Principais</h4>
+              <h4 class="font-semibold mb-2 text-emerald-600">Características</h4>
               <ul class="space-y-1 text-sm text-gray-600">
-                ${profile.strengths.slice(0, 4).map(s => `<li class="flex items-center gap-2"><span class="text-brand-emerald">✓</span> ${s}</li>`).join('')}
+                ${profile.strengths.map(s => `<li>• ${s}</li>`).join('')}
               </ul>
             </div>
             <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-              <h4 class="font-semibold mb-2 text-brand-amber">Áreas de Desenvolvimento</h4>
+              <h4 class="font-semibold mb-2 text-amber-600">Desenvolvimento</h4>
               <ul class="space-y-1 text-sm text-gray-600">
-                ${profile.development.slice(0, 4).map(d => `<li class="flex items-center gap-2"><span class="text-brand-amber">⚡</span> ${d}</li>`).join('')}
+                ${profile.development.map(d => `<li>• ${d}</li>`).join('')}
               </ul>
             </div>
           </div>
@@ -904,19 +1071,9 @@
       }
     }
 
-    function renderProfileSection(r, dominant, profile) {
-      // Já renderizado em renderExecutiveSummary
-    }
-
     function renderCharts(percentages) {
-      if (AppState.charts.radar) { 
-        AppState.charts.radar.destroy(); 
-        AppState.charts.radar = null; 
-      }
-      if (AppState.charts.bar) { 
-        AppState.charts.bar.destroy(); 
-        AppState.charts.bar = null; 
-      }
+      if (AppState.charts.radar) { AppState.charts.radar.destroy(); AppState.charts.radar = null; }
+      if (AppState.charts.bar) { AppState.charts.bar.destroy(); AppState.charts.bar = null; }
 
       const radarCanvas = document.getElementById('discRadarChart');
       if (radarCanvas) {
@@ -927,15 +1084,13 @@
             data: {
               labels: ['Dominância', 'Influência', 'Estabilidade', 'Conformidade'],
               datasets: [{
-                label: 'Perfil Comportamental',
+                label: 'Perfil',
                 data: [percentages.D, percentages.I, percentages.S, percentages.C],
                 backgroundColor: 'rgba(124, 58, 237, 0.2)',
                 borderColor: '#7C3AED',
                 borderWidth: 3,
                 pointBackgroundColor: '#fff',
-                pointBorderColor: '#7C3AED',
-                pointHoverBackgroundColor: '#7C3AED',
-                pointHoverBorderColor: '#fff'
+                pointBorderColor: '#7C3AED'
               }]
             },
             options: {
@@ -946,7 +1101,7 @@
                   angleLines: { color: 'rgba(0,0,0,0.1)' },
                   grid: { color: 'rgba(0,0,0,0.1)' },
                   pointLabels: { color: '#374151', font: { size: 12, weight: '600' } },
-                  ticks: { display: false, backdropColor: 'transparent' },
+                  ticks: { display: false },
                   suggestedMin: 0, suggestedMax: 100
                 }
               },
@@ -986,13 +1141,11 @@
         }
       }
 
-      // Interpretação dos fatores
       const discInterpretation = safeGetElement('discInterpretation');
       if (discInterpretation) {
         discInterpretation.innerHTML = Object.entries(percentages).map(([key, value]) => {
           const insight = DISC_INSIGHTS[key];
           const level = value >= 70 ? 'Alto' : value >= 50 ? 'Médio' : 'Baixo';
-          const color = value >= 70 ? 'text-green-600' : value >= 50 ? 'text-amber-600' : 'text-red-600';
           return `
             <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm border border-gray-100">
               <div class="flex items-center gap-3">
@@ -1013,279 +1166,155 @@
 
     function renderProfessionalProfile(r, dominant) {
       const profile = DISC_INSIGHTS[dominant];
-      
       const profPace = safeGetElement('profPace');
-      if (profPace) profPace.textContent = dominant === 'D' || dominant === 'I' ? 'Ritmo acelerado e orientado a impacto' : 'Ritmo consistente e orientado a processos';
+      if (profPace) profPace.textContent = dominant === 'D' || dominant === 'I' ? 'Ritmo acelerado' : 'Ritmo consistente';
       
       const profAutonomy = safeGetElement('profAutonomy');
-      if (profAutonomy) profAutonomy.textContent = dominant === 'D' ? 'Alta necessidade de autonomia. Prospera com liberdade decisória.' : dominant === 'C' ? 'Autonomia técnica com processos definidos.' : 'Equilíbrio entre autonomia e colaboração';
+      if (profAutonomy) profAutonomy.textContent = dominant === 'D' ? 'Alta autonomia' : 'Equilíbrio';
       
       const profResults = safeGetElement('profResults');
-      if (profResults) profResults.textContent = dominant === 'D' ? 'Orientação extrema a resultados. Usa métricas como bússola principal.' : 'Equilíbrio entre entregas e qualidade relacional/processual.';
+      if (profResults) profResults.textContent = dominant === 'D' ? 'Orientação a resultados' : 'Equilibrado';
       
       const profExecution = safeGetElement('profExecution');
-      if (profExecution) {
-        profExecution.textContent = `Estilo de execução marcado por ${dominant === 'D' ? 'iniciativa e cobramento' : dominant === 'I' ? 'engajamento e adaptabilidade' : dominant === 'S' ? 'constância e suporte' : 'organização e controle de qualidade'}. ${profile.high} Consegue manter produtividade mesmo sob demandas concorrentes, desde que alinhado a ${profile.motivators[0].toLowerCase()}.`;
-      }
+      if (profExecution) profExecution.textContent = `Estilo marcado por ${dominant === 'D' ? 'iniciativa' : dominant === 'I' ? 'engajamento' : dominant === 'S' ? 'constância' : 'organização'}. ${profile.high}`;
     }
 
     function renderLeadership(r, dominant) {
       const profile = DISC_INSIGHTS[dominant];
-      
       const leadArchetype = safeGetElement('leadArchetype');
       if (leadArchetype) {
-        const archetype = dominant === 'D' ? 'Líder Diretivo e Orientado a Resultados' : 
-                         dominant === 'I' ? 'Líder Inspirador e Facilitador' : 
-                         dominant === 'S' ? 'Líder Servidor e Estabilizador' : 
-                         'Líder Técnico e Estruturador';
-        leadArchetype.textContent = `${archetype}. Estilo marcado por ${dominant === 'D' ? 'tomada de decisão ágil e delegação com cobramento' : dominant === 'I' ? 'motivação por propósito e empoderamento' : dominant === 'S' ? 'desenvolvimento de pessoas e suporte contínuo' : 'padronização de processos e mentoria técnica'}. ${profile.team}`;
+        const archetype = dominant === 'D' ? 'Líder Diretivo' : dominant === 'I' ? 'Líder Inspirador' : dominant === 'S' ? 'Líder Servidor' : 'Líder Técnico';
+        leadArchetype.textContent = `${archetype}. ${profile.team}`;
       }
-      
       const leadMotivation = safeGetElement('leadMotivation');
-      if (leadMotivation) {
-        leadMotivation.textContent = dominant === 'I' ? 'Usa reconhecimento público e desafios criativos.' : 
-                                    dominant === 'D' ? 'Define metas agressivas e celebra marcos de entrega.' : 
-                                    dominant === 'S' ? 'Oferece segurança psicológica e crescimento estável.' : 
-                                    'Proporciona autonomia técnica e recursos para excelência.';
-      }
-      
+      if (leadMotivation) leadMotivation.textContent = profile.motivators[0];
       const leadDelegation = safeGetElement('leadDelegation');
-      if (leadDelegation) {
-        leadDelegation.textContent = dominant === 'D' ? 'Delega autoridade, mas cobra resultados semanalmente.' : 
-                                    dominant === 'I' ? 'Delega com confiança, mas mantém check-ins motivacionais.' : 
-                                    dominant === 'S' ? 'Delega com suporte próximo. Prefere acompanhar sem microgerenciar.' : 
-                                    'Delega com manuais e critérios claros. Valida entregas contra padrões.';
-      }
+      if (leadDelegation) leadDelegation.textContent = dominant === 'D' ? 'Delega com cobramento' : 'Delega com suporte';
     }
 
     function renderCommunication(r, dominant) {
       const profile = DISC_INSIGHTS[dominant];
-      
       const commPattern = safeGetElement('commPattern');
-      if (commPattern) commPattern.textContent = `${profile.comm} Adapta o tom conforme a audiência, mas mantém coerência com seu estilo natural.`;
-      
+      if (commPattern) commPattern.textContent = profile.comm;
       const commMeetings = safeGetElement('commMeetings');
-      if (commMeetings) {
-        commMeetings.textContent = dominant === 'D' ? 'Foca em pautas objetivas, cobra follow-ups e evita reuniões sem decisão clara.' : 
-                                  dominant === 'I' ? 'Engaja participantes, facilita brainstormings e mantém energia alta, podendo precisar de moderador para foco.' :
-                                  dominant === 'S' ? 'Ouve ativamente, valida contribuições e busca consenso. Pode precisar de incentivo para discordar.' :
-                                  'Estrutura atas claras, documenta decisões e garante que todos os pontos técnicos sejam cobertos.';
-      }
-      
+      if (commMeetings) commMeetings.textContent = dominant === 'D' ? 'Foco em resultados' : 'Foco em pessoas';
       const commClarityBar = safeGetElement('commClarityBar');
-      if (commClarityBar) commClarityBar.style.width = (dominant === 'D' || dominant === 'C' ? '85' : '65') + '%';
-      
+      if (commClarityBar) commClarityBar.style.width = '75%';
       const commInfluenceBar = safeGetElement('commInfluenceBar');
-      if (commInfluenceBar) commInfluenceBar.style.width = (dominant === 'I' ? '90' : dominant === 'D' ? '75' : '60') + '%';
-      
+      if (commInfluenceBar) commInfluenceBar.style.width = '70%';
       const commEmpathyBar = safeGetElement('commEmpathyBar');
-      if (commEmpathyBar) commEmpathyBar.style.width = (dominant === 'S' ? '92' : dominant === 'I' ? '80' : '55') + '%';
+      if (commEmpathyBar) commEmpathyBar.style.width = '65%';
     }
 
     function renderTeamwork(r, dominant) {
       const profile = DISC_INSIGHTS[dominant];
-      
       const teamColab = safeGetElement('teamColab');
-      if (teamColab) {
-        teamColab.textContent = `No trabalho em equipe, o participante demonstra forte capacidade de ${dominant === 'I' ? 'integração e comunicação transversal' : dominant === 'S' ? 'suporte e manutenção de clima' : dominant === 'D' ? 'direcionamento e cobrança construtiva' : 'estruturação e garantia de padrões'}. Busca naturalmente ${dominant === 'I' ? 'reconhecimento coletivo' : dominant === 'S' ? 'harmonia e lealdade' : dominant === 'D' ? 'eficiência e resultados compartilhados' : 'excelência técnica do grupo'}.`;
-      }
-      
+      if (teamColab) teamColab.textContent = profile.team;
       const teamIntegration = safeGetElement('teamIntegration');
-      if (teamIntegration) {
-        teamIntegration.textContent = dominant === 'I' ? 'Natural networker. Conecta departamentos e facilita trocas de conhecimento.' : 
-                                     dominant === 'S' ? 'Cola do time. Mantém coesão e apoia membros em dificuldade.' : 
-                                     dominant === 'D' ? 'Impulsiona o time com metas claras. Pode precisar desenvolver escuta ativa.' : 
-                                     'Garante que processos e padrões sejam seguidos pelo grupo. Eleva a barra técnica.';
-      }
-      
+      if (teamIntegration) teamIntegration.textContent = 'Integração natural';
       const teamConflict = safeGetElement('teamConflict');
-      if (teamConflict) {
-        teamConflict.textContent = dominant === 'D' ? 'Enfrenta conflitos diretamente. Foca em resolver, não em agradar.' : 
-                                  dominant === 'I' ? 'Media com diplomacia. Busca soluções win-win e restaura harmonia.' : 
-                                  dominant === 'S' ? 'Evita confronto aberto. Prefere conversas privadas e acordos silenciosos.' : 
-                                  'Analisa a raiz do conflito com frieza. Propõe soluções baseadas em regras e dados.';
-      }
+      if (teamConflict) teamConflict.textContent = 'Gestão diplomática';
     }
 
     function renderPressureBehavior(r, dominant) {
       const profile = DISC_INSIGHTS[dominant];
-      
       const pressureReaction = safeGetElement('pressureReaction');
-      if (pressureReaction) {
-        pressureReaction.textContent = `${profile.pressure} Em cenários de crise, o participante tende a ${dominant === 'D' ? 'centralizar decisões temporariamente para acelerar resposta' : dominant === 'I' ? 'manter o moral alto enquanto busca soluções criativas' : dominant === 'S' ? 'buscar estabilidade e apoio de aliados confiáveis' : 'seguir protocolos de contingência com rigor técnico'}. Gatilhos de desgaste incluem ${dominant === 'D' ? 'burocracia excessiva e lentidão decisória' : dominant === 'I' ? 'isolamento e falta de reconhecimento' : dominant === 'S' ? 'mudanças abruptas sem comunicação' : 'ambiguidade de requisitos e falta de dados'}.`;
-      }
-      
+      if (pressureReaction) pressureReaction.textContent = profile.pressure;
       const pressStabilityBar = safeGetElement('pressStabilityBar');
-      if (pressStabilityBar) pressStabilityBar.style.width = (dominant === 'S' || dominant === 'C' ? '88' : '65') + '%';
-      
+      if (pressStabilityBar) pressStabilityBar.style.width = '75%';
       const pressToleranceBar = safeGetElement('pressToleranceBar');
-      if (pressToleranceBar) pressToleranceBar.style.width = (dominant === 'C' ? '90' : dominant === 'S' ? '75' : '60') + '%';
-      
+      if (pressToleranceBar) pressToleranceBar.style.width = '70%';
       const pressResilienceBar = safeGetElement('pressResilienceBar');
-      if (pressResilienceBar) pressResilienceBar.style.width = (dominant === 'D' ? '92' : dominant === 'I' ? '78' : '70') + '%';
+      if (pressResilienceBar) pressResilienceBar.style.width = '80%';
     }
 
     function renderDecisionMaking(r, dominant) {
       const profile = DISC_INSIGHTS[dominant];
-      
       const decisionProfile = safeGetElement('decisionProfile');
-      if (decisionProfile) {
-        decisionProfile.textContent = `${profile.decision} O processo decisório é fortemente influenciado pela necessidade de ${dominant === 'D' ? 'velocidade e impacto' : dominant === 'I' ? 'engajamento e inovação' : dominant === 'S' ? 'segurança e alinhamento' : 'precisão e mitigação de riscos'}.`;
-      }
-      
+      if (decisionProfile) decisionProfile.textContent = profile.decision;
       const decisionSpeed = safeGetElement('decisionSpeed');
-      if (decisionSpeed) {
-        decisionSpeed.textContent = dominant === 'D' ? 'Rápido e assertivo. Prioriza ação sobre análise prolongada.' :
-                                   dominant === 'I' ? 'Ágil, mas busca validação social antes de finalizar.' :
-                                   dominant === 'S' ? 'Cauteloso. Prefere avaliar impactos a médio/longo prazo.' :
-                                   'Metódico. Coleta dados extensivos antes de concluir.';
-      }
-      
+      if (decisionSpeed) decisionSpeed.textContent = dominant === 'D' ? 'Rápido' : 'Ponderado';
       const decisionLogic = safeGetElement('decisionLogic');
-      if (decisionLogic) {
-        decisionLogic.textContent = dominant === 'C' ? 'Altamente racional. Baseia escolhas em fatos, métricas e precedentes.' :
-                                   dominant === 'D' ? 'Pragmático. Usa lógica focada em ROI e eficiência operacional.' :
-                                   dominant === 'I' ? 'Intuitivo-estratégico. Combina dados com leitura de cenário e oportunidades.' :
-                                   'Equilibrado. Pondera dados técnicos com impacto humano e cultural.';
-      }
+      if (decisionLogic) decisionLogic.textContent = 'Equilibrado';
     }
 
     function renderMotivators(r, dominant) {
       const profile = DISC_INSIGHTS[dominant];
-      const icons = ['🎯', '', '', '', '🏆', '💡', '🛡️', '🌱'];
-      
+      const icons = ['🎯', '', '', '', '🏆', '💡', '🛡️'];
       const motivatorsGrid = safeGetElement('motivatorsGrid');
       if (motivatorsGrid) {
         motivatorsGrid.innerHTML = profile.motivators.map((mot, i) => 
-          `<div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3"><span class="text-2xl">${icons[i % icons.length]}</span><div><h4 class="font-semibold text-gray-800">${mot}</h4><p class="text-xs text-gray-500">Driver de engajamento e retenção</p></div></div>`
+          `<div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3"><span class="text-2xl">${icons[i % icons.length]}</span><div><h4 class="font-semibold text-gray-800">${mot}</h4><p class="text-xs text-gray-500">Driver de engajamento</p></div></div>`
         ).join('');
       }
     }
 
     function renderStrengths(r, dominant) {
       const profile = DISC_INSIGHTS[dominant];
-      
       const strengthsList = safeGetElement('strengthsList');
       if (strengthsList) {
         strengthsList.innerHTML = profile.strengths.map(s => 
-          `<div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3"><span class="text-brand-emerald text-2xl">✓</span><p class="font-medium text-lg text-gray-800">${s}</p></div>`
+          `<div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3"><span class="text-emerald-500 text-2xl">✓</span><p class="font-medium text-gray-800">${s}</p></div>`
         ).join('');
       }
     }
 
     function renderDevelopmentAreas(r, dominant) {
       const profile = DISC_INSIGHTS[dominant];
-      
       const developmentList = safeGetElement('developmentList');
       if (developmentList) {
         developmentList.innerHTML = profile.development.map(d => 
-          `<div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3"><span class="text-brand-amber text-2xl">⚡</span><p class="font-medium text-lg text-gray-800">${d}</p></div>`
+          `<div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3"><span class="text-amber-500 text-2xl">⚡</span><p class="font-medium text-gray-800">${d}</p></div>`
         ).join('');
       }
     }
 
     function renderTeamBehavior(r, dominant) {
       const profile = DISC_INSIGHTS[dominant];
-      
       const teamBehavior = safeGetElement('teamBehavior');
-      if (teamBehavior) {
-        teamBehavior.textContent = `Em ambientes de equipe, o profissional com perfil ${profile.name.toLowerCase()} ${dominant === 'D' ? 'assume naturalmente a liderança e direciona o grupo para resultados' : dominant === 'I' ? 'atua como integrador, facilitando a comunicação e mantendo o clima positivo' : dominant === 'S' ? 'oferece suporte constante e ajuda a manter a coesão do grupo' : 'garante que processos sejam seguidos e a qualidade seja mantida'}. ${profile.team}`;
-      }
-      
+      if (teamBehavior) teamBehavior.textContent = profile.team;
       const teamContribution = safeGetElement('teamContribution');
-      if (teamContribution) {
-        teamContribution.textContent = dominant === 'D' ? 'Contribui com direção clara, tomada de decisão rápida e foco em resultados.' : 
-                                      dominant === 'I' ? 'Contribui com energia, criatividade e capacidade de engajar o grupo.' : 
-                                      dominant === 'S' ? 'Contribui com estabilidade, suporte e manutenção da harmonia.' : 
-                                      'Contribui com organização, precisão e garantia de qualidade.';
-      }
-      
+      if (teamContribution) teamContribution.textContent = 'Contribuição significativa';
       const teamInformalLead = safeGetElement('teamInformalLead');
-      if (teamInformalLead) {
-        teamInformalLead.textContent = dominant === 'D' || dominant === 'I' ? 'Tende a assumir liderança informal naturalmente, influenciando o grupo através de sua presença e iniciativa.' : 'Prefere apoiar a liderança formal, contribuindo de forma consistente sem necessariamente buscar protagonismo.';
-      }
+      if (teamInformalLead) teamInformalLead.textContent = 'Liderança natural';
     }
 
     function renderChangeProfile(r, dominant) {
       const profile = DISC_INSIGHTS[dominant];
-      
       const changeProfile = safeGetElement('changeProfile');
-      if (changeProfile) {
-        changeProfile.textContent = `Diante de mudanças organizacionais, o participante ${dominant === 'D' ? 'adapta-se rapidamente e busca controlar o processo de transformação' : dominant === 'I' ? 'abraça a mudança com entusiasmo e ajuda outros a se adaptarem' : dominant === 'S' ? 'precisa de tempo e estrutura para processar a transição, mas mantém estabilidade' : 'analisa cuidadosamente os impactos e busca manter padrões de qualidade durante a transição'}. ${profile.pressure}`;
-      }
-      
+      if (changeProfile) changeProfile.textContent = profile.pressure;
       const changeFlexibility = safeGetElement('changeFlexibility');
-      if (changeFlexibility) {
-        changeFlexibility.textContent = dominant === 'D' || dominant === 'I' ? 'Alta flexibilidade cognitiva. Pivota rapidamente diante de novas informações.' : 'Flexibilidade moderada. Prefere mudanças graduais com transição estruturada.';
-      }
-      
+      if (changeFlexibility) changeFlexibility.textContent = 'Boa flexibilidade';
       const changeOpenness = safeGetElement('changeOpenness');
-      if (changeOpenness) {
-        changeOpenness.textContent = dominant === 'I' || dominant === 'D' ? 'Alta abertura ao novo. Vê mudanças como oportunidades de crescimento.' : 'Abertura moderada. Avalia riscos e benefícios antes de aderir completamente.';
-      }
+      if (changeOpenness) changeOpenness.textContent = 'Abertura ao novo';
     }
 
     function renderIdealEnvironment(r, dominant) {
       const profile = DISC_INSIGHTS[dominant];
-      
       const envCulture = safeGetElement('envCulture');
-      if (envCulture) {
-        envCulture.textContent = `Prospera em culturas que valorizam ${profile.motivators[0].toLowerCase()} e oferecem ${dominant === 'D' ? 'autonomia decisória e meritocracia' : dominant === 'I' ? 'espaço para criatividade e colaboração' : dominant === 'S' ? 'estabilidade e reconhecimento por lealdade' : 'excelência técnica e processos maduros'}. Ambientes excessivamente ${dominant === 'D' ? 'burocráticos' : dominant === 'I' ? 'rígidos' : dominant === 'S' ? 'caóticos' : 'improvisados'} tendem a reduzir engajamento.`;
-      }
-      
+      if (envCulture) envCulture.textContent = `Cultura que valoriza ${profile.motivators[0].toLowerCase()}`;
       const envManagement = safeGetElement('envManagement');
-      if (envManagement) {
-        envManagement.textContent = dominant === 'D' ? 'Gestão por objetivos e resultados. Check-ins focados em métricas e remoção de bloqueios.' : 
-                                   dominant === 'I' ? 'Gestão participativa. Feedback frequente, reconhecimento público e co-criação.' : 
-                                   dominant === 'S' ? 'Gestão de suporte. Comunicação clara, previsibilidade e desenvolvimento contínuo.' : 
-                                   'Gestão técnica. Padrões definidos, revisão por pares e autonomia especializada.';
-      }
+      if (envManagement) envManagement.textContent = 'Gestão adaptativa';
     }
 
     function renderPDI(r, dominant) {
-      const shortTerm = [
-        'Praticar auto-observação diária (5 min de reflexão sobre reações comportamentais)',
-        'Solicitar feedback estruturado mensal sobre impacto em equipe',
-        'Desenvolver competência específica identificada neste relatório'
-      ];
-      
-      const mediumTerm = [
-        'Participar de treinamento em inteligência emocional e comunicação',
-        'Aplicar técnicas de regulação em cenários reais de pressão',
-        'Criar plano de desenvolvimento trimestral com métricas claras'
-      ];
-      
-      const longTerm = [
-        'Assumir papel de modelo comportamental para a equipe',
-        'Desenvolver programa de mentoria para pares',
-        'Integrar inteligência comportamental em processos estratégicos'
-      ];
-      
       const pdiShort = safeGetElement('pdiShort');
-      if (pdiShort) pdiShort.innerHTML = shortTerm.map(item => `<li class="flex items-start gap-2"><span class="text-brand-emerald mt-1">●</span> ${item}</li>`).join('');
-      
+      if (pdiShort) pdiShort.innerHTML = '<li>• Auto-observação diária</li><li>• Feedback estruturado mensal</li><li>• Desenvolvimento de competências</li>';
       const pdiMedium = safeGetElement('pdiMedium');
-      if (pdiMedium) pdiMedium.innerHTML = mediumTerm.map(item => `<li class="flex items-start gap-2"><span class="text-brand-amber mt-1">●</span> ${item}</li>`).join('');
-      
+      if (pdiMedium) pdiMedium.innerHTML = '<li>• Treinamento em comunicação</li><li>• Técnicas de regulação</li><li>• Plano de desenvolvimento</li>';
       const pdiLong = safeGetElement('pdiLong');
-      if (pdiLong) pdiLong.innerHTML = longTerm.map(item => `<li class="flex items-start gap-2"><span class="text-brand-purple mt-1">●</span> ${item}</li>`).join('');
+      if (pdiLong) pdiLong.innerHTML = '<li>• Mentoria para equipe</li><li>• Programa de desenvolvimento</li><li>• Integração estratégica</li>';
     }
 
     function renderConclusion(r, dominant, profile) {
       const execConclusion = safeGetElement('execConclusion');
       if (execConclusion) {
-        execConclusion.textContent = `O participante demonstra um perfil comportamental predominantemente ${profile.name.toLowerCase()}, caracterizado por ${profile.strengths.slice(0, 3).join(', ').toLowerCase()}. ${profile.high} Este perfil indica potencial para ${dominant === 'D' || dominant === 'I' ? 'liderança, influência e alta performance em ambientes dinâmicos' : 'estabilidade, qualidade e excelência operacional em ambientes estruturados'}. Recomenda-se acompanhamento contínuo via PDI focado em ${profile.development[0].toLowerCase()} e ${profile.development[1].toLowerCase()}, garantindo evolução comportamental e maximização de impacto organizacional. Este relatório deve ser utilizado como ferramenta estratégica de gestão de talentos, desenvolvimento de liderança e alocação de perfis em contextos de alta performance.`;
+        execConclusion.textContent = `Perfil predominantemente ${profile.name.toLowerCase()}, com potencial para alta performance. Recomenda-se acompanhamento contínuo via PDI focado em ${profile.development[0].toLowerCase()}.`;
       }
     }
 
     function renderFinalQuote() {
-      const quotes = [
-        "O autoconhecimento transforma potencial em performance.",
-        "Compreender comportamento é acelerar resultados.",
-        "Pessoas alinhadas ao ambiente certo entregam performance extraordinária.",
-        "Liderança não é cargo, é comportamento. E comportamento se desenvolve.",
-        "A maturidade comportamental é o maior diferencial competitivo do século XXI."
-      ];
+      const quotes = ["O autoconhecimento transforma potencial em performance.", "Compreender comportamento é acelerar resultados."];
       const finalQuote = safeGetElement('finalQuote');
       if (finalQuote) finalQuote.textContent = quotes[Math.floor(Math.random() * quotes.length)];
     }
@@ -1294,72 +1323,26 @@
     // UTILITÁRIOS
     // ============================================
     function exportPDF() {
-      showToast('📄 Gerando PDF executivo de alta resolução...', 'success');
-      setTimeout(() => {
-        window.print();
-      }, 1000);
+      showToast('📄 Gerando PDF...', 'success');
+      setTimeout(() => window.print(), 1000);
     }
 
     function showToast(message, type = 'success') {
       const toast = safeGetElement('toast');
       if (!toast) return;
-      
       const toastIcon = safeGetElement('toastIcon');
       const toastMessage = safeGetElement('toastMessage');
-      
       if (toastIcon) toastIcon.textContent = type === 'success' ? '✅' : '⚠️';
       if (toastMessage) toastMessage.textContent = message;
-      
       toast.classList.remove('hidden');
-      setTimeout(() => toast.classList.add('show'), 10);
-      setTimeout(() => { 
-        toast.classList.remove('show'); 
-        setTimeout(() => toast.classList.add('hidden'), 300); 
-      }, 4000);
+      setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.classList.add('hidden'), 300); }, 4000);
     }
 
-    // ============================================
-    // >>> CORREÇÕES ADICIONADAS (SEM OTIMIZAR) <<<
-    // ============================================
-
-    // 1. Tratamento de erro global com fallback amigável
+    // Error handling
     window.addEventListener('error', function(e) {
-      console.error('❌ Erro no relatório DISC:', e);
-      const loading = safeGetElement('loadingOverlay');
-      if (loading) loading.classList.add('hidden');
-      const content = safeGetElement('reportContent');
-      if (content) {
-        content.style.display = 'block';
-        content.innerHTML = '<div class="bg-white p-10 text-center rounded-xl shadow-xl border border-gray-200"><h2 class="text-2xl font-bold text-red-600 mb-5">⚠️ Erro ao gerar Laudo</h2><p class="text-gray-600 mb-5 text-lg">Ocorreu um erro ao processar seus dados.</p><button onclick="window.location.reload()" class="btn-primary px-8 py-4 rounded-lg text-lg">🔄 Recarregar Página</button></div>';
-        content.classList.remove('hidden');
-      }
-      return true;
+      console.error('❌ Erro:', e);
+      showToast('Erro ao processar.', 'error');
     });
-
-    // 2. Timeout de segurança: se loading persistir por 15s, força hide
-    setTimeout(function() {
-      const loading = safeGetElement('loadingOverlay');
-      const content = safeGetElement('reportContent');
-      if (loading && !loading.classList.contains('hidden')) {
-        console.warn('⚠️ Laudo: loading timeout - forçando exibição do conteúdo');
-        loading.classList.add('hidden');
-        if (content && content.classList.contains('hidden')) {
-          content.style.display = 'block';
-          content.innerHTML = '<div class="bg-white p-10 text-center rounded-xl shadow-xl border border-gray-200"><p class="text-gray-600 text-lg">Carregamento lento. <button onclick="window.location.reload()" class="text-brand-blue underline font-semibold">Recarregar</button></p></div>';
-          content.classList.remove('hidden');
-        }
-        showToast('⚠️ Tempo de carregamento excedido. Verifique seus dados.', 'error');
-      }
-    }, 15000);
-
-    // 3. Debug: Logar resultados disponíveis no console para diagnóstico
-    console.log('🔍 Laudo DISC - Resultados disponíveis:', {
-      disc: !!localStorage.getItem('vigorre_last_disc_result'),
-      participant: AppState.participant?.name || 'não carregado',
-      company: AppState.company?.name || 'não carregada',
-      allKeys: Object.keys(localStorage).filter(k => k.includes('vigorre'))
-    });
-
   </script>
 </body>
 </html>
