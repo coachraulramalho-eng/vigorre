@@ -134,7 +134,7 @@
     }
     
     /* ============================================
-       ESTILO PARA LISTA DE VAGAS SELECIONADAS (NOVO)
+       ESTILO PARA LISTA DE VAGAS SELECIONADAS
        ============================================ */
     .selected-jobs-container {
       margin-top: 10px;
@@ -247,7 +247,7 @@
   <header>
     <div class="logo">
       <img src="logo-vigorre.png" alt="Vigorre One™" class="logo-img" onerror="this.outerHTML='<div class=\'logo-icon\'>V</div>'">
-      <span>Vigorre One™ - Cadastro de Participante</span>
+      <span>Vigorre One™ - Cadastro de Participante (Admin)</span>
     </div>
     <button class="btn-logout" onclick="logout()">Sair do Sistema</button>
   </header>
@@ -287,7 +287,7 @@
             </select>
           </div>
 
-          <!-- Vaga/Cargo - Seleção e Inclusão (NOVO) -->
+          <!-- Vaga/Cargo - Seleção e Inclusão -->
           <div class="form-group">
             <label for="availableJobSelect">Vaga / Cargo Disponível</label>
             <select id="availableJobSelect">
@@ -336,6 +336,25 @@
     let companies = [];
     let allJobs = [];
     let selectedJobs = []; // Array para armazenar vagas selecionadas para este participante
+
+    // ============================================
+    // VERIFICAÇÃO DE AUTENTICAÇÃO - ADMIN APENAS
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+      const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+      
+      // Se não for admin ou staff, redirecionar para login
+      if (!currentUser.role || (currentUser.role !== 'admin' && currentUser.role !== 'staff')) {
+        alert('⚠️ Acesso restrito: Apenas administradores podem cadastrar participantes.');
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      loadCompanies();
+      if (participantId) {
+        loadParticipantData();
+      }
+    });
 
     // ============================================
     // CARREGAR EMPRESAS NO SELECT
@@ -606,16 +625,6 @@
       // Redireciona para a tela de login
       window.location.href = 'login.html';
     }
-
-    // ============================================
-    // INICIALIZAÇÃO DA PÁGINA
-    // ============================================
-    window.addEventListener('DOMContentLoaded', function() {
-      loadCompanies();
-      if (participantId) {
-        loadParticipantData();
-      }
-    });
   </script>
 </body>
 </html>
