@@ -423,7 +423,7 @@
         }
 
         // ========================================
-        // 3. LOGIN PARTICIPANTE (BANCO LOCAL)
+        // 3. LOGIN PARTICIPANTE (BANCO LOCAL) - ✅ CORREÇÃO AQUI
         // ========================================
         if (currentEnv === 'participant') {
           const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
@@ -443,8 +443,9 @@
             }));
             showAlert('✅ Bem-vindo, ' + participant.name.split(' ')[0] + '!', 'success');
             setTimeout(function() {
-              // Redireciona para a tela do participante
-              window.location.href = 'cadastro-participante.html';
+              // ✅ CORREÇÃO: Redirecionar para dashboard do participante, NÃO para cadastro
+              // OBS: Você precisa criar o arquivo 'dashboard-participante.html' para esta página existir
+              window.location.href = 'dashboard-participante.html';
             }, 1000);
             return;
           }
@@ -472,7 +473,8 @@
         if (currentUser.role === 'admin' || currentUser.role === 'staff') {
           window.location.href = 'admin.html';
         } else if (currentUser.role === 'participant') {
-          window.location.href = 'cadastro-participante.html';
+          // ✅ CORREÇÃO: Participante vai para dashboard, NÃO para cadastro
+          window.location.href = 'dashboard-participante.html';
         }
       }
     });
