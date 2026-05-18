@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Relatório Completo DISC Vigorre™ | People Analytics Enterprise</title>
+  <title>Relatório Completo DISC Vigorre One™ | People Analytics Enterprise</title>
   
   <!-- Tailwind CSS & Chart.js -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -321,6 +321,12 @@
       }
       
       /* Logo no rodapé */
+      .print-footer .footer-logo-box {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      
       .print-footer .footer-logo {
         width: 30px;
         height: 30px;
@@ -332,7 +338,20 @@
         justify-content: center;
         font-weight: 900;
         font-size: 16px;
-        margin-right: 10px;
+      }
+      
+      .print-footer .footer-text h4 {
+        font-size: 11pt;
+        font-weight: 700;
+        margin: 0;
+        color: white !important;
+      }
+      
+      .print-footer .footer-text p {
+        font-size: 8pt;
+        margin: 0;
+        opacity: 0.9;
+        color: rgba(255,255,255,0.9) !important;
       }
       
       /* Marca d'água */
@@ -358,18 +377,18 @@
 <body class="antialiased">
 
   <!-- ============================================
-       HEADER VIGORRE PREMIUM (TELA)
+       HEADER VIGORRE ONE™ PREMIUM (TELA)
        ============================================ -->
   <header class="no-print bg-brand-navy text-white shadow-lg sticky top-0 z-50">
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
       <div class="flex items-center gap-4">
         <!-- LOGO COM FUNDO BRANCO NA MOLDURA -->
         <div class="vigorre-logo-box">
-           <img src="logo-vigorre.png" alt="Vigorre" onerror="this.outerHTML='<span class=\'text-brand-navy font-black text-2xl\'>V</span>'">
+           <img src="logo-vigorre.png" alt="Vigorre One™" onerror="this.outerHTML='<span class=\'text-brand-navy font-black text-2xl\'>V</span>'">
         </div>
         <div>
-          <h1 class="font-bold text-xl tracking-tight">Vigorre People Analytics</h1>
-          <p class="text-xs text-gray-400 font-medium uppercase tracking-widest">Relatório Comportamental Enterprise</p>
+          <h1 class="font-bold text-xl tracking-tight">Vigorre One™</h1>
+          <p class="text-xs text-gray-400 font-medium uppercase tracking-widest">People Analytics Enterprise</p>
         </div>
       </div>
       <div class="flex items-center gap-3">
@@ -393,8 +412,8 @@
             <img src="logo-vigorre.png" style="width:100%; height:100%; object-fit:contain;" onerror="this.outerHTML='<span style=\'color:#0A1628; font-weight:900; font-size:18px;\'>V</span>'">
         </div>
         <div>
-          <h1>Vigorre People Analytics</h1>
-          <p>Relatório DISC Completo • Inteligência Comportamental</p>
+          <h1>Vigorre One™</h1>
+          <p>People Analytics Enterprise</p>
         </div>
       </div>
       <div class="print-method">
@@ -407,23 +426,23 @@
   <!-- ============================================
        MARCA D'ÁGUA
        ============================================ -->
-  <div class="print-watermark">VIGORRE</div>
+  <div class="print-watermark">VIGORRE ONE</div>
 
   <!-- ============================================
        RODAPÉ DE IMPRESSÃO (AZUL COMO NA TELA COM LOGO)
        ============================================ -->
   <div class="print-footer">
     <div class="print-footer-content">
-      <div style="display: flex; align-items: center;">
+      <div class="footer-logo-box">
         <div class="footer-logo">V</div>
-        <div>
-          <p style="margin: 0; font-weight: 700;">Vigorre People Analytics</p>
-          <p style="margin: 0; font-size: 8pt; opacity: 0.8;">Inteligência e Gestão Estratégica</p>
+        <div class="footer-text">
+          <h4>Vigorre One™</h4>
+          <p>People Analytics Enterprise</p>
         </div>
       </div>
       <div style="text-align: center;">
         <p style="margin: 0; font-size: 9pt;">Relatório DISC Completo • Gerado automaticamente</p>
-        <p style="margin: 0; font-size: 8pt; opacity: 0.7;">Documento confidencial • Vigorre People Analytics</p>
+        <p style="margin: 0; font-size: 8pt; opacity: 0.7;">Documento confidencial • Vigorre One™</p>
       </div>
       <div style="text-align: right;">
         <p style="margin: 0; font-size: 9pt;">contato@vigorre.com.br</p>
@@ -442,7 +461,7 @@
       <div class="flex flex-col md:flex-row items-center gap-8">
         <!-- LOGO NA CAPA COM FUNDO BRANCO -->
         <div class="vigorre-logo-box" style="width:80px; height:80px;">
-           <img src="logo-vigorre.png" alt="Vigorre" onerror="this.outerHTML='<span class=\'text-brand-navy font-black text-4xl\'>V</span>'">
+           <img src="logo-vigorre.png" alt="Vigorre One™" onerror="this.outerHTML='<span class=\'text-brand-navy font-black text-4xl\'>V</span>'">
         </div>
         
         <div class="flex-1 text-center md:text-left">
@@ -484,7 +503,7 @@
           Esta ferramenta vai além da simples categorização — ela revela <strong>como as pessoas se comportam</strong> em diferentes contextos, <strong>como tomam decisões</strong>, <strong>como lidam com pressão</strong> e <strong>como se relacionam</strong> com outras pessoas. No ambiente corporativo, o DISC se tornou essencial para recrutamento, desenvolvimento de liderança, formação de equipes de alta performance e gestão estratégica de talentos.
         </p>
         <p>
-          O relatório que você está recebendo foi gerado através da plataforma <strong>Vigorre People Analytics</strong>, que combina a metodologia DISC tradicional com <strong>inteligência artificial</strong>, <strong>people analytics avançado</strong> e <strong>psicologia organizacional</strong> para entregar insights profundos e acionáveis sobre seu perfil comportamental.
+          O relatório que você está recebendo foi gerado através da plataforma <strong>Vigorre One™</strong>, que combina a metodologia DISC tradicional com <strong>inteligência artificial</strong>, <strong>people analytics avançado</strong> e <strong>psicologia organizacional</strong> para entregar insights profundos e acionáveis sobre seu perfil comportamental.
         </p>
       </div>
     </section>
@@ -800,27 +819,27 @@
     <section class="vigorre-card text-center" style="background: #f8fafc; border: none;">
       <div class="card-body" style="padding: 30px;">
         <blockquote class="text-2xl italic mb-4 font-light text-gray-700">"<span id="finalQuote">Carregando...</span>"</blockquote>
-        <p class="text-sm text-gray-500">— Vigorre People Analytics</p>
+        <p class="text-sm text-gray-500">— Vigorre One™</p>
       </div>
     </section>
 
   </main>
 
-  <!-- FOOTER VIGORRE PREMIUM (TELA) -->
+  <!-- FOOTER VIGORRE ONE™ PREMIUM (TELA) -->
   <footer class="no-print bg-brand-navy text-white py-12 mt-12">
     <div class="max-w-5xl mx-auto px-6">
       <div class="flex flex-col md:flex-row justify-between items-center gap-8">
         <div class="flex items-center gap-4">
           <div class="vigorre-logo-box" style="width:60px; height:60px;">
-             <img src="logo-vigorre.png" alt="Vigorre" onerror="this.outerHTML='<span class=\'text-brand-navy font-black text-3xl\'>V</span>'">
+             <img src="logo-vigorre.png" alt="Vigorre One™" onerror="this.outerHTML='<span class=\'text-brand-navy font-black text-3xl\'>V</span>'">
           </div>
           <div>
-            <h3 class="font-bold text-xl">Vigorre People Analytics</h3>
-            <p class="text-xs text-gray-400 uppercase tracking-widest mt-1">Inteligência e Gestão Estratégica</p>
+            <h3 class="font-bold text-xl">Vigorre One™</h3>
+            <p class="text-xs text-gray-400 uppercase tracking-widest mt-1">People Analytics Enterprise</p>
           </div>
         </div>
         <div class="text-center md:text-right text-sm text-gray-400">
-          <p>© 2024 Vigorre People Analytics. Todos os direitos reservados.</p>
+          <p>© 2024 Vigorre One™. Todos os direitos reservados.</p>
           <p>Método V.I.G.O.R. - Transformando estratégia em performance.</p>
           <p class="mt-2">contato@vigorre.com.br</p>
         </div>
@@ -957,7 +976,7 @@
     // INICIALIZAÇÃO
     // ============================================
     document.addEventListener('DOMContentLoaded', () => {
-      console.log('🔹 Inicializando Relatório DISC Vigorre™...');
+      console.log('🔹 Inicializando Relatório DISC Vigorre One™...');
       loadSession();
       loadDiscResults();
     });
