@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel Administrativo - Vigorre</title>
+  <title>Painel Administrativo - Vigorre One™</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     /* ============================================
@@ -491,19 +491,19 @@
 </head>
 <body>
   <!-- ============================================
-       SIDEBAR COM LOGO
+       SIDEBAR COM LOGO - VIGORRE ONE™
        ============================================ -->
   <aside class="sidebar">
     <div class="logo" onclick="window.location.href='index.html'">
       <img src="logo-vigorre.png" class="logo-img" onerror="this.outerHTML='<div style=\'width:35px;height:35px;background:#fff;color:#1e40af;display:flex;align-items:center;justify-content:center;border-radius:8px;font-weight:bold;font-size:18px\'>V</div>'">
       <div class="logo-text">
-        <h2>Vigorre</h2>
+        <h2>Vigorre One™</h2>
         <p>Gestão Estratégica</p>
       </div>
     </div>
     <ul class="nav-menu">
       <li><a href="#" class="active" onclick="showSection('dashboard')"><span>📊</span> <span>Dashboard</span></a></li>
-      <li><a href="#" onclick="showSection('staff')"><span>👥</span> <span>Staff Vigorre</span></a></li>
+      <li><a href="#" onclick="showSection('staff')"><span>👥</span> <span>Staff Vigorre One™</span></a></li>
       <li><a href="#" onclick="showSection('companies')"><span>🏢</span> <span>Empresas</span></a></li>
       <li><a href="#" onclick="showSection('participants')"><span>👤</span> <span>Participantes</span></a></li>
       <li><a href="#" class="danger" onclick="logout()"><span>🚪</span> <span>Sair</span></a></li>
@@ -528,17 +528,17 @@
          ============================================ -->
     <section id="dashboard">
       <div class="card">
-        <h3>Bem-vindo ao Painel Vigorre</h3>
+        <h3>Bem-vindo ao Painel Vigorre One™</h3>
         <p style="color:#64748b;">Gerencie sua equipe interna, clientes (empresas) e participantes. Utilize o menu lateral para navegar.</p>
       </div>
     </section>
 
     <!-- ============================================
-         STAFF VIGORRE
+         STAFF VIGORRE ONE™
          ============================================ -->
     <section id="staff" style="display:none;">
       <div class="card">
-        <h3>Staff Vigorre <button class="btn btn-primary" onclick="openModal('staffModal')">+ Novo Funcionário</button></h3>
+        <h3>Staff Vigorre One™ <button class="btn btn-primary" onclick="openModal('staffModal')">+ Novo Funcionário</button></h3>
         <table>
           <thead>
             <tr>
@@ -644,7 +644,7 @@
   <div class="modal" id="staffModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 id="staffModalTitle">Novo Funcionário Vigorre</h3>
+        <h3 id="staffModalTitle">Novo Funcionário Vigorre One™</h3>
         <button class="modal-close" onclick="closeModal('staffModal')">×</button>
       </div>
       <form onsubmit="saveStaff(event)">
@@ -832,9 +832,9 @@
           <option value="simple">📄 Relatório Simples</option>
           <option value="complete">📘 Relatório Completo (Modelo HMI)</option>
           <option value="laudo">📜 Laudo Comportamental Técnico</option>
-          <option value="vigorre-disc">💎 Relatório Completo DISC Vigorre (Premium)</option>
-          <option value="vigorre-ie">🧠 Relatório Completo IE Vigorre (Premium)</option>
-          <option value="vigorre-valores">💎 Relatório Completo Valores Vigorre (Premium)</option>
+          <option value="vigorre-disc">💎 Relatório Completo DISC Vigorre One™ (Premium)</option>
+          <option value="vigorre-ie">🧠 Relatório Completo IE Vigorre One™ (Premium)</option>
+          <option value="vigorre-valores">💎 Relatório Completo Valores Vigorre One™ (Premium)</option>
         </select>
       </div>
       <div class="form-group">
@@ -930,12 +930,13 @@
     }
 
     // ============================================
-    // INICIALIZAÇÃO
+    // INICIALIZAÇÃO - VERIFICAÇÃO DE AUTENTICAÇÃO
     // ============================================
     document.addEventListener('DOMContentLoaded', function() {
-      // Verificar autenticação
+      // Verificar autenticação - APENAS ADMIN/STAFF PODEM ACESSAR
       const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
       if (!currentUser.role || (currentUser.role !== 'admin' && currentUser.role !== 'staff')) {
+        // Se não for admin/staff, redirecionar para login
         window.location.href = 'login.html';
         return;
       }
@@ -967,7 +968,7 @@
       // Atualizar título da página
       var titles = { 
         dashboard: 'Dashboard', 
-        staff: 'Staff Vigorre', 
+        staff: 'Staff Vigorre One™', 
         companies: 'Empresas', 
         participants: 'Participantes' 
       };
@@ -1006,7 +1007,7 @@
     }
 
     // ============================================
-    // STAFF VIGORRE - RENDERIZAR
+    // STAFF VIGORRE ONE™ - RENDERIZAR
     // ============================================
     function renderStaff() {
       var tbody = document.getElementById('staffTableBody');
@@ -1030,7 +1031,7 @@
     }
 
     // ============================================
-    // STAFF VIGORRE - SALVAR
+    // STAFF VIGORRE ONE™ - SALVAR
     // ============================================
     function saveStaff(e) {
       e.preventDefault();
@@ -1056,7 +1057,7 @@
     }
 
     // ============================================
-    // STAFF VIGORRE - EDITAR
+    // STAFF VIGORRE ONE™ - EDITAR
     // ============================================
     function editStaff(id) {
       var s = DB.staff.find(function(x) { return x.id === id; }); 
@@ -1318,7 +1319,7 @@
     }
 
     // ============================================
-    // FUNÇÃO: Abrir Relatório Vigorre (qualquer tipo)
+    // FUNÇÃO: Abrir Relatório Vigorre One™ (qualquer tipo)
     // ============================================
     function openVigorreReport(participantId, reportType) {
       try {
@@ -1418,13 +1419,13 @@
         // Botões de relatório - CORREÇÃO: Mostrar quando canAccess = true
         var reportBtns = '';
         if (discStatus.canAccess) {
-          reportBtns += '<button class="btn-report" onclick="openVigorreReport(\'' + p.id + '\', \'DISC\')" title="Gerar Relatório DISC">📊 DISC</button> ';
+          reportBtns += '<button class="btn-report" onclick="openVigorreReport(\'' + p.id + '\', \'DISC\')" title="Gerar Relatório DISC Vigorre One™">📊 DISC</button> ';
         }
         if (ieStatus.canAccess) {
-          reportBtns += '<button class="btn-report btn-report-ie" onclick="openVigorreReport(\'' + p.id + '\', \'IE\')" title="Gerar Relatório IE">🧠 IE</button> ';
+          reportBtns += '<button class="btn-report btn-report-ie" onclick="openVigorreReport(\'' + p.id + '\', \'IE\')" title="Gerar Relatório IE Vigorre One™">🧠 IE</button> ';
         }
         if (valoresStatus.canAccess) {
-          reportBtns += '<button class="btn-report btn-report-valores" onclick="openVigorreReport(\'' + p.id + '\', \'Valores\')" title="Gerar Relatório Valores">💎 Valores</button>';
+          reportBtns += '<button class="btn-report btn-report-valores" onclick="openVigorreReport(\'' + p.id + '\', \'Valores\')" title="Gerar Relatório Valores Vigorre One™">💎 Valores</button>';
         }
         if (!reportBtns) {
           reportBtns = '<span class="badge-pill badge-pending" title="Aguardando conclusão dos testes">Aguardando</span>';
@@ -1753,7 +1754,7 @@
     }
 
     // ============================================
-    // ABRIR LAUDO VIGORRE PREMIUM
+    // ABRIR LAUDO VIGORRE ONE™ PREMIUM
     // ============================================
     function openVigorreLaudo(participantId) {
       // Abre o laudo premium em uma nova aba, passando o ID do participante
@@ -1808,7 +1809,7 @@
       var p = DB.participants.find(function(x) { return x.id === currentCompanyId; });
       if (!p) return;
 
-      // Verificar se é um relatório Vigorre premium
+      // Verificar se é um relatório Vigorre One™ premium
       if (type === 'vigorre-disc' || type === 'vigorre-ie' || type === 'vigorre-valores') {
         var reportType = type.replace('vigorre-', '');
         var status = checkTestStatus(p.id, reportType);
@@ -1833,7 +1834,7 @@
         if (reportFile) {
           window.open(reportFile + '?participantId=' + p.id, '_blank');
           closeModal('reportModal');
-          showToast('📊 Abrindo Relatório Vigorre ' + reportType.toUpperCase() + '...', 'success');
+          showToast('📊 Abrindo Relatório Vigorre One™ ' + reportType.toUpperCase() + '...', 'success');
         } else {
           showToast('Arquivo de relatório não encontrado.', 'error');
         }
@@ -1854,7 +1855,7 @@
           '<h3>Pontos Fortes</h3><ul>' + profile.strengths.map(function(s) { return '<li>' + s + '</li>'; }).join('') + '</ul>' +
           '<h3>Desenvolvimento</h3><ul>' + profile.development.map(function(d) { return '<li>' + d + '</li>'; }).join('') + '</ul>' +
           '<h3>Carreiras Compatíveis</h3><ul>' + profile.careers.map(function(c) { return '<li>' + c + '</li>'; }).join('') + '</ul>' +
-          '<p style="margin-top:20px; font-size:0.9rem; color:#64748b;">Gerado automaticamente pela plataforma Vigorre. Baseado na metodologia HMI/MBTI.</p>';
+          '<p style="margin-top:20px; font-size:0.9rem; color:#64748b;">Gerado automaticamente pela plataforma Vigorre One™. Baseado na metodologia HMI/MBTI.</p>';
       } else if (type === 'laudo') {
         content = '<h2>Laudo Comportamental Técnico - ' + p.name + '</h2>' +
           '<p><strong>Teste Base:</strong> ' + test + '</p>' +
@@ -1880,7 +1881,7 @@
       
       // Abre o relatório em nova aba para visualização/impressão
       var win = window.open('', '_blank');
-      win.document.write('<html><head><title>Relatório Vigorre</title><style>body{font-family:Inter,sans-serif;max-width:800px;margin:40px auto;padding:20px;line-height:1.6;}h2{color:#1e40af;border-bottom:2px solid #e2e8f0;padding-bottom:10px;}h3{color:#334155;margin-top:20px;}ul{padding-left:20px;}li{margin-bottom:5px;}</style></head><body>' + content + '</body></html>');
+      win.document.write('<html><head><title>Relatório Vigorre One™</title><style>body{font-family:Inter,sans-serif;max-width:800px;margin:40px auto;padding:20px;line-height:1.6;}h2{color:#1e40af;border-bottom:2px solid #e2e8f0;padding-bottom:10px;}h3{color:#334155;margin-top:20px;}ul{padding-left:20px;}li{margin-bottom:5px;}</style></head><body>' + content + '</body></html>');
     }
 
     function updateSelects() {
@@ -1909,8 +1910,17 @@
       }, 3000);
     }
 
+    // ============================================
+    // LOGOUT DO SISTEMA - VIGORRE ONE™
+    // ============================================
     function logout() {
+      // Remove completamente a sessão do usuário
       localStorage.removeItem('vigorre_current_user');
+      
+      // Limpa dados temporários de sessão
+      sessionStorage.clear();
+      
+      // Redireciona para a tela de login
       window.location.href = 'login.html';
     }
 
@@ -1920,13 +1930,13 @@
 
     // 1. Tratamento de erro global com fallback amigável
     window.addEventListener('error', function(e) {
-      console.error('Erro no Admin Vigorre:', e);
+      console.error('Erro no Admin Vigorre One™:', e);
       showToast('⚠️ Ocorreu um erro. Recarregue a página se o problema persistir.', 'error');
       return true; // Previne erro no console
     });
 
     // 2. Debug: Logar estado inicial no console para diagnóstico
-    console.log('🔍 Admin Vigorre - Estado inicial:', {
+    console.log('🔍 Admin Vigorre One™ - Estado inicial:', {
       staff: DB.staff.length,
       companies: DB.companies.length,
       participants: DB.participants.length,
