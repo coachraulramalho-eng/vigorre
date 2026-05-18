@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Vigorre</title>
+  <title>Login - Vigorre One™</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     /* ============================================
@@ -209,12 +209,12 @@
   <div class="login-container">
     
     <!-- ============================================
-         LOGO E TÍTULO
+         LOGO E TÍTULO - VIGORRE ONE™
          ============================================ -->
     <div class="logo-area">
-      <img src="logo-vigorre.png" alt="Vigorre" onerror="this.outerHTML='<div style=\'font-size:32px;color:#1e40af;font-weight:bold;margin-bottom:8px\'>V</div>'">
-      <h1>Vigorre</h1>
-      <p>Inteligência e Gestão Estratégica</p>
+      <img src="logo-vigorre.png" alt="Vigorre One™" onerror="this.outerHTML='<div style=\'font-size:32px;color:#1e40af;font-weight:bold;margin-bottom:8px\'>V</div>'">
+      <h1>Vigorre One™</h1>
+      <p>People Analytics Enterprise</p>
     </div>
 
     <!-- ============================================
@@ -253,7 +253,7 @@
       </div>
       
       <!-- Botão de Entrar -->
-      <button type="submit" class="btn" id="loginBtn">Entrar</button>
+      <button type="submit" class="btn" id="loginBtn">Entrar no Vigorre One™</button>
     </form>
 
     <!-- ============================================
@@ -262,6 +262,14 @@
     <div class="links">
       <a href="#" onclick="forgotPassword()">Esqueceu a senha?</a>
       <a href="index.html">← Voltar ao site</a>
+    </div>
+    
+    <!-- ============================================
+         RODAPÉ COM COPYRIGHT - VIGORRE ONE™
+         ============================================ -->
+    <div style="text-align: center; margin-top: 2rem; color: #94a3b8; font-size: 0.8rem;">
+      <p>© 2024 Vigorre One™ - Todos os direitos reservados</p>
+      <p style="margin-top: 4px;">People Analytics Enterprise</p>
     </div>
   </div>
 
@@ -278,7 +286,9 @@
       currentEnv = env;
       
       // Remove classe active de todos os botões
-      document.querySelectorAll('.env-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.env-btn').forEach(function(b) { 
+        b.classList.remove('active'); 
+      });
       
       // Adiciona classe active no botão clicado
       event.target.closest('.env-btn').classList.add('active');
@@ -309,11 +319,11 @@
     function showAlert(msg, type) {
       const a = document.getElementById('alert');
       a.textContent = msg;
-      a.className = `alert ${type}`;
+      a.className = 'alert ' + type;
       a.style.display = 'block';
       
       // Esconde o alerta após 4 segundos
-      setTimeout(() => {
+      setTimeout(function() {
         a.style.display = 'none';
       }, 4000);
     }
@@ -333,16 +343,16 @@
       const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
       
       // Procura o e-mail em todos os bancos
-      const found = [...staff, ...participants, ...companies].find(u => 
-        u.email?.toLowerCase() === email.toLowerCase()
-      );
+      const found = [].concat(staff, participants, companies).find(function(u) { 
+        return u.email && u.email.toLowerCase() === email.toLowerCase();
+      });
       
       // Exibe mensagem conforme resultado
       if (found) {
         alert(
-          `📧 E-mail simulado enviado para ${email}\n` +
-          `Sua senha é: ${found.password || found.pass}\n\n` +
-          `💡 Em produção, este e-mail seria enviado automaticamente.`
+          '📧 E-mail simulado enviado para ' + email + '\n' +
+          'Sua senha é: ' + (found.password || found.pass) + '\n\n' +
+          '💡 Em produção, este e-mail seria enviado automaticamente.'
         );
       } else {
         alert("❌ E-mail não encontrado nos cadastros.");
@@ -365,7 +375,7 @@
       btn.textContent = 'Verificando...';
 
       // Simula tempo de processamento (600ms)
-      setTimeout(() => {
+      setTimeout(function() {
         
         // ========================================
         // 1. LOGIN ADMIN PADRÃO (HARDCODED)
@@ -379,7 +389,7 @@
             type: 'admin'
           }));
           showAlert('✅ Login realizado!', 'success');
-          setTimeout(() => {
+          setTimeout(function() {
             window.location.href = 'admin.html';
           }, 1000);
           return;
@@ -390,11 +400,11 @@
         // ========================================
         if (currentEnv === 'admin') {
           const staff = JSON.parse(localStorage.getItem('vigorre_staff') || '[]');
-          const staffUser = staff.find(s => 
-            ((s.login && s.login.toLowerCase() === input) || 
-             (s.email && s.email.toLowerCase() === input)) && 
-            s.password === pass
-          );
+          const staffUser = staff.find(function(s) { 
+            return ((s.login && s.login.toLowerCase() === input) || 
+                   (s.email && s.email.toLowerCase() === input)) && 
+                   s.password === pass;
+          });
           
           if (staffUser) {
             localStorage.setItem('vigorre_current_user', JSON.stringify({
@@ -405,7 +415,7 @@
               type: 'staff'
             }));
             showAlert('✅ Login realizado!', 'success');
-            setTimeout(() => {
+            setTimeout(function() {
               window.location.href = 'admin.html';
             }, 1000);
             return;
@@ -417,11 +427,11 @@
         // ========================================
         if (currentEnv === 'participant') {
           const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-          const participant = participants.find(p => 
-            ((p.user && p.user.toLowerCase() === input) || 
-             (p.email && p.email.toLowerCase() === input)) && 
-            p.pass === pass
-          );
+          const participant = participants.find(function(p) { 
+            return ((p.user && p.user.toLowerCase() === input) || 
+                   (p.email && p.email.toLowerCase() === input)) && 
+                   p.pass === pass;
+          });
           
           if (participant) {
             localStorage.setItem('vigorre_current_user', JSON.stringify({
@@ -432,7 +442,7 @@
               type: 'participant'
             }));
             showAlert('✅ Bem-vindo, ' + participant.name.split(' ')[0] + '!', 'success');
-            setTimeout(() => {
+            setTimeout(function() {
               // Redireciona para a tela do participante
               window.location.href = 'cadastro-participante.html';
             }, 1000);
@@ -445,10 +455,27 @@
         // ========================================
         showAlert('❌ Credenciais inválidas ou ambiente incorreto. Verifique usuário e senha.', 'error');
         btn.disabled = false;
-        btn.textContent = 'Entrar';
+        btn.textContent = 'Entrar no Vigorre One™';
         
       }, 600);
     }
+
+    // ============================================
+    // VERIFICAÇÃO DE SESSÃO AO CARREGAR A PÁGINA
+    // Se usuário já estiver logado, redireciona conforme o papel
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+      const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+      
+      if (currentUser && currentUser.role) {
+        // Usuário já está logado - redirecionar conforme o papel
+        if (currentUser.role === 'admin' || currentUser.role === 'staff') {
+          window.location.href = 'admin.html';
+        } else if (currentUser.role === 'participant') {
+          window.location.href = 'cadastro-participante.html';
+        }
+      }
+    });
   </script>
 </body>
 </html>
