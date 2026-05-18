@@ -338,7 +338,7 @@
     let selectedJobs = []; // Array para armazenar vagas selecionadas para este participante
 
     // ============================================
-    // VERIFICAÇÃO DE AUTENTICAÇÃO - ADMIN APENAS
+    // VERIFICAÇÃO DE AUTENTICAÇÃO - ADMIN/STAFF APENAS
     // ============================================
     document.addEventListener('DOMContentLoaded', function() {
       const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
@@ -625,6 +625,29 @@
       // Redireciona para a tela de login
       window.location.href = 'login.html';
     }
+
+    // ============================================
+    // >>> CORREÇÕES ADICIONADAS (SEM OTIMIZAR) <<<
+    // ============================================
+
+    // 1. Tratamento de erro global com fallback amigável
+    window.addEventListener('error', function(e) {
+      console.error('❌ Erro no cadastro de participante Vigorre One™:', e);
+      alert('⚠️ Ocorreu um erro. Recarregue a página se o problema persistir.');
+      return true;
+    });
+
+    // 2. Debug: Logar estado inicial no console para diagnóstico
+    console.log('🔍 Cadastro Participante Vigorre One™ - Estado inicial:', {
+      participantId: participantId,
+      companies: companies.length,
+      localStorage: {
+        participants: !!localStorage.getItem('vigorre_participants'),
+        jobs: !!localStorage.getItem('vigorre_jobs'),
+        companies: !!localStorage.getItem('vigorre_companies')
+      }
+    });
+
   </script>
 </body>
 </html>
