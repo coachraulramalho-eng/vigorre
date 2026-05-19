@@ -34,7 +34,7 @@
           }
         }
       }
-    }
+    };
   </script>
 
   <style>
@@ -1014,27 +1014,27 @@
       innovative: {
         name: "Cultura Inovadora",
         traits: ["Experimentação", "Tolerância a falhas", "Agilidade", "Pensamento disruptivo"],
-        idealFor: ["innovation: high", "growth: high", "autonomy: high", "stability: low"]
+        contrast: "rígidos e burocráticos"
       },
       collaborative: {
         name: "Cultura Colaborativa",
         traits: ["Trabalho em equipe", "Comunicação aberta", "Apoio mútuo", "Decisões coletivas"],
-        idealFor: ["collaboration: high", "recognition: medium-high", "purpose: medium-high"]
+        contrast: "competitivos e individualistas"
       },
       results: {
         name: "Cultura Orientada a Resultados",
         traits: ["Foco em métricas", "Meritocracia", "Performance", "Competitividade saudável"],
-        idealFor: ["achievement: high", "recognition: high", "growth: high"]
+        contrast: "lentos e sem meritocracia"
       },
       stable: {
         name: "Cultura Estável e Estruturada",
         traits: ["Processos claros", "Previsibilidade", "Hierarquia definida", "Segurança"],
-        idealFor: ["stability: high", "autonomy: low-medium", "balance: medium-high"]
+        contrast: "caóticos e imprevisíveis"
       },
       purpose: {
         name: "Cultura com Propósito",
         traits: ["Missão inspiradora", "Impacto social", "Valores fortes", "Significado"],
-        idealFor: ["purpose: high", "impact: high", "collaboration: medium-high"]
+        contrast: "focados apenas em lucro"
       }
     };
 
@@ -1054,14 +1054,17 @@
     // ============================================
     function safeGetElement(id) {
       const el = document.getElementById(id);
-      if (!el) console.warn(`⚠️ Elemento não encontrado: #${id}`);
+      if (!el) {
+        console.warn("⚠️ Elemento não encontrado: #" + id);
+        return null;
+      }
       return el;
     }
 
     // ============================================
     // INICIALIZAÇÃO
     // ============================================
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', function() {
       console.log('🔹 Inicializando Relatório de Valores Vigorre One™...');
       loadSession();
       loadValuesResults();
@@ -1072,32 +1075,47 @@
         const urlParams = new URLSearchParams(window.location.search);
         const participantId = urlParams.get('participantId');
         
+        console.log('🔍 participantId da URL:', participantId);
+        
         if (!participantId) {
-          console.error('❌ Nenhum participantId na URL');
+          console.warn('⚠️ Nenhum participantId na URL - usando modo demonstração');
+          // Modo demonstração com dados fictícios
+          AppState.participant = {
+            name: 'Participante Demo',
+            companyId: null,
+            jobs: []
+          };
           return;
         }
         
         console.log('🔍 Buscando participante com ID:', participantId);
         
         const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-        AppState.participant = participants.find(p => p.id === participantId);
+        AppState.participant = participants.find(function(p) { return p.id === participantId; });
         
         if (!AppState.participant) {
-          console.error('❌ Participante não encontrado');
+          console.error('❌ Participante não encontrado no localStorage');
+          // Mostrar mensagem amigável
+          const coverName = safeGetElement('coverName');
+          if (coverName) coverName.textContent = 'Participante não encontrado';
           return;
         }
         
-        console.log('✅ Participante encontrado:', AppState.participant);
+        console.log('✅ Participante encontrado:', AppState.participant.name);
         
+        // Buscar empresas
         const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
         if (AppState.participant.companyId) {
-          AppState.company = companies.find(c => c.id === AppState.participant.companyId);
-          console.log('✅ Empresa encontrada:', AppState.company);
+          AppState.company = companies.find(function(c) { return c.id === AppState.participant.companyId; });
+          if (AppState.company) {
+            console.log('✅ Empresa encontrada:', AppState.company.name);
+          }
         }
         
+        // Buscar vagas vinculadas
         if (AppState.participant.jobs && Array.isArray(AppState.participant.jobs)) {
           AppState.jobs = AppState.participant.jobs;
-          console.log('✅ Vagas vinculadas:', AppState.jobs);
+          console.log('✅ Vagas vinculadas:', AppState.jobs.length);
         }
         
       } catch (e) { 
@@ -1107,24 +1125,47 @@
 
     function loadValuesResults() {
       try {
-        const valuesData = localStorage.getItem('vigorre_last_values_result');
+        // Tentar múltiplas chaves possíveis para resultados de Valores
+        var valuesData = localStorage.getItem('vigorre_last_values_result');
+        
+        // Fallback para chave alternativa
         if (!valuesData) {
-          console.error('❌ Nenhum resultado de Valores encontrado');
+          valuesData = localStorage.getItem('vigorre_last_valores_result');
+        }
+        
+        if (!valuesData) {
+          console.error('❌ Nenhum resultado de Valores encontrado no localStorage');
           showToast('Nenhum resultado de Valores encontrado. Complete o teste primeiro.', 'error');
-          setTimeout(() => window.location.href = 'teste-valores.html', 3000);
+          
+          // Mostrar mensagem no perfil
+          var profileEl = safeGetElement('motivationalProfile');
+          if (profileEl) {
+            profileEl.innerHTML = '<p class="text-amber-600 text-center py-4">⚠️ Resultados não encontrados. Complete o teste de Valores primeiro.</p>';
+          }
+          
+          setTimeout(function() { window.location.href = 'teste-valores.html'; }, 5000);
           return;
         }
+        
         AppState.valuesResults = JSON.parse(valuesData);
         console.log('✅ Dados de Valores carregados:', AppState.valuesResults);
+        
+        // Validar estrutura dos dados
+        if (!AppState.valuesResults.dimensions) {
+          console.error('❌ Dados de Valores inválidos: falta a propriedade "dimensions"');
+          showToast('Erro: estrutura de dados inválida', 'error');
+          return;
+        }
+        
         generateReport();
       } catch (e) {
         console.error('❌ Erro ao carregar resultados de Valores:', e);
-        showToast('Erro ao processar relatório.', 'error');
+        showToast('Erro ao processar relatório: ' + e.message, 'error');
       }
     }
 
     function generateReport() {
-      const r = AppState.valuesResults;
+      var r = AppState.valuesResults;
       if (!r || !r.dimensions) {
         console.error('❌ Dados de Valores inválidos:', r);
         showToast('Erro: dados do relatório inválidos', 'error');
@@ -1133,23 +1174,26 @@
 
       console.log('🎨 Gerando relatório de Valores...');
 
+      // Atualizar informações do participante
       updateParticipantInfo();
-      renderMotivationalProfile(r.dimensions);
-      renderCharts(r.dimensions);
-      renderPurposeAnalysis(r.dimensions);
-      renderRecognitionAnalysis(r.dimensions);
-      renderAutonomyAnalysis(r.dimensions);
-      renderStabilityAnalysis(r.dimensions);
-      renderGrowthAnalysis(r.dimensions);
-      renderIdealCulture(r.dimensions);
-      renderChangeAnalysis(r.dimensions);
-      renderOrganizationalBond(r.dimensions);
-      renderCulturalFit(r.dimensions);
-      renderPDI(r.dimensions);
-      renderExecutiveConclusion(r.dimensions);
-      renderPremiumConclusion(r.dimensions);
-      renderFinalQuote();
-      updateCulturalDashboard(r.dimensions);
+      
+      // Renderizar todas as seções com try-catch para evitar falhas em cascata
+      try { renderMotivationalProfile(r.dimensions); } catch(e) { console.error('Erro em renderMotivationalProfile:', e); }
+      try { renderCharts(r.dimensions); } catch(e) { console.error('Erro em renderCharts:', e); }
+      try { renderPurposeAnalysis(r.dimensions); } catch(e) { console.error('Erro em renderPurposeAnalysis:', e); }
+      try { renderRecognitionAnalysis(r.dimensions); } catch(e) { console.error('Erro em renderRecognitionAnalysis:', e); }
+      try { renderAutonomyAnalysis(r.dimensions); } catch(e) { console.error('Erro em renderAutonomyAnalysis:', e); }
+      try { renderStabilityAnalysis(r.dimensions); } catch(e) { console.error('Erro em renderStabilityAnalysis:', e); }
+      try { renderGrowthAnalysis(r.dimensions); } catch(e) { console.error('Erro em renderGrowthAnalysis:', e); }
+      try { renderIdealCulture(r.dimensions); } catch(e) { console.error('Erro em renderIdealCulture:', e); }
+      try { renderChangeAnalysis(r.dimensions); } catch(e) { console.error('Erro em renderChangeAnalysis:', e); }
+      try { renderOrganizationalBond(r.dimensions); } catch(e) { console.error('Erro em renderOrganizationalBond:', e); }
+      try { renderCulturalFit(r.dimensions); } catch(e) { console.error('Erro em renderCulturalFit:', e); }
+      try { renderPDI(r.dimensions); } catch(e) { console.error('Erro em renderPDI:', e); }
+      try { renderExecutiveConclusion(r.dimensions); } catch(e) { console.error('Erro em renderExecutiveConclusion:', e); }
+      try { renderPremiumConclusion(r.dimensions); } catch(e) { console.error('Erro em renderPremiumConclusion:', e); }
+      try { renderFinalQuote(); } catch(e) { console.error('Erro em renderFinalQuote:', e); }
+      try { updateCulturalDashboard(r.dimensions); } catch(e) { console.error('Erro em updateCulturalDashboard:', e); }
 
       console.log('✅ Relatório de Valores gerado com sucesso!');
     }
@@ -1158,30 +1202,34 @@
     // ATUALIZAR INFORMAÇÕES DO PARTICIPANTE
     // ============================================
     function updateParticipantInfo() {
-      const coverName = safeGetElement('coverName');
-      if (coverName && AppState.participant) {
-        coverName.textContent = AppState.participant.name || 'Participante';
-      }
-      
-      const coverCompany = safeGetElement('coverCompany');
-      if (coverCompany) {
-        const companyName = AppState.company?.name || 'Independente';
-        coverCompany.textContent = companyName;
-      }
-      
-      const coverJob = safeGetElement('coverJob');
-      if (coverJob) {
-        if (AppState.jobs && AppState.jobs.length > 0) {
-          const jobName = AppState.jobs[0].name || AppState.jobs[0].title || 'Vaga vinculada';
-          coverJob.textContent = jobName;
-        } else {
-          coverJob.textContent = 'Não vinculada';
+      try {
+        var coverName = safeGetElement('coverName');
+        if (coverName && AppState.participant) {
+          coverName.textContent = AppState.participant.name || 'Participante';
         }
-      }
-      
-      const coverCode = safeGetElement('coverCode');
-      if (coverCode) {
-        coverCode.textContent = 'VIG-VAL-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 9000 + 1000);
+        
+        var coverCompany = safeGetElement('coverCompany');
+        if (coverCompany) {
+          var companyName = (AppState.company && AppState.company.name) ? AppState.company.name : 'Independente';
+          coverCompany.textContent = companyName;
+        }
+        
+        var coverJob = safeGetElement('coverJob');
+        if (coverJob) {
+          if (AppState.jobs && AppState.jobs.length > 0) {
+            var jobName = AppState.jobs[0].name || AppState.jobs[0].title || 'Vaga vinculada';
+            coverJob.textContent = jobName;
+          } else {
+            coverJob.textContent = 'Não vinculada';
+          }
+        }
+        
+        var coverCode = safeGetElement('coverCode');
+        if (coverCode) {
+          coverCode.textContent = 'VIG-VAL-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 9000 + 1000);
+        }
+      } catch (e) {
+        console.error('❌ Erro em updateParticipantInfo:', e);
       }
     }
 
@@ -1189,241 +1237,303 @@
     // ATUALIZAR DASHBOARD CULTURAL
     // ============================================
     function updateCulturalDashboard(dimensions) {
-      // Calcular scores baseados nas dimensões
-      const culturalFit = calculateCulturalFit(dimensions);
-      const motivationScore = calculateMotivationScore(dimensions);
-      const retentionScore = calculateRetentionScore(dimensions);
-      const alignmentScore = calculateAlignmentScore(dimensions);
-      
-      safeGetElement('culturalFitScore').textContent = culturalFit + '%';
-      safeGetElement('motivationScore').textContent = motivationScore + '%';
-      safeGetElement('retentionScore').textContent = retentionScore + '%';
-      safeGetElement('alignmentScore').textContent = alignmentScore + '%';
+      try {
+        // Calcular scores baseados nas dimensões
+        var culturalFit = calculateCulturalFit(dimensions);
+        var motivationScore = calculateMotivationScore(dimensions);
+        var retentionScore = calculateRetentionScore(dimensions);
+        var alignmentScore = calculateAlignmentScore(dimensions);
+        
+        var el1 = safeGetElement('culturalFitScore');
+        var el2 = safeGetElement('motivationScore');
+        var el3 = safeGetElement('retentionScore');
+        var el4 = safeGetElement('alignmentScore');
+        
+        if (el1) el1.textContent = culturalFit + '%';
+        if (el2) el2.textContent = motivationScore + '%';
+        if (el3) el3.textContent = retentionScore + '%';
+        if (el4) el4.textContent = alignmentScore + '%';
+      } catch (e) {
+        console.error('❌ Erro em updateCulturalDashboard:', e);
+      }
     }
 
     function calculateCulturalFit(dimensions) {
-      // Lógica simplificada de cálculo
-      const values = Object.values(dimensions);
-      const avg = values.reduce((a, b) => a + b, 0) / values.length;
-      return Math.min(98, Math.round(avg * 0.9 + 10));
+      try {
+        // Lógica simplificada de cálculo
+        var values = Object.values(dimensions);
+        var avg = values.reduce(function(a, b) { return a + b; }, 0) / values.length;
+        return Math.min(98, Math.round(avg * 0.9 + 10));
+      } catch (e) {
+        console.error('❌ Erro em calculateCulturalFit:', e);
+        return 70; // Valor padrão
+      }
     }
 
     function calculateMotivationScore(dimensions) {
-      const keyValues = [dimensions.purpose, dimensions.growth, dimensions.achievement];
-      const avg = keyValues.reduce((a, b) => a + b, 0) / keyValues.length;
-      return Math.min(99, Math.round(avg * 0.85 + 15));
+      try {
+        var keyValues = [dimensions.purpose, dimensions.growth, dimensions.achievement];
+        var avg = keyValues.reduce(function(a, b) { return a + b; }, 0) / keyValues.length;
+        return Math.min(99, Math.round(avg * 0.85 + 15));
+      } catch (e) {
+        return 70;
+      }
     }
 
     function calculateRetentionScore(dimensions) {
-      const keyValues = [dimensions.recognition, dimensions.stability, dimensions.balance];
-      const avg = keyValues.reduce((a, b) => a + b, 0) / keyValues.length;
-      return Math.min(97, Math.round(avg * 0.8 + 20));
+      try {
+        var keyValues = [dimensions.recognition, dimensions.stability, dimensions.balance];
+        var avg = keyValues.reduce(function(a, b) { return a + b; }, 0) / keyValues.length;
+        return Math.min(97, Math.round(avg * 0.8 + 20));
+      } catch (e) {
+        return 70;
+      }
     }
 
     function calculateAlignmentScore(dimensions) {
-      const keyValues = [dimensions.purpose, dimensions.impact, dimensions.collaboration];
-      const avg = keyValues.reduce((a, b) => a + b, 0) / keyValues.length;
-      return Math.min(96, Math.round(avg * 0.75 + 25));
+      try {
+        var keyValues = [dimensions.purpose, dimensions.impact, dimensions.collaboration];
+        var avg = keyValues.reduce(function(a, b) { return a + b; }, 0) / keyValues.length;
+        return Math.min(96, Math.round(avg * 0.75 + 25));
+      } catch (e) {
+        return 70;
+      }
     }
 
     // ============================================
     // RENDERIZAR PERFIL MOTIVACIONAL
     // ============================================
     function renderMotivationalProfile(dimensions) {
-      const container = safeGetElement('motivationalProfile');
-      if (!container) return;
-      
-      // Encontrar valor predominante
-      const sortedValues = Object.entries(dimensions).sort((a, b) => b[1] - a[1]);
-      const dominantValue = sortedValues[0][0];
-      const dominantScore = sortedValues[0][1];
-      const content = VALUES_CONTENT[dominantValue];
-      
-      const colorMap = {
-        purpose: '#7C3AED',
-        recognition: '#F59E0B',
-        autonomy: '#3B82F6',
-        stability: '#10B981',
-        growth: '#06B6D4',
-        innovation: '#EC4899',
-        collaboration: '#8B5CF6',
-        impact: '#14B8A6',
-        balance: '#6366F1',
-        achievement: '#F97316'
-      };
-      const color = colorMap[dominantValue] || '#7C3AED';
-      
-      container.innerHTML = `
-        <div class="flex flex-col md:flex-row items-center gap-6 text-left">
-          <div class="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white shadow-lg" style="background: ${color}">
-            ${dominantValue.charAt(0).toUpperCase()}
-          </div>
-          <div class="flex-1">
-            <h3 class="text-2xl font-bold mb-2" style="color: ${color}">${content.title}</h3>
-            <p class="text-gray-600 text-lg mb-4">${content.description}</p>
-            <div class="grid md:grid-cols-2 gap-4">
-              <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-                <h4 class="font-semibold mb-2 text-emerald-600">Quando Alto (${dominantScore}%)</h4>
-                <p class="text-sm text-gray-600">${content.high}</p>
-              </div>
-              <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-                <h4 class="font-semibold mb-2 text-amber-600">Considerações</h4>
-                <p class="text-sm text-gray-600">${getMotivationalConsiderations(dominantValue, dominantScore)}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
+      try {
+        var container = safeGetElement('motivationalProfile');
+        if (!container) return;
+        
+        // Encontrar valor predominante
+        var sortedValues = Object.entries(dimensions).sort(function(a, b) { return b[1] - a[1]; });
+        var dominantValue = sortedValues[0][0];
+        var dominantScore = sortedValues[0][1];
+        var content = VALUES_CONTENT[dominantValue];
+        
+        if (!content) {
+          container.innerHTML = '<p class="text-gray-500 text-center py-4">Perfil não identificado</p>';
+          return;
+        }
+        
+        var colorMap = {
+          purpose: '#7C3AED',
+          recognition: '#F59E0B',
+          autonomy: '#3B82F6',
+          stability: '#10B981',
+          growth: '#06B6D4',
+          innovation: '#EC4899',
+          collaboration: '#8B5CF6',
+          impact: '#14B8A6',
+          balance: '#6366F1',
+          achievement: '#F97316'
+        };
+        var color = colorMap[dominantValue] || '#7C3AED';
+        
+        container.innerHTML = '<div class="flex flex-col md:flex-row items-center gap-6 text-left">' +
+          '<div class="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white shadow-lg" style="background: ' + color + '">' +
+            dominantValue.charAt(0).toUpperCase() +
+          '</div>' +
+          '<div class="flex-1">' +
+            '<h3 class="text-2xl font-bold mb-2" style="color: ' + color + '">' + content.title + '</h3>' +
+            '<p class="text-gray-600 text-lg mb-4">' + content.description + '</p>' +
+            '<div class="grid md:grid-cols-2 gap-4">' +
+              '<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">' +
+                '<h4 class="font-semibold mb-2 text-emerald-600">Quando Alto (' + dominantScore + '%)</h4>' +
+                '<p class="text-sm text-gray-600">' + content.high + '</p>' +
+              '</div>' +
+              '<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">' +
+                '<h4 class="font-semibold mb-2 text-amber-600">Considerações</h4>' +
+                '<p class="text-sm text-gray-600">' + getMotivationalConsiderations(dominantValue, dominantScore) + '</p>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      } catch (e) {
+        console.error('❌ Erro em renderMotivationalProfile:', e);
+      }
     }
 
     function getMotivationalConsiderations(value, score) {
-      const considerations = {
-        purpose: score >= 70 ? 'Garantir alinhamento com propósito organizacional para maximizar engajamento.' : 'Comunicar claramente o "porquê" das iniciativas para aumentar conexão.',
-        recognition: score >= 70 ? 'Implementar sistema estruturado de reconhecimento e feedback frequente.' : 'Equilibrar reconhecimento público com apreciação privada conforme preferência.',
-        autonomy: score >= 70 ? 'Oferecer flexibilidade e confiança; evitar microgestão.', 'Fornecer direção clara com espaço para autonomia gradual.',
-        stability: score >= 70 ? 'Comunicar mudanças com antecedência; manter processos previsíveis.', 'Introduzir mudanças de forma gradual e com suporte adequado.',
-        growth: score >= 70 ? 'Oferecer plano de carreira claro e oportunidades de desenvolvimento contínuo.', 'Balancear desafios de crescimento com estabilidade operacional.',
-        innovation: score >= 70 ? 'Criar ambiente seguro para experimentação e aprendizado com falhas.', 'Estabelecer processos para avaliar e implementar ideias inovadoras.',
-        collaboration: score >= 70 ? 'Fomentar cultura de equipe, espaços colaborativos e reconhecimento coletivo.', 'Respeitar necessidade de trabalho individual enquanto promove colaboração.',
-        impact: score >= 70 ? 'Conectar trabalho diário com impacto social e propósito organizacional.', 'Demonstrar como contribuições individuais geram valor tangível.',
-        balance: score >= 70 ? 'Respeitar limites, oferecer flexibilidade e promover bem-estar integral.', 'Estabelecer expectativas claras sobre disponibilidade e prioridades.',
-        achievement: score >= 70 ? 'Definir metas desafiadoras com métricas claras de sucesso.', 'Celebrar conquistas enquanto mantém foco em bem-estar sustentável.'
-      };
-      return considerations[value] || 'Adaptar abordagem de gestão conforme perfil motivacional identificado.';
+      try {
+        var considerations = {
+          purpose: score >= 70 ? 'Garantir alinhamento com propósito organizacional para maximizar engajamento.' : 'Comunicar claramente o "porquê" das iniciativas para aumentar conexão.',
+          recognition: score >= 70 ? 'Implementar sistema estruturado de reconhecimento e feedback frequente.' : 'Equilibrar reconhecimento público com apreciação privada conforme preferência.',
+          autonomy: score >= 70 ? 'Oferecer flexibilidade e confiança; evitar microgestão.' : 'Fornecer direção clara com espaço para autonomia gradual.',
+          stability: score >= 70 ? 'Comunicar mudanças com antecedência; manter processos previsíveis.' : 'Introduzir mudanças de forma gradual e com suporte adequado.',
+          growth: score >= 70 ? 'Oferecer plano de carreira claro e oportunidades de desenvolvimento contínuo.' : 'Balancear desafios de crescimento com estabilidade operacional.',
+          innovation: score >= 70 ? 'Criar ambiente seguro para experimentação e aprendizado com falhas.' : 'Estabelecer processos para avaliar e implementar ideias inovadoras.',
+          collaboration: score >= 70 ? 'Fomentar cultura de equipe, espaços colaborativos e reconhecimento coletivo.' : 'Respeitar necessidade de trabalho individual enquanto promove colaboração.',
+          impact: score >= 70 ? 'Conectar trabalho diário com impacto social e propósito organizacional.' : 'Demonstrar como contribuições individuais geram valor tangível.',
+          balance: score >= 70 ? 'Respeitar limites, oferecer flexibilidade e promover bem-estar integral.' : 'Estabelecer expectativas claras sobre disponibilidade e prioridades.',
+          achievement: score >= 70 ? 'Definir metas desafiadoras com métricas claras de sucesso.' : 'Celebrar conquistas enquanto mantém foco em bem-estar sustentável.'
+        };
+        return considerations[value] || 'Adaptar abordagem de gestão conforme perfil motivacional identificado.';
+      } catch (e) {
+        return 'Adaptar abordagem conforme perfil identificado.';
+      }
     }
 
     // ============================================
     // RENDERIZAR GRÁFICOS
     // ============================================
     function renderCharts(dimensions) {
-      if (AppState.charts.radar) { AppState.charts.radar.destroy(); AppState.charts.radar = null; }
-      if (AppState.charts.bar) { AppState.charts.bar.destroy(); AppState.charts.bar = null; }
-
-      const labels = ['Propósito', 'Reconhecimento', 'Autonomia', 'Estabilidade', 'Crescimento', 'Inovação', 'Colaboração', 'Impacto', 'Equilíbrio', 'Realização'];
-      const data = [
-        dimensions.purpose, dimensions.recognition, dimensions.autonomy, 
-        dimensions.stability, dimensions.growth, dimensions.innovation,
-        dimensions.collaboration, dimensions.impact, dimensions.balance, dimensions.achievement
-      ];
-
-      const radarCanvas = document.getElementById('valuesRadarChart');
-      if (radarCanvas) {
-        const ctxRadar = radarCanvas.getContext('2d');
-        if (ctxRadar) {
-          AppState.charts.radar = new Chart(ctxRadar, {
-            type: 'radar',
-            data: {
-              labels: labels,
-              datasets: [{
-                label: 'Intensidade de Valores',
-                data: data,
-                backgroundColor: 'rgba(124, 58, 237, 0.2)',
-                borderColor: '#7C3AED',
-                borderWidth: 2,
-                pointBackgroundColor: '#7C3AED'
-              }]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                r: {
-                  angleLines: { color: 'rgba(0,0,0,0.1)' },
-                  grid: { color: 'rgba(0,0,0,0.1)' },
-                  pointLabels: { color: '#374151', font: { size: 10, weight: '600' } },
-                  ticks: { display: false, backdropColor: 'transparent' },
-                  suggestedMin: 0, suggestedMax: 100
-                }
-              },
-              plugins: { legend: { display: true, position: 'bottom', labels: { usePointStyle: true } } }
-            }
-          });
+      try {
+        // Destruir instâncias anteriores se existirem
+        if (AppState.charts.radar) { 
+          try { AppState.charts.radar.destroy(); } catch(e) {}
+          AppState.charts.radar = null; 
         }
-      }
-
-      const barCanvas = document.getElementById('valuesBarChart');
-      if (barCanvas) {
-        const ctxBar = barCanvas.getContext('2d');
-        if (ctxBar) {
-          AppState.charts.bar = new Chart(ctxBar, {
-            type: 'bar',
-            data: {
-              labels: labels.map(l => l.substring(0, 3)),
-              datasets: [{
-                label: 'Intensidade (%)',
-                data: data,
-                backgroundColor: ['#7C3AED', '#F59E0B', '#3B82F6', '#10B981', '#06B6D4', '#EC4899', '#8B5CF6', '#14B8A6', '#6366F1', '#F97316'],
-                borderRadius: 4
-              }]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                y: { beginAtZero: true, max: 100, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#6B7280' } },
-                x: { grid: { display: false }, ticks: { color: '#374151', font: { weight: 'bold', size: 9 } } }
-              },
-              plugins: { legend: { display: false } }
-            }
-          });
+        if (AppState.charts.bar) { 
+          try { AppState.charts.bar.destroy(); } catch(e) {}
+          AppState.charts.bar = null; 
         }
-      }
 
-      // Interpretação dos valores
-      const valuesInterpretation = safeGetElement('valuesInterpretation');
-      if (valuesInterpretation) {
-        valuesInterpretation.innerHTML = Object.entries(dimensions).map(([key, value]) => {
-          const insight = VALUES_CONTENT[key];
-          const level = value >= 70 ? 'Alto' : value >= 50 ? 'Médio' : 'Baixo';
-          const color = value >= 70 ? 'text-emerald-600' : value >= 50 ? 'text-amber-600' : 'text-gray-600';
-          return `
-            <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm border border-gray-100">
-              <div class="flex items-center gap-3">
-                <span class="text-xl">${insight ? insight.title.split(' ')[0] : key}</span>
-                <div>
-                  <p class="font-semibold text-gray-800">${insight ? insight.title : key}</p>
-                  <p class="text-sm ${color}">${level} - ${value}%</p>
-                </div>
-              </div>
-              <div class="w-32 bg-gray-200 rounded-full h-2">
-                <div class="h-2 rounded-full" style="width: ${value}%; background: ${getColorForKey(key)}"></div>
-              </div>
-            </div>
-          `;
-        }).join('');
+        var labels = ['Propósito', 'Reconhecimento', 'Autonomia', 'Estabilidade', 'Crescimento', 'Inovação', 'Colaboração', 'Impacto', 'Equilíbrio', 'Realização'];
+        var data = [
+          dimensions.purpose, dimensions.recognition, dimensions.autonomy, 
+          dimensions.stability, dimensions.growth, dimensions.innovation,
+          dimensions.collaboration, dimensions.impact, dimensions.balance, dimensions.achievement
+        ];
+
+        // Radar Chart
+        var radarCanvas = document.getElementById('valuesRadarChart');
+        if (radarCanvas) {
+          var ctxRadar = radarCanvas.getContext('2d');
+          if (ctxRadar) {
+            AppState.charts.radar = new Chart(ctxRadar, {
+              type: 'radar',
+              data: {
+                labels: labels,
+                datasets: [{
+                  label: 'Intensidade de Valores',
+                  data: data,
+                  backgroundColor: 'rgba(124, 58, 237, 0.2)',
+                  borderColor: '#7C3AED',
+                  borderWidth: 2,
+                  pointBackgroundColor: '#7C3AED'
+                }]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                  r: {
+                    angleLines: { color: 'rgba(0,0,0,0.1)' },
+                    grid: { color: 'rgba(0,0,0,0.1)' },
+                    pointLabels: { color: '#374151', font: { size: 10, weight: '600' } },
+                    ticks: { display: false, backdropColor: 'transparent' },
+                    suggestedMin: 0, suggestedMax: 100
+                  }
+                },
+                plugins: { legend: { display: true, position: 'bottom', labels: { usePointStyle: true } } }
+              }
+            });
+          }
+        }
+
+        // Bar Chart
+        var barCanvas = document.getElementById('valuesBarChart');
+        if (barCanvas) {
+          var ctxBar = barCanvas.getContext('2d');
+          if (ctxBar) {
+            AppState.charts.bar = new Chart(ctxBar, {
+              type: 'bar',
+              data: {
+                labels: labels.map(function(l) { return l.substring(0, 3); }),
+                datasets: [{
+                  label: 'Intensidade (%)',
+                  data: data,
+                  backgroundColor: ['#7C3AED', '#F59E0B', '#3B82F6', '#10B981', '#06B6D4', '#EC4899', '#8B5CF6', '#14B8A6', '#6366F1', '#F97316'],
+                  borderRadius: 4
+                }]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                  y: { beginAtZero: true, max: 100, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#6B7280' } },
+                  x: { grid: { display: false }, ticks: { color: '#374151', font: { weight: 'bold', size: 9 } } }
+                },
+                plugins: { legend: { display: false } }
+              }
+            });
+          }
+        }
+
+        // Interpretação dos valores
+        var valuesInterpretation = safeGetElement('valuesInterpretation');
+        if (valuesInterpretation) {
+          valuesInterpretation.innerHTML = Object.entries(dimensions).map(function(entry) {
+            var key = entry[0];
+            var value = entry[1];
+            var insight = VALUES_CONTENT[key];
+            var level = value >= 70 ? 'Alto' : value >= 50 ? 'Médio' : 'Baixo';
+            var color = value >= 70 ? 'text-emerald-600' : value >= 50 ? 'text-amber-600' : 'text-gray-600';
+            return '<div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm border border-gray-100">' +
+              '<div class="flex items-center gap-3">' +
+                '<span class="text-xl">' + (insight ? insight.title.split(' ')[0] : key) + '</span>' +
+                '<div>' +
+                  '<p class="font-semibold text-gray-800">' + (insight ? insight.title : key) + '</p>' +
+                  '<p class="text-sm ' + color + '">' + level + ' - ' + value + '%</p>' +
+                '</div>' +
+              '</div>' +
+              '<div class="w-32 bg-gray-200 rounded-full h-2">' +
+                '<div class="h-2 rounded-full" style="width: ' + value + '%; background: ' + getColorForKey(key) + '"></div>' +
+              '</div>' +
+            '</div>';
+          }).join('');
+        }
+      } catch (e) {
+        console.error('❌ Erro em renderCharts:', e);
       }
     }
 
     function getColorForKey(key) {
-      const colors = {
-        purpose: '#7C3AED', recognition: '#F59E0B', autonomy: '#3B82F6',
-        stability: '#10B981', growth: '#06B6D4', innovation: '#EC4899',
-        collaboration: '#8B5CF6', impact: '#14B8A6', balance: '#6366F1', achievement: '#F97316'
-      };
-      return colors[key] || '#64748B';
+      try {
+        var colors = {
+          purpose: '#7C3AED', recognition: '#F59E0B', autonomy: '#3B82F6',
+          stability: '#10B981', growth: '#06B6D4', innovation: '#EC4899',
+          collaboration: '#8B5CF6', impact: '#14B8A6', balance: '#6366F1', achievement: '#F97316'
+        };
+        return colors[key] || '#64748B';
+      } catch (e) {
+        return '#64748B';
+      }
     }
 
     // ============================================
     // RENDERIZAR ANÁLISE DE PROPÓSITO
     // ============================================
     function renderPurposeAnalysis(dimensions) {
-      const purposeAnalysis = safeGetElement('purposeAnalysis');
-      const purposeInsight = safeGetElement('purposeInsight');
-      
-      if (purposeAnalysis) {
-        const purpose = dimensions.purpose;
-        purposeAnalysis.innerHTML = `
-          <strong>Análise de Propósito Profissional:</strong> Com pontuação de ${purpose}% na dimensão de Propósito e Significado, o participante ${purpose >= 70 ? 'demonstra forte motivação por trabalho com significado, buscando organizações cuja missão ressoe com seus valores pessoais. Para este perfil, o "porquê" do trabalho é tão importante quanto o "o que" e o "como".' : purpose >= 50 ? 'valoriza significado no trabalho, equilibrando propósito com aspectos práticos da carreira. Adapta-se bem a diferentes contextos quando compreende a contribuição de seu papel.' : 'prioriza aspectos instrumentais do trabalho (remuneração, benefícios, estabilidade), considerando propósito como fator secundário nas decisões profissionais.'}
-        `;
-      }
-      
-      if (purposeInsight) {
-        const purpose = dimensions.purpose;
-        purposeInsight.textContent = purpose >= 70 
-          ? 'Estratégia: Conectar tarefas diárias com impacto organizacional e social. Compartilhar histórias de impacto e convidar para iniciativas com propósito.'
-          : purpose >= 50
-          ? 'Estratégia: Comunicar claramente o propósito de projetos e iniciativas. Oferecer oportunidades pontuais de trabalho com impacto social.'
-          : 'Estratégia: Focar em benefícios tangíveis e crescimento profissional. Introduzir elementos de propósito de forma gradual e opcional.';
+      try {
+        var purposeAnalysis = safeGetElement('purposeAnalysis');
+        var purposeInsight = safeGetElement('purposeInsight');
+        
+        if (purposeAnalysis) {
+          var purpose = dimensions.purpose;
+          var text = purpose >= 70 
+            ? 'demonstra forte motivação por trabalho com significado, buscando organizações cuja missão ressoe com seus valores pessoais. Para este perfil, o "porquê" do trabalho é tão importante quanto o "o que" e o "como".'
+            : purpose >= 50
+            ? 'valoriza significado no trabalho, equilibrando propósito com aspectos práticos da carreira. Adapta-se bem a diferentes contextos quando compreende a contribuição de seu papel.'
+            : 'prioriza aspectos instrumentais do trabalho (remuneração, benefícios, estabilidade), considerando propósito como fator secundário nas decisões profissionais.';
+          
+          purposeAnalysis.innerHTML = '<strong>Análise de Propósito Profissional:</strong> Com pontuação de ' + purpose + '% na dimensão de Propósito e Significado, o participante ' + text;
+        }
+        
+        if (purposeInsight) {
+          var purpose = dimensions.purpose;
+          purposeInsight.textContent = purpose >= 70 
+            ? 'Estratégia: Conectar tarefas diárias com impacto organizacional e social. Compartilhar histórias de impacto e convidar para iniciativas com propósito.'
+            : purpose >= 50
+            ? 'Estratégia: Comunicar claramente o propósito de projetos e iniciativas. Oferecer oportunidades pontuais de trabalho com impacto social.'
+            : 'Estratégia: Focar em benefícios tangíveis e crescimento profissional. Introduzir elementos de propósito de forma gradual e opcional.';
+        }
+      } catch (e) {
+        console.error('❌ Erro em renderPurposeAnalysis:', e);
       }
     }
 
@@ -1431,44 +1541,60 @@
     // RENDERIZAR ANÁLISE DE RECONHECIMENTO
     // ============================================
     function renderRecognitionAnalysis(dimensions) {
-      const recognitionAnalysis = safeGetElement('recognitionAnalysis');
-      const recognitionLevel = safeGetElement('recognitionLevel');
-      const feedbackPreference = safeGetElement('feedbackPreference');
-      const recognitionStyle = safeGetElement('recognitionStyle');
-      
-      if (recognitionAnalysis) {
-        const recognition = dimensions.recognition;
-        recognitionAnalysis.innerHTML = `
-          <strong>Análise de Necessidade de Reconhecimento:</strong> Com ${recognition}% na dimensão de Reconhecimento e Valorização, o participante ${recognition >= 70 ? 'possui alta sensibilidade a apreciação e validação. Reconhecimento frequente, específico e sincero é fundamental para manter engajamento e senso de valor. Ausência de feedback pode ser interpretada como desvalorização.' : recognition >= 50 ? 'aprecia reconhecimento, mas mantém motivação interna equilibrada. Valoriza feedback construtivo e apreciação genuína, sem depender exclusivamente de validação externa.' : 'possui motivação predominantemente interna. Reconhecimento é bem-vindo, mas não essencial para engajamento. Prefere feedback focado em desenvolvimento sobre elogios genéricos.'}
-        `;
+      try {
+        var recognitionAnalysis = safeGetElement('recognitionAnalysis');
+        var recognitionLevel = safeGetElement('recognitionLevel');
+        var feedbackPreference = safeGetElement('feedbackPreference');
+        var recognitionStyle = safeGetElement('recognitionStyle');
+        
+        if (recognitionAnalysis) {
+          var recognition = dimensions.recognition;
+          var text = recognition >= 70 
+            ? 'possui alta sensibilidade a apreciação e validação. Reconhecimento frequente, específico e sincero é fundamental para manter engajamento e senso de valor. Ausência de feedback pode ser interpretada como desvalorização.'
+            : recognition >= 50
+            ? 'aprecia reconhecimento, mas mantém motivação interna equilibrada. Valoriza feedback construtivo e apreciação genuína, sem depender exclusivamente de validação externa.'
+            : 'possui motivação predominantemente interna. Reconhecimento é bem-vindo, mas não essencial para engajamento. Prefere feedback focado em desenvolvimento sobre elogios genéricos.';
+          
+          recognitionAnalysis.innerHTML = '<strong>Análise de Necessidade de Reconhecimento:</strong> Com ' + recognition + '% na dimensão de Reconhecimento e Valorização, o participante ' + text;
+        }
+        
+        if (recognitionLevel) recognitionLevel.textContent = dimensions.recognition >= 70 ? 'Alta' : dimensions.recognition >= 50 ? 'Média' : 'Baixa';
+        if (feedbackPreference) feedbackPreference.textContent = dimensions.recognition >= 70 ? 'Frequente' : dimensions.recognition >= 50 ? 'Equilibrado' : 'Sob Demanda';
+        if (recognitionStyle) recognitionStyle.textContent = dimensions.recognition >= 70 ? 'Público' : dimensions.recognition >= 50 ? 'Misto' : 'Privado';
+      } catch (e) {
+        console.error('❌ Erro em renderRecognitionAnalysis:', e);
       }
-      
-      if (recognitionLevel) recognitionLevel.textContent = dimensions.recognition >= 70 ? 'Alta' : dimensions.recognition >= 50 ? 'Média' : 'Baixa';
-      if (feedbackPreference) feedbackPreference.textContent = dimensions.recognition >= 70 ? 'Frequente' : dimensions.recognition >= 50 ? 'Equilibrado' : 'Sob Demanda';
-      if (recognitionStyle) recognitionStyle.textContent = dimensions.recognition >= 70 ? 'Público' : dimensions.recognition >= 50 ? 'Misto' : 'Privado';
     }
 
     // ============================================
     // RENDERIZAR ANÁLISE DE AUTONOMIA
     // ============================================
     function renderAutonomyAnalysis(dimensions) {
-      const autonomyAnalysis = safeGetElement('autonomyAnalysis');
-      const autonomyManagement = safeGetElement('autonomyManagement');
-      
-      if (autonomyAnalysis) {
-        const autonomy = dimensions.autonomy;
-        autonomyAnalysis.innerHTML = `
-          <strong>Análise de Autonomia e Liberdade:</strong> Com ${autonomy}% na dimensão de Autonomia, o participante ${autonomy >= 70 ? 'necessita de alta independência para performar no máximo potencial. Estruturas rígidas, microgestão ou processos excessivamente burocráticos podem gerar frustração e desengajamento. Prospera em ambientes que confiam em sua capacidade de autogestão.' : autonomy >= 50 ? 'equilibra necessidade de autonomia com orientação estrutural. Adapta-se bem a diferentes níveis de supervisão quando compreende o propósito das diretrizes. Valoriza flexibilidade dentro de limites claros.' : 'confortável com estruturas definidas, processos estabelecidos e orientação direta. Valoriza segurança da direção clara e pode sentir ansiedade em ambientes excessivamente ambíguos ou não estruturados.'}
-        `;
-      }
-      
-      if (autonomyManagement) {
-        const autonomy = dimensions.autonomy;
-        autonomyManagement.textContent = autonomy >= 70 
-          ? 'Recomendação: Estabelecer objetivos claros e permitir liberdade nos métodos. Evitar microgestão; focar em resultados.'
-          : autonomy >= 50
-          ? 'Recomendação: Fornecer direção estratégica com espaço para autonomia tática. Explicar o "porquê" das diretrizes.'
-          : 'Recomendação: Oferecer estrutura clara, processos documentados e orientação consistente. Introduzir autonomia gradualmente.';
+      try {
+        var autonomyAnalysis = safeGetElement('autonomyAnalysis');
+        var autonomyManagement = safeGetElement('autonomyManagement');
+        
+        if (autonomyAnalysis) {
+          var autonomy = dimensions.autonomy;
+          var text = autonomy >= 70 
+            ? 'necessita de alta independência para performar no máximo potencial. Estruturas rígidas, microgestão ou processos excessivamente burocráticos podem gerar frustração e desengajamento. Prospera em ambientes que confiam em sua capacidade de autogestão.'
+            : autonomy >= 50
+            ? 'equilibra necessidade de autonomia com orientação estrutural. Adapta-se bem a diferentes níveis de supervisão quando compreende o propósito das diretrizes. Valoriza flexibilidade dentro de limites claros.'
+            : 'confortável com estruturas definidas, processos estabelecidos e orientação direta. Valoriza segurança da direção clara e pode sentir ansiedade em ambientes excessivamente ambíguos ou não estruturados.';
+          
+          autonomyAnalysis.innerHTML = '<strong>Análise de Autonomia e Liberdade:</strong> Com ' + autonomy + '% na dimensão de Autonomia, o participante ' + text;
+        }
+        
+        if (autonomyManagement) {
+          var autonomy = dimensions.autonomy;
+          autonomyManagement.textContent = autonomy >= 70 
+            ? 'Recomendação: Estabelecer objetivos claros e permitir liberdade nos métodos. Evitar microgestão; focar em resultados.'
+            : autonomy >= 50
+            ? 'Recomendação: Fornecer direção estratégica com espaço para autonomia tática. Explicar o "porquê" das diretrizes.'
+            : 'Recomendação: Oferecer estrutura clara, processos documentados e orientação consistente. Introduzir autonomia gradualmente.';
+        }
+      } catch (e) {
+        console.error('❌ Erro em renderAutonomyAnalysis:', e);
       }
     }
 
@@ -1476,44 +1602,60 @@
     // RENDERIZAR ANÁLISE DE ESTABILIDADE
     // ============================================
     function renderStabilityAnalysis(dimensions) {
-      const stabilityAnalysis = safeGetElement('stabilityAnalysis');
-      const changeTolerance = safeGetElement('changeTolerance');
-      const structurePreference = safeGetElement('structurePreference');
-      
-      if (stabilityAnalysis) {
-        const stability = dimensions.stability;
-        stabilityAnalysis.innerHTML = `
-          <strong>Análise de Estabilidade e Segurança:</strong> Com ${stability}% na dimensão de Estabilidade, o participante ${stability >= 70 ? 'valoriza profundamente previsibilidade, processos consolidados e segurança profissional. Mudanças abruptas, reestruturações frequentes ou ambiguidade organizacional podem gerar ansiedade significativa. Prospera em ambientes com direção clara e evolução gradual.' : stability >= 50 ? 'aceita mudanças quando bem comunicadas, justificadas e implementadas com suporte adequado. Equilibra necessidade de segurança com abertura a evolução. Valoriza transparência no processo de mudança.' : 'confortável com ambiguidade, mudanças frequentes e ambientes dinâmicos. Vê incerteza como oportunidade para inovação e crescimento. Pode sentir tédio em ambientes excessivamente estáticos ou burocráticos.'}
-        `;
+      try {
+        var stabilityAnalysis = safeGetElement('stabilityAnalysis');
+        var changeTolerance = safeGetElement('changeTolerance');
+        var structurePreference = safeGetElement('structurePreference');
+        
+        if (stabilityAnalysis) {
+          var stability = dimensions.stability;
+          var text = stability >= 70 
+            ? 'valoriza profundamente previsibilidade, processos consolidados e segurança profissional. Mudanças abruptas, reestruturações frequentes ou ambiguidade organizacional podem gerar ansiedade significativa. Prospera em ambientes com direção clara e evolução gradual.'
+            : stability >= 50
+            ? 'aceita mudanças quando bem comunicadas, justificadas e implementadas com suporte adequado. Equilibra necessidade de segurança com abertura a evolução. Valoriza transparência no processo de mudança.'
+            : 'confortável com ambiguidade, mudanças frequentes e ambientes dinâmicos. Vê incerteza como oportunidade para inovação e crescimento. Pode sentir tédio em ambientes excessivamente estáticos ou burocráticos.';
+          
+          stabilityAnalysis.innerHTML = '<strong>Análise de Estabilidade e Segurança:</strong> Com ' + stability + '% na dimensão de Estabilidade, o participante ' + text;
+        }
+        
+        if (changeTolerance) changeTolerance.textContent = dimensions.stability >= 70 ? 'Baixa' : dimensions.stability >= 50 ? 'Moderada' : 'Alta';
+        if (structurePreference) structurePreference.textContent = dimensions.stability >= 70 ? 'Alta Estrutura' : dimensions.stability >= 50 ? 'Estrutura Flexível' : 'Baixa Estrutura';
+      } catch (e) {
+        console.error('❌ Erro em renderStabilityAnalysis:', e);
       }
-      
-      if (changeTolerance) changeTolerance.textContent = dimensions.stability >= 70 ? 'Baixa' : dimensions.stability >= 50 ? 'Moderada' : 'Alta';
-      if (structurePreference) structurePreference.textContent = dimensions.stability >= 70 ? 'Alta Estrutura' : dimensions.stability >= 50 ? 'Estrutura Flexível' : 'Baixa Estrutura';
     }
 
     // ============================================
     // RENDERIZAR ANÁLISE DE CRESCIMENTO
     // ============================================
     function renderGrowthAnalysis(dimensions) {
-      const growthAnalysis = safeGetElement('growthAnalysis');
-      const growthRecommendations = safeGetElement('growthRecommendations');
-      
-      if (growthAnalysis) {
-        const growth = dimensions.growth;
-        growthAnalysis.innerHTML = `
-          <strong>Análise de Crescimento e Desenvolvimento:</strong> Com ${growth}% na dimensão de Crescimento, o participante ${growth >= 70 ? 'demonstra alta motivação por aprendizado contínuo, desafios progressivos e evolução de carreira. Estagnação profissional é um dos principais fatores de desengajamento. Busca ativamente oportunidades de capacitação, mentoria e expansão de responsabilidades.' : growth >= 50 ? 'valoriza desenvolvimento profissional, mas em ritmo sustentável que preserve bem-estar e vida pessoal. Aprecia oportunidades de crescimento quando alinhadas com interesses e capacidades atuais.' : 'satisfação com nível atual de competências e responsabilidades. Crescimento é desejável, mas não prioritário nas decisões profissionais. Valoriza estabilidade sobre expansão constante.'}
-        `;
-      }
-      
-      if (growthRecommendations) {
-        const growth = dimensions.growth;
-        const recs = growth >= 70 
-          ? ['Oferecer plano de carreira claro com marcos de progressão', 'Disponibilizar orçamento para capacitação e certificações', 'Criar programa de mentoria com líderes sênior', 'Atribuir projetos stretch que desafiem competências atuais']
-          : growth >= 50
-          ? ['Oferecer oportunidades de desenvolvimento opcionais e flexíveis', 'Comunicar claramente benefícios de iniciativas de crescimento', 'Respeitar ritmo individual de desenvolvimento', 'Balancear desafios com suporte adequado']
-          : ['Focar em capacitação para eficiência na função atual', 'Oferecer desenvolvimento como benefício, não expectativa', 'Respeitar preferência por estabilidade profissional', 'Reconhecer contribuições sem pressionar por expansão'];
+      try {
+        var growthAnalysis = safeGetElement('growthAnalysis');
+        var growthRecommendations = safeGetElement('growthRecommendations');
         
-        growthRecommendations.innerHTML = recs.map(r => `<li>${r}</li>`).join('');
+        if (growthAnalysis) {
+          var growth = dimensions.growth;
+          var text = growth >= 70 
+            ? 'demonstra alta motivação por aprendizado contínuo, desafios progressivos e evolução de carreira. Estagnação profissional é um dos principais fatores de desengajamento. Busca ativamente oportunidades de capacitação, mentoria e expansão de responsabilidades.'
+            : growth >= 50
+            ? 'valoriza desenvolvimento profissional, mas em ritmo sustentável que preserve bem-estar e vida pessoal. Aprecia oportunidades de crescimento quando alinhadas com interesses e capacidades atuais.'
+            : 'satisfação com nível atual de competências e responsabilidades. Crescimento é desejável, mas não prioritário nas decisões profissionais. Valoriza estabilidade sobre expansão constante.';
+          
+          growthAnalysis.innerHTML = '<strong>Análise de Crescimento e Desenvolvimento:</strong> Com ' + growth + '% na dimensão de Crescimento, o participante ' + text;
+        }
+        
+        if (growthRecommendations) {
+          var growth = dimensions.growth;
+          var recs = growth >= 70 
+            ? ['Oferecer plano de carreira claro com marcos de progressão', 'Disponibilizar orçamento para capacitação e certificações', 'Criar programa de mentoria com líderes sênior', 'Atribuir projetos stretch que desafiem competências atuais']
+            : growth >= 50
+            ? ['Oferecer oportunidades de desenvolvimento opcionais e flexíveis', 'Comunicar claramente benefícios de iniciativas de crescimento', 'Respeitar ritmo individual de desenvolvimento', 'Balancear desafios com suporte adequado']
+            : ['Focar em capacitação para eficiência na função atual', 'Oferecer desenvolvimento como benefício, não expectativa', 'Respeitar preferência por estabilidade profissional', 'Reconhecer contribuições sem pressionar por expansão'];
+          
+          growthRecommendations.innerHTML = recs.map(function(r) { return '<li>' + r + '</li>'; }).join('');
+        }
+      } catch (e) {
+        console.error('❌ Erro em renderGrowthAnalysis:', e);
       }
     }
 
@@ -1521,94 +1663,120 @@
     // RENDERIZAR CULTURA IDEAL
     // ============================================
     function renderIdealCulture(dimensions) {
-      const idealCulture = safeGetElement('idealCulture');
-      const idealLeadership = safeGetElement('idealLeadership');
-      const idealEnvironment = safeGetElement('idealEnvironment');
-      
-      if (idealCulture) {
-        // Determinar cultura ideal baseada nos valores
-        const culture = determineIdealCulture(dimensions);
-        idealCulture.textContent = `Prospera em culturas que valorizam ${culture.traits.join(', ').toLowerCase()}. Ambientes excessivamente ${culture.contrast} tendem a reduzir engajamento e performance.`;
-      }
-      
-      if (idealLeadership) {
-        const leadership = determineIdealLeadership(dimensions);
-        idealLeadership.textContent = leadership;
-      }
-      
-      if (idealEnvironment) {
-        idealEnvironment.innerHTML = `
-          <div class="flex items-center gap-2"><span class="text-emerald-500">✓</span> Comunicação transparente e feedback frequente</div>
-          <div class="flex items-center gap-2"><span class="text-emerald-500">✓</span> ${dimensions.autonomy >= 70 ? 'Flexibilidade e confiança na autogestão' : 'Estrutura clara com espaço para contribuição'}</div>
-          <div class="flex items-center gap-2"><span class="text-emerald-500">✓</span> ${dimensions.growth >= 70 ? 'Oportunidades claras de desenvolvimento' : 'Estabilidade com evolução gradual'}</div>
-          <div class="flex items-center gap-2"><span class="text-emerald-500">✓</span> ${dimensions.collaboration >= 70 ? 'Cultura de equipe e apoio mútuo' : 'Respeito por trabalho individual e colaboração opcional'}</div>
-          <div class="flex items-center gap-2"><span class="text-emerald-500">✓</span> Reconhecimento alinhado ao estilo preferido do profissional</div>
-        `;
+      try {
+        var idealCulture = safeGetElement('idealCulture');
+        var idealLeadership = safeGetElement('idealLeadership');
+        var idealEnvironment = safeGetElement('idealEnvironment');
+        
+        if (idealCulture) {
+          // Determinar cultura ideal baseada nos valores
+          var culture = determineIdealCulture(dimensions);
+          idealCulture.textContent = 'Prospera em culturas que valorizam ' + culture.traits.join(', ').toLowerCase() + '. Ambientes excessivamente ' + culture.contrast + ' tendem a reduzir engajamento e performance.';
+        }
+        
+        if (idealLeadership) {
+          var leadership = determineIdealLeadership(dimensions);
+          idealLeadership.textContent = leadership;
+        }
+        
+        if (idealEnvironment) {
+          idealEnvironment.innerHTML = '<div class="flex items-center gap-2"><span class="text-emerald-500">✓</span> Comunicação transparente e feedback frequente</div>' +
+            '<div class="flex items-center gap-2"><span class="text-emerald-500">✓</span> ' + (dimensions.autonomy >= 70 ? 'Flexibilidade e confiança na autogestão' : 'Estrutura clara com espaço para contribuição') + '</div>' +
+            '<div class="flex items-center gap-2"><span class="text-emerald-500">✓</span> ' + (dimensions.growth >= 70 ? 'Oportunidades claras de desenvolvimento' : 'Estabilidade com evolução gradual') + '</div>' +
+            '<div class="flex items-center gap-2"><span class="text-emerald-500">✓</span> ' + (dimensions.collaboration >= 70 ? 'Cultura de equipe e apoio mútuo' : 'Respeito por trabalho individual e colaboração opcional') + '</div>' +
+            '<div class="flex items-center gap-2"><span class="text-emerald-500">✓</span> Reconhecimento alinhado ao estilo preferido do profissional</div>';
+        }
+      } catch (e) {
+        console.error('❌ Erro em renderIdealCulture:', e);
       }
     }
 
     function determineIdealCulture(dimensions) {
-      // Lógica simplificada para determinar cultura ideal
-      if (dimensions.innovation >= 70 && dimensions.growth >= 70) return CULTURE_PROFILES.innovative;
-      if (dimensions.collaboration >= 70 && dimensions.purpose >= 70) return CULTURE_PROFILES.purpose;
-      if (dimensions.achievement >= 70 && dimensions.recognition >= 70) return CULTURE_PROFILES.results;
-      if (dimensions.stability >= 70 && dimensions.balance >= 70) return CULTURE_PROFILES.stable;
-      return CULTURE_PROFILES.collaborative;
+      try {
+        // Lógica simplificada para determinar cultura ideal
+        if (dimensions.innovation >= 70 && dimensions.growth >= 70) return CULTURE_PROFILES.innovative;
+        if (dimensions.collaboration >= 70 && dimensions.purpose >= 70) return CULTURE_PROFILES.purpose;
+        if (dimensions.achievement >= 70 && dimensions.recognition >= 70) return CULTURE_PROFILES.results;
+        if (dimensions.stability >= 70 && dimensions.balance >= 70) return CULTURE_PROFILES.stable;
+        return CULTURE_PROFILES.collaborative;
+      } catch (e) {
+        return CULTURE_PROFILES.collaborative;
+      }
     }
 
     function determineIdealLeadership(dimensions) {
-      if (dimensions.autonomy >= 70) return 'Liderança facilitadora: define direção, confia na execução, oferece suporte sob demanda.';
-      if (dimensions.stability >= 70) return 'Liderança estruturante: fornece direção clara, processos definidos e comunicação previsível.';
-      if (dimensions.growth >= 70) return 'Liderança desenvolvedora: desafia, mentora e investe no crescimento do profissional.';
-      return 'Liderança equilibrada: combina direção clara com espaço para contribuição e desenvolvimento.';
+      try {
+        if (dimensions.autonomy >= 70) return 'Liderança facilitadora: define direção, confia na execução, oferece suporte sob demanda.';
+        if (dimensions.stability >= 70) return 'Liderança estruturante: fornece direção clara, processos definidos e comunicação previsível.';
+        if (dimensions.growth >= 70) return 'Liderança desenvolvedora: desafia, mentora e investe no crescimento do profissional.';
+        return 'Liderança equilibrada: combina direção clara com espaço para contribuição e desenvolvimento.';
+      } catch (e) {
+        return 'Liderança equilibrada e adaptativa.';
+      }
     }
 
     // ============================================
     // RENDERIZAR ANÁLISE DE MUDANÇAS
     // ============================================
     function renderChangeAnalysis(dimensions) {
-      const changeAnalysis = safeGetElement('changeAnalysis');
-      const adaptabilityScore = safeGetElement('adaptabilityScore');
-      const innovationOpenness = safeGetElement('innovationOpenness');
-      const changeResilience = safeGetElement('changeResilience');
-      
-      if (changeAnalysis) {
-        const stability = dimensions.stability;
-        const innovation = dimensions.innovation;
-        changeAnalysis.innerHTML = `
-          <strong>Análise de Adaptação a Mudanças:</strong> Com ${stability}% em Estabilidade e ${innovation}% em Inovação, o participante ${stability >= 70 && innovation < 50 ? 'prefere mudanças graduais, bem comunicadas e com suporte adequado. Transformações abruptas ou frequentes podem gerar resistência e ansiedade. Beneficia-se de tempo para processar e adaptar-se a novas realidades.' : innovation >= 70 && stability < 50 ? 'abraça mudanças como oportunidades, thrives em ambientes dinâmicos e contribui com ideias inovadoras. Pode sentir tédio em ambientes excessivamente estáticos. Beneficia-se de desafios constantes e liberdade para experimentar.' : 'equilibra abertura a mudanças com necessidade de estrutura. Adapta-se bem quando compreende o propósito da transformação e recebe suporte adequado durante a transição.'}
-        `;
+      try {
+        var changeAnalysis = safeGetElement('changeAnalysis');
+        var adaptabilityScore = safeGetElement('adaptabilityScore');
+        var innovationOpenness = safeGetElement('innovationOpenness');
+        var changeResilience = safeGetElement('changeResilience');
+        
+        if (changeAnalysis) {
+          var stability = dimensions.stability;
+          var innovation = dimensions.innovation;
+          var text = (stability >= 70 && innovation < 50)
+            ? 'prefere mudanças graduais, bem comunicadas e com suporte adequado. Transformações abruptas ou frequentes podem gerar resistência e ansiedade. Beneficia-se de tempo para processar e adaptar-se a novas realidades.'
+            : (innovation >= 70 && stability < 50)
+            ? 'abraça mudanças como oportunidades, thrives em ambientes dinâmicos e contribui com ideias inovadoras. Pode sentir tédio em ambientes excessivamente estáticos. Beneficia-se de desafios constantes e liberdade para experimentar.'
+            : 'equilibra abertura a mudanças com necessidade de estrutura. Adapta-se bem quando compreende o propósito da transformação e recebe suporte adequado durante a transição.';
+          
+          changeAnalysis.innerHTML = '<strong>Análise de Adaptação a Mudanças:</strong> Com ' + stability + '% em Estabilidade e ' + innovation + '% em Inovação, o participante ' + text;
+        }
+        
+        if (adaptabilityScore) adaptabilityScore.textContent = (dimensions.stability >= 70 ? '45' : dimensions.stability >= 50 ? '70' : '90') + '%';
+        if (innovationOpenness) innovationOpenness.textContent = (dimensions.innovation >= 70 ? '92' : dimensions.innovation >= 50 ? '68' : '40') + '%';
+        if (changeResilience) changeResilience.textContent = (dimensions.stability >= 70 && dimensions.innovation >= 50 ? '75' : dimensions.stability >= 70 ? '55' : '85') + '%';
+      } catch (e) {
+        console.error('❌ Erro em renderChangeAnalysis:', e);
       }
-      
-      if (adaptabilityScore) adaptabilityScore.textContent = (dimensions.stability >= 70 ? '45' : dimensions.stability >= 50 ? '70' : '90') + '%';
-      if (innovationOpenness) innovationOpenness.textContent = (dimensions.innovation >= 70 ? '92' : dimensions.innovation >= 50 ? '68' : '40') + '%';
-      if (changeResilience) changeResilience.textContent = (dimensions.stability >= 70 && dimensions.innovation >= 50 ? '75' : dimensions.stability >= 70 ? '55' : '85') + '%';
     }
 
     // ============================================
     // RENDERIZAR VÍNCULO ORGANIZACIONAL
     // ============================================
     function renderOrganizationalBond(dimensions) {
-      const organizationalBondAnalysis = safeGetElement('organizationalBondAnalysis');
-      const bondStrategies = safeGetElement('bondStrategies');
-      
-      if (organizationalBondAnalysis) {
-        const collaboration = dimensions.collaboration;
-        const stability = dimensions.stability;
-        organizationalBondAnalysis.innerHTML = `
-          <strong>Análise de Vínculo Organizacional:</strong> Com ${collaboration}% em Colaboração e ${stability}% em Estabilidade, o participante ${collaboration >= 70 ? 'desenvolve vínculos fortes através de conexões significativas e senso de pertencimento. Valoriza cultura de equipe, reconhecimento coletivo e ambiente de apoio. Isolamento ou competitividade excessiva podem enfraquecer o vínculo.' : collaboration >= 50 ? 'constrói vínculos equilibrados, valorizando tanto colaboração quanto autonomia. Adapta-se a diferentes dinâmicas de equipe quando compreende seu papel e contribuição.' : 'estabelece vínculos funcionais baseados em respeito mútuo e objetivos compartilhados. Valoriza clareza de expectativas e reconhecimento individual sobre conexões sociais intensas.'}
-        `;
-      }
-      
-      if (bondStrategies) {
-        const collaboration = dimensions.collaboration;
-        const strategies = collaboration >= 70 
-          ? ['Promover atividades de team building e reconhecimento coletivo', 'Criar espaços para colaboração espontânea e troca de ideias', 'Comunicar impacto do trabalho no time e na organização', 'Fomentar cultura de apoio mútuo e celebração de conquistas']
-          : collaboration >= 50
-          ? ['Equilibrar trabalho individual e colaborativo conforme preferência', 'Comunicar claramente papel e contribuição em projetos de equipe', 'Oferecer opções de colaboração sem obrigatoriedade', 'Reconhecer contribuições individuais e coletivas']
-          : ['Focar em clareza de expectativas e reconhecimento individual', 'Respeitar preferência por trabalho independente', 'Oferecer colaboração como opção, não expectativa', 'Valorizar contribuições baseadas em resultados'];
+      try {
+        var organizationalBondAnalysis = safeGetElement('organizationalBondAnalysis');
+        var bondStrategies = safeGetElement('bondStrategies');
         
-        bondStrategies.innerHTML = strategies.map(s => `<li>${s}</li>`).join('');
+        if (organizationalBondAnalysis) {
+          var collaboration = dimensions.collaboration;
+          var stability = dimensions.stability;
+          var text = collaboration >= 70 
+            ? 'desenvolve vínculos fortes através de conexões significativas e senso de pertencimento. Valoriza cultura de equipe, reconhecimento coletivo e ambiente de apoio. Isolamento ou competitividade excessiva podem enfraquecer o vínculo.'
+            : collaboration >= 50
+            ? 'constrói vínculos equilibrados, valorizando tanto colaboração quanto autonomia. Adapta-se a diferentes dinâmicas de equipe quando compreende seu papel e contribuição.'
+            : 'estabelece vínculos funcionais baseados em respeito mútuo e objetivos compartilhados. Valoriza clareza de expectativas e reconhecimento individual sobre conexões sociais intensas.';
+          
+          organizationalBondAnalysis.innerHTML = '<strong>Análise de Vínculo Organizacional:</strong> Com ' + collaboration + '% em Colaboração e ' + stability + '% em Estabilidade, o participante ' + text;
+        }
+        
+        if (bondStrategies) {
+          var collaboration = dimensions.collaboration;
+          var strategies = collaboration >= 70 
+            ? ['Promover atividades de team building e reconhecimento coletivo', 'Criar espaços para colaboração espontânea e troca de ideias', 'Comunicar impacto do trabalho no time e na organização', 'Fomentar cultura de apoio mútuo e celebração de conquistas']
+            : collaboration >= 50
+            ? ['Equilibrar trabalho individual e colaborativo conforme preferência', 'Comunicar claramente papel e contribuição em projetos de equipe', 'Oferecer opções de colaboração sem obrigatoriedade', 'Reconhecer contribuições individuais e coletivas']
+            : ['Focar em clareza de expectativas e reconhecimento individual', 'Respeitar preferência por trabalho independente', 'Oferecer colaboração como opção, não expectativa', 'Valorizar contribuições baseadas em resultados'];
+          
+          bondStrategies.innerHTML = strategies.map(function(s) { return '<li>' + s + '</li>'; }).join('');
+        }
+      } catch (e) {
+        console.error('❌ Erro em renderOrganizationalBond:', e);
       }
     }
 
@@ -1616,187 +1784,101 @@
     // RENDERIZAR FIT CULTURAL (SE HOUVER VAGA)
     // ============================================
     function renderCulturalFit(dimensions) {
-      const container = safeGetElement('culturalFitContent');
-      if (!container) return;
-      
-      const hasJob = AppState.jobs && AppState.jobs.length > 0;
-      
-      if (!hasJob) {
-        container.innerHTML = `
-          <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
-            <h4 class="font-bold text-blue-900 mb-4 text-lg">📋 Relatório de Valores Pessoais - Análise Geral</h4>
-            <div class="text-gray-700 leading-relaxed space-y-3">
-              <p>
-                Este é um relatório de valores pessoais <strong>geral</strong> sem vínculo a um cargo ou cultura organizacional específica. Para uma análise de fit cultural mais precisa e personalizada, recomendamos vincular este relatório a uma vaga ou empresa específica através do sistema de gestão de talentos Vigorre One™.
-              </p>
-              <p>
-                As análises apresentadas nas demais seções deste relatório fornecem insights valiosos sobre o perfil motivacional do participante, podendo ser utilizadas para:
-              </p>
-              <ul class="list-disc pl-6 space-y-1">
-                <li>Autoconhecimento e planejamento de carreira</li>
-                <li>Preparação para processos seletivos</li>
-                <li>Identificação de ambientes organizacionais aderentes</li>
-                <li>Desenvolvimento de estratégias de engajamento pessoal</li>
-                <li>Compreensão de motivadores e fatores de retenção</li>
-              </ul>
-            </div>
-          </div>
-        `;
-        return;
+      try {
+        var container = safeGetElement('culturalFitContent');
+        if (!container) return;
+        
+        var hasJob = AppState.jobs && AppState.jobs.length > 0;
+        
+        if (!hasJob) {
+          container.innerHTML = '<div class="bg-blue-50 p-6 rounded-xl border border-blue-200">' +
+            '<h4 class="font-bold text-blue-900 mb-4 text-lg">📋 Relatório de Valores Pessoais - Análise Geral</h4>' +
+            '<div class="text-gray-700 leading-relaxed space-y-3">' +
+              '<p>Este é um relatório de valores pessoais <strong>geral</strong> sem vínculo a um cargo ou cultura organizacional específica. Para uma análise de fit cultural mais precisa e personalizada, recomendamos vincular este relatório a uma vaga ou empresa específica através do sistema de gestão de talentos Vigorre One™.</p>' +
+              '<p>As análises apresentadas nas demais seções deste relatório fornecem insights valiosos sobre o perfil motivacional do participante, podendo ser utilizadas para:</p>' +
+              '<ul class="list-disc pl-6 space-y-1">' +
+                '<li>Autoconhecimento e planejamento de carreira</li>' +
+                '<li>Preparação para processos seletivos</li>' +
+                '<li>Identificação de ambientes organizacionais aderentes</li>' +
+                '<li>Desenvolvimento de estratégias de engajamento pessoal</li>' +
+                '<li>Compreensão de motivadores e fatores de retenção</li>' +
+              '</ul>' +
+            '</div>' +
+          '</div>';
+          return;
+        }
+        
+        // Calcular fit cultural
+        var culturalFit = calculateCulturalFit(dimensions);
+        var fitClass = culturalFit >= 90 ? 'alta' : culturalFit >= 75 ? 'media' : culturalFit >= 60 ? 'media' : 'baixa';
+        var jobName = AppState.jobs[0].name;
+        
+        container.innerHTML = '<div class="space-y-8">' +
+          '<div class="bg-gradient-to-r from-brand-purple to-brand-blue text-white p-6 rounded-xl">' +
+            '<h4 class="font-bold text-xl mb-2">📊 Análise de Fit Cultural para: ' + jobName + '</h4>' +
+            '<p class="text-sm opacity-90">Perfil Motivacional Analisado • Metodologia Vigorre V.I.G.O.R.</p>' +
+          '</div>' +
+          '<div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">' +
+            '<h4 class="font-bold text-brand-navy mb-4 text-lg">📈 Compatibilidade Cultural Vigorre™</h4>' +
+            '<div class="flex items-center gap-4 mb-4">' +
+              '<div class="flex-1">' +
+                '<div class="aderencia-cultural-container">' +
+                  '<div class="aderencia-cultural-fill ' + fitClass + '" style="width: ' + culturalFit + '%"></div>' +
+                  '<span class="aderencia-cultural-text">' + culturalFit + '%</span>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+            '<p class="text-sm text-gray-600 mb-3">' +
+              '<strong>Legenda de Classificação:</strong> ' +
+              '<span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded bg-emerald-500"></span> 90-100%: Aderência cultural extremamente elevada</span><br>' +
+              '<span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded bg-emerald-500/70"></span> 75-89%: Excelente compatibilidade cultural e motivacional</span><br>' +
+              '<span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded bg-amber-500"></span> 60-74%: Boa aderência com pontos de atenção</span><br>' +
+              '<span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded bg-red-500"></span> &lt;60%: Possível desalinhamento cultural e motivacional</span>' +
+            '</p>' +
+            '<div class="bg-slate-50 p-4 rounded-lg border border-gray-200">' +
+              '<p class="text-gray-700 leading-relaxed">' +
+                'O perfil motivacional do participante apresenta uma compatibilidade cultural de <strong class="' + (fitClass === 'alta' ? 'text-emerald-600' : fitClass === 'media' ? 'text-amber-600' : 'text-red-600') + '">' + culturalFit + '%</strong> com os requisitos motivacionais e culturais para o cargo de <strong>' + jobName + '</strong>. ' +
+                (culturalFit >= 75 ? 'Este índice indica <strong>alta compatibilidade</strong> entre os valores do profissional e a cultura organizacional esperada para a posição.' : culturalFit >= 60 ? 'Este índice indica <strong>compatibilidade moderada</strong>, sugerindo necessidade de atenção a pontos específicos de alinhamento cultural.' : 'Este índice indica <strong>possível desalinhamento</strong> entre valores pessoais e cultura organizacional, sugerindo avaliação cuidadosa antes da alocação.') +
+              '</p>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      } catch (e) {
+        console.error('❌ Erro em renderCulturalFit:', e);
       }
-      
-      // Calcular fit cultural
-      const culturalFit = calculateCulturalFit(dimensions);
-      const fitClass = culturalFit >= 90 ? 'alta' : culturalFit >= 75 ? 'media' : culturalFit >= 60 ? 'media' : 'baixa';
-      const fitText = culturalFit >= 90 ? 'Aderência cultural extremamente elevada' : culturalFit >= 75 ? 'Excelente compatibilidade cultural e motivacional' : culturalFit >= 60 ? 'Boa aderência com pontos de atenção' : 'Possível desalinhamento cultural e motivacional';
-      const jobName = AppState.jobs[0].name;
-      
-      container.innerHTML = `
-        <div class="space-y-8">
-          <!-- Cabeçalho com Nome do Cargo -->
-          <div class="bg-gradient-to-r from-brand-purple to-brand-blue text-white p-6 rounded-xl">
-            <h4 class="font-bold text-xl mb-2">📊 Análise de Fit Cultural para: ${jobName}</h4>
-            <p class="text-sm opacity-90">Perfil Motivacional Analisado • Metodologia Vigorre V.I.G.O.R.</p>
-          </div>
-          
-          <!-- Percentual de Aderência Cultural -->
-          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-            <h4 class="font-bold text-brand-navy mb-4 text-lg">📈 Compatibilidade Cultural Vigorre™</h4>
-            <div class="flex items-center gap-4 mb-4">
-              <div class="flex-1">
-                <div class="aderencia-cultural-container">
-                  <div class="aderencia-cultural-fill ${fitClass}" style="width: ${culturalFit}%"></div>
-                  <span class="aderencia-cultural-text">${culturalFit}%</span>
-                </div>
-              </div>
-            </div>
-            <p class="text-sm text-gray-600 mb-3">
-              <strong>Legenda de Classificação:</strong> 
-              <span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded bg-emerald-500"></span> 90-100%: Aderência cultural extremamente elevada</span><br>
-              <span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded bg-emerald-500/70"></span> 75-89%: Excelente compatibilidade cultural e motivacional</span><br>
-              <span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded bg-amber-500"></span> 60-74%: Boa aderência com pontos de atenção</span><br>
-              <span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded bg-red-500"></span> &lt;60%: Possível desalinhamento cultural e motivacional</span>
-            </p>
-            <div class="bg-slate-50 p-4 rounded-lg border border-gray-200">
-              <p class="text-gray-700 leading-relaxed">
-                O perfil motivacional do participante apresenta uma compatibilidade cultural de <strong class="${fitClass === 'alta' ? 'text-emerald-600' : fitClass === 'media' ? 'text-amber-600' : 'text-red-600'}">${culturalFit}%</strong> com os requisitos motivacionais e culturais para o cargo de <strong>${jobName}</strong>. 
-                ${culturalFit >= 75 ? 'Este índice indica <strong>alta compatibilidade</strong> entre os valores do profissional e a cultura organizacional esperada para a posição.' : culturalFit >= 60 ? 'Este índice indica <strong>compatibilidade moderada</strong>, sugerindo necessidade de atenção a pontos específicos de alinhamento cultural.' : 'Este índice indica <strong>possível desalinhamento</strong> entre valores pessoais e cultura organizacional, sugerindo avaliação cuidadosa antes da alocação.'}
-              </p>
-            </div>
-          </div>
-
-          <!-- Análise por Dimensão Cultural -->
-          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-            <h4 class="font-bold text-brand-navy mb-4 text-lg">📋 Análise de Aderência por Dimensão Motivacional</h4>
-            <div class="space-y-4">
-              <div>
-                <div class="flex justify-between mb-1">
-                  <span class="text-sm font-medium text-gray-700">Aderência à Cultura Organizacional</span>
-                  <span class="text-sm font-bold ${culturalFit >= 75 ? 'text-emerald-600' : culturalFit >= 60 ? 'text-amber-600' : 'text-red-600'}">${culturalFit}%</span>
-                </div>
-                <div class="aderencia-cultural-container h-3">
-                  <div class="aderencia-cultural-fill ${culturalFit >= 75 ? 'alta' : culturalFit >= 60 ? 'media' : 'baixa'}" style="width: ${culturalFit}%"></div>
-                </div>
-              </div>
-              <div>
-                <div class="flex justify-between mb-1">
-                  <span class="text-sm font-medium text-gray-700">Aderência ao Estilo de Liderança</span>
-                  <span class="text-sm font-bold text-emerald-600">85%</span>
-                </div>
-                <div class="aderencia-cultural-container h-3">
-                  <div class="aderencia-cultural-fill alta" style="width: 85%"></div>
-                </div>
-              </div>
-              <div>
-                <div class="flex justify-between mb-1">
-                  <span class="text-sm font-medium text-gray-700">Aderência ao Ambiente de Trabalho</span>
-                  <span class="text-sm font-bold ${culturalFit >= 75 ? 'text-emerald-600' : culturalFit >= 60 ? 'text-amber-600' : 'text-red-600'}">${Math.min(95, culturalFit + 5)}%</span>
-                </div>
-                <div class="aderencia-cultural-container h-3">
-                  <div class="aderencia-cultural-fill ${culturalFit >= 75 ? 'alta' : culturalFit >= 60 ? 'media' : 'baixa'}" style="width: ${Math.min(95, culturalFit + 5)}%"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Análise de Riscos e Potenciais -->
-          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-            <h4 class="font-bold text-brand-navy mb-4 text-lg">⚖️ Análise de Riscos Motivacionais e Potencial de Satisfação</h4>
-            <div class="grid md:grid-cols-2 gap-6">
-              <div>
-                <h5 class="font-semibold text-amber-700 mb-2">⚠️ Riscos Motivacionais Identificados</h5>
-                <ul class="list-disc pl-5 space-y-1 text-sm text-gray-600">
-                  <li>${dimensions.stability >= 70 ? 'Resistência a mudanças organizacionais abruptas' : 'Adaptação rápida a novos processos e estruturas'}</li>
-                  <li>${dimensions.recognition >= 70 ? 'Sensibilidade à ausência de reconhecimento formal' : 'Motivação interna reduz dependência de validação externa'}</li>
-                  <li>${dimensions.autonomy >= 70 ? 'Frustração com microgestão ou processos rígidos' : 'Conforto com estruturas definidas e orientação clara'}</li>
-                </ul>
-              </div>
-              <div>
-                <h5 class="font-semibold text-emerald-700 mb-2">✅ Potencial de Satisfação e Retenção</h5>
-                <ul class="list-disc pl-5 space-y-1 text-sm text-gray-600">
-                  <li>${dimensions.purpose >= 70 ? 'Alto engajamento quando conectado ao propósito organizacional' : 'Engajamento sustentável através de objetivos claros'}</li>
-                  <li>${dimensions.growth >= 70 ? 'Forte retenção com plano de carreira e desenvolvimento' : 'Estabilidade profissional como fator de retenção'}</li>
-                  <li>${dimensions.collaboration >= 70 ? 'Vínculo fortalecido por cultura de equipe e apoio' : 'Vínculo baseado em respeito e reconhecimento individual'}</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <!-- Recomendações Estratégicas -->
-          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-            <h4 class="font-bold text-brand-navy mb-4 text-lg">💡 Recomendações Estratégicas para Maximizar Fit Cultural</h4>
-            <div class="text-gray-700 leading-relaxed space-y-3">
-              <p>
-                Para maximizar a aderência cultural e potencializar a satisfação profissional no cargo de <strong>${jobName}</strong>, recomendamos as seguintes estratégias:
-              </p>
-              <ul class="list-disc pl-6 space-y-2">
-                <li><strong>Onboarding Cultural:</strong> Programa estruturado de integração que comunique claramente valores, missão e expectativas culturais da organização.</li>
-                <li><strong>Alinhamento de Expectativas:</strong> Conversas regulares para garantir que motivadores pessoais estejam sendo atendidos e ajustar abordagens conforme necessário.</li>
-                <li><strong>Desenvolvimento Personalizado:</strong> Plano de desenvolvimento que considere perfil motivacional único, oferecendo oportunidades alinhadas com valores predominantes.</li>
-                <li><strong>Feedback Motivacional:</strong> Sistema de feedback que reconheça contribuições no estilo preferido pelo profissional, fortalecendo vínculo e engajamento.</li>
-              </ul>
-              <p class="text-sm text-amber-700 bg-amber-50 p-3 rounded-lg border border-amber-200 italic">
-                ⚠️ <strong>Nota Técnica:</strong> Esta análise de fit cultural é baseada em modelos psicométricos e deve ser interpretada como <strong>uma ferramenta de apoio à decisão</strong>. Recomenda-se integração com entrevistas comportamentais, assessment de cultura e análise de experiência para avaliação holística.
-              </p>
-            </div>
-          </div>
-        </div>
-      `;
     }
 
     // ============================================
     // RENDERIZAR PDI MOTIVACIONAL
     // ============================================
     function renderPDI(dimensions) {
-      const pdiShort = safeGetElement('pdiMotivationalShort');
-      const pdiMedium = safeGetElement('pdiMotivationalMedium');
-      const pdiLong = safeGetElement('pdiMotivationalLong');
-      
-      if (pdiShort) {
-        pdiShort.innerHTML = `
-          <li class="flex items-start gap-2"><span class="text-emerald-500 mt-1">●</span> Realizar reflexão guiada sobre valores pessoais e alinhamento com trajetória profissional</li>
-          <li class="flex items-start gap-2"><span class="text-emerald-500 mt-1">●</span> Identificar 2-3 motivadores prioritários e definir ações para atendê-los no curto prazo</li>
-          <li class="flex items-start gap-2"><span class="text-emerald-500 mt-1">●</span> Solicitar feedback estruturado sobre alinhamento cultural com gestor e pares</li>
-          <li class="flex items-start gap-2"><span class="text-emerald-500 mt-1">●</span> Explorar oportunidades de desenvolvimento alinhadas com valores predominantes</li>
-        `;
-      }
-      
-      if (pdiMedium) {
-        pdiMedium.innerHTML = `
-          <li class="flex items-start gap-2"><span class="text-amber-500 mt-1">●</span> Participar de programa de mentoria focado em alinhamento propósito-carreira</li>
-          <li class="flex items-start gap-2"><span class="text-amber-500 mt-1">●</span> Desenvolver competências que potencializem motivadores predominantes</li>
-          <li class="flex items-start gap-2"><span class="text-amber-500 mt-1">●</span> Engajar-se em iniciativas organizacionais que ressoem com valores pessoais</li>
-          <li class="flex items-start gap-2"><span class="text-amber-500 mt-1">●</span> Estabelecer métricas pessoais de satisfação e revisar trimestralmente</li>
-        `;
-      }
-      
-      if (pdiLong) {
-        pdiLong.innerHTML = `
-          <li class="flex items-start gap-2"><span class="text-purple-500 mt-1">●</span> Assumir papel de embaixador cultural, compartilhando aprendizados sobre valores</li>
-          <li class="flex items-start gap-2"><span class="text-purple-500 mt-1">●</span> Desenvolver programa de desenvolvimento motivacional para pares</li>
-          <li class="flex items-start gap-2"><span class="text-purple-500 mt-1">●</span> Integrar inteligência motivacional em processos estratégicos da organização</li>
-          <li class="flex items-start gap-2"><span class="text-purple-500 mt-1">●</span> Reavaliar perfil de valores periodicamente para acompanhar evolução profissional</li>
-        `;
+      try {
+        var pdiShort = safeGetElement('pdiMotivationalShort');
+        var pdiMedium = safeGetElement('pdiMotivationalMedium');
+        var pdiLong = safeGetElement('pdiMotivationalLong');
+        
+        if (pdiShort) {
+          pdiShort.innerHTML = '<li class="flex items-start gap-2"><span class="text-emerald-500 mt-1">●</span> Realizar reflexão guiada sobre valores pessoais e alinhamento com trajetória profissional</li>' +
+            '<li class="flex items-start gap-2"><span class="text-emerald-500 mt-1">●</span> Identificar 2-3 motivadores prioritários e definir ações para atendê-los no curto prazo</li>' +
+            '<li class="flex items-start gap-2"><span class="text-emerald-500 mt-1">●</span> Solicitar feedback estruturado sobre alinhamento cultural com gestor e pares</li>' +
+            '<li class="flex items-start gap-2"><span class="text-emerald-500 mt-1">●</span> Explorar oportunidades de desenvolvimento alinhadas com valores predominantes</li>';
+        }
+        
+        if (pdiMedium) {
+          pdiMedium.innerHTML = '<li class="flex items-start gap-2"><span class="text-amber-500 mt-1">●</span> Participar de programa de mentoria focado em alinhamento propósito-carreira</li>' +
+            '<li class="flex items-start gap-2"><span class="text-amber-500 mt-1">●</span> Desenvolver competências que potencializem motivadores predominantes</li>' +
+            '<li class="flex items-start gap-2"><span class="text-amber-500 mt-1">●</span> Engajar-se em iniciativas organizacionais que ressoem com valores pessoais</li>' +
+            '<li class="flex items-start gap-2"><span class="text-amber-500 mt-1">●</span> Estabelecer métricas pessoais de satisfação e revisar trimestralmente</li>';
+        }
+        
+        if (pdiLong) {
+          pdiLong.innerHTML = '<li class="flex items-start gap-2"><span class="text-purple-500 mt-1">●</span> Assumir papel de embaixador cultural, compartilhando aprendizados sobre valores</li>' +
+            '<li class="flex items-start gap-2"><span class="text-purple-500 mt-1">●</span> Desenvolver programa de desenvolvimento motivacional para pares</li>' +
+            '<li class="flex items-start gap-2"><span class="text-purple-500 mt-1">●</span> Integrar inteligência motivacional em processos estratégicos da organização</li>' +
+            '<li class="flex items-start gap-2"><span class="text-purple-500 mt-1">●</span> Reavaliar perfil de valores periodicamente para acompanhar evolução profissional</li>';
+        }
+      } catch (e) {
+        console.error('❌ Erro em renderPDI:', e);
       }
     }
 
@@ -1804,211 +1886,264 @@
     // RENDERIZAR CONCLUSÃO EXECUTIVA
     // ============================================
     function renderExecutiveConclusion(dimensions) {
-      const execConclusion = safeGetElement('executiveConclusion');
-      if (!execConclusion) return;
-      
-      const dominantValue = Object.entries(dimensions).sort((a, b) => b[1] - a[1])[0][0];
-      const dominantScore = dimensions[dominantValue];
-      const content = VALUES_CONTENT[dominantValue];
-      
-      execConclusion.innerHTML = `
-        <p class="leading-relaxed">
-          O participante demonstra um perfil motivacional predominantemente orientado por <strong>${content.title.toLowerCase()}</strong> (${dominantScore}%), caracterizado por ${content.description.toLowerCase()}. Este perfil indica potencial para ${getExecutivePotential(dominantValue)} em ambientes que ressoem com seus valores fundamentais.
-        </p>
-        <p class="leading-relaxed mt-3">
-          ${AppState.jobs && AppState.jobs.length > 0 ? `A análise de fit cultural para o cargo de ${AppState.jobs[0].name} indica compatibilidade que deve ser considerada em conjunto com avaliação de competências técnicas e experiência profissional.` : 'Sem cargo específico vinculado, recomenda-se utilização deste relatório para autoconhecimento, planejamento de carreira e preparação para processos seletivos.'}
-        </p>
-        <p class="leading-relaxed mt-3">
-          Recomenda-se acompanhamento contínuo via PDI Motivacional focado em ${getDevelopmentFocus(dominantValue)}, garantindo evolução profissional e maximização de engajamento organizacional. Este relatório deve ser utilizado como ferramenta estratégica de gestão de talentos, desenvolvimento de liderança e alocação de perfis em contextos de alta performance.
-        </p>
-      `;
+      try {
+        var execConclusion = safeGetElement('executiveConclusion');
+        if (!execConclusion) return;
+        
+        var sortedEntries = Object.entries(dimensions).sort(function(a, b) { return b[1] - a[1]; });
+        var dominantValue = sortedEntries[0][0];
+        var dominantScore = dimensions[dominantValue];
+        var content = VALUES_CONTENT[dominantValue];
+        
+        if (!content) return;
+        
+        execConclusion.innerHTML = '<p class="leading-relaxed">' +
+          'O participante demonstra um perfil motivacional predominantemente orientado por <strong>' + content.title.toLowerCase() + '</strong> (' + dominantScore + '%), caracterizado por ' + content.description.toLowerCase() + '. Este perfil indica potencial para ' + getExecutivePotential(dominantValue) + ' em ambientes que ressoem com seus valores fundamentais.' +
+        '</p>' +
+        '<p class="leading-relaxed mt-3">' +
+          (AppState.jobs && AppState.jobs.length > 0 
+            ? 'A análise de fit cultural para o cargo de ' + AppState.jobs[0].name + ' indica compatibilidade que deve ser considerada em conjunto com avaliação de competências técnicas e experiência profissional.'
+            : 'Sem cargo específico vinculado, recomenda-se utilização deste relatório para autoconhecimento, planejamento de carreira e preparação para processos seletivos.') +
+        '</p>' +
+        '<p class="leading-relaxed mt-3">' +
+          'Recomenda-se acompanhamento contínuo via PDI Motivacional focado em ' + getDevelopmentFocus(dominantValue) + ', garantindo evolução profissional e maximização de engajamento organizacional. Este relatório deve ser utilizado como ferramenta estratégica de gestão de talentos, desenvolvimento de liderança e alocação de perfis em contextos de alta performance.' +
+        '</p>';
+      } catch (e) {
+        console.error('❌ Erro em renderExecutiveConclusion:', e);
+      }
     }
 
     function getExecutivePotential(value) {
-      const potentials = {
-        purpose: 'liderança inspiradora, engajamento sustentado e contribuição com significado',
-        recognition: 'alta performance em ambientes com cultura de feedback e reconhecimento',
-        autonomy: 'excelência em estruturas flexíveis com confiança e liberdade de execução',
-        stability: 'consistência e confiabilidade em ambientes estruturados e previsíveis',
-        growth: 'evolução contínua e adaptação em trajetórias de desenvolvimento acelerado',
-        innovation: 'criatividade e contribuição disruptiva em ambientes que valorizam experimentação',
-        collaboration: 'fortalecimento de equipes e cultura de apoio mútuo',
-        impact: 'contribuição com propósito e engajamento em iniciativas de impacto social',
-        balance: 'sustentabilidade profissional e bem-estar integral de longo prazo',
-        achievement: 'superação de desafios e conquista de resultados em ambientes meritocráticos'
-      };
-      return potentials[value] || 'performance alinhada com valores pessoais';
+      try {
+        var potentials = {
+          purpose: 'liderança inspiradora, engajamento sustentado e contribuição com significado',
+          recognition: 'alta performance em ambientes com cultura de feedback e reconhecimento',
+          autonomy: 'excelência em estruturas flexíveis com confiança e liberdade de execução',
+          stability: 'consistência e confiabilidade em ambientes estruturados e previsíveis',
+          growth: 'evolução contínua e adaptação em trajetórias de desenvolvimento acelerado',
+          innovation: 'criatividade e contribuição disruptiva em ambientes que valorizam experimentação',
+          collaboration: 'fortalecimento de equipes e cultura de apoio mútuo',
+          impact: 'contribuição com propósito e engajamento em iniciativas de impacto social',
+          balance: 'sustentabilidade profissional e bem-estar integral de longo prazo',
+          achievement: 'superação de desafios e conquista de resultados em ambientes meritocráticos'
+        };
+        return potentials[value] || 'performance alinhada com valores pessoais';
+      } catch (e) {
+        return 'performance alinhada com valores pessoais';
+      }
     }
 
     function getDevelopmentFocus(value) {
-      const focuses = {
-        purpose: 'alinhamento propósito-carreira e conexão com impacto organizacional',
-        recognition: 'sistema de feedback estruturado e cultura de apreciação',
-        autonomy: 'confiança na autogestão e equilíbrio entre liberdade e direção',
-        stability: 'comunicação de mudanças e construção de segurança psicológica',
-        growth: 'plano de carreira claro e oportunidades de desenvolvimento contínuo',
-        innovation: 'ambiente seguro para experimentação e aprendizado com falhas',
-        collaboration: 'cultura de equipe e reconhecimento de contribuições coletivas',
-        impact: 'conexão entre trabalho diário e contribuição social significativa',
-        balance: 'respeito a limites e promoção de bem-estar integral',
-        achievement: 'metas desafiadoras com suporte para sustentabilidade de performance'
-      };
-      return focuses[value] || 'desenvolvimento alinhado ao perfil motivacional';
+      try {
+        var focuses = {
+          purpose: 'alinhamento propósito-carreira e conexão com impacto organizacional',
+          recognition: 'sistema de feedback estruturado e cultura de apreciação',
+          autonomy: 'confiança na autogestão e equilíbrio entre liberdade e direção',
+          stability: 'comunicação de mudanças e construção de segurança psicológica',
+          growth: 'plano de carreira claro e oportunidades de desenvolvimento contínuo',
+          innovation: 'ambiente seguro para experimentação e aprendizado com falhas',
+          collaboration: 'cultura de equipe e reconhecimento de contribuições coletivas',
+          impact: 'conexão entre trabalho diário e contribuição social significativa',
+          balance: 'respeito a limites e promoção de bem-estar integral',
+          achievement: 'metas desafiadoras com suporte para sustentabilidade de performance'
+        };
+        return focuses[value] || 'desenvolvimento alinhado ao perfil motivacional';
+      } catch (e) {
+        return 'desenvolvimento alinhado ao perfil motivacional';
+      }
     }
 
     // ============================================
     // RENDERIZAR CONCLUSÃO PREMIUM
     // ============================================
     function renderPremiumConclusion(dimensions) {
-      const container = safeGetElement('premiumExecutiveConclusion');
-      if (!container) return;
-      
-      const dominantValue = Object.entries(dimensions).sort((a, b) => b[1] - a[1])[0][0];
-      const content = VALUES_CONTENT[dominantValue];
-      const culturalFit = calculateCulturalFit(dimensions);
-      
-      const text = `
-        <div class="prose max-w-none">
-          <h3 class="text-lg font-bold text-brand-navy mb-4">1. Síntese Executiva Multinacional</h3>
-          <p class="mb-4">
-            O participante exibe um perfil motivacional predominantemente orientado por <strong class="text-brand-purple">${content.title}</strong> (${dimensions[dominantValue]}%), com valores secundários em ${getSecondaryValues(dimensions)}. Este perfil indica um profissional com alta aderência a ambientes que demandam <strong>${getStrategicAlignment(dominantValue)}</strong>.
-          </p>
-          <p class="mb-6">
-            A combinação destes valores sugere um potencial significativo para ${getExecutivePotential(dominantValue)}, alinhando-se a posições estratégicas dentro de organizações que priorizem cultura autêntica e engajamento baseado em valores.
-          </p>
+      try {
+        var container = safeGetElement('premiumExecutiveConclusion');
+        if (!container) return;
+        
+        var sortedEntries = Object.entries(dimensions).sort(function(a, b) { return b[1] - a[1]; });
+        var dominantValue = sortedEntries[0][0];
+        var content = VALUES_CONTENT[dominantValue];
+        var culturalFit = calculateCulturalFit(dimensions);
+        
+        if (!content) return;
+        
+        var secondaryValues = getSecondaryValues(dimensions);
+        var strategicAlignment = getStrategicAlignment(dominantValue);
+        var executivePotential = getExecutivePotential(dominantValue);
+        var fitInterpretation = getFitInterpretation(culturalFit);
+        var motivationalBehavior = getMotivationalBehavior(dominantValue, dimensions[dominantValue]);
+        var riskMitigation = getRiskMitigationStrategies(dimensions);
+        
+        container.innerHTML = '<div class="prose max-w-none">' +
+          '<h3 class="text-lg font-bold text-brand-navy mb-4">1. Síntese Executiva Multinacional</h3>' +
+          '<p class="mb-4">' +
+            'O participante exibe um perfil motivacional predominantemente orientado por <strong class="text-brand-purple">' + content.title + '</strong> (' + dimensions[dominantValue] + '%), com valores secundários em ' + secondaryValues + '. Este perfil indica um profissional com alta aderência a ambientes que demandam <strong>' + strategicAlignment + '</strong>.' +
+          '</p>' +
+          '<p class="mb-6">' +
+            'A combinação destes valores sugere um potencial significativo para ' + executivePotential + ', alinhando-se a posições estratégicas dentro de organizações que priorizem cultura autêntica e engajamento baseado em valores.' +
+          '</p>' +
 
-          <h3 class="text-lg font-bold text-brand-navy mb-4">2. Análise de Fit Cultural e Motivacional</h3>
-          <p class="mb-4">
-            ${AppState.jobs && AppState.jobs.length > 0 
-              ? `Para o cargo de <strong>${AppState.jobs[0].name}</strong>, a análise de fit cultural indica compatibilidade de <strong class="${culturalFit >= 75 ? 'text-emerald-600' : culturalFit >= 60 ? 'text-amber-600' : 'text-red-600'}">${culturalFit}%</strong>. ${getFitInterpretation(culturalFit)}`
-              : 'Sem cargo específico vinculado, este relatório serve como base para autoconhecimento e preparação para futuros processos de seleção e alocação cultural.'}
-          </p>
-          <p class="mb-6">
-            Os motivadores predominantes indicam que o participante ${getMotivationalBehavior(dominantValue, dimensions[dominantValue])}. Esta compreensão é fundamental para estratégias de engajamento, desenvolvimento e retenção.
-          </p>
+          '<h3 class="text-lg font-bold text-brand-navy mb-4">2. Análise de Fit Cultural e Motivacional</h3>' +
+          '<p class="mb-4">' +
+            (AppState.jobs && AppState.jobs.length > 0 
+              ? 'Para o cargo de <strong>' + AppState.jobs[0].name + '</strong>, a análise de fit cultural indica compatibilidade de <strong class="' + (culturalFit >= 75 ? 'text-emerald-600' : culturalFit >= 60 ? 'text-amber-600' : 'text-red-600') + '">' + culturalFit + '%</strong>. ' + fitInterpretation
+              : 'Sem cargo específico vinculado, este relatório serve como base para autoconhecimento e preparação para futuros processos de seleção e alocação cultural.') +
+          '</p>' +
+          '<p class="mb-6">' +
+            'Os motivadores predominantes indicam que o participante ' + motivationalBehavior + '. Esta compreensão é fundamental para estratégias de engajamento, desenvolvimento e retenção.' +
+          '</p>' +
 
-          <h3 class="text-lg font-bold text-brand-navy mb-4">3. Riscos Motivacionais e Estratégias de Mitigação</h3>
-          <p class="mb-4">
-            Para garantir engajamento sustentado e prevenir desalinhamento cultural, recomenda-se atenção aos seguintes pontos:
-          </p>
-          <ul class="list-disc pl-6 mb-6 text-gray-700 space-y-2">
-            ${getRiskMitigationStrategies(dimensions).map(r => `<li>${r}</li>`).join('')}
-          </ul>
+          '<h3 class="text-lg font-bold text-brand-navy mb-4">3. Riscos Motivacionais e Estratégias de Mitigação</h3>' +
+          '<p class="mb-4">' +
+            'Para garantir engajamento sustentado e prevenir desalinhamento cultural, recomenda-se atenção aos seguintes pontos:' +
+          '</p>' +
+          '<ul class="list-disc pl-6 mb-6 text-gray-700 space-y-2">' +
+            riskMitigation.map(function(r) { return '<li>' + r + '</li>'; }).join('') +
+          '</ul>' +
 
-          <h3 class="text-lg font-bold text-brand-navy mb-4">4. Recomendações Estratégicas de Desenvolvimento (PDI Motivacional)</h3>
-          <p class="mb-2 font-semibold text-gray-800">Curto Prazo (0-3 meses):</p>
-          <ul class="list-disc pl-6 mb-4 text-gray-700 space-y-1">
-            <li>Reflexão guiada sobre alinhamento valores-carreira</li>
-            <li>Identificação de motivadores prioritários e ações imediatas</li>
-            <li>Feedback estruturado sobre fit cultural com gestor</li>
-          </ul>
-          <p class="mb-2 font-semibold text-gray-800">Médio Prazo (3-12 meses):</p>
-          <ul class="list-disc pl-6 mb-4 text-gray-700 space-y-1">
-            <li>Programa de mentoria focado em propósito e desenvolvimento</li>
-            <li>Desenvolvimento de competências que potencializem valores</li>
-            <li>Engajamento em iniciativas organizacionais alinhadas</li>
-          </ul>
-          <p class="mb-2 font-semibold text-gray-800">Longo Prazo (12+ meses):</p>
-          <ul class="list-disc pl-6 mb-4 text-gray-700 space-y-1">
-            <li>Papel de embaixador cultural e multiplicador de valores</li>
-            <li>Desenvolvimento de programa motivacional para pares</li>
-            <li>Integração de inteligência motivacional em estratégia organizacional</li>
-          </ul>
+          '<h3 class="text-lg font-bold text-brand-navy mb-4">4. Recomendações Estratégicas de Desenvolvimento (PDI Motivacional)</h3>' +
+          '<p class="mb-2 font-semibold text-gray-800">Curto Prazo (0-3 meses):</p>' +
+          '<ul class="list-disc pl-6 mb-4 text-gray-700 space-y-1">' +
+            '<li>Reflexão guiada sobre alinhamento valores-carreira</li>' +
+            '<li>Identificação de motivadores prioritários e ações imediatas</li>' +
+            '<li>Feedback estruturado sobre fit cultural com gestor</li>' +
+          '</ul>' +
+          '<p class="mb-2 font-semibold text-gray-800">Médio Prazo (3-12 meses):</p>' +
+          '<ul class="list-disc pl-6 mb-4 text-gray-700 space-y-1">' +
+            '<li>Programa de mentoria focado em propósito e desenvolvimento</li>' +
+            '<li>Desenvolvimento de competências que potencializem valores</li>' +
+            '<li>Engajamento em iniciativas organizacionais alinhadas</li>' +
+          '</ul>' +
+          '<p class="mb-2 font-semibold text-gray-800">Longo Prazo (12+ meses):</p>' +
+          '<ul class="list-disc pl-6 mb-4 text-gray-700 space-y-1">' +
+            '<li>Papel de embaixador cultural e multiplicador de valores</li>' +
+            '<li>Desenvolvimento de programa motivacional para pares</li>' +
+            '<li>Integração de inteligência motivacional em estratégia organizacional</li>' +
+          '</ul>' +
           
-          <div class="bg-brand-purple/5 p-4 rounded-lg border border-brand-purple/20 mt-6">
-            <p class="text-sm text-brand-purple-900">
-              <strong>Nota Metodológica:</strong> Esta análise integra a Teoria de Valores de Shalom Schwartz com modelos de people analytics da Vigorre One™. Os resultados devem ser interpretados como ferramenta de apoio à decisão, em conjunto com entrevistas comportamentais, assessment de cultura e análise de experiência profissional.
-            </p>
-          </div>
-        </div>
-      `;
-      
-      container.innerHTML = text;
+          '<div class="bg-brand-purple/5 p-4 rounded-lg border border-brand-purple/20 mt-6">' +
+            '<p class="text-sm text-brand-purple-900">' +
+              '<strong>Nota Metodológica:</strong> Esta análise integra a Teoria de Valores de Shalom Schwartz com modelos de people analytics da Vigorre One™. Os resultados devem ser interpretados como ferramenta de apoio à decisão, em conjunto com entrevistas comportamentais, assessment de cultura e análise de experiência profissional.' +
+            '</p>' +
+          '</div>' +
+        '</div>';
+      } catch (e) {
+        console.error('❌ Erro em renderPremiumConclusion:', e);
+      }
     }
 
     function getSecondaryValues(dimensions) {
-      const sorted = Object.entries(dimensions).sort((a, b) => b[1] - a[1]);
-      return sorted.slice(1, 3).map(([k, v]) => `${VALUES_CONTENT[k].title} (${v}%)`).join(' e ');
+      try {
+        var sorted = Object.entries(dimensions).sort(function(a, b) { return b[1] - a[1]; });
+        return sorted.slice(1, 3).map(function(entry) {
+          var k = entry[0];
+          var v = entry[1];
+          return VALUES_CONTENT[k].title + ' (' + v + '%)';
+        }).join(' e ');
+      } catch (e) {
+        return 'outros valores';
+      }
     }
 
     function getStrategicAlignment(value) {
-      const alignments = {
-        purpose: 'propósito claro, impacto social e missão inspiradora',
-        recognition: 'cultura de feedback, apreciação e visibilidade de conquistas',
-        autonomy: 'flexibilidade, confiança e liberdade de execução',
-        stability: 'estrutura clara, processos definidos e evolução gradual',
-        growth: 'desenvolvimento contínuo, desafios progressivos e progressão',
-        innovation: 'experimentação, criatividade e tolerância a falhas como aprendizado',
-        collaboration: 'trabalho em equipe, apoio mútuo e cultura de comunidade',
-        impact: 'contribuição social, sustentabilidade e legado significativo',
-        balance: 'bem-estar integral, limites saudáveis e flexibilidade',
-        achievement: 'metas desafiadoras, meritocracia e reconhecimento de resultados'
-      };
-      return alignments[value] || 'alinhamento com valores organizacionais autênticos';
+      try {
+        var alignments = {
+          purpose: 'propósito claro, impacto social e missão inspiradora',
+          recognition: 'cultura de feedback, apreciação e visibilidade de conquistas',
+          autonomy: 'flexibilidade, confiança e liberdade de execução',
+          stability: 'estrutura clara, processos definidos e evolução gradual',
+          growth: 'desenvolvimento contínuo, desafios progressivos e progressão',
+          innovation: 'experimentação, criatividade e tolerância a falhas como aprendizado',
+          collaboration: 'trabalho em equipe, apoio mútuo e cultura de comunidade',
+          impact: 'contribuição social, sustentabilidade e legado significativo',
+          balance: 'bem-estar integral, limites saudáveis e flexibilidade',
+          achievement: 'metas desafiadoras, meritocracia e reconhecimento de resultados'
+        };
+        return alignments[value] || 'alinhamento com valores organizacionais autênticos';
+      } catch (e) {
+        return 'alinhamento com valores organizacionais';
+      }
     }
 
     function getFitInterpretation(score) {
-      if (score >= 90) return 'Este nível de compatibilidade indica <strong>excepcional alinhamento</strong> entre valores pessoais e cultura organizacional, sugerindo alto potencial de engajamento, satisfação e retenção de longo prazo.';
-      if (score >= 75) return 'Este nível de compatibilidade indica <strong>forte alinhamento</strong> com pontos de atenção específicos que, se gerenciados proativamente, podem resultar em engajamento sustentado e performance elevada.';
-      if (score >= 60) return 'Este nível de compatibilidade indica <strong>alinhamento moderado</strong> com gaps motivacionais que demandam intervenção estratégica para prevenir desengajamento e otimizar fit cultural.';
-      return 'Este nível de compatibilidade indica <strong>possível desalinhamento</strong> significativo entre valores pessoais e cultura organizacional, sugerindo avaliação criteriosa antes da alocação e desenvolvimento de estratégias de mitigação de riscos.';
+      try {
+        if (score >= 90) return 'Este nível de compatibilidade indica <strong>excepcional alinhamento</strong> entre valores pessoais e cultura organizacional, sugerindo alto potencial de engajamento, satisfação e retenção de longo prazo.';
+        if (score >= 75) return 'Este nível de compatibilidade indica <strong>forte alinhamento</strong> com pontos de atenção específicos que, se gerenciados proativamente, podem resultar em engajamento sustentado e performance elevada.';
+        if (score >= 60) return 'Este nível de compatibilidade indica <strong>alinhamento moderado</strong> com gaps motivacionais que demandam intervenção estratégica para prevenir desengajamento e otimizar fit cultural.';
+        return 'Este nível de compatibilidade indica <strong>possível desalinhamento</strong> significativo entre valores pessoais e cultura organizacional, sugerindo avaliação criteriosa antes da alocação e desenvolvimento de estratégias de mitigação de riscos.';
+      } catch (e) {
+        return 'Análise de compatibilidade disponível.';
+      }
     }
 
     function getMotivationalBehavior(value, score) {
-      const behaviors = {
-        purpose: `demonstra motivação ${score >= 70 ? 'elevada' : score >= 50 ? 'moderada' : 'instrumental'} por trabalho com significado, buscando organizações cuja missão ressoe com seus valores pessoais`,
-        recognition: `possui ${score >= 70 ? 'alta sensibilidade' : score >= 50 ? 'apreciação equilibrada' : 'motivação interna'} a reconhecimento, influenciando engajamento e percepção de valor`,
-        autonomy: `${score >= 70 ? 'necessita de alta independência' : score >= 50 ? 'equilibra autonomia com estrutura' : 'confortável com orientação direta'} para performar no máximo potencial`,
-        stability: `${score >= 70 ? 'valoriza profundamente previsibilidade' : score >= 50 ? 'aceita mudanças bem comunicadas' : 'confortável com ambiguidade'}, influenciando adaptação a transformações organizacionais`,
-        growth: `${score >= 70 ? 'busca constante por desafios e evolução' : score >= 50 ? 'valoriza desenvolvimento em ritmo sustentável' : 'satisfação com nível atual'}, impactando trajetória de carreira`,
-        innovation: `${score >= 70 ? 'thrives em ambientes inovadores' : score >= 50 ? 'aprecia inovação com processos' : 'prefere métodos testados'}, influenciando contribuição criativa`,
-        collaboration: `${score >= 70 ? 'motivação por conexões significativas' : score >= 50 ? 'equilíbrio entre individual e coletivo' : 'conforto com trabalho independente'}, impactando dinâmica de equipe`,
-        impact: `${score >= 70 ? 'busca ativa de contribuição social' : score >= 50 ? 'valoriza impacto equilibrado' : 'foco em objetivos profissionais'}, influenciando engajamento com propósito`,
-        balance: `${score >= 70 ? 'prioriza bem-estar integral' : score >= 50 ? 'busca equilíbrio flexível' : 'disposto a priorizar trabalho'}, impactando sustentabilidade de performance`,
-        achievement: `${score >= 70 ? 'impulsionado por desafios e conquistas' : score >= 50 ? 'aprecia metas com equilíbrio' : 'satisfação com desempenho adequado'}, influenciando ambição profissional`
-      };
-      return behaviors[value] || 'comportamento alinhado com perfil motivacional identificado';
+      try {
+        var behaviors = {
+          purpose: 'demonstra motivação ' + (score >= 70 ? 'elevada' : score >= 50 ? 'moderada' : 'instrumental') + ' por trabalho com significado, buscando organizações cuja missão ressoe com seus valores pessoais',
+          recognition: 'possui ' + (score >= 70 ? 'alta sensibilidade' : score >= 50 ? 'apreciação equilibrada' : 'motivação interna') + ' a reconhecimento, influenciando engajamento e percepção de valor',
+          autonomy: (score >= 70 ? 'necessita de alta independência' : score >= 50 ? 'equilibra autonomia com estrutura' : 'confortável com orientação direta') + ' para performar no máximo potencial',
+          stability: (score >= 70 ? 'valoriza profundamente previsibilidade' : score >= 50 ? 'aceita mudanças bem comunicadas' : 'confortável com ambiguidade') + ', influenciando adaptação a transformações organizacionais',
+          growth: (score >= 70 ? 'busca constante por desafios e evolução' : score >= 50 ? 'valoriza desenvolvimento em ritmo sustentável' : 'satisfação com nível atual') + ', impactando trajetória de carreira',
+          innovation: (score >= 70 ? 'thrives em ambientes inovadores' : score >= 50 ? 'aprecia inovação com processos' : 'prefere métodos testados') + ', influenciando contribuição criativa',
+          collaboration: (score >= 70 ? 'motivação por conexões significativas' : score >= 50 ? 'equilíbrio entre individual e coletivo' : 'conforto com trabalho independente') + ', impactando dinâmica de equipe',
+          impact: (score >= 70 ? 'busca ativa de contribuição social' : score >= 50 ? 'valoriza impacto equilibrado' : 'foco em objetivos profissionais') + ', influenciando engajamento com propósito',
+          balance: (score >= 70 ? 'prioriza bem-estar integral' : score >= 50 ? 'busca equilíbrio flexível' : 'disposto a priorizar trabalho') + ', impactando sustentabilidade de performance',
+          achievement: (score >= 70 ? 'impulsionado por desafios e conquistas' : score >= 50 ? 'aprecia metas com equilíbrio' : 'satisfação com desempenho adequado') + ', influenciando ambição profissional'
+        };
+        return behaviors[value] || 'comportamento alinhado com perfil motivacional identificado';
+      } catch (e) {
+        return 'comportamento alinhado com perfil identificado';
+      }
     }
 
     function getRiskMitigationStrategies(dimensions) {
-      const strategies = [];
-      
-      if (dimensions.stability >= 70) {
-        strategies.push('Comunicar mudanças com antecedência, justificativa clara e suporte durante transição para reduzir ansiedade.');
+      try {
+        var strategies = [];
+        
+        if (dimensions.stability >= 70) {
+          strategies.push('Comunicar mudanças com antecedência, justificativa clara e suporte durante transição para reduzir ansiedade.');
+        }
+        if (dimensions.recognition >= 70) {
+          strategies.push('Implementar sistema estruturado de reconhecimento e feedback frequente para manter engajamento.');
+        }
+        if (dimensions.autonomy >= 70) {
+          strategies.push('Oferecer flexibilidade e confiança na execução; evitar microgestão que possa gerar frustração.');
+        }
+        if (dimensions.growth >= 70) {
+          strategies.push('Oferecer plano de carreira claro e oportunidades de desenvolvimento para prevenir estagnação.');
+        }
+        if (dimensions.purpose >= 70) {
+          strategies.push('Conectar tarefas diárias com impacto organizacional e social para fortalecer significado.');
+        }
+        
+        if (strategies.length === 0) {
+          strategies.push('Manter comunicação transparente e alinhamento de expectativas para sustentabilidade de engajamento.');
+        }
+        
+        return strategies;
+      } catch (e) {
+        return ['Manter comunicação transparente e alinhamento de expectativas.'];
       }
-      if (dimensions.recognition >= 70) {
-        strategies.push('Implementar sistema estruturado de reconhecimento e feedback frequente para manter engajamento.');
-      }
-      if (dimensions.autonomy >= 70) {
-        strategies.push('Oferecer flexibilidade e confiança na execução; evitar microgestão que possa gerar frustração.');
-      }
-      if (dimensions.growth >= 70) {
-        strategies.push('Oferecer plano de carreira claro e oportunidades de desenvolvimento para prevenir estagnação.');
-      }
-      if (dimensions.purpose >= 70) {
-        strategies.push('Conectar tarefas diárias com impacto organizacional e social para fortalecer significado.');
-      }
-      
-      if (strategies.length === 0) {
-        strategies.push('Manter comunicação transparente e alinhamento de expectativas para sustentabilidade de engajamento.');
-      }
-      
-      return strategies;
     }
 
     // ============================================
     // RENDERIZAR FRASE FINAL
     // ============================================
     function renderFinalQuote() {
-      const quotes = [
-        "Valores alinhados criam culturas extraordinárias.",
-        "Motivadores compreendidos são talentos retidos.",
-        "Propósito compartilhado transforma trabalho em legado.",
-        "Cultura autêntica atrai e retém os melhores.",
-        "Pessoas com valores alinhados ao ambiente entregam performance sustentável."
-      ];
-      const finalQuote = safeGetElement('finalQuote');
-      if (finalQuote) finalQuote.textContent = quotes[Math.floor(Math.random() * quotes.length)];
+      try {
+        var quotes = [
+          "Valores alinhados criam culturas extraordinárias.",
+          "Motivadores compreendidos são talentos retidos.",
+          "Propósito compartilhado transforma trabalho em legado.",
+          "Cultura autêntica atrai e retém os melhores.",
+          "Pessoas com valores alinhados ao ambiente entregam performance sustentável."
+        ];
+        var finalQuote = safeGetElement('finalQuote');
+        if (finalQuote) finalQuote.textContent = quotes[Math.floor(Math.random() * quotes.length)];
+      } catch (e) {
+        console.error('❌ Erro em renderFinalQuote:', e);
+      }
     }
 
     // ============================================
@@ -2016,27 +2151,32 @@
     // ============================================
     function exportPDF() {
       showToast('📄 Gerando PDF executivo de alta resolução...', 'success');
-      setTimeout(() => {
+      setTimeout(function() {
         window.print();
       }, 1000);
     }
 
-    function showToast(message, type = 'success') {
-      const toast = safeGetElement('toast');
-      if (!toast) return;
-      
-      const toastIcon = safeGetElement('toastIcon');
-      const toastMessage = safeGetElement('toastMessage');
-      
-      if (toastIcon) toastIcon.textContent = type === 'success' ? '✅' : '⚠️';
-      if (toastMessage) toastMessage.textContent = message;
-      
-      toast.classList.remove('hidden');
-      setTimeout(() => toast.classList.add('show'), 10);
-      setTimeout(() => { 
-        toast.classList.remove('show'); 
-        setTimeout(() => toast.classList.add('hidden'), 300); 
-      }, 4000);
+    function showToast(message, type) {
+      try {
+        type = type || 'success';
+        var toast = safeGetElement('toast');
+        if (!toast) return;
+        
+        var toastIcon = safeGetElement('toastIcon');
+        var toastMessage = safeGetElement('toastMessage');
+        
+        if (toastIcon) toastIcon.textContent = type === 'success' ? '✅' : '⚠️';
+        if (toastMessage) toastMessage.textContent = message;
+        
+        toast.classList.remove('hidden');
+        setTimeout(function() { toast.classList.add('show'); }, 10);
+        setTimeout(function() { 
+          toast.classList.remove('show'); 
+          setTimeout(function() { toast.classList.add('hidden'); }, 300); 
+        }, 4000);
+      } catch (e) {
+        console.error('❌ Erro em showToast:', e);
+      }
     }
 
     // ============================================
@@ -2050,11 +2190,10 @@
 
     console.log('🔍 Relatório de Valores - Resultados disponíveis:', {
       values: !!localStorage.getItem('vigorre_last_values_result'),
-      participant: AppState.participant?.name || 'não carregado',
-      company: AppState.company?.name || 'não carregada',
+      participant: (AppState.participant && AppState.participant.name) ? AppState.participant.name : 'não carregado',
+      company: (AppState.company && AppState.company.name) ? AppState.company.name : 'não carregada',
       jobs: AppState.jobs || 'não carregadas'
     });
-
   </script>
 </body>
 </html>
