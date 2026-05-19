@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Teste de Inteligência Emocional | Vigorre People Analytics</title>
+  <title>Teste de Inteligência Emocional | Vigorre One™</title>
   
   <!-- Tailwind CSS & Chart.js -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -136,7 +136,7 @@
     .option-btn.selected .check-icon { background: #10B981; border-color: #10B981; }
 
     /* ============================================
-       PRINT OPTIMIZATION - PREMIUM VIGORRE
+       PRINT OPTIMIZATION - PREMIUM VIGORRE ONE™
        ============================================ */
     @media print {
       body { 
@@ -252,12 +252,12 @@
        ============================================ -->
   <div class="print-header">
     <div class="logo-v">V</div>
-    <h1>Vigorre People Analytics</h1>
+    <h1>Vigorre One™</h1>
     <p>Inteligência Emocional • Relatório Profissional</p>
   </div>
   
   <!-- Marca d'água para impressão -->
-  <div class="print-watermark">VIGORRE</div>
+  <div class="print-watermark">VIGORRE ONE</div>
 
   <!-- ============================================
        HEADER / CONTROLS (NO PRINT)
@@ -266,9 +266,9 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <!-- ✅ LOGO VIGORRE COM FALLBACK -->
-        <img src="logo-vigorre.png" alt="Vigorre" class="w-10 h-10 rounded-xl" onerror="this.outerHTML='<div class=\'w-10 h-10 rounded-xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center font-bold text-white\'>V</div>'">
+        <img src="logo-vigorre.png" alt="Vigorre One™" class="w-10 h-10 rounded-xl" onerror="this.outerHTML='<div class=\'w-10 h-10 rounded-xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center font-bold text-white\'>V</div>'">
         <div>
-          <h1 class="font-bold text-lg">Vigorre</h1>
+          <h1 class="font-bold text-lg">Vigorre One™</h1>
           <p class="text-xs text-gray-400">Inteligência Emocional • People Analytics</p>
         </div>
       </div>
@@ -303,7 +303,7 @@
     <!-- Header -->
     <div class="glass-card p-6 md:p-8 mb-8 text-center slide-up">
       <h1 class="text-3xl font-bold mb-2">Sua Inteligência Emocional</h1>
-      <p class="text-gray-400 mb-4" id="participantName">Análise Emocional Vigorre</p>
+      <p class="text-gray-400 mb-4" id="participantName">Análise Emocional Vigorre One™</p>
       <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-emerald/20 text-brand-emerald border border-brand-emerald/30" id="profileBadge">QE: --</div>
     </div>
 
@@ -347,19 +347,19 @@
       <div class="glass-card p-6 text-center slide-up">
         <h4 class="font-semibold mb-2">🔓 Desbloquear Análise Completa</h4>
         <p class="text-sm text-gray-400 mb-4">Laudo detalhado + fit cultural + plano de desenvolvimento</p>
-        <button onclick="window.location.href='laudo-vigorre.html?test=IE'" class="btn-secondary px-6 py-3 rounded-lg font-semibold w-full">Ver Laudo Vigorre</button>
+        <button onclick="window.location.href='relatorio-ie-vigorre.html'" class="btn-secondary px-6 py-3 rounded-lg font-semibold w-full">Ver Relatório Completo</button>
       </div>
     </div>
 
     <!-- Frase Final -->
     <div class="glass-card p-8 text-center slide-up mb-8">
       <blockquote class="text-lg italic text-gray-300 mb-4">"<span>A inteligência emocional é a habilidade mais poderosa da alta performance.</span>"</blockquote>
-      <p class="text-sm text-gray-400">— Vigorre People Analytics</p>
+      <p class="text-sm text-gray-400">— Vigorre One™</p>
     </div>
     
     <!-- Rodapé de impressão -->
     <div class="print-footer">
-      © 2024 Vigorre People Analytics • Relatório gerado em <span id="printDate"></span> • www.vigorre.com.br
+      © 2024 Vigorre One™ • Relatório gerado em <span id="printDate"></span> • www.vigorre.com.br
     </div>
   </div>
 
@@ -658,9 +658,10 @@
           AppState.session = session;
           const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
           AppState.participant = participants.find(p => p.id === session.id);
+          console.log('✅ Sessão carregada:', AppState.session.name);
         }
       } catch (e) {
-        console.error('Erro ao carregar sessão:', e);
+        console.error('❌ Erro ao carregar sessão:', e);
       }
     }
 
@@ -1005,9 +1006,9 @@ Resiliência: ${results.percentages.resiliencia}%
 Inteligência Social: ${results.percentages.social}%
 Estabilidade Emocional: ${results.percentages.estabilidade}%
 
-Para análise completa, acesse: laudo-vigorre.html
+Para análise completa, acesse: relatorio-ie-vigorre.html
 
-© 2024 Vigorre People Analytics - Metodologia validada internacionalmente
+© 2024 Vigorre One™ - Metodologia validada internacionalmente
       `;
 
       const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8' });
@@ -1041,7 +1042,7 @@ Para análise completa, acesse: laudo-vigorre.html
 
     // 1. Tratamento de erro global com fallback amigável
     window.addEventListener('error', function(e) {
-      console.error('Erro no Teste IE Vigorre:', e);
+      console.error('❌ Erro no Teste IE Vigorre One™:', e);
       showToast('⚠️ Ocorreu um erro. Recarregue a página se o problema persistir.', 'error');
       return true; // Previne erro no console
     });
