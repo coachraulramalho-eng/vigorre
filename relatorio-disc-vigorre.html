@@ -34,7 +34,7 @@
           }
         }
       }
-    }
+    };
   </script>
 
   <style>
@@ -42,12 +42,13 @@
        BASE & RESET - ENTERPRISE PREMIUM
        ============================================ */
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body { 
       font-family: 'Inter', sans-serif; 
       background: #F1F5F9;
       color: #1e293b;
       min-height: 100vh; 
-      line-height: 1.6;
+      line-height: 1.8;
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
     }
@@ -87,7 +88,7 @@
     }
     
     .vigorre-card .card-header {
-      background: #F8FAFC;
+      background: linear-gradient(135deg, #F8FAFC, #ffffff);
       border-bottom: 2px solid #E2E8F0;
       padding: 20px 30px;
       display: flex;
@@ -154,19 +155,67 @@
     }
 
     /* ============================================
+       MODAL PREMIUM
+       ============================================ */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      backdrop-filter: blur(8px);
+    }
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    }
+    .modal-content h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0F172A;
+      margin-bottom: 1rem;
+    }
+    .modal-content p {
+      color: #64748B;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+    .modal-btn {
+      background: linear-gradient(135deg, #1D4ED8, #7C3AED);
+      color: white;
+      padding: 12px 32px;
+      border-radius: 8px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .modal-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(29, 78, 216, 0.4);
+    }
+
+    /* ============================================
        PRINT OPTIMIZATION - ULTRA PREMIUM
        ============================================ */
     @media print {
       @page {
         size: A4 portrait;
-        margin: 15mm 15mm;
+        margin: 20mm 20mm;
       }
       
       body { 
         background: #ffffff !important;
         color: #000000 !important;
-        font-size: 11pt;
-        line-height: 1.5;
+        font-size: 10pt;
+        line-height: 1.6;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
@@ -179,7 +228,7 @@
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 15px 25px !important;
+        padding: 20px 30px !important;
         position: fixed;
         top: 0;
         left: 0;
@@ -246,10 +295,10 @@
         color: white !important;
       }
       
-      /* Conteúdo principal com margem para header/footer - CORREÇÃO DAS MARGENS */
+      /* Conteúdo principal com margem CORRETAMENTE AJUSTADA para header/footer */
       main {
-        margin-top: 100px !important;
-        margin-bottom: 100px !important;
+        margin-top: 120px !important;
+        margin-bottom: 120px !important;
         padding: 0 !important;
       }
       
@@ -260,7 +309,7 @@
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
         break-inside: avoid !important;
         page-break-inside: avoid !important;
-        margin-bottom: 20px !important;
+        margin-bottom: 25px !important;
       }
       
       .vigorre-card .card-header {
@@ -270,7 +319,7 @@
       
       /* Gráficos na impressão */
       .chart-container {
-        height: 300px !important;
+        height: 320px !important;
         max-width: 100% !important;
         page-break-inside: avoid;
       }
@@ -284,6 +333,7 @@
       /* Textos na impressão */
       h1, h2, h3, h4 {
         color: #0F172A !important;
+        page-break-after: avoid;
       }
       
       p, li, td { 
@@ -295,7 +345,7 @@
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 15px 25px !important;
+        padding: 20px 30px !important;
         position: fixed;
         bottom: 0;
         left: 0;
@@ -379,7 +429,7 @@
   <!-- ============================================
        HEADER VIGORRE ONE™ PREMIUM (TELA)
        ============================================ -->
-  <header class="no-print bg-brand-navy text-white shadow-lg sticky top-0 z-50">
+  <header class="no-print bg-brand-navy text-white shadow-lg sticky top-0 z-50" style="height: 70px;">
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
       <div class="flex items-center gap-4">
         <!-- LOGO COM FUNDO BRANCO NA MOLDURA -->
@@ -394,9 +444,6 @@
       <div class="flex items-center gap-3">
         <button onclick="window.print()" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 border border-white/20">
           🖨️ Imprimir
-        </button>
-        <button onclick="exportPDF()" class="bg-gradient-to-r from-brand-blue to-brand-purple hover:opacity-90 text-white px-5 py-2 rounded-lg text-sm font-bold transition shadow-lg flex items-center gap-2">
-          📥 Exportar PDF
         </button>
       </div>
     </div>
@@ -452,9 +499,9 @@
   </div>
 
   <!-- ============================================
-       MAIN REPORT CONTENT
+       MAIN REPORT CONTENT - MARGEM CORRETAMENTE AJUSTADA
        ============================================ -->
-  <main class="max-w-5xl mx-auto px-4 py-10">
+  <main class="max-w-5xl mx-auto px-4 py-12" style="padding-top: 90px; padding-bottom: 90px;">
     
     <!-- CAPA / DADOS DO PARTICIPANTE -->
     <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 mb-8">
@@ -852,6 +899,16 @@
     <span id="toastIcon" class="text-2xl">✅</span><span id="toastMessage" class="font-medium text-gray-800">Ação realizada!</span>
   </div>
 
+  <!-- MODAL PARA BOTÃO RELATÓRIO SIMPLES -->
+  <div id="simpleReportModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <h3>🔒 Acesso ao Relatório Completo</h3>
+      <p>Para obter acesso ao relatório completo com análise detalhada, plano de desenvolvimento personalizado e parecer executivo multinacional, entre em contato com nossa equipe.</p>
+      <p class="font-semibold text-brand-navy">Procure a Vigorre para maiores detalhes.</p>
+      <button onclick="closeModalAndLogout()" class="modal-btn">Sair e Voltar</button>
+    </div>
+  </div>
+
   <script>
     // ============================================
     // BANCO DE DADOS DE CONTEÚDO PROFUNDO (PREMIUM)
@@ -979,6 +1036,12 @@
       console.log('🔹 Inicializando Relatório DISC Vigorre One™...');
       loadSession();
       loadDiscResults();
+      
+      // ✅ CORREÇÃO: Detectar clique no botão "voltar" do navegador para fazer logoff
+      window.addEventListener('popstate', function(event) {
+        console.log('🔙 Botão voltar detectado - realizando logoff');
+        performLogout();
+      });
     });
 
     function loadSession() {
@@ -1102,7 +1165,7 @@
         console.log('✓ Nome:', AppState.participant.name);
       }
       
-      // Empresa
+      // Empresa - CORREÇÃO: Sempre mostrar nome da empresa vinculada
       const coverCompany = safeGetElement('coverCompany');
       if (coverCompany) {
         const companyName = AppState.company?.name || 'Independente';
@@ -1132,7 +1195,7 @@
     }
 
     // ============================================
-    // ✅ NOVA SEÇÃO: ANÁLISE DE ADERÊNCIA À VAGA
+    // ✅ NOVA SEÇÃO: ANÁLISE DE ADERÊNCIA À VAGA (COM NOME DA VAGA E TEXTO COERENTE)
     // ============================================
     function renderAderenciaVaga(dominant, percentages) {
       const container = safeGetElement('aderenciaContent');
@@ -1156,14 +1219,22 @@
       // Gerar análise textual completa
       const analiseTextual = getAnaliseTextual(dominant, intensity, percentages);
       
-      // ✅ CORREÇÃO: Mostrar nome da vaga vinculada
-      const vagaNome = AppState.jobs && AppState.jobs.length > 0 ? AppState.jobs[0].name : 'Vaga não especificada';
+      // ✅ CORREÇÃO: Mostrar nome da vaga vinculada e texto coerente
+      const hasJob = AppState.jobs && AppState.jobs.length > 0;
+      const vagaNome = hasJob ? (AppState.jobs[0].name || AppState.jobs[0].title || 'Vaga vinculada') : null;
+      const companyName = AppState.company?.name || 'Independente';
 
       container.innerHTML = `
         <div class="space-y-8">
+          <!-- Cabeçalho com Nome da Vaga quando vinculada -->
+          <div class="bg-gradient-to-r from-brand-blue to-brand-purple text-white p-6 rounded-xl">
+            <h4 class="font-bold text-xl mb-2">📊 Análise de Aderência para: ${vagaNome || 'Perfil Geral'}</h4>
+            <p class="text-sm opacity-90">Empresa: ${companyName} • Metodologia Vigorre V.I.G.O.R.</p>
+          </div>
+          
           <!-- Percentual de Aderência -->
           <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-            <h4 class="font-bold text-brand-navy mb-4 text-lg">📊 Percentual de Aderência à Vaga</h4>
+            <h4 class="font-bold text-brand-navy mb-4 text-lg">📈 Compatibilidade Comportamental Vigorre™</h4>
             <div class="flex items-center gap-4 mb-4">
               <div class="flex-1">
                 <div class="aderencia-bar-container">
@@ -1172,20 +1243,25 @@
                 </div>
               </div>
             </div>
-            <p class="text-sm text-gray-600">
+            <p class="text-sm text-gray-600 mb-3">
               <strong>Legenda:</strong> 
               <span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded bg-emerald-500"></span> Alta (75-100%)</span> | 
               <span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded bg-amber-500"></span> Média (50-74%)</span> | 
               <span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded bg-red-500"></span> Baixa (0-49%)</span>
             </p>
-            <p class="mt-4 text-gray-700 leading-relaxed">
-              O perfil comportamental predominante <strong class="text-brand-blue">${PREMIUM_CONTENT[dominant].title}</strong> (${intensity}%) apresenta uma aderência de <strong>${aderenciaGeral}%</strong> às exigências comportamentais típicas para cargos de liderança e gestão. Este índice considera a intensidade do traço dominante em relação às competências comportamentais requeridas para o cargo.
-            </p>
+            <div class="bg-slate-50 p-4 rounded-lg border border-gray-200">
+              <p class="text-gray-700 leading-relaxed">
+                ${hasJob 
+                  ? `O perfil comportamental predominante <strong class="text-brand-blue">${PREMIUM_CONTENT[dominant].title}</strong> (${intensity}%) apresenta uma aderência de <strong>${aderenciaGeral}%</strong> às exigências comportamentais típicas para o cargo de <strong>${vagaNome}</strong> na empresa <strong>${companyName}</strong>. Este índice considera a intensidade do traço dominante em relação às competências comportamentais requeridas para a posição.`
+                  : `O perfil comportamental predominante <strong class="text-brand-blue">${PREMIUM_CONTENT[dominant].title}</strong> (${intensity}%) apresenta uma aderência de <strong>${aderenciaGeral}%</strong> às exigências comportamentais típicas para cargos de liderança e gestão em contextos corporativos gerais. Este índice considera a intensidade do traço dominante em relação às competências comportamentais requeridas para posições estratégicas.`
+                }
+              </p>
+            </div>
           </div>
 
           <!-- Análise Detalhada por Competência -->
           <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-            <h4 class="font-bold text-brand-navy mb-4 text-lg"> Análise de Aderência por Competência Comportamental</h4>
+            <h4 class="font-bold text-brand-navy mb-4 text-lg">📋 Análise de Aderência por Competência Comportamental</h4>
             <div class="space-y-4">
               <div>
                 <div class="flex justify-between mb-1">
@@ -1302,12 +1378,16 @@
       
       let analise = '';
       
+      // Texto base do perfil
       analise += `<p>O participante apresenta um perfil comportamental predominantemente <strong>${profile.title}</strong>, com intensidade de <strong>${intensity}%</strong>. Este perfil indica um profissional com características comportamentais que tendem a ${dominant === 'D' ? 'assumir liderança natural, tomar decisões rápidas e focar em resultados' : dominant === 'I' ? 'comunicar-se de forma impactante, engajar equipes e criar ambientes colaborativos' : dominant === 'S' ? 'manter estabilidade, oferecer suporte constante e preservar a harmonia da equipe' : 'analisar dados com profundidade, garantir qualidade e estruturar processos claros'}.</p>`;
       
+      // Texto sobre congruência com cargos
       analise += `<p>Do ponto de vista da psicologia comportamental, o perfil <strong>${profile.title}</strong> apresenta uma configuração de traços que sugere <strong>${intensity >= 70 ? 'alta congruência com cargos que demandam' : intensity >= 50 ? 'moderada congruência com cargos que beneficiam-se de' : 'baixa congruência com cargos que requerem'} ${dominant === 'D' ? 'liderança direta, assertividade e foco em resultados' : dominant === 'I' ? 'comunicação persuasiva, networking e engajamento' : dominant === 'S' ? 'estabilidade operacional, suporte e manutenção de processos' : 'análise técnica, qualidade e conformidade'}. A intensidade de ${intensity}% indica que este traço é <strong>${intensity >= 70 ? 'altamente predominante' : intensity >= 50 ? 'moderadamente presente' : 'pouco expressivo'} no repertório comportamental do participante.</strong></p>`;
       
+      // Texto sobre versatilidade do perfil
       analise += `<p>A análise psicométrica revela que o participante possui um perfil comportamental com ${Object.entries(percentages).filter(([k, v]) => v >= 20).length} traços significativos (acima de 20%), o que indica ${Object.entries(percentages).filter(([k, v]) => v >= 20).length >= 3 ? 'um perfil versátil com múltiplas competências comportamentais' : 'um perfil focado com competências comportamentais bem definidas'}. Esta configuração sugere que o participante ${Object.entries(percentages).filter(([k, v]) => v >= 20).length >= 3 ? 'pode se adaptar a diferentes contextos profissionais, mas pode precisar de foco para evitar dispersão' : 'tem clareza sobre seu estilo comportamental, o que facilita a adequação a cargos específicos'}.</p>`;
       
+      // Texto sobre potencial para cargos específicos
       analise += `<p>Sob a ótica da psicologia organizacional, este perfil comportamental apresenta <strong>potencial significativo</strong> para cargos que demandem ${dominant === 'D' ? 'liderança, gestão de crise e tomada de decisão rápida' : dominant === 'I' ? 'comunicação, vendas e construção de relacionamentos' : dominant === 'S' ? 'estabilidade, suporte e operações consistentes' : 'análise, qualidade e processos estruturados'}. A aderência ao cargo deve ser avaliada em conjunto com outros fatores como experiência profissional, formação acadêmica e motivações pessoais.</p>`;
       
       return analise;
@@ -1706,7 +1786,11 @@
     function renderConclusion(r, dominant, profile) {
       const execConclusion = safeGetElement('execConclusion');
       if (execConclusion) {
-        execConclusion.textContent = `O participante demonstra um perfil comportamental predominantemente ${profile.title.toLowerCase()}, caracterizado por ${profile.strengths.slice(0, 3).join(', ').toLowerCase()}. ${profile.summary} Este perfil indica potencial para ${dominant === 'D' || dominant === 'I' ? 'liderança, influência e alta performance em ambientes dinâmicos' : 'estabilidade, qualidade e excelência operacional em ambientes estruturados'}. Recomenda-se acompanhamento contínuo via PDI focado em ${profile.risks[0].toLowerCase()} e ${profile.risks[1].toLowerCase()}, garantindo evolução comportamental e maximização de impacto organizacional. Este relatório deve ser utilizado como ferramenta estratégica de gestão de talentos, desenvolvimento de liderança e alocação de perfis em contextos de alta performance.`;
+        const hasJob = AppState.jobs && AppState.jobs.length > 0;
+        const jobName = hasJob ? (AppState.jobs[0].name || AppState.jobs[0].title) : null;
+        const companyName = AppState.company?.name || 'Independente';
+        
+        execConclusion.textContent = `O participante demonstra um perfil comportamental predominantemente ${profile.title.toLowerCase()}, caracterizado por ${profile.strengths.slice(0, 3).join(', ').toLowerCase()}. ${profile.summary} Este perfil indica potencial para ${dominant === 'D' || dominant === 'I' ? 'liderança, influência e alta performance em ambientes dinâmicos' : 'estabilidade, qualidade e excelência operacional em ambientes estruturados'}. ${hasJob ? `Para o cargo de ${jobName} na empresa ${companyName}, recomenda-se avaliação complementar das competências técnicas e experiência profissional para validação do fit comportamental.` : 'Sem cargo específico vinculado, este perfil pode ser aplicado em diversos contextos organizacionais que valorizem as competências identificadas.'} Recomenda-se acompanhamento contínuo via PDI focado em ${profile.risks[0].toLowerCase()} e ${profile.risks[1].toLowerCase()}, garantindo evolução comportamental e maximização de impacto organizacional. Este relatório deve ser utilizado como ferramenta estratégica de gestão de talentos, desenvolvimento de liderança e alocação de perfis em contextos de alta performance.`;
       }
     }
 
@@ -1718,6 +1802,10 @@
       const sortedKeys = Object.keys(percentages).sort((a,b) => percentages[b] - percentages[a]);
       const secondaryKey = sortedKeys[1];
       const secondaryContent = PREMIUM_CONTENT[secondaryKey];
+      
+      const hasJob = AppState.jobs && AppState.jobs.length > 0;
+      const jobName = hasJob ? (AppState.jobs[0].name || AppState.jobs[0].title) : null;
+      const companyName = AppState.company?.name || 'Independente';
 
       const text = `
         <div class="prose max-w-none">
@@ -1765,6 +1853,19 @@
             <li>Desenvolver programa de mentoria para pares.</li>
             <li>Integrar inteligência comportamental em processos estratégicos da empresa.</li>
           </ul>
+          
+          ${hasJob 
+            ? `<div class="bg-brand-blue/5 p-4 rounded-lg border border-brand-blue/20 mt-6">
+                <p class="text-sm text-brand-blue-900">
+                  <strong>Nota sobre o Cargo:</strong> Esta análise foi contextualizada para o cargo de <strong>${jobName}</strong> na empresa <strong>${companyName}</strong>. Recomenda-se revisão periódica do fit comportamental conforme evolução das responsabilidades e mudanças organizacionais.
+                </p>
+              </div>`
+            : `<div class="bg-brand-purple/5 p-4 rounded-lg border border-brand-purple/20 mt-6">
+                <p class="text-sm text-brand-purple-900">
+                  <strong>Nota sobre Perfil Geral:</strong> Esta análise apresenta o perfil comportamental do participante em contexto geral. Para avaliação de fit com cargo específico, recomenda-se vincular o participante a uma vaga através do sistema Vigorre One™.
+                </p>
+              </div>`
+          }
         </div>
       `;
       
@@ -1786,13 +1887,6 @@
     // ============================================
     // UTILITÁRIOS
     // ============================================
-    function exportPDF() {
-      showToast('📄 Gerando PDF executivo de alta resolução...', 'success');
-      setTimeout(() => {
-        window.print();
-      }, 1000);
-    }
-
     function showToast(message, type = 'success') {
       const toast = safeGetElement('toast');
       if (!toast) return;
@@ -1812,40 +1906,42 @@
     }
 
     // ============================================
+    // FUNÇÕES DO MODAL E LOGOFF
+    // ============================================
+    function openSimpleReportModal() {
+      const modal = document.getElementById('simpleReportModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+      }
+    }
+
+    function closeModalAndLogout() {
+      const modal = document.getElementById('simpleReportModal');
+      if (modal) {
+        modal.classList.add('hidden');
+      }
+      performLogout();
+    }
+
+    function performLogout() {
+      console.log('🔐 Realizando logoff...');
+      localStorage.removeItem('vigorre_current_user');
+      sessionStorage.clear();
+      window.location.href = 'login.html';
+    }
+
+    // ============================================
     // >>> CORREÇÕES ADICIONADAS (SEM OTIMIZAR) <<<
     // ============================================
 
     // 1. Tratamento de erro global com fallback amigável
     window.addEventListener('error', function(e) {
       console.error('❌ Erro no relatório DISC:', e);
-      const loading = safeGetElement('loadingOverlay');
-      if (loading) loading.classList.add('hidden');
-      const content = safeGetElement('reportContent');
-      if (content) {
-        content.style.display = 'block';
-        content.innerHTML = '<div class="bg-white p-10 text-center rounded-xl shadow-xl border border-gray-200"><h2 class="text-2xl font-bold text-red-600 mb-5">⚠️ Erro ao gerar Laudo</h2><p class="text-gray-600 mb-5 text-lg">Ocorreu um erro ao processar seus dados.</p><button onclick="window.location.reload()" class="btn-primary px-8 py-4 rounded-lg text-lg">🔄 Recarregar Página</button></div>';
-        content.classList.remove('hidden');
-      }
+      showToast('⚠️ Ocorreu um erro. Recarregue a página se o problema persistir.', 'error');
       return true;
     });
 
-    // 2. Timeout de segurança: se loading persistir por 15s, força hide
-    setTimeout(function() {
-      const loading = safeGetElement('loadingOverlay');
-      const content = safeGetElement('reportContent');
-      if (loading && !loading.classList.contains('hidden')) {
-        console.warn('⚠️ Laudo: loading timeout - forçando exibição do conteúdo');
-        loading.classList.add('hidden');
-        if (content && content.classList.contains('hidden')) {
-          content.style.display = 'block';
-          content.innerHTML = '<div class="bg-white p-10 text-center rounded-xl shadow-xl border border-gray-200"><p class="text-gray-600 text-lg">Carregamento lento. <button onclick="window.location.reload()" class="text-brand-blue underline font-semibold">Recarregar</button></p></div>';
-          content.classList.remove('hidden');
-        }
-        showToast('⚠️ Tempo de carregamento excedido. Verifique seus dados.', 'error');
-      }
-    }, 15000);
-
-    // 3. Debug: Logar resultados disponíveis no console para diagnóstico
+    // 2. Debug: Logar resultados disponíveis no console para diagnóstico
     console.log('🔍 Laudo DISC - Resultados disponíveis:', {
       disc: !!localStorage.getItem('vigorre_last_disc_result'),
       participant: AppState.participant?.name || 'não carregado',
