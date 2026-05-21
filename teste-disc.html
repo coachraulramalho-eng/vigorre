@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Assessment DISC | Vigorre People Analytics</title>
+  <title>Assessment DISC | Vigorre One™ | People Analytics Enterprise</title>
   
   <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -33,7 +33,8 @@
               cyan: '#06B6D4',
               emerald: '#10B981',
               amber: '#F59E0B',
-              rose: '#F43F5E'
+              rose: '#F43F5E',
+              navy: '#0A1628'
             }
           },
           animation: {
@@ -53,14 +54,15 @@
           }
         }
       }
-    }
+    };
   </script>
   
   <style>
     /* ============================================
-       RESET E BASE
+       RESET E BASE - ENTERPRISE PREMIUM
        ============================================ */
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     
     body { 
       font-family: 'Inter', sans-serif; 
@@ -258,24 +260,105 @@
     .insight-c { border-left-color: #7C3AED; }
     
     /* ============================================
+       MODAL PREMIUM - PARA RELATÓRIO SIMPLES
+       ============================================ */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      backdrop-filter: blur(12px);
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      padding: 45px 40px;
+      max-width: 540px;
+      width: 92%;
+      text-align: center;
+      box-shadow: 0 30px 90px rgba(0,0,0,0.45);
+      border: 1px solid #e2e8f0;
+      animation: slideUp 0.45s ease;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .modal-content h3 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #0F172A;
+      margin-bottom: 1.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    .modal-content p {
+      color: #64748B;
+      margin-bottom: 1.8rem;
+      line-height: 1.75;
+      font-size: 1.08rem;
+    }
+    .modal-highlight {
+      background: linear-gradient(135deg, #1D4ED8, #7C3AED);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 700;
+      font-size: 1.15rem;
+      margin: 1rem 0;
+    }
+    .modal-btn {
+      background: linear-gradient(135deg, #1D4ED8, #7C3AED);
+      color: white;
+      padding: 15px 40px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.35s ease;
+      box-shadow: 0 5px 20px rgba(29, 78, 216, 0.45);
+    }
+    .modal-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 32px rgba(29, 78, 216, 0.65);
+    }
+    .modal-footer {
+      margin-top: 2rem;
+      padding-top: 1.8rem;
+      border-top: 1px solid #e2e8f0;
+      font-size: 0.92rem;
+      color: #94a3b8;
+    }
+    
+    /* ============================================
        TOAST NOTIFICATIONS
        ============================================ */
     #toast {
       position: fixed;
       top: 20px;
       right: 20px;
-      padding: 12px 20px;
-      border-radius: 12px;
-      background: rgba(30, 41, 59, 0.95);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+      padding: 14px 24px;
+      border-radius: 14px;
+      background: rgba(30, 41, 59, 0.96);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 0 12px 45px rgba(0, 0, 0, 0.42);
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       z-index: 9999;
-      transform: translateX(400px);
-      transition: transform 0.3s ease;
-      max-width: 350px;
+      transform: translateX(420px);
+      transition: transform 0.32s ease;
+      max-width: 380px;
     }
     #toast.show {
       transform: translateX(0);
@@ -287,10 +370,10 @@
       border-left: 4px solid #EF4444;
     }
     #toast .toast-icon {
-      font-size: 1.25rem;
+      font-size: 1.35rem;
     }
     #toast .toast-message {
-      font-size: 0.875rem;
+      font-size: 0.92rem;
       color: #F8FAFC;
       flex: 1;
     }
@@ -299,7 +382,7 @@
       border: none;
       color: #94A3B8;
       cursor: pointer;
-      font-size: 1.25rem;
+      font-size: 1.35rem;
       line-height: 1;
       padding: 0;
     }
@@ -316,6 +399,9 @@
       }
       .disc-chart-container {
         height: 250px;
+      }
+      .modal-content {
+        padding: 35px 28px;
       }
     }
     
@@ -350,6 +436,18 @@
       box-shadow: 0 12px 40px rgba(124, 58, 237, 0.4);
     }
     
+    .btn-secondary {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: white;
+      transition: all 0.3s ease;
+    }
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.2);
+      border-color: rgba(255,255,255,0.4);
+      transform: translateY(-1px);
+    }
+    
     .section-title {
       position: relative;
       padding-bottom: 12px;
@@ -364,6 +462,39 @@
       background: linear-gradient(90deg, #1D4ED8, #7C3AED);
       border-radius: 2px;
     }
+    
+    /* ============================================
+       CORREÇÃO DE MARGENS - HEADER/FIXED ELEMENTS
+       ============================================ */
+    header {
+      height: 72px !important;
+    }
+    
+    main {
+      padding-top: 95px !important; /* ✅ Espaço para header fixo de 72px + margem */
+      padding-bottom: 45px !important;
+    }
+    
+    /* Para telas menores */
+    @media (max-width: 768px) {
+      header { height: 68px !important; }
+      main { padding-top: 90px !important; }
+    }
+    
+    /* ============================================
+       PRINT OPTIMIZATION
+       ============================================ */
+    @media print {
+      header, .no-print, #toast, .modal-overlay { display: none !important; }
+      body { background: white !important; color: #000 !important; }
+      .glass, .glass-card { 
+        background: white !important; 
+        border: 1px solid #ccc !important; 
+        box-shadow: none !important; 
+        backdrop-filter: none !important; 
+      }
+      .gradient-text { -webkit-text-fill-color: #1D4ED8 !important; color: #1D4ED8 !important; }
+    }
   </style>
 </head>
 <body class="antialiased">
@@ -375,6 +506,21 @@
     <span class="toast-icon" id="toastIcon">✅</span>
     <span class="toast-message" id="toastMessage">Mensagem</span>
     <button class="toast-close" onclick="hideToast()">×</button>
+  </div>
+  
+  <!-- ============================================
+       MODAL PARA RELATÓRIO SIMPLES
+       ============================================ -->
+  <div id="simpleReportModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <h3>🔒 Acesso ao Relatório Completo</h3>
+      <p>Para obter acesso ao relatório completo com análise detalhada, plano de desenvolvimento personalizado e parecer executivo multinacional, entre em contato com nossa equipe de People Analytics.</p>
+      <p class="modal-highlight">Procure a Vigorre para maiores detalhes.</p>
+      <button class="modal-btn" onclick="closeModalAndLogout()">Sair e Voltar</button>
+      <div class="modal-footer">
+        <p>© 2024 Vigorre One™ • People Analytics Enterprise</p>
+      </div>
+    </div>
   </div>
   
   <!-- ============================================
@@ -391,8 +537,8 @@
               V
             </div>
             <div>
-              <h1 class="font-bold text-lg">Vigorre</h1>
-              <p class="text-xs text-gray-400">People Analytics</p>
+              <h1 class="font-bold text-lg">Vigorre One™</h1>
+              <p class="text-xs text-gray-400">People Analytics Enterprise</p>
             </div>
           </div>
           <nav class="hidden md:flex items-center gap-6">
@@ -460,7 +606,7 @@
     <!-- Footer -->
     <footer class="glass border-t border-white/10 py-6">
       <div class="max-w-7xl mx-auto px-4 text-center text-sm text-gray-400">
-        <p>© 2024 Vigorre People Analytics. Metodologia DISC validada internacionalmente.</p>
+        <p>© 2024 Vigorre One™. Metodologia DISC validada internacionalmente.</p>
       </div>
     </footer>
     
@@ -637,7 +783,7 @@
        ============================================ -->
   <div id="resultsPage" class="hidden min-h-screen">
     
-    <!-- Header de Resultados -->
+    <!-- Header de Resultados - ✅ BOTÃO EXPORTAR REMOVIDO -->
     <header class="glass border-b border-white/10 px-4 py-4 sticky top-0 z-40">
       <div class="max-w-6xl mx-auto flex items-center justify-between">
         <div class="flex items-center gap-3">
@@ -651,14 +797,7 @@
             <p class="text-xs text-gray-400">Assessment DISC Completo</p>
           </div>
         </div>
-        <div class="flex items-center gap-2">
-          <button onclick="exportPDF()" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-300 border border-white/20 hover:border-white/40 transition flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-            </svg>
-            Exportar PDF
-          </button>
-        </div>
+        <!-- ✅ BOTÃO EXPORTAR PDF REMOVIDO - MANTIDO APENAS IMPRIMIR VIA NAVEGADOR -->
       </div>
     </header>
 
@@ -805,20 +944,20 @@
         </div>
       </div>
 
-      <!-- CTAs de Relatório -->
+      <!-- CTAs de Relatório - ✅ BOTÃO RELATÓRIO SIMPLES COM MODAL -->
       <div class="grid md:grid-cols-2 gap-4 mb-8">
         <div class="glass-card p-6 text-center animate-on-scroll">
           <h4 class="font-semibold mb-2">📄 Relatório Simples</h4>
           <p class="text-sm text-gray-400 mb-4">Visão geral do seu perfil DISC para download</p>
-          <button onclick="downloadSimpleReport()" class="btn-primary px-6 py-3 rounded-lg font-semibold w-full">
+          <button onclick="openSimpleReportModal()" class="btn-primary px-6 py-3 rounded-lg font-semibold w-full">
             Baixar Relatório Simples
           </button>
         </div>
         <div class="glass-card p-6 text-center animate-on-scroll">
           <h4 class="font-semibold mb-2">🔓 Laudo Vigorre Completo</h4>
           <p class="text-sm text-gray-400 mb-4">Análise integrada com IE + Valores + Fit Cultural</p>
-          <button onclick="window.location.href='laudo-vigorre.html?test=DISC'" class="btn-secondary px-6 py-3 rounded-lg font-semibold w-full">
-            Ver Laudo Vigorre
+          <button onclick="window.location.href='relatorio-disc-vigorre.html'" class="btn-secondary px-6 py-3 rounded-lg font-semibold w-full">
+            Ver Relatório Completo
           </button>
         </div>
       </div>
@@ -828,8 +967,8 @@
     <!-- Footer de Resultados -->
     <footer class="glass border-t border-white/10 py-6 mt-8">
       <div class="max-w-6xl mx-auto px-4 text-center text-sm text-gray-400">
-        <p class="mb-2">Este relatório foi gerado automaticamente pela plataforma Vigorre People Analytics.</p>
-        <p>Metodologia DISC © Vigorre. Para uso profissional e desenvolvimento de equipes.</p>
+        <p class="mb-2">Este relatório foi gerado automaticamente pela plataforma Vigorre One™.</p>
+        <p>Metodologia DISC © Vigorre One™. Para uso profissional e desenvolvimento de equipes.</p>
       </div>
     </footer>
     
@@ -850,12 +989,11 @@
       questions: [],
       participant: null,
       session: null,
-      shuffledOptions: {} // ✅ NOVO: Armazenar ordem embaralhada POR PERGUNTA
+      shuffledOptions: {}
     };
 
     // ============================================
     // BANCO DE PERGUNTAS DISC (25 QUESTÕES)
-    // Cada pergunta tem 4 opções: D, I, S, C
     // ============================================
     const DISC_QUESTIONS = [
       {
@@ -1294,6 +1432,12 @@
       // Carregar sessão do participante
       loadSession();
       
+      // ✅ CORREÇÃO: Detectar clique no botão "voltar" do navegador para fazer logoff
+      window.addEventListener('popstate', function(event) {
+        console.log('🔙 Botão voltar detectado - realizando logoff');
+        performLogout();
+      });
+      
       // ✅ CORREÇÃO: Se já estiver logado, vai direto para as instruções
       if (AppState.session && AppState.session.id) {
         showView('instructionsPage');
@@ -1318,9 +1462,10 @@
           AppState.session = session;
           const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
           AppState.participant = participants.find(p => p.id === session.id);
+          console.log('✅ Sessão carregada:', AppState.session.name);
         }
       } catch (e) {
-        console.error('Erro ao carregar sessão:', e);
+        console.error('❌ Erro ao carregar sessão:', e);
       }
     }
 
@@ -1373,7 +1518,7 @@
       AppState.currentQuestionIndex = 0;
       AppState.answers = new Array(25).fill(null);
       AppState.discScores = { D: 0, I: 0, S: 0, C: 0 };
-      AppState.shuffledOptions = {}; // ✅ Resetar opções embaralhadas
+      AppState.shuffledOptions = {};
       
       // Carregar primeira pergunta
       renderQuestion();
@@ -1437,12 +1582,10 @@
       
       // ✅ CORREÇÃO: Embaralhar UMA VEZ por pergunta e armazenar
       if (!AppState.shuffledOptions[questionId]) {
-        // Criar cópia e embaralhar
         const shuffled = [...options].sort(() => Math.random() - 0.5);
         AppState.shuffledOptions[questionId] = shuffled;
       }
       
-      // Usar a ordem embaralhada armazenada
       const shuffled = AppState.shuffledOptions[questionId];
       
       shuffled.forEach((option, index) => {
@@ -1452,7 +1595,6 @@
         item.dataset.type = option.type;
         item.dataset.index = index;
         
-        // ✅ REMOVIDO: Não mostrar o tipo (D, I, S, C) para o usuário
         item.innerHTML = `
           <div class="rank-badge rank-${index + 1}" id="badge-${index}">${index + 1}º</div>
           <div class="flex-1">
@@ -1461,7 +1603,6 @@
           <div class="text-gray-400">⋮</div>
         `;
         
-        // Eventos de drag and drop
         item.addEventListener('dragstart', handleDragStart);
         item.addEventListener('dragover', handleDragOver);
         item.addEventListener('drop', handleDrop);
@@ -1470,7 +1611,6 @@
         list.appendChild(item);
       });
       
-      // Carregar resposta salva se existir
       if (AppState.answers[AppState.currentQuestionIndex]) {
         applySavedRanking(AppState.answers[AppState.currentQuestionIndex]);
       }
@@ -1480,7 +1620,6 @@
       const list = document.getElementById('rankList');
       const items = Array.from(list.children);
       
-      // Reordenar conforme resposta salva
       savedOrder.forEach((type, newIndex) => {
         const item = items.find(el => el.dataset.type === type);
         if (item) {
@@ -1521,23 +1660,16 @@
         const list = document.getElementById('rankList');
         const items = Array.from(list.children);
         
-        // Obter índices
         const draggedIndex = items.indexOf(draggedItem);
         const targetIndex = items.indexOf(this);
         
-        // Reordenar no DOM de forma confiável
         if (draggedIndex < targetIndex) {
-          // Arrastando para baixo: inserir após o alvo
           this.parentNode.insertBefore(draggedItem, this.nextSibling);
         } else {
-          // Arrastando para cima: inserir antes do alvo
           this.parentNode.insertBefore(draggedItem, this);
         }
         
-        // Atualizar badges visualmente
         updateAllBadges();
-        
-        // Salvar resposta IMEDIATAMENTE
         saveCurrentAnswer();
       }
       
@@ -1565,16 +1697,12 @@
       const list = document.getElementById('rankList');
       const items = Array.from(list.children);
       
-      // Capturar a ordem REAL baseada na posição visual (topo = índice 0)
       const ranking = [];
       items.forEach((item, visualIndex) => {
         ranking.push(item.dataset.type);
       });
       
-      // Salvar no estado
       AppState.answers[AppState.currentQuestionIndex] = ranking;
-      
-      // Salvar no localStorage
       saveProgress();
     }
 
@@ -1582,7 +1710,7 @@
       const progress = {
         currentQuestion: AppState.currentQuestionIndex,
         answers: AppState.answers,
-        shuffledOptions: AppState.shuffledOptions, // ✅ Salvar ordem embaralhada
+        shuffledOptions: AppState.shuffledOptions,
         timestamp: Date.now()
       };
       localStorage.setItem('disc_assessment_progress', JSON.stringify(progress));
@@ -1593,11 +1721,10 @@
       if (saved) {
         try {
           const progress = JSON.parse(saved);
-          // Verificar se o progresso é recente (últimas 24h)
           if (Date.now() - progress.timestamp < 24 * 60 * 60 * 1000) {
             AppState.currentQuestionIndex = progress.currentQuestion;
             AppState.answers = progress.answers;
-            AppState.shuffledOptions = progress.shuffledOptions || {}; // ✅ Carregar ordem embaralhada
+            AppState.shuffledOptions = progress.shuffledOptions || {};
             return true;
           }
         } catch (e) {
@@ -1612,9 +1739,7 @@
     // ============================================
     function prevQuestion() {
       if (AppState.currentQuestionIndex > 0) {
-        // Salvar resposta atual antes de mudar
         saveCurrentAnswer();
-        
         AppState.currentQuestionIndex--;
         renderQuestion();
         saveProgress();
@@ -1622,10 +1747,8 @@
     }
 
     function nextQuestion() {
-      // Salvar resposta atual
       saveCurrentAnswer();
       
-      // Verificar se todas as opções foram ranqueadas
       const list = document.getElementById('rankList');
       if (list.children.length !== 4) {
         showToast('Por favor, ranqueie todas as 4 características antes de continuar.', 'error');
@@ -1637,7 +1760,6 @@
         renderQuestion();
         saveProgress();
       } else {
-        // Finalizar teste
         finishTest();
       }
     }
@@ -1646,16 +1768,9 @@
     // FINALIZAR TESTE E PROCESSAR RESULTADOS
     // ============================================
     function finishTest() {
-      // Calcular resultados
       const results = calculateResults();
-      
-      // Salvar no localStorage do participante
       saveParticipantResults(results);
-      
-      // Enviar relatório simples por e-mail (simulado)
       sendSimpleReportEmail(results);
-      
-      // Mostrar loading
       showLoadingResults();
     }
 
@@ -1670,18 +1785,15 @@
         const idx = participants.findIndex(p => p.id === AppState.participant.id);
         
         if (idx > -1) {
-          // Garantir que completedTests exista
           if (!participants[idx].completedTests) {
             participants[idx].completedTests = [];
           }
           
-          // Adicionar DISC aos testes concluídos se ainda não estiver
           if (!participants[idx].completedTests.includes('DISC')) {
             participants[idx].completedTests.push('DISC');
             console.log('✅ DISC adicionado a completedTests');
           }
           
-          // Salvar resultados do teste
           participants[idx].testResults = participants[idx].testResults || {};
           participants[idx].testResults.DISC = {
             date: new Date().toISOString(),
@@ -1690,10 +1802,8 @@
             dominant: Object.entries(results.percentages).sort((a, b) => b[1] - a[1])[0][0]
           };
           
-          // Salvar no localStorage
           localStorage.setItem('vigorre_participants', JSON.stringify(participants));
           
-          // Salvar resultado no localStorage para relatórios
           localStorage.setItem('vigorre_last_disc_result', JSON.stringify({
             scores: results.scores,
             percentages: results.percentages,
@@ -1701,7 +1811,6 @@
             date: new Date().toISOString()
           }));
           
-          // Atualizar participant no AppState
           AppState.participant = participants[idx];
         }
       } catch (e) {
@@ -1713,15 +1822,10 @@
     // ENVIAR RELATÓRIO SIMPLES POR E-MAIL (SIMULADO)
     // ============================================
     function sendSimpleReportEmail(results) {
-      // Em produção, aqui chamaria a API: /api/send-simple-report
       console.log('📧 Enviando relatório DISC para:', AppState.session?.email);
       
-      // Simular delay de envio
       setTimeout(() => {
-        // Salvar histórico de relatório enviado
         saveReportHistory('DISC', 'simple');
-        
-        // Mostrar toast de confirmação
         showToast('✅ Relatório simples enviado para seu e-mail!', 'success');
       }, 1000);
     }
@@ -1756,13 +1860,10 @@
     // CÁLCULO DOS RESULTADOS DISC
     // ============================================
     function calculateResults() {
-      // Resetar scores
       AppState.discScores = { D: 0, I: 0, S: 0, C: 0 };
       
-      // Processar cada resposta
       AppState.answers.forEach((ranking, questionIndex) => {
         if (ranking && ranking.length === 4) {
-          // Pontuação: 1º = 4pts, 2º = 3pts, 3º = 2pts, 4º = 1pt
           ranking.forEach((type, position) => {
             const points = 4 - position;
             AppState.discScores[type] += points;
@@ -1770,7 +1871,6 @@
         }
       });
       
-      // Calcular totais e percentuais
       const total = Object.values(AppState.discScores).reduce((a, b) => a + b, 0);
       
       return {
@@ -1788,7 +1888,6 @@
     function showLoadingResults() {
       showView('loadingResults');
       
-      // Animar barra de loading
       let progress = 0;
       const interval = setInterval(() => {
         progress += Math.random() * 15;
@@ -1807,13 +1906,11 @@
     function showResults() {
       const results = calculateResults();
       
-      // Identificar perfil predominante e secundário
       const sorted = Object.entries(results.percentages)
         .sort((a, b) => b[1] - a[1]);
       
       const [dominant, secondary] = sorted;
       
-      // Atualizar header do perfil
       const dominantProfile = DISC_PROFILES[dominant[0]];
       document.getElementById('profileBadge').className = `profile-badge ${dominantProfile.badge}`;
       document.getElementById('profileLetter').textContent = dominant[0];
@@ -1821,21 +1918,15 @@
       document.getElementById('dominantPercent').textContent = `${dominant[1]}%`;
       document.getElementById('secondaryPercent').textContent = `${secondary[1]}%`;
       
-      // Renderizar gráficos
       renderCharts(results.percentages);
-      
-      // Renderizar insights
       renderInsights(dominant[0], secondary[0], results.percentages);
       
-      // Mostrar página de resultados
       showView('resultsPage');
       
-      // Remover progresso salvo
       localStorage.removeItem('disc_assessment_progress');
     }
 
     function renderCharts(percentages) {
-      // Gráfico Radar
       const radarCtx = document.getElementById('radarChart').getContext('2d');
       new Chart(radarCtx, {
         type: 'radar',
@@ -1870,7 +1961,6 @@
         }
       });
       
-      // Gráfico de Barras
       const barCtx = document.getElementById('barChart').getContext('2d');
       new Chart(barCtx, {
         type: 'bar',
@@ -1919,13 +2009,11 @@
     function renderInsights(dominant, secondary, percentages) {
       const profile = DISC_PROFILES[dominant];
       
-      // Atualizar insights principais
       document.getElementById('communicationInsight').textContent = profile.insights.communication;
       document.getElementById('leadershipInsight').textContent = profile.insights.leadership;
       document.getElementById('decisionInsight').textContent = profile.insights.decision;
       document.getElementById('pressureInsight').textContent = profile.insights.pressure;
       
-      // Pontos fortes
       const strengthsList = document.getElementById('strengthsList');
       strengthsList.innerHTML = profile.strengths.map(strength => `
         <li class="flex items-start gap-2 text-sm text-gray-300">
@@ -1934,7 +2022,6 @@
         </li>
       `).join('');
       
-      // Pontos de desenvolvimento
       const devList = document.getElementById('developmentList');
       devList.innerHTML = profile.development.map(point => `
         <li class="flex items-start gap-2 text-sm text-gray-300">
@@ -1943,7 +2030,6 @@
         </li>
       `).join('');
       
-      // Sugestões de carreira
       const careers = document.getElementById('careerSuggestions');
       careers.innerHTML = profile.careers.map(career => `
         <span class="px-3 py-1.5 rounded-full text-xs font-medium glass border border-white/10 hover:border-white/30 transition cursor-default">
@@ -1951,7 +2037,6 @@
         </span>
       `).join('');
       
-      // Insights inteligentes
       const insights = document.getElementById('smartInsights');
       const smartInsights = [
         {
@@ -1981,90 +2066,59 @@
     }
 
     // ============================================
-    // DOWNLOAD DE RELATÓRIO SIMPLES
+    // FUNÇÕES DO MODAL E LOGOFF
     // ============================================
-    function downloadSimpleReport() {
-      const results = calculateResults();
-      const dominant = Object.entries(results.percentages).sort((a, b) => b[1] - a[1])[0][0];
-      const profile = DISC_PROFILES[dominant];
-      
-      const reportContent = `
-RELATÓRIO SIMPLES DISC - VIGORRE PEOPLE ANALYTICS
-==================================================
-Participante: ${AppState.participant?.name || 'Participante'}
-Data: ${new Date().toLocaleDateString('pt-BR')}
-Teste: Assessment DISC
+    function openSimpleReportModal() {
+      console.log('🔒 Abrindo modal de relatório completo');
+      const modal = document.getElementById('simpleReportModal');
+      if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
+    }
 
-PERFIL PREDOMINANTE
--------------------
-${profile.name} (${results.percentages[dominant]}%)
-${profile.characteristics.slice(0, 5).join(' • ')}
+    function closeModalAndLogout() {
+      console.log('🔐 Fechando modal e realizando logoff');
+      const modal = document.getElementById('simpleReportModal');
+      if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+      performLogout();
+    }
 
-PONTOS FORTES
--------------
-${profile.strengths.map(s => `• ${s}`).join('\n')}
-
-PONTOS DE DESENVOLVIMENTO
--------------------------
-${profile.development.map(d => `• ${d}`).join('\n')}
-
-CARREIRAS COMPATÍVEIS
----------------------
-${profile.careers.slice(0, 5).join('\n')}
-
-INSIGHTS PRINCIPAIS
--------------------
-Comunicação: ${profile.insights.communication}
-Liderança: ${profile.insights.leadership}
-Decisão: ${profile.insights.decision}
-Sob Pressão: ${profile.insights.pressure}
-
----
-Para análise completa integrada com Inteligência Emocional e Valores Pessoais,
-acesse: laudo-vigorre.html
-
-© 2024 Vigorre People Analytics. Metodologia DISC validada internacionalmente.
-      `;
-      
-      // Criar blob e download
-      const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `Relatorio-Simples-DISC-${AppState.participant?.name?.replace(/\s+/g, '-') || 'Vigorre'}.txt`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      
-      showToast('✅ Relatório baixado com sucesso!', 'success');
+    function performLogout() {
+      console.log('🔐 Realizando logoff completo...');
+      localStorage.removeItem('vigorre_current_user');
+      sessionStorage.clear();
+      window.location.href = 'login.html?loggedout=1&ts=' + Date.now();
     }
 
     // ============================================
-    // EXPORTAÇÃO PDF (SIMULAÇÃO)
+    // DOWNLOAD DE RELATÓRIO SIMPLES
     // ============================================
-    function exportPDF() {
-      showToast('📄 Em produção, esta função geraria um PDF profissional com gráficos HD e identidade visual Vigorre. Use Ctrl+P para imprimir esta página.', 'success');
+    function downloadSimpleReport() {
+      // ✅ CORREÇÃO: Ao clicar em "Baixar Relatório Simples", abrir modal em vez de download direto
+      openSimpleReportModal();
     }
 
     // ============================================
     // TOAST NOTIFICATIONS
     // ============================================
-    function showToast(message, type = 'success') {
+    function showToast(message, type) {
+      type = type || 'success';
       const toast = document.getElementById('toast');
       const icon = document.getElementById('toastIcon');
       const msg = document.getElementById('toastMessage');
       
-      // Configurar toast
+      if (!toast) return;
+      
       toast.className = `toast ${type}`;
       icon.textContent = type === 'success' ? '✅' : '⚠️';
       msg.textContent = message;
       
-      // Mostrar toast
       toast.classList.remove('hidden');
       setTimeout(() => toast.classList.add('show'), 10);
-      
-      // Auto-hide após 4 segundos
       setTimeout(() => hideToast(), 4000);
     }
 
@@ -2074,6 +2128,26 @@ acesse: laudo-vigorre.html
       setTimeout(() => toast.classList.add('hidden'), 300);
     }
 
+    // ============================================
+    // TRATAMENTO DE ERROS GLOBAIS
+    // ============================================
+    window.addEventListener('error', function(e) {
+      console.error('❌ Erro no teste DISC Vigorre One™:', e);
+      showToast('⚠️ Ocorreu um erro. Recarregue a página se o problema persistir.', 'error');
+      return true;
+    });
+
+    // ============================================
+    // DEBUG INICIAL
+    // ============================================
+    console.log('🔍 Teste DISC - Estado inicial:', {
+      session: AppState.session?.name || 'não carregado',
+      participant: AppState.participant?.name || 'não carregado',
+      localStorage: {
+        user: !!localStorage.getItem('vigorre_current_user'),
+        participants: !!localStorage.getItem('vigorre_participants')
+      }
+    });
   </script>
 </body>
 </html>
