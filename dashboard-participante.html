@@ -3,65 +3,420 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Minha Área - Vigorre One™</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <title>Minha Área - Vigorre One™ | People Analytics Enterprise</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
+    /* ============================================
+       BASE & RESET - ENTERPRISE PREMIUM
+       ============================================ */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; }
-    header { background: linear-gradient(135deg, #1e3a8a, #0f172a); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
-    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; }
-    .logo-img { height: 40px; width: auto; border-radius: 8px; }
-    .btn-logout { background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; }
-    .btn-logout:hover { background: rgba(255,255,255,0.3); }
-    main { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
-    .card { background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 2rem; }
-    .card h2 { color: #1e40af; margin-bottom: 1.5rem; font-size: 1.4rem; display: flex; align-items: center; gap: 10px; }
+    html { scroll-behavior: smooth; }
+    body { 
+      font-family: 'Inter', sans-serif; 
+      background: linear-gradient(135deg, #F1F5F9 0%, #E2E8F0 100%);
+      color: #1e293b; 
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ============================================
+       HEADER PREMIUM
+       ============================================ */
+    header { 
+      background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%); 
+      color: white; 
+      padding: 15px 20px; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      height: 70px;
+    }
+    .logo { display: flex; align-items: center; gap: 12px; font-weight: 700; }
+    .logo-img { 
+      height: 45px; 
+      width: auto; 
+      border-radius: 10px; 
+      background: white;
+      padding: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .btn-logout { 
+      background: rgba(255,255,255,0.15); 
+      border: 1px solid rgba(255,255,255,0.3); 
+      color: white; 
+      padding: 10px 20px; 
+      border-radius: 8px; 
+      cursor: pointer; 
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+    .btn-logout:hover { 
+      background: rgba(255,255,255,0.25); 
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    /* ============================================
+       MAIN CONTENT - MARGEM CORRETAMENTE AJUSTADA
+       ============================================ */
+    main { 
+      max-width: 900px; 
+      margin: 0 auto; 
+      padding: 20px;
+      padding-top: 90px; /* ✅ CORREÇÃO: Espaço para header fixo */
+      padding-bottom: 40px;
+    }
+
+    /* ============================================
+       CARDS PREMIUM
+       ============================================ */
+    .card { 
+      background: white; 
+      border-radius: 16px; 
+      padding: 2rem; 
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
+      margin-bottom: 2rem;
+      border: 1px solid #e2e8f0;
+    }
+    .card h2 { 
+      color: #0F172A; 
+      margin-bottom: 1.5rem; 
+      font-size: 1.4rem; 
+      display: flex; 
+      align-items: center; 
+      gap: 10px;
+      font-weight: 700;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #f1f5f9;
+    }
     
-    /* PERFIL DO PARTICIPANTE */
-    .profile-header { display: flex; flex-direction: column; align-items: center; gap: 1rem; padding-bottom: 2rem; border-bottom: 1px solid #e2e8f0; margin-bottom: 2rem; }
+    /* ============================================
+       PERFIL DO PARTICIPANTE - ULTRA PREMIUM
+       ============================================ */
+    .profile-header { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      gap: 1.5rem; 
+      padding-bottom: 2rem; 
+      border-bottom: 1px solid #e2e8f0; 
+      margin-bottom: 2rem; 
+    }
     .company-badge {
-      width: 60px; height: 60px; background: linear-gradient(135deg, #1e3a8a, #0f172a);
-      color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center;
-      font-weight: bold; font-size: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-transform: uppercase;
+      width: 70px; 
+      height: 70px; 
+      background: linear-gradient(135deg, #1D4ED8, #7C3AED);
+      color: white; 
+      border-radius: 14px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      font-weight: 800; 
+      font-size: 28px; 
+      box-shadow: 0 6px 20px rgba(29, 78, 216, 0.3); 
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
     .participant-info { text-align: center; }
-    .participant-name { font-size: 1.5rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem; }
-    .participant-meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; color: #64748b; font-size: 0.9rem; }
-    .meta-item { display: flex; align-items: center; gap: 0.5rem; }
+    .participant-name { 
+      font-size: 1.6rem; 
+      font-weight: 800; 
+      color: #0F172A; 
+      margin-bottom: 0.5rem; 
+    }
+    .participant-meta { 
+      display: flex; 
+      flex-wrap: wrap; 
+      justify-content: center; 
+      gap: 1.2rem; 
+      color: #64748b; 
+      font-size: 0.95rem; 
+    }
+    .meta-item { 
+      display: flex; 
+      align-items: center; 
+      gap: 0.5rem;
+      padding: 4px 12px;
+      background: #f8fafc;
+      border-radius: 20px;
+      border: 1px solid #e2e8f0;
+    }
     
-    /* TESTES */
-    .tests-list { display: flex; flex-direction: column; gap: 1rem; }
-    .test-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; transition: all 0.3s; position: relative; }
-    .test-card:hover { border-color: #3b82f6; box-shadow: 0 6px 20px rgba(59, 130, 246, 0.15); }
-    .test-card.completed { border-color: #22c55e; background: #f0fdf4; }
-    .test-icon { font-size: 2.5rem; margin-bottom: 1rem; }
-    .test-title { font-size: 1.2rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem; }
-    .test-status { font-size: 0.9rem; color: #64748b; margin-bottom: 1rem; font-weight: 500; }
-    .test-status.realizado { color: #166534; font-weight: 700; }
-    .test-status.aguardando { color: #f59e0b; font-weight: 600; font-style: italic; }
+    /* ============================================
+       TESTES - DESIGN PREMIUM
+       ============================================ */
+    .tests-list { display: flex; flex-direction: column; gap: 1.2rem; }
+    .test-card { 
+      background: white; 
+      border: 1px solid #e2e8f0; 
+      border-radius: 14px; 
+      padding: 1.8rem; 
+      transition: all 0.3s ease; 
+      position: relative;
+      border-left: 4px solid #3b82f6;
+    }
+    .test-card:hover { 
+      border-color: #1D4ED8; 
+      box-shadow: 0 8px 30px rgba(29, 78, 216, 0.15); 
+      transform: translateY(-2px);
+    }
+    .test-card.completed { 
+      border-color: #10B981; 
+      background: linear-gradient(135deg, #f0fdf4, #ffffff); 
+      border-left-color: #10B981;
+    }
+    .test-icon { 
+      font-size: 2.8rem; 
+      margin-bottom: 1rem; 
+      display: block;
+      text-align: center;
+    }
+    .test-title { 
+      font-size: 1.25rem; 
+      font-weight: 700; 
+      color: #0F172A; 
+      margin-bottom: 0.6rem; 
+    }
+    .test-description {
+      color: #64748b; 
+      font-size: 0.95rem; 
+      margin-bottom: 1.2rem;
+      line-height: 1.5;
+    }
+    .test-status { 
+      font-size: 0.95rem; 
+      color: #64748b; 
+      margin-bottom: 1.2rem; 
+      font-weight: 500; 
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .test-status.realizado { 
+      color: #065F46; 
+      font-weight: 700; 
+      background: #d1fae5;
+      padding: 6px 14px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+    }
+    .test-status.aguardando { 
+      color: #B45309; 
+      font-weight: 600; 
+      font-style: italic; 
+      background: #fef3c7;
+      padding: 6px 14px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+    }
     
-    /* BOTÕES */
-    .btn-start { width: 100%; padding: 12px; border-radius: 8px; border: none; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s; background: linear-gradient(135deg, #3b82f6, #1e40af); color: white; }
-    .btn-start:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4); }
-    .btn-start:disabled { background: #cbd5e1; color: #64748b; cursor: not-allowed; transform: none; box-shadow: none; }
+    /* ============================================
+       BOTÕES PREMIUM
+       ============================================ */
+    .btn-start { 
+      width: 100%; 
+      padding: 14px 20px; 
+      border-radius: 10px; 
+      border: none; 
+      font-weight: 700; 
+      font-size: 1rem; 
+      cursor: pointer; 
+      transition: all 0.3s ease; 
+      background: linear-gradient(135deg, #3B82F6, #1D4ED8); 
+      color: white;
+      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+    }
+    .btn-start:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 8px 25px rgba(29, 78, 216, 0.5); 
+    }
+    .btn-start:disabled { 
+      background: #cbd5e1; 
+      color: #64748b; 
+      cursor: not-allowed; 
+      transform: none; 
+      box-shadow: none; 
+    }
     
-    .empty-state { text-align: center; padding: 3rem; color: #64748b; }
-    .empty-state h3 { color: #94a3b8; margin-bottom: 0.5rem; }
+    /* ============================================
+       MODAL PREMIUM - PARA RELATÓRIO SIMPLES
+       ============================================ */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      backdrop-filter: blur(10px);
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 520px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.4);
+      border: 1px solid #e2e8f0;
+      animation: slideUp 0.4s ease;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .modal-content h3 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #0F172A;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .modal-content p {
+      color: #64748B;
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+      font-size: 1.05rem;
+    }
+    .modal-highlight {
+      background: linear-gradient(135deg, #1D4ED8, #7C3AED);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    .modal-btn {
+      background: linear-gradient(135deg, #1D4ED8, #7C3AED);
+      color: white;
+      padding: 14px 36px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 1rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 16px rgba(29, 78, 216, 0.4);
+    }
+    .modal-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(29, 78, 216, 0.6);
+    }
+    .modal-footer {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #e2e8f0;
+      font-size: 0.9rem;
+      color: #94a3b8;
+    }
+
+    /* ============================================
+       EMPTY STATE PREMIUM
+       ============================================ */
+    .empty-state { 
+      text-align: center; 
+      padding: 4rem 2rem; 
+      color: #64748b;
+      background: #f8fafc;
+      border-radius: 14px;
+      border: 2px dashed #cbd5e1;
+    }
+    .empty-state h3 { 
+      color: #94a3b8; 
+      margin-bottom: 0.8rem; 
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    .empty-state p {
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    /* ============================================
+       TOAST NOTIFICATION
+       ============================================ */
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: white;
+      padding: 14px 24px;
+      border-radius: 10px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 500;
+      color: #0F172A;
+      z-index: 10001;
+      border-left: 4px solid #10B981;
+      animation: slideIn 0.3s ease;
+    }
+    @keyframes slideIn {
+      from { transform: translateX(100px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    .toast.error {
+      border-left-color: #EF4444;
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 768px) {
+      header { padding: 12px 16px; height: auto; }
+      .logo-img { height: 40px; }
+      main { padding-top: 100px; }
+      .card { padding: 1.5rem; }
+      .modal-content { padding: 30px 25px; }
+      .participant-name { font-size: 1.4rem; }
+    }
+
+    /* ============================================
+       PRINT OPTIMIZATION
+       ============================================ */
+    @media print {
+      header, .no-print { display: none !important; }
+      body { background: white !important; color: #000 !important; }
+      .card { box-shadow: none !important; border: 1px solid #ccc !important; }
+    }
   </style>
 </head>
 <body>
+
+  <!-- ============================================
+       HEADER PREMIUM
+       ============================================ -->
   <header>
     <div class="logo">
-      <img src="logo-vigorre.png" alt="Vigorre One™" class="logo-img" onerror="this.outerHTML='<div style=\'width:35px;height:35px;background:#fff;color:#1e40af;display:flex;align-items:center;justify-content:center;border-radius:8px;font-weight:bold;font-size:18px\'>V</div>'">
+      <img src="logo-vigorre.png" alt="Vigorre One™" class="logo-img" onerror="this.outerHTML='<div style=\'width:40px;height:40px;background:#fff;color:#1D4ED8;display:flex;align-items:center;justify-content:center;border-radius:10px;font-weight:800;font-size:20px;box-shadow:0 2px 8px rgba(0,0,0,0.1)\' >V</div>'">
       <span>Vigorre One™ - Minha Área</span>
     </div>
-    <button class="btn-logout" onclick="logout()">Sair do Sistema</button>
+    <button class="btn-logout" onclick="logout()">🔐 Sair do Sistema</button>
   </header>
 
+  <!-- ============================================
+       MAIN CONTENT
+       ============================================ -->
   <main>
     <div class="card">
       <div class="profile-header">
-        <!-- Fallback visual com a inicial da empresa (sem erro 404) -->
+        <!-- Badge da empresa com inicial -->
         <div class="company-badge" id="companyInitial">E</div>
         <div class="participant-info">
           <h2 class="participant-name" id="pName">Carregando...</h2>
@@ -69,76 +424,141 @@
             <span class="meta-item">📧 <span id="pEmail">...</span></span>
             <span class="meta-item">📱 <span id="pPhone">...</span></span>
           </div>
-          <div class="participant-meta" style="margin-top: 0.5rem;">
+          <div class="participant-meta" style="margin-top: 0.8rem;">
             <span class="meta-item">🏢 <span id="pCompany">Independente</span></span>
             <span class="meta-item">💼 <span id="pJob">Não vinculada</span></span>
           </div>
         </div>
       </div>
       
-      <h2>📋 Meus Testes</h2>
+      <h2>📋 Meus Testes Disponíveis</h2>
       <div class="tests-list" id="testsList">
         <!-- Testes serão carregados via JS -->
       </div>
     </div>
   </main>
 
+  <!-- ============================================
+       MODAL PARA RELATÓRIO SIMPLES
+       ============================================ -->
+  <div id="simpleReportModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <h3>🔒 Acesso ao Relatório Completo</h3>
+      <p>Para obter acesso ao relatório completo com análise detalhada, plano de desenvolvimento personalizado e parecer executivo multinacional, entre em contato com nossa equipe de People Analytics.</p>
+      <p class="modal-highlight">Procure a Vigorre para maiores detalhes.</p>
+      <button class="modal-btn" onclick="closeModalAndLogout()">Sair e Voltar</button>
+      <div class="modal-footer">
+        <p>© 2024 Vigorre One™ • People Analytics Enterprise</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       TOAST NOTIFICATION
+       ============================================ -->
+  <div id="toast" class="toast" style="display: none;">
+    <span id="toastIcon">✅</span>
+    <span id="toastMessage">Ação realizada!</span>
+  </div>
+
   <script>
     let currentUser = null;
     let participantData = null;
     let companiesData = [];
 
+    // ============================================
+    // INICIALIZAÇÃO
+    // ============================================
     document.addEventListener('DOMContentLoaded', function() {
+      console.log('🔹 Inicializando Dashboard Vigorre One™...');
+      
+      // ✅ CORREÇÃO: Detectar clique no botão "voltar" do navegador para fazer logoff
+      window.addEventListener('popstate', function(event) {
+        console.log('🔙 Botão voltar detectado - realizando logoff');
+        performLogout();
+      });
+      
       loadSession();
-      if (!currentUser) { window.location.href = 'login.html'; return; }
+      if (!currentUser) { 
+        console.log('⚠️ Usuário não autenticado - redirecionando para login');
+        window.location.href = 'login.html'; 
+        return; 
+      }
       loadParticipantData();
       loadTests();
     });
 
+    // ============================================
+    // CARREGAR SESSÃO
+    // ============================================
     function loadSession() {
       try {
         const session = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
-        if (session?.id) currentUser = session;
-      } catch (e) { console.error('❌ Erro ao carregar sessão:', e); }
+        if (session?.id) {
+          currentUser = session;
+          console.log('✅ Sessão carregada:', currentUser.name);
+        }
+      } catch (e) { 
+        console.error('❌ Erro ao carregar sessão:', e); 
+      }
     }
 
+    // ============================================
+    // CARREGAR DADOS DO PARTICIPANTE
+    // ============================================
     function loadParticipantData() {
       try {
         const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-        participantData = participants.find(p => p.id === currentUser.id);
+        participantData = participants.find(function(p) { return p.id === currentUser.id; });
         
         if (participantData) {
+          // Preencher dados do participante
           document.getElementById('pName').textContent = participantData.name || 'Participante';
           document.getElementById('pEmail').textContent = participantData.email || '-';
           document.getElementById('pPhone').textContent = participantData.phone || '-';
           
+          // ✅ CORREÇÃO: Carregar e exibir nome da empresa vinculada
           companiesData = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
           if (participantData.companyId) {
-            const company = companiesData.find(c => c.id === participantData.companyId);
+            const company = companiesData.find(function(c) { return c.id === participantData.companyId; });
             const companyName = company?.name || 'Independente';
             document.getElementById('pCompany').textContent = companyName;
             
             // Atualiza a inicial do badge com a primeira letra da empresa
             document.getElementById('companyInitial').textContent = companyName.charAt(0).toUpperCase();
+            console.log('✅ Empresa vinculada:', companyName);
+          } else {
+            document.getElementById('pCompany').textContent = 'Independente';
+            document.getElementById('companyInitial').textContent = 'E';
           }
           
+          // ✅ CORREÇÃO: Exibir nome da vaga vinculada quando existir
           if (participantData.jobs && participantData.jobs.length > 0) {
-            document.getElementById('pJob').textContent = participantData.jobs[0].name || 'Vaga vinculada';
+            const jobName = participantData.jobs[0].name || participantData.jobs[0].title || 'Vaga vinculada';
+            document.getElementById('pJob').textContent = jobName;
+            console.log('✅ Vaga vinculada:', jobName);
           } else {
             document.getElementById('pJob').textContent = 'Não vinculada';
           }
+          
+          console.log('✅ Dados do participante carregados');
         }
-      } catch (e) { console.error('❌ Erro ao carregar dados do participante:', e); }
+      } catch (e) { 
+        console.error('❌ Erro ao carregar dados do participante:', e); 
+      }
     }
 
+    // ============================================
+    // CARREGAR TESTES
+    // ============================================
     function loadTests() {
       const testsList = document.getElementById('testsList');
       if (!testsList || !participantData) return;
       
       const availableTests = [
-        { id: 'DISC', name: 'Teste DISC', description: 'Análise de perfil comportamental baseada na metodologia DISC', icon: '📊' },
-        { id: 'IE', name: 'Inteligência Emocional', description: 'Avaliação de competências emocionais e relacionais', icon: '🧠' },
-        { id: 'Valores', name: 'Valores Pessoais', description: 'Mapeamento de valores e motivadores profissionais', icon: '💎' }
+        { id: 'DISC', name: 'Teste DISC', description: 'Análise de perfil comportamental baseada na metodologia DISC de William Marston', icon: '📊' },
+        { id: 'IE', name: 'Inteligência Emocional', description: 'Avaliação de competências emocionais e relacionais para alta performance', icon: '🧠' },
+        { id: 'Valores', name: 'Valores Pessoais', description: 'Mapeamento de valores e motivadores profissionais para fit cultural', icon: '💎' }
       ];
       
       const assignedTests = participantData.tests || participantData.assignedTests || [];
@@ -146,8 +566,8 @@
       
       testsList.innerHTML = '';
       
-      if (assignedTests.length === 0) {
-        testsList.innerHTML = `<div class="empty-state"><h3>Nenhum teste liberado ainda</h3><p>Entre em contato com o administrador para liberar seus testes comportamentais.</p></div>`;
+      if (!assignedTests || assignedTests.length === 0) {
+        testsList.innerHTML = '<div class="empty-state"><h3>📭 Nenhum teste liberado ainda</h3><p>Entre em contato com o administrador da Vigorre One™ para liberar seus testes comportamentais e iniciar sua jornada de autoconhecimento.</p></div>';
         return;
       }
       
@@ -155,30 +575,27 @@
         if (assignedTests.includes(test.id)) {
           const isCompleted = completedTests.includes(test.id);
           const statusText = isCompleted ? '✅ Teste Concluído' : '⏳ Disponível para Iniciar';
-          const statusClass = isCompleted ? 'realizado' : '';
+          const statusClass = isCompleted ? 'realizado' : 'aguardando';
           
           const testCard = document.createElement('div');
-          testCard.className = `test-card ${isCompleted ? 'completed' : ''}`;
+          testCard.className = 'test-card ' + (isCompleted ? 'completed' : '');
           
-          // PARTICIPANTE NÃO GERA RELATÓRIO (apenas admin)
+          // ✅ CORREÇÃO: PARTICIPANTE NÃO GERA RELATÓRIO DIRETAMENTE
+          // Ao clicar em "Relatório", mostrar modal com mensagem e botão para sair
           if (isCompleted) {
-            testCard.innerHTML = `
-              <div class="test-icon">${test.icon}</div>
-              <div class="test-title">${test.name}</div>
-              <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1rem;">${test.description}</p>
-              <div class="test-status ${statusClass}">${statusText}</div>
-              <div style="background: #fef3c7; color: #92400e; padding: 10px; border-radius: 6px; font-size: 0.85rem; text-align: center; font-weight: 500;">
-                📋 Relatório será gerado pelo administrador
-              </div>
-            `;
+            testCard.innerHTML = 
+              '<div class="test-icon">' + test.icon + '</div>' +
+              '<div class="test-title">' + test.name + '</div>' +
+              '<p class="test-description">' + test.description + '</p>' +
+              '<div class="test-status ' + statusClass + '">' + statusText + '</div>' +
+              '<button class="btn-start" style="background: linear-gradient(135deg, #64748B, #475569);" onclick="openSimpleReportModal()">📋 Ver Relatório</button>';
           } else {
-            testCard.innerHTML = `
-              <div class="test-icon">${test.icon}</div>
-              <div class="test-title">${test.name}</div>
-              <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1rem;">${test.description}</p>
-              <div class="test-status ${statusClass}">${statusText}</div>
-              <button class="btn-start" onclick="startTest('${test.id}')">Iniciar Teste</button>
-            `;
+            testCard.innerHTML = 
+              '<div class="test-icon">' + test.icon + '</div>' +
+              '<div class="test-title">' + test.name + '</div>' +
+              '<p class="test-description">' + test.description + '</p>' +
+              '<div class="test-status ' + statusClass + '">' + statusText + '</div>' +
+              '<button class="btn-start" onclick="startTest(\'' + test.id + '\')">🚀 Iniciar Teste</button>';
           }
           
           testsList.appendChild(testCard);
@@ -186,18 +603,103 @@
       });
     }
 
+    // ============================================
+    // INICIAR TESTE
+    // ============================================
     function startTest(testId) {
-      const testUrls = { 'DISC': 'teste-disc.html', 'IE': 'teste-ie.html', 'Valores': 'teste-valores.html' };
-      if (testUrls[testId]) window.location.href = testUrls[testId];
+      const testUrls = { 
+        'DISC': 'teste-disc.html', 
+        'IE': 'teste-ie.html', 
+        'Valores': 'teste-valores.html' 
+      };
+      if (testUrls[testId]) {
+        console.log('🚀 Iniciando teste:', testId);
+        window.location.href = testUrls[testId] + '?participantId=' + (currentUser?.id || '');
+      }
+    }
+
+    // ============================================
+    // MODAL: RELATÓRIO SIMPLES
+    // ============================================
+    function openSimpleReportModal() {
+      console.log('🔒 Abrindo modal de relatório completo');
+      const modal = document.getElementById('simpleReportModal');
+      if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Evitar scroll no fundo
+      }
+    }
+
+    function closeModalAndLogout() {
+      console.log('🔐 Fechando modal e realizando logoff');
+      const modal = document.getElementById('simpleReportModal');
+      if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+      performLogout();
+    }
+
+    // ============================================
+    // LOGOFF DO SISTEMA
+    // ============================================
+    function performLogout() {
+      console.log('🔐 Realizando logoff completo...');
+      localStorage.removeItem('vigorre_current_user');
+      sessionStorage.clear();
+      
+      // Redirecionar para login com parâmetro para evitar cache
+      window.location.href = 'login.html?loggedout=1&ts=' + Date.now();
     }
 
     function logout() {
-      localStorage.removeItem('vigorre_current_user');
-      sessionStorage.clear();
-      window.location.href = 'login.html';
+      console.log('🔐 Botão logout clicado');
+      performLogout();
     }
 
-    window.addEventListener('error', function(e) { console.error('❌ Erro no dashboard Vigorre One™:', e); return true; });
+    // ============================================
+    // TOAST NOTIFICATION
+    // ============================================
+    function showToast(message, type) {
+      type = type || 'success';
+      const toast = document.getElementById('toast');
+      const toastIcon = document.getElementById('toastIcon');
+      const toastMessage = document.getElementById('toastMessage');
+      
+      if (!toast) return;
+      
+      toastIcon.textContent = type === 'success' ? '✅' : '⚠️';
+      toastMessage.textContent = message;
+      toast.className = 'toast ' + (type === 'error' ? 'error' : '');
+      toast.style.display = 'flex';
+      
+      setTimeout(function() {
+        toast.style.display = 'none';
+      }, 4000);
+    }
+
+    // ============================================
+    // TRATAMENTO DE ERROS GLOBAIS
+    // ============================================
+    window.addEventListener('error', function(e) {
+      console.error('❌ Erro no dashboard Vigorre One™:', e);
+      showToast('⚠️ Ocorreu um erro. Recarregue a página se o problema persistir.', 'error');
+      return true;
+    });
+
+    // ============================================
+    // DEBUG INICIAL
+    // ============================================
+    console.log('🔍 Dashboard - Estado inicial:', {
+      currentUser: currentUser?.name || 'não carregado',
+      participant: participantData?.name || 'não carregado',
+      hasCompanies: companiesData.length > 0,
+      localStorage: {
+        user: !!localStorage.getItem('vigorre_current_user'),
+        participants: !!localStorage.getItem('vigorre_participants'),
+        companies: !!localStorage.getItem('vigorre_companies')
+      }
+    });
   </script>
 </body>
 </html>
