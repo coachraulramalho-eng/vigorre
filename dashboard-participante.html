@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Minha Área - Vigorre One™ | People Analytics Enterprise</title>
   
-  <!-- ✅ ADICIONAR ISTO -->
+  <!-- ✅ SUPABASE SDK - CARREGAR PRIMEIRO -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- ✅ CONFIGURAÇÃO SUPABASE - SUAS CHAVES -->
   <script src="supabase-config.js"></script>
   
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -467,126 +469,316 @@
   </div>
 
   <script>
-    let currentUser = null;
-    let participantData = null;
-    let companiesData = [];
+    // ============================================
+    // VARIÁVEIS GLOBAIS DO SISTEMA
+    // ============================================
+    let currentUser = null;           // Usuário logado atualmente
+    let participantData = null;       // Dados completos do participante
+    let companiesData = [];           // Lista de empresas cadastradas
 
     // ============================================
-    // INICIALIZAÇÃO
+    // INICIALIZAÇÃO DA PÁGINA
     // ============================================
     document.addEventListener('DOMContentLoaded', function() {
       console.log('🔹 Inicializando Dashboard Vigorre One™...');
       
-      // ✅ CORREÇÃO: Detectar clique no botão "voltar" do navegador para fazer logoff
+      // ✅ DETECTAR CLIQUE NO BOTÃO "VOLTAR" DO NAVEGADOR
+      // Se o usuário clicar em voltar, fazemos logoff automaticamente
       window.addEventListener('popstate', function(event) {
         console.log('🔙 Botão voltar detectado - realizando logoff');
         performLogout();
       });
       
+      // Carregar sessão do usuário
       loadSession();
+      
+      // Se não tiver usuário logado, redirecionar para login
       if (!currentUser) { 
         console.log('⚠️ Usuário não autenticado - redirecionando para login');
         window.location.href = 'login.html'; 
         return; 
       }
+      
+      // Carregar dados do participante
       loadParticipantData();
+      
+      // Carregar lista de testes disponíveis
       loadTests();
     });
 
     // ============================================
-    // CARREGAR SESSÃO
+    // FUNÇÃO: CARREGAR SESSÃO DO USUÁRIO
     // ============================================
-    function loadSession() {
+    // Tenta carregar do Supabase primeiro, fallback para localStorage
+    async function loadSession() {
       try {
+        console.log('🔍 Tentando carregar sessão...');
+        
+        // PRIMEIRO: Tentar carregar do Supabase (online)
+        if (window.VigorreDB && VigorreDB.supabase) {
+          console.log('🌐 Tentando carregar do Supabase...');
+          
+          const token = sessionStorage.getItem('vigorre_session_token');
+          
+          if (token) {
+            // Buscar sessão ativa no Supabase
+            const { data: sessionData, error: sessionError } = await VigorreDB.supabase
+              .from('sessions')
+              .select('participant_id, expires_at')
+              .eq('token', token)
+              .maybeSingle();
+            
+            if (sessionData && !sessionError) {
+              // Verificar se sessão não expirou
+              if (new Date(sessionData.expires_at) > new Date()) {
+                // Sessão válida - buscar dados do participante
+                const { data: participant, error: pError } = await VigorreDB.supabase
+                  .from('participants')
+                  .select('*')
+                  .eq('id', sessionData.participant_id)
+                  .maybeSingle();
+                
+                if (participant && !pError) {
+                  currentUser = {
+                    id: participant.id,
+                    name: participant.name,
+                    email: participant.email,
+                    role: 'participant'
+                  };
+                  participantData = participant;
+                  console.log('✅ Sessão carregada do Supabase:', participant.name);
+                  return true;
+                }
+              }
+            }
+          }
+        }
+        
+        // SEGUNDO: Fallback para localStorage (offline ou sem Supabase)
+        console.log('📱 Usando fallback localStorage...');
         const session = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+        
         if (session?.id) {
           currentUser = session;
-          console.log('✅ Sessão carregada:', currentUser.name);
+          console.log('✅ Sessão carregada do localStorage:', currentUser.name);
+          return true;
         }
+        
+        console.log('❌ Nenhuma sessão encontrada');
+        return false;
+        
       } catch (e) { 
         console.error('❌ Erro ao carregar sessão:', e); 
+        // Em caso de erro, tentar localStorage como último recurso
+        try {
+          const session = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+          if (session?.id) {
+            currentUser = session;
+            return true;
+          }
+        } catch (e2) {
+          console.error('❌ Erro no fallback:', e2);
+        }
+        return false;
       }
     }
 
     // ============================================
-    // CARREGAR DADOS DO PARTICIPANTE
+    // FUNÇÃO: CARREGAR DADOS DO PARTICIPANTE
     // ============================================
-    function loadParticipantData() {
+    // Carrega dados do Supabase com fallback para localStorage
+    async function loadParticipantData() {
       try {
+        console.log('🔍 Carregando dados do participante...');
+        
+        // Se já temos os dados da sessão, usar eles
+        if (participantData) {
+          console.log('✅ Dados já carregados da sessão');
+          updateParticipantUI(participantData);
+          return;
+        }
+        
+        // PRIMEIRO: Tentar carregar do Supabase
+        if (window.VigorreDB && VigorreDB.supabase && currentUser?.id) {
+          console.log('🌐 Tentando carregar participante do Supabase...');
+          
+          try {
+            const { data, error } = await VigorreDB.supabase
+              .from('participants')
+              .select('*')
+              .eq('id', currentUser.id)
+              .maybeSingle();
+            
+            if (data && !error) {
+              participantData = data;
+              console.log('✅ Participante carregado do Supabase');
+              updateParticipantUI(participantData);
+              return;
+            }
+          } catch (supabaseError) {
+            console.warn('⚠️ Erro ao buscar do Supabase, usando localStorage:', supabaseError);
+          }
+        }
+        
+        // SEGUNDO: Fallback para localStorage
+        console.log('📱 Buscando participante no localStorage...');
         const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-        participantData = participants.find(function(p) { return p.id === currentUser.id; });
+        participantData = participants.find(function(p) { return p.id === currentUser?.id; });
         
         if (participantData) {
-          // Preencher dados do participante
-          document.getElementById('pName').textContent = participantData.name || 'Participante';
-          document.getElementById('pEmail').textContent = participantData.email || '-';
-          document.getElementById('pPhone').textContent = participantData.phone || '-';
-          
-          // ✅ CORREÇÃO: Carregar e exibir nome da empresa vinculada
-          companiesData = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
-          if (participantData.companyId) {
-            const company = companiesData.find(function(c) { return c.id === participantData.companyId; });
-            const companyName = company?.name || 'Independente';
-            document.getElementById('pCompany').textContent = companyName;
-            
-            // Atualiza a inicial do badge com a primeira letra da empresa
-            document.getElementById('companyInitial').textContent = companyName.charAt(0).toUpperCase();
-            console.log('✅ Empresa vinculada:', companyName);
-          } else {
-            document.getElementById('pCompany').textContent = 'Independente';
-            document.getElementById('companyInitial').textContent = 'E';
-          }
-          
-          // ✅ CORREÇÃO: Exibir nome da vaga vinculada quando existir
-          if (participantData.jobs && participantData.jobs.length > 0) {
-            const jobName = participantData.jobs[0].name || participantData.jobs[0].title || 'Vaga vinculada';
-            document.getElementById('pJob').textContent = jobName;
-            console.log('✅ Vaga vinculada:', jobName);
-          } else {
-            document.getElementById('pJob').textContent = 'Não vinculada';
-          }
-          
-          console.log('✅ Dados do participante carregados');
+          console.log('✅ Participante carregado do localStorage');
+          updateParticipantUI(participantData);
+          return;
         }
+        
+        console.log('❌ Participante não encontrado');
+        
       } catch (e) { 
         console.error('❌ Erro ao carregar dados do participante:', e); 
+        // Tentar localStorage como último recurso
+        try {
+          const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+          participantData = participants.find(function(p) { return p.id === currentUser?.id; });
+          if (participantData) {
+            updateParticipantUI(participantData);
+          }
+        } catch (e2) {
+          console.error('❌ Erro no fallback do participante:', e2);
+        }
       }
     }
 
     // ============================================
-    // CARREGAR TESTES
+    // FUNÇÃO: ATUALIZAR INTERFACE COM DADOS DO PARTICIPANTE
+    // ============================================
+    // Atualiza os elementos HTML com os dados carregados
+    function updateParticipantUI(data) {
+      if (!data) return;
+      
+      console.log('🎨 Atualizando interface com dados do participante...');
+      
+      // Atualizar nome do participante
+      const pName = document.getElementById('pName');
+      if (pName) pName.textContent = data.name || 'Participante';
+      
+      // Atualizar email
+      const pEmail = document.getElementById('pEmail');
+      if (pEmail) pEmail.textContent = data.email || '-';
+      
+      // Atualizar telefone
+      const pPhone = document.getElementById('pPhone');
+      if (pPhone) pPhone.textContent = data.phone || '-';
+      
+      // Atualizar empresa vinculada
+      const pCompany = document.getElementById('pCompany');
+      const companyInitial = document.getElementById('companyInitial');
+      
+      if (pCompany && companyInitial) {
+        if (data.companyId && data.companyName) {
+          // Tem empresa vinculada
+          pCompany.textContent = data.companyName;
+          companyInitial.textContent = data.companyName.charAt(0).toUpperCase();
+          console.log('✅ Empresa vinculada:', data.companyName);
+        } else if (data.companyId) {
+          // Tem ID da empresa mas não o nome - buscar na lista local
+          companiesData = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+          const company = companiesData.find(function(c) { return c.id === data.companyId; });
+          const companyName = company?.name || 'Independente';
+          pCompany.textContent = companyName;
+          companyInitial.textContent = companyName.charAt(0).toUpperCase();
+        } else {
+          // Sem empresa vinculada
+          pCompany.textContent = 'Independente';
+          companyInitial.textContent = 'E';
+        }
+      }
+      
+      // Atualizar vaga vinculada
+      const pJob = document.getElementById('pJob');
+      if (pJob) {
+        if (data.jobs && Array.isArray(data.jobs) && data.jobs.length > 0) {
+          const jobName = data.jobs[0].name || data.jobs[0].title || 'Vaga vinculada';
+          pJob.textContent = jobName;
+          console.log('✅ Vaga vinculada:', jobName);
+        } else {
+          pJob.textContent = 'Não vinculada';
+        }
+      }
+      
+      console.log('✅ Interface atualizada com sucesso');
+    }
+
+    // ============================================
+    // FUNÇÃO: CARREGAR LISTA DE TESTES DISPONÍVEIS
     // ============================================
     function loadTests() {
       const testsList = document.getElementById('testsList');
-      if (!testsList || !participantData) return;
+      if (!testsList || !participantData) {
+        console.warn('⚠️ Não foi possível carregar testes: testsList ou participantData não encontrado');
+        return;
+      }
       
+      console.log('📋 Carregando testes para participante:', participantData.name);
+      
+      // Lista de testes disponíveis no sistema
       const availableTests = [
-        { id: 'DISC', name: 'Teste DISC', description: 'Análise de perfil comportamental baseada na metodologia DISC de William Marston', icon: '📊' },
-        { id: 'IE', name: 'Inteligência Emocional', description: 'Avaliação de competências emocionais e relacionais para alta performance', icon: '🧠' },
-        { id: 'Valores', name: 'Valores Pessoais', description: 'Mapeamento de valores e motivadores profissionais para fit cultural', icon: '💎' }
+        { 
+          id: 'DISC', 
+          name: 'Teste DISC', 
+          description: 'Análise de perfil comportamental baseada na metodologia DISC de William Marston', 
+          icon: '📊' 
+        },
+        { 
+          id: 'IE', 
+          name: 'Inteligência Emocional', 
+          description: 'Avaliação de competências emocionais e relacionais para alta performance', 
+          icon: '🧠' 
+        },
+        { 
+          id: 'Valores', 
+          name: 'Valores Pessoais', 
+          description: 'Mapeamento de valores e motivadores profissionais para fit cultural', 
+          icon: '💎' 
+        }
       ];
       
+      // Testes atribuídos ao participante (do banco de dados)
       const assignedTests = participantData.tests || participantData.assignedTests || [];
+      
+      // Testes que o participante já completou
       const completedTests = participantData.completedTests || [];
       
+      console.log('📊 Status dos testes:', {
+        assigned: assignedTests,
+        completed: completedTests
+      });
+      
+      // Limpar lista atual
       testsList.innerHTML = '';
       
+      // Se não houver testes atribuídos, mostrar mensagem
       if (!assignedTests || assignedTests.length === 0) {
         testsList.innerHTML = '<div class="empty-state"><h3>📭 Nenhum teste liberado ainda</h3><p>Entre em contato com o administrador da Vigorre One™ para liberar seus testes comportamentais e iniciar sua jornada de autoconhecimento.</p></div>';
         return;
       }
       
+      // Renderizar cada teste atribuído
       availableTests.forEach(function(test) {
+        // Só mostrar se o teste estiver atribuído ao participante
         if (assignedTests.includes(test.id)) {
+          // Verificar se o teste já foi completado
           const isCompleted = completedTests.includes(test.id);
+          
+          // Texto e classe do status
           const statusText = isCompleted ? '✅ Teste Concluído' : '⏳ Disponível para Iniciar';
           const statusClass = isCompleted ? 'realizado' : 'aguardando';
           
+          // Criar card do teste
           const testCard = document.createElement('div');
           testCard.className = 'test-card ' + (isCompleted ? 'completed' : '');
           
           // ✅ CORREÇÃO: PARTICIPANTE NÃO GERA RELATÓRIO DIRETAMENTE
-          // Ao clicar em "Relatório", mostrar modal com mensagem e botão para sair
+          // Se teste completado, mostrar botão que abre modal
           if (isCompleted) {
             testCard.innerHTML = 
               '<div class="test-icon">' + test.icon + '</div>' +
@@ -595,6 +787,7 @@
               '<div class="test-status ' + statusClass + '">' + statusText + '</div>' +
               '<button class="btn-start" style="background: linear-gradient(135deg, #64748B, #475569);" onclick="openSimpleReportModal()">📋 Ver Relatório</button>';
           } else {
+            // Se teste não completado, mostrar botão para iniciar
             testCard.innerHTML = 
               '<div class="test-icon">' + test.icon + '</div>' +
               '<div class="test-title">' + test.name + '</div>' +
@@ -603,81 +796,129 @@
               '<button class="btn-start" onclick="startTest(\'' + test.id + '\')">🚀 Iniciar Teste</button>';
           }
           
+          // Adicionar card à lista
           testsList.appendChild(testCard);
         }
       });
+      
+      console.log('✅ Testes renderizados com sucesso');
     }
 
     // ============================================
-    // INICIAR TESTE
+    // FUNÇÃO: INICIAR UM TESTE
     // ============================================
     function startTest(testId) {
+      console.log('🚀 Iniciando teste:', testId);
+      
+      // URLs dos testes
       const testUrls = { 
         'DISC': 'teste-disc.html', 
         'IE': 'teste-ie.html', 
         'Valores': 'teste-valores.html' 
       };
+      
+      // Redirecionar para o teste com ID do participante na URL
       if (testUrls[testId]) {
-        console.log('🚀 Iniciando teste:', testId);
-        window.location.href = testUrls[testId] + '?participantId=' + (currentUser?.id || '');
+        const participantId = currentUser?.id || '';
+        window.location.href = testUrls[testId] + '?participantId=' + participantId;
+      } else {
+        console.error('❌ URL do teste não encontrada:', testId);
+        showToast('Teste não encontrado.', 'error');
       }
     }
 
     // ============================================
-    // MODAL: RELATÓRIO SIMPLES
+    // FUNÇÃO: ABRIR MODAL DE RELATÓRIO SIMPLES
     // ============================================
     function openSimpleReportModal() {
       console.log('🔒 Abrindo modal de relatório completo');
       const modal = document.getElementById('simpleReportModal');
       if (modal) {
         modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden'; // Evitar scroll no fundo
+        // Impedir scroll na página de fundo
+        document.body.style.overflow = 'hidden';
       }
     }
 
+    // ============================================
+    // FUNÇÃO: FECHAR MODAL E FAZER LOGOFF
+    // ============================================
     function closeModalAndLogout() {
       console.log('🔐 Fechando modal e realizando logoff');
       const modal = document.getElementById('simpleReportModal');
       if (modal) {
         modal.style.display = 'none';
+        // Restaurar scroll na página
         document.body.style.overflow = '';
       }
+      // Fazer logoff
       performLogout();
     }
 
     // ============================================
-    // LOGOFF DO SISTEMA
+    // FUNÇÃO: FAZER LOGOFF DO SISTEMA
     // ============================================
-    function performLogout() {
+    async function performLogout() {
       console.log('🔐 Realizando logoff completo...');
+      
+      try {
+        // PRIMEIRO: Tentar remover sessão do Supabase
+        if (window.VigorreDB && VigorreDB.supabase) {
+          const token = sessionStorage.getItem('vigorre_session_token');
+          if (token) {
+            await VigorreDB.supabase
+              .from('sessions')
+              .delete()
+              .eq('token', token);
+            console.log('✅ Sessão removida do Supabase');
+          }
+        }
+      } catch (e) {
+        console.warn('⚠️ Não foi possível remover sessão do Supabase:', e);
+      }
+      
+      // Limpar dados locais
       localStorage.removeItem('vigorre_current_user');
       sessionStorage.clear();
       
-      // Redirecionar para login com parâmetro para evitar cache
+      // Redirecionar para login com parâmetros para evitar cache
       window.location.href = 'login.html?loggedout=1&ts=' + Date.now();
     }
 
+    // ============================================
+    // FUNÇÃO: BOTÃO DE LOGOUT NO HEADER
+    // ============================================
     function logout() {
       console.log('🔐 Botão logout clicado');
       performLogout();
     }
 
     // ============================================
-    // TOAST NOTIFICATION
+    // FUNÇÃO: MOSTRAR NOTIFICAÇÃO TOAST
     // ============================================
     function showToast(message, type) {
+      // Definir tipo padrão como 'success'
       type = type || 'success';
+      
+      // Buscar elementos do toast
       const toast = document.getElementById('toast');
       const toastIcon = document.getElementById('toastIcon');
       const toastMessage = document.getElementById('toastMessage');
       
+      // Se não encontrar os elementos, sair
       if (!toast) return;
       
+      // Configurar ícone e mensagem
       toastIcon.textContent = type === 'success' ? '✅' : '⚠️';
       toastMessage.textContent = message;
+      
+      // Aplicar classe de estilo conforme tipo
       toast.className = 'toast ' + (type === 'error' ? 'error' : '');
+      
+      // Mostrar toast
       toast.style.display = 'flex';
       
+      // Esconder após 4 segundos
       setTimeout(function() {
         toast.style.display = 'none';
       }, 4000);
@@ -689,11 +930,11 @@
     window.addEventListener('error', function(e) {
       console.error('❌ Erro no dashboard Vigorre One™:', e);
       showToast('⚠️ Ocorreu um erro. Recarregue a página se o problema persistir.', 'error');
-      return true;
+      return true; // Previne erro no console do navegador
     });
 
     // ============================================
-    // DEBUG INICIAL
+    // DEBUG INICIAL - LOGS PARA DIAGNÓSTICO
     // ============================================
     console.log('🔍 Dashboard - Estado inicial:', {
       currentUser: currentUser?.name || 'não carregado',
@@ -703,6 +944,10 @@
         user: !!localStorage.getItem('vigorre_current_user'),
         participants: !!localStorage.getItem('vigorre_participants'),
         companies: !!localStorage.getItem('vigorre_companies')
+      },
+      supabase: {
+        available: !!window.VigorreDB,
+        url: window.VigorreDB?.supabase ? 'conectado' : 'não conectado'
       }
     });
   </script>
