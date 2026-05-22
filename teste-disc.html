@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Assessment DISC | Vigorre One™ | People Analytics Enterprise</title>
   
+  <!-- ✅ SUPABASE SDK - CARREGAR PRIMEIRO -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- ✅ CONFIGURAÇÃO SUPABASE - SUAS CHAVES -->
+  <script src="supabase-config.js"></script>
+  
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   
@@ -783,7 +789,7 @@
        ============================================ -->
   <div id="resultsPage" class="hidden min-h-screen">
     
-    <!-- Header de Resultados - ✅ BOTÃO EXPORTAR REMOVIDO -->
+    <!-- Header de Resultados -->
     <header class="glass border-b border-white/10 px-4 py-4 sticky top-0 z-40">
       <div class="max-w-6xl mx-auto flex items-center justify-between">
         <div class="flex items-center gap-3">
@@ -797,7 +803,6 @@
             <p class="text-xs text-gray-400">Assessment DISC Completo</p>
           </div>
         </div>
-        <!-- ✅ BOTÃO EXPORTAR PDF REMOVIDO - MANTIDO APENAS IMPRIMIR VIA NAVEGADOR -->
       </div>
     </header>
 
@@ -944,7 +949,7 @@
         </div>
       </div>
 
-      <!-- CTAs de Relatório - ✅ BOTÃO RELATÓRIO SIMPLES COM MODAL -->
+      <!-- CTAs de Relatório -->
       <div class="grid md:grid-cols-2 gap-4 mb-8">
         <div class="glass-card p-6 text-center animate-on-scroll">
           <h4 class="font-semibold mb-2">📄 Relatório Simples</h4>
@@ -975,7 +980,7 @@
   </div>
 
   <!-- ============================================
-       JAVASCRIPT - LÓGICA COMPLETA
+       JAVASCRIPT - LÓGICA COMPLETA COM SUPABASE
        ============================================ -->
   <script>
     // ============================================
@@ -1423,6 +1428,8 @@
     // INICIALIZAÇÃO DA APLICAÇÃO
     // ============================================
     document.addEventListener('DOMContentLoaded', () => {
+      console.log('🔹 Inicializando Assessment DISC Vigorre One™...');
+      
       // Copiar perguntas para o estado
       AppState.questions = JSON.parse(JSON.stringify(DISC_QUESTIONS));
       
@@ -1432,13 +1439,14 @@
       // Carregar sessão do participante
       loadSession();
       
-      // ✅ CORREÇÃO: Detectar clique no botão "voltar" do navegador para fazer logoff
+      // ✅ DETECTAR CLIQUE NO BOTÃO "VOLTAR" DO NAVEGADOR
+      // Se o usuário clicar em voltar, fazemos logoff automaticamente
       window.addEventListener('popstate', function(event) {
         console.log('🔙 Botão voltar detectado - realizando logoff');
         performLogout();
       });
       
-      // ✅ CORREÇÃO: Se já estiver logado, vai direto para as instruções
+      // Se já tiver sessão, vai direto para instruções
       if (AppState.session && AppState.session.id) {
         showView('instructionsPage');
       } else {
@@ -1453,19 +1461,83 @@
     });
 
     // ============================================
-    // CARREGAR SESSÃO DO PARTICIPANTE
+    // FUNÇÃO: CARREGAR SESSÃO DO PARTICIPANTE
     // ============================================
-    function loadSession() {
+    // Tenta carregar do Supabase primeiro, fallback para localStorage
+    async function loadSession() {
       try {
+        console.log('🔍 Tentando carregar sessão...');
+        
+        // PRIMEIRO: Tentar carregar do Supabase (online)
+        if (window.VigorreDB && VigorreDB.supabase) {
+          console.log('🌐 Tentando carregar do Supabase...');
+          
+          const token = sessionStorage.getItem('vigorre_session_token');
+          
+          if (token) {
+            // Buscar sessão ativa no Supabase
+            const { data: sessionData, error: sessionError } = await VigorreDB.supabase
+              .from('sessions')
+              .select('participant_id, expires_at')
+              .eq('token', token)
+              .maybeSingle();
+            
+            if (sessionData && !sessionError) {
+              // Verificar se sessão não expirou
+              if (new Date(sessionData.expires_at) > new Date()) {
+                // Sessão válida - buscar dados do participante
+                const { data: participant, error: pError } = await VigorreDB.supabase
+                  .from('participants')
+                  .select('*')
+                  .eq('id', sessionData.participant_id)
+                  .maybeSingle();
+                
+                if (participant && !pError) {
+                  AppState.session = {
+                    id: participant.id,
+                    name: participant.name,
+                    email: participant.email,
+                    role: 'participant'
+                  };
+                  AppState.participant = participant;
+                  console.log('✅ Sessão carregada do Supabase:', participant.name);
+                  return true;
+                }
+              }
+            }
+          }
+        }
+        
+        // SEGUNDO: Fallback para localStorage (offline ou sem Supabase)
+        console.log('📱 Usando fallback localStorage...');
         const session = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
-        if (session && session.id) {
+        
+        if (session?.id) {
           AppState.session = session;
           const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
           AppState.participant = participants.find(p => p.id === session.id);
-          console.log('✅ Sessão carregada:', AppState.session.name);
+          console.log('✅ Sessão carregada do localStorage:', AppState.session.name);
+          return true;
         }
-      } catch (e) {
-        console.error('❌ Erro ao carregar sessão:', e);
+        
+        console.log('❌ Nenhuma sessão encontrada');
+        return false;
+        
+      } catch (e) { 
+        console.error('❌ Erro ao carregar sessão:', e); 
+        // Em caso de erro, tentar localStorage como último recurso
+        try {
+          const session = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+          if (session?.id) {
+            AppState.session = session;
+            const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+            AppState.participant = participants.find(p => p.id === session.id);
+            return true;
+          }
+        } catch (e2) {
+          console.error('❌ Erro no fallback:', e2);
+        }
+        return false;
       }
     }
 
@@ -1767,17 +1839,113 @@
     // ============================================
     // FINALIZAR TESTE E PROCESSAR RESULTADOS
     // ============================================
-    function finishTest() {
+    async function finishTest() {
+      // Calcular resultados
       const results = calculateResults();
-      saveParticipantResults(results);
+      
+      // ✅ SALVAR RESULTADOS NO SUPABASE COM FALLBACK
+      await saveParticipantResultsSupabase(results);
+      
+      // Enviar relatório simples por e-mail (simulado)
       sendSimpleReportEmail(results);
+      
+      // Mostrar loading
       showLoadingResults();
     }
 
     // ============================================
-    // SALVAR RESULTADOS NO PARTICIPANTE
+    // ✅ FUNÇÃO: SALVAR RESULTADOS NO SUPABASE COM FALLBACK
     // ============================================
-    function saveParticipantResults(results) {
+    async function saveParticipantResultsSupabase(results) {
+      console.log('💾 Salvando resultados do teste DISC...');
+      
+      if (!AppState.participant) {
+        console.warn('⚠️ Participante não encontrado, salvando apenas no localStorage');
+        saveParticipantResultsLocalStorage(results);
+        return;
+      }
+      
+      try {
+        // Preparar dados para salvar no Supabase
+        const resultData = {
+          id: VigorreDB.generateId(),
+          participant_id: AppState.participant.id,
+          test_type: 'DISC',
+          scores: results.scores,
+          percentages: results.percentages,
+          dominant: Object.entries(results.percentages).sort((a, b) => b[1] - a[1])[0][0],
+          secondary: Object.entries(results.percentages).sort((a, b) => b[1] - a[1])[1]?.[0],
+          completed_at: new Date().toISOString()
+        };
+        
+        console.log('📋 Dados para salvar:', resultData);
+        
+        // PRIMEIRO: Tentar salvar no Supabase
+        if (window.VigorreDB && VigorreDB.supabase) {
+          console.log('🌐 Tentando salvar no Supabase...');
+          
+          const { error } = await VigorreDB.supabase
+            .from('test_results')
+            .upsert(resultData);
+          
+          if (error) {
+            throw error;
+          }
+          
+          console.log('✅ Resultados salvos no Supabase com sucesso!');
+          
+          // Atualizar participante no Supabase para marcar teste como completado
+          await updateParticipantCompletedTests('DISC');
+        }
+        
+      } catch (e) {
+        // SEGUNDO: Fallback para localStorage se Supabase falhar
+        console.warn('⚠️ Falha ao salvar no Supabase, usando localStorage:', e);
+        saveParticipantResultsLocalStorage(results);
+      }
+    }
+
+    // ============================================
+    // FUNÇÃO: ATUALIZAR TESTES COMPLETADOS DO PARTICIPANTE NO SUPABASE
+    // ============================================
+    async function updateParticipantCompletedTests(testType) {
+      try {
+        if (!AppState.participant || !window.VigorreDB) return;
+        
+        // Buscar participante atual do Supabase
+        const { data: participant, error: fetchError } = await VigorreDB.supabase
+          .from('participants')
+          .select('completed_tests')
+          .eq('id', AppState.participant.id)
+          .maybeSingle();
+        
+        if (fetchError) throw fetchError;
+        
+        // Adicionar teste à lista de completados
+        const completedTests = participant?.completed_tests || [];
+        if (!completedTests.includes(testType)) {
+          completedTests.push(testType);
+          
+          // Atualizar no Supabase
+          const { error: updateError } = await VigorreDB.supabase
+            .from('participants')
+            .update({ completed_tests: completedTests })
+            .eq('id', AppState.participant.id);
+          
+          if (updateError) throw updateError;
+          
+          console.log(`✅ Teste ${testType} marcado como completado no Supabase`);
+        }
+        
+      } catch (e) {
+        console.warn('⚠️ Falha ao atualizar completed_tests no Supabase:', e);
+      }
+    }
+
+    // ============================================
+    // FUNÇÃO: SALVAR RESULTADOS NO LOCALSTORAGE (FALLBACK)
+    // ============================================
+    function saveParticipantResultsLocalStorage(results) {
       if (!AppState.participant) return;
       
       try {
@@ -1785,15 +1953,18 @@
         const idx = participants.findIndex(p => p.id === AppState.participant.id);
         
         if (idx > -1) {
+          // Garantir que completedTests exista
           if (!participants[idx].completedTests) {
             participants[idx].completedTests = [];
           }
           
+          // Adicionar DISC aos testes concluídos se ainda não estiver
           if (!participants[idx].completedTests.includes('DISC')) {
             participants[idx].completedTests.push('DISC');
             console.log('✅ DISC adicionado a completedTests');
           }
           
+          // Salvar resultados do teste
           participants[idx].testResults = participants[idx].testResults || {};
           participants[idx].testResults.DISC = {
             date: new Date().toISOString(),
@@ -1802,8 +1973,10 @@
             dominant: Object.entries(results.percentages).sort((a, b) => b[1] - a[1])[0][0]
           };
           
+          // Salvar no localStorage
           localStorage.setItem('vigorre_participants', JSON.stringify(participants));
           
+          // Salvar resultado no localStorage para relatórios
           localStorage.setItem('vigorre_last_disc_result', JSON.stringify({
             scores: results.scores,
             percentages: results.percentages,
@@ -1811,10 +1984,13 @@
             date: new Date().toISOString()
           }));
           
+          // Atualizar participant no AppState
           AppState.participant = participants[idx];
+          
+          console.log('✅ Resultados salvos no localStorage');
         }
       } catch (e) {
-        console.error('Erro ao salvar resultados:', e);
+        console.error('❌ Erro ao salvar resultados no localStorage:', e);
       }
     }
 
@@ -1822,10 +1998,15 @@
     // ENVIAR RELATÓRIO SIMPLES POR E-MAIL (SIMULADO)
     // ============================================
     function sendSimpleReportEmail(results) {
+      // Em produção, aqui chamaria a API: /api/send-simple-report
       console.log('📧 Enviando relatório DISC para:', AppState.session?.email);
       
+      // Simular delay de envio
       setTimeout(() => {
+        // Salvar histórico de relatório enviado
         saveReportHistory('DISC', 'simple');
+        
+        // Mostrar toast de confirmação
         showToast('✅ Relatório simples enviado para seu e-mail!', 'success');
       }, 1000);
     }
@@ -1860,10 +2041,13 @@
     // CÁLCULO DOS RESULTADOS DISC
     // ============================================
     function calculateResults() {
+      // Resetar scores
       AppState.discScores = { D: 0, I: 0, S: 0, C: 0 };
       
+      // Processar cada resposta
       AppState.answers.forEach((ranking, questionIndex) => {
         if (ranking && ranking.length === 4) {
+          // Pontuação: 1º = 4pts, 2º = 3pts, 3º = 2pts, 4º = 1pt
           ranking.forEach((type, position) => {
             const points = 4 - position;
             AppState.discScores[type] += points;
@@ -1871,6 +2055,7 @@
         }
       });
       
+      // Calcular totais e percentuais
       const total = Object.values(AppState.discScores).reduce((a, b) => a + b, 0);
       
       return {
@@ -1888,6 +2073,7 @@
     function showLoadingResults() {
       showView('loadingResults');
       
+      // Animar barra de loading
       let progress = 0;
       const interval = setInterval(() => {
         progress += Math.random() * 15;
@@ -1906,11 +2092,13 @@
     function showResults() {
       const results = calculateResults();
       
+      // Identificar perfil predominante e secundário
       const sorted = Object.entries(results.percentages)
         .sort((a, b) => b[1] - a[1]);
       
       const [dominant, secondary] = sorted;
       
+      // Atualizar header do perfil
       const dominantProfile = DISC_PROFILES[dominant[0]];
       document.getElementById('profileBadge').className = `profile-badge ${dominantProfile.badge}`;
       document.getElementById('profileLetter').textContent = dominant[0];
@@ -1918,15 +2106,21 @@
       document.getElementById('dominantPercent').textContent = `${dominant[1]}%`;
       document.getElementById('secondaryPercent').textContent = `${secondary[1]}%`;
       
+      // Renderizar gráficos
       renderCharts(results.percentages);
+      
+      // Renderizar insights
       renderInsights(dominant[0], secondary[0], results.percentages);
       
+      // Mostrar página de resultados
       showView('resultsPage');
       
+      // Remover progresso salvo
       localStorage.removeItem('disc_assessment_progress');
     }
 
     function renderCharts(percentages) {
+      // Gráfico Radar
       const radarCtx = document.getElementById('radarChart').getContext('2d');
       new Chart(radarCtx, {
         type: 'radar',
@@ -1961,6 +2155,7 @@
         }
       });
       
+      // Gráfico de Barras
       const barCtx = document.getElementById('barChart').getContext('2d');
       new Chart(barCtx, {
         type: 'bar',
@@ -2009,11 +2204,13 @@
     function renderInsights(dominant, secondary, percentages) {
       const profile = DISC_PROFILES[dominant];
       
+      // Atualizar insights principais
       document.getElementById('communicationInsight').textContent = profile.insights.communication;
       document.getElementById('leadershipInsight').textContent = profile.insights.leadership;
       document.getElementById('decisionInsight').textContent = profile.insights.decision;
       document.getElementById('pressureInsight').textContent = profile.insights.pressure;
       
+      // Pontos fortes
       const strengthsList = document.getElementById('strengthsList');
       strengthsList.innerHTML = profile.strengths.map(strength => `
         <li class="flex items-start gap-2 text-sm text-gray-300">
@@ -2022,6 +2219,7 @@
         </li>
       `).join('');
       
+      // Pontos de desenvolvimento
       const devList = document.getElementById('developmentList');
       devList.innerHTML = profile.development.map(point => `
         <li class="flex items-start gap-2 text-sm text-gray-300">
@@ -2030,6 +2228,7 @@
         </li>
       `).join('');
       
+      // Sugestões de carreira
       const careers = document.getElementById('careerSuggestions');
       careers.innerHTML = profile.careers.map(career => `
         <span class="px-3 py-1.5 rounded-full text-xs font-medium glass border border-white/10 hover:border-white/30 transition cursor-default">
@@ -2037,6 +2236,7 @@
         </span>
       `).join('');
       
+      // Insights inteligentes
       const insights = document.getElementById('smartInsights');
       const smartInsights = [
         {
@@ -2073,7 +2273,7 @@
       const modal = document.getElementById('simpleReportModal');
       if (modal) {
         modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden'; // Evitar scroll no fundo
       }
     }
 
@@ -2089,6 +2289,20 @@
 
     function performLogout() {
       console.log('🔐 Realizando logoff completo...');
+      
+      // Tentar remover sessão do Supabase se disponível
+      if (window.VigorreDB && VigorreDB.supabase) {
+        const token = sessionStorage.getItem('vigorre_session_token');
+        if (token) {
+          VigorreDB.supabase
+            .from('sessions')
+            .delete()
+            .eq('token', token)
+            .then(() => console.log('✅ Sessão removida do Supabase'))
+            .catch(e => console.warn('⚠️ Não foi possível remover sessão do Supabase:', e));
+        }
+      }
+      
       localStorage.removeItem('vigorre_current_user');
       sessionStorage.clear();
       window.location.href = 'login.html?loggedout=1&ts=' + Date.now();
@@ -2146,6 +2360,10 @@
       localStorage: {
         user: !!localStorage.getItem('vigorre_current_user'),
         participants: !!localStorage.getItem('vigorre_participants')
+      },
+      supabase: {
+        available: !!window.VigorreDB,
+        url: window.VigorreDB?.supabase ? 'conectado' : 'não conectado'
       }
     });
   </script>
