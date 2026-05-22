@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Painel Administrativo - Vigorre One™</title>
+  
+  <!-- ✅ SUPABASE SDK - ADICIONAR PRIMEIRO -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- ✅ CONFIGURAÇÃO SUPABASE -->
+  <script src="supabase-config.js"></script>
+  
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     /* ============================================
@@ -113,6 +120,40 @@
       font-size: 1.5rem; 
       color: #1e40af; 
       font-weight: 700; 
+    }
+    
+    /* ============================================
+       INDICADOR DE STATUS DO SUPABASE
+       ============================================ */
+    .supabase-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: #f1f5f9;
+      border: 2px solid #e2e8f0;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    .status-dot.connecting {
+      background: #fbbf24;
+    }
+    .status-dot.connected {
+      background: #10b981;
+    }
+    .status-dot.error {
+      background: #ef4444;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
     }
     
     /* ============================================
@@ -520,6 +561,13 @@
   <main class="main">
     <div class="header">
       <h1 id="pageTitle">Dashboard</h1>
+      
+      <!-- ✅ INDICADOR DE STATUS DO SUPABASE -->
+      <div id="supabaseStatus" class="supabase-status">
+        <span class="status-dot connecting" id="statusDot"></span>
+        <span id="statusText">Verificando conexão...</span>
+      </div>
+      
       <div id="headerActions"></div>
     </div>
 
@@ -942,7 +990,56 @@
       }
       document.getElementById('userName').textContent = currentUser.name;
       renderAll();
+      
+      // ✅ VERIFICAR CONEXÃO COM SUPABASE
+      checkSupabaseConnection();
     });
+
+    // ============================================
+    // ✅ FUNÇÃO: VERIFICAR CONEXÃO COM SUPABASE
+    // ============================================
+    async function checkSupabaseConnection() {
+      const statusElement = document.getElementById('supabaseStatus');
+      const statusDot = document.getElementById('statusDot');
+      const statusText = document.getElementById('statusText');
+      
+      if (!statusElement || !window.VigorreDB) {
+        // Se não tem VigorreDB, esconde o indicador
+        if (statusElement) statusElement.style.display = 'none';
+        return;
+      }
+      
+      try {
+        // Tenta fazer uma query simples para testar conexão
+        const { data, error } = await VigorreDB.supabase
+          .from('participants')
+          .select('id')
+          .limit(1);
+        
+        if (error) {
+          throw error;
+        }
+        
+        // ✅ Conexão bem-sucedida
+        statusDot.className = 'status-dot connected';
+        statusText.textContent = 'Supabase Conectado';
+        statusElement.style.background = '#dcfce7';
+        statusElement.style.borderColor = '#86efac';
+        statusText.style.color = '#166534';
+        
+        console.log('✅ Supabase conectado com sucesso!');
+        
+      } catch (e) {
+        // ❌ Falha na conexão
+        statusDot.className = 'status-dot error';
+        statusText.textContent = 'Supabase Desconectado';
+        statusElement.style.background = '#fee2e2';
+        statusElement.style.borderColor = '#fca5a5';
+        statusText.style.color = '#dc2626';
+        
+        console.error('❌ Erro de conexão com Supabase:', e);
+      }
+    }
 
     function renderAll() {
       renderStaff();
