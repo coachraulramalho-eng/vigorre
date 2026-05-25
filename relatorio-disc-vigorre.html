@@ -123,7 +123,7 @@
     }
 
     /* ============================================
-       CHART CONTAINERS
+       CHART CONTAINERS - CORRIGIDO PARA IMPRESSÃO
        ============================================ */
     .chart-container {
       position: relative;
@@ -209,12 +209,12 @@
     }
 
     /* ============================================
-       PRINT OPTIMIZATION - ULTRA PREMIUM
+       PRINT OPTIMIZATION - ULTRA PREMIUM CORRIGIDO
        ============================================ */
     @media print {
       @page {
         size: A4 portrait;
-        margin: 20mm 20mm;
+        margin: 15mm 15mm; /* Reduzido de 20mm para evitar corte */
       }
       
       body { 
@@ -229,12 +229,12 @@
       /* Esconder elementos não impressos */
       .no-print { display: none !important; }
       
-      /* Header de impressão - AZUL COMO NA TELA */
+      /* Header de impressão - CORRIGIDO MARGEM SUPERIOR */
       .print-header {
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 20px 30px !important;
+        padding: 15px 25px !important; /* Reduzido padding */
         position: fixed;
         top: 0;
         left: 0;
@@ -301,10 +301,10 @@
         color: white !important;
       }
       
-      /* Conteúdo principal com margem CORRETAMENTE AJUSTADA para header/footer */
+      /* Conteúdo principal - MARGEM CORRIGIDA */
       main {
-        margin-top: 120px !important;
-        margin-bottom: 120px !important;
+        margin-top: 100px !important; /* Reduzido de 120px */
+        margin-bottom: 100px !important; /* Reduzido de 120px */
         padding: 0 !important;
       }
       
@@ -323,15 +323,17 @@
         border-bottom: 2px solid #E2E8F0 !important;
       }
       
-      /* Gráficos na impressão */
+      /* Gráficos na impressão - CORRIGIDO */
       .chart-container {
-        height: 320px !important;
+        height: 300px !important; /* Reduzido de 320px */
         max-width: 100% !important;
         page-break-inside: avoid;
+        break-inside: avoid;
       }
       
       canvas {
         max-width: 100% !important;
+        height: auto !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
@@ -346,12 +348,12 @@
         color: #334155 !important; 
       }
       
-      /* Rodapé de impressão - AZUL COMO NA TELA COM LOGO */
+      /* Rodapé de impressão - CORRIGIDO MARGEM INFERIOR */
       .print-footer {
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 20px 30px !important;
+        padding: 15px 25px !important; /* Reduzido padding */
         position: fixed;
         bottom: 0;
         left: 0;
@@ -505,7 +507,7 @@
   </div>
 
   <!-- ============================================
-       MAIN REPORT CONTENT - MARGEM CORRETAMENTE AJUSTADA
+       MAIN REPORT CONTENT - MARGEM CORRIGIDA
        ============================================ -->
   <main class="max-w-5xl mx-auto px-4 py-12" style="padding-top: 90px; padding-bottom: 90px;">
     
@@ -1270,7 +1272,7 @@
         console.log('✓ Nome:', AppState.participant.name);
       }
       
-      // Empresa - CORREÇÃO: Sempre mostrar nome da empresa vinculada
+      // Empresa - CORRIGIDO: Sempre mostrar nome da empresa vinculada
       const coverCompany = safeGetElement('coverCompany');
       if (coverCompany) {
         const companyName = AppState.company?.name || AppState.company?.company_name || 'Independente';
@@ -1278,7 +1280,7 @@
         console.log('✓ Empresa:', companyName);
       }
       
-      // Vaga/Cargo - CORREÇÃO: Mostrar primeira vaga ou "Não vinculada"
+      // Vaga/Cargo - CORRIGIDO: Mostrar primeira vaga ou "Não vinculada"
       const coverJob = safeGetElement('coverJob');
       if (coverJob) {
         if (AppState.jobs && AppState.jobs.length > 0) {
@@ -1324,7 +1326,7 @@
       // Gerar análise textual completa
       const analiseTextual = getAnaliseTextual(dominant, intensity, percentages);
       
-      // ✅ CORREÇÃO: Mostrar nome da vaga vinculada e texto coerente
+      // ✅ CORRIGIDO: Mostrar nome da vaga vinculada e texto coerente
       const hasJob = AppState.jobs && AppState.jobs.length > 0;
       const vagaNome = hasJob ? (AppState.jobs[0].name || AppState.jobs[0].title || 'Vaga vinculada') : null;
       const companyName = AppState.company?.name || AppState.company?.company_name || 'Independente';
