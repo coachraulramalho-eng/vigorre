@@ -9,15 +9,14 @@ const SUPABASE_URL = 'https://dfthdcnaqmqswidwgezj.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_bcLZGSu_wLmhcNOQmY3TLQ_yp3CHiZo';
 
 // ============================================
-// 2. INICIALIZAR CLIENTE SUPABASE
+// 2. INICIALIZAR CLIENTE SUPABASE (UMA VEZ SÓ!)
 // ============================================
 // Cria a conexão com o banco de dados
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ============================================
 // 3. FUNÇÃO PARA GERAR ID ÚNICO
 // ============================================
-// Gera um ID único para cada registro (ex: "k2j3h4g5f6")
 function generateId() {
   const timestamp = Date.now().toString(36);
   const randomPart = Math.random().toString(36).substr(2, 9);
@@ -27,7 +26,6 @@ function generateId() {
 // ============================================
 // 4. FUNÇÃO PARA FORMATAR DATA
 // ============================================
-// Formata data para o padrão brasileiro (ex: "15/01/2025 14:30:00")
 function formatDate(date) {
   return new Date(date).toLocaleString('pt-BR');
 }
@@ -35,11 +33,10 @@ function formatDate(date) {
 // ============================================
 // 5. FUNÇÃO PARA SALVAR NO SUPABASE
 // ============================================
-// Salva dados no banco online, com fallback para localStorage se estiver offline
 async function saveToSupabase(table, data, localStorageKey) {
   try {
     // Tenta salvar no Supabase
-    const { error } = await supabase.from(table).upsert(data);
+    const { error } = await supabaseClient.from(table).upsert(data);
     
     if (error) {
       throw error;
@@ -69,11 +66,10 @@ async function saveToSupabase(table, data, localStorageKey) {
 // ============================================
 // 6. FUNÇÃO PARA BUSCAR DO SUPABASE
 // ============================================
-// Busca dados do banco online, com fallback para localStorage se estiver offline
 async function loadFromSupabase(table, localStorageKey, filterKey, filterValue) {
   try {
     // Tenta buscar no Supabase
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
       .from(table)
       .select('*')
       .eq(filterKey, filterValue)
@@ -103,7 +99,7 @@ async function loadFromSupabase(table, localStorageKey, filterKey, filterValue) 
 // ============================================
 // Disponibiliza as funções para todos os arquivos HTML
 window.VigorreDB = {
-  supabase: supabase,
+  supabase: supabaseClient,
   generateId: generateId,
   formatDate: formatDate,
   saveToSupabase: saveToSupabase,
