@@ -3,14 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Laudo Comportamental Vigorre | People Analytics Premium</title>
+  <title>Laudo Comportamental Integrado Vigorre One™ | People Analytics Enterprise Premium</title>
+  
+  <!-- ✅ SUPABASE SDK - CARREGAR PRIMEIRO -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- ✅ CONFIGURAÇÃO SUPABASE - SUAS CHAVES -->
+  <script src="supabase-config.js"></script>
   
   <!-- Tailwind CSS & Chart.js -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   <!-- Tailwind Config -->
   <script>
@@ -27,25 +33,30 @@
               emerald: '#10B981',
               amber: '#F59E0B',
               rose: '#F43F5E',
-              slate: '#64748B'
+              slate: '#64748B',
+              navy: '#0A1628',
+              light: '#F8FAFC'
             }
           }
         }
       }
-    }
+    };
   </script>
 
   <style>
     /* ============================================
-       BASE & RESET
+       BASE & RESET - ENTERPRISE PREMIUM
        ============================================ */
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body { 
       font-family: 'Inter', sans-serif; 
       background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%); 
       color: #F8FAFC; 
       min-height: 100vh; 
       line-height: 1.7;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
     }
 
     /* ============================================
@@ -320,6 +331,23 @@
       font-size: 2rem; font-weight: bold;
       color: white;
     }
+    
+    /* ============================================
+       CORREÇÃO DE MARGENS - LAYOUT RESPONSIVO
+       ============================================ */
+    @media (max-width: 768px) {
+      .glass-card { padding: 1.5rem !important; }
+      .chart-container { height: 280px !important; }
+      .score-ring { width: 120px; height: 120px; }
+      .score-value { font-size: 1.8rem; }
+    }
+    
+    @media (max-width: 480px) {
+      .glass-card { padding: 1rem !important; }
+      .chart-container { height: 240px !important; }
+      h1 { font-size: 1.5rem !important; }
+      h2 { font-size: 1.3rem !important; }
+    }
   </style>
 </head>
 <body class="antialiased">
@@ -364,7 +392,7 @@
   </header>
 
   <!-- ============================================
-       MAIN LAUDO CONTENT
+       MAIN LAUDO CONTENT - MARGENS CORRETAS
        ============================================ -->
   <main class="max-w-6xl mx-auto px-4 py-8 space-y-8" id="laudoContent" style="display:none;">
     
@@ -833,6 +861,16 @@
     <span id="toastIcon">✅</span><span id="toastMessage">Ação realizada!</span>
   </div>
 
+  <!-- MODAL PARA BOTÃO RELATÓRIO SIMPLES -->
+  <div id="simpleReportModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <h3>🔒 Acesso ao Relatório Completo</h3>
+      <p>Para obter acesso ao relatório completo com análise detalhada, plano de desenvolvimento personalizado e parecer executivo multinacional, entre em contato com nossa equipe.</p>
+      <p class="font-semibold text-brand-navy">Procure a Vigorre para maiores detalhes.</p>
+      <button onclick="closeModalAndLogout()" class="modal-btn">Sair e Voltar</button>
+    </div>
+  </div>
+
   <script>
     // ============================================
     // ESTADO E DADOS
@@ -1064,67 +1102,269 @@
     // ============================================
     document.addEventListener('DOMContentLoaded', () => {
       console.log('Inicializando Laudo Vigorre...');
+      
+      // ✅ DETECTAR CLIQUE NO BOTÃO "VOLTAR" DO NAVEGADOR PARA FAZER LOGOFF
+      window.addEventListener('popstate', function(event) {
+        console.log('🔙 Botão voltar detectado - realizando logoff');
+        performLogout();
+      });
+      
       loadSession();
       loadAllResults();
     });
 
-    function loadSession() {
+    // ============================================
+    // ✅ FUNÇÃO: CARREGAR SESSÃO - SUPABASE + FALLBACK
+    // ============================================
+    async function loadSession() {
       try {
-        const session = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
-        if (session?.id) {
-          AppState.session = session;
-          const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-          AppState.participant = participants.find(p => p.id === session.id);
+        console.log('🔍 Tentando carregar sessão...');
+        
+        // Pegar ID da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const participantId = urlParams.get('participantId');
+        
+        if (!participantId) {
+          console.warn('⚠️ Nenhum participantId na URL - usando modo demonstração');
+          // Modo demonstração com dados fictícios
+          AppState.participant = {
+            name: 'Participante Demo',
+            companyId: null,
+            jobs: []
+          };
+          return;
+        }
+        
+        console.log('🔍 Buscando participante com ID:', participantId);
+        
+        // PRIMEIRO: Tentar carregar do Supabase (online)
+        if (window.VigorreDB && VigorreDB.supabase) {
+          console.log('🌐 Tentando carregar do Supabase...');
           
-          const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
-          if (AppState.participant?.compId) {
-            AppState.company = companies.find(c => c.id === AppState.participant.compId);
-          }
-          
-          const jobs = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]');
-          if (AppState.participant?.jobId) {
-            AppState.job = jobs.find(j => j.id === AppState.participant.jobId);
+          try {
+            // Buscar participante no Supabase
+            const { data: participant, error: pError } = await VigorreDB.supabase
+              .from('participants')
+              .select('*')
+              .eq('id', participantId)
+              .maybeSingle();
+            
+            if (participant && !pError) {
+              AppState.participant = participant;
+              console.log('✅ Participante carregado do Supabase:', participant.name);
+              
+              // Buscar empresa se houver companyId
+              if (participant.company_id) {
+                const { data: company } = await VigorreDB.supabase
+                  .from('companies')
+                  .select('*')
+                  .eq('id', participant.company_id)
+                  .maybeSingle();
+                if (company) {
+                  AppState.company = company;
+                  console.log('✅ Empresa carregada do Supabase:', company.name);
+                }
+              }
+              
+              // Buscar vagas se houver
+              if (participant.jobs && Array.isArray(participant.jobs)) {
+                AppState.jobs = participant.jobs;
+                console.log('✅ Vagas carregadas do Supabase');
+              }
+              
+              return;
+            }
+          } catch (supabaseError) {
+            console.warn('⚠️ Erro ao buscar do Supabase, usando localStorage:', supabaseError);
           }
         }
-      } catch (e) { console.error('Erro ao carregar sessão:', e); }
+        
+        // SEGUNDO: Fallback para localStorage (offline ou sem Supabase)
+        console.log('📱 Usando fallback localStorage...');
+        
+        const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+        AppState.participant = participants.find(function(p) { return p.id === participantId; });
+        
+        if (!AppState.participant) {
+          console.error('❌ Participante não encontrado no localStorage');
+          // Mostrar mensagem amigável
+          const coverName = safeGetElement('coverName');
+          if (coverName) coverName.textContent = 'Participante não encontrado';
+          return;
+        }
+        
+        console.log('✅ Participante encontrado no localStorage:', AppState.participant.name);
+        
+        // Buscar empresas
+        const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+        if (AppState.participant.companyId) {
+          AppState.company = companies.find(function(c) { return c.id === AppState.participant.companyId; });
+          if (AppState.company) {
+            console.log('✅ Empresa encontrada:', AppState.company.name);
+          }
+        }
+        
+        // Buscar vagas vinculadas
+        if (AppState.participant.jobs && Array.isArray(AppState.participant.jobs)) {
+          AppState.jobs = AppState.participant.jobs;
+          console.log('✅ Vagas vinculadas:', AppState.jobs.length);
+        }
+        
+      } catch (e) { 
+        console.error('❌ Erro ao carregar sessão:', e); 
+      }
     }
 
-    function loadAllResults() {
-      // Carregar resultados de todos os testes disponíveis - ✅ CHAVES CONSISTENTES EM PORTUGUÊS
-      const discData = localStorage.getItem('vigorre_last_disc_result');
-      const ieData = localStorage.getItem('vigorre_last_ie_result');
-      const valoresData = localStorage.getItem('vigorre_last_valores_result'); // ✅ português
-      
-      if (discData) AppState.results.disc = JSON.parse(discData);
-      if (ieData) AppState.results.ie = JSON.parse(ieData);
-      if (valoresData) AppState.results.valores = JSON.parse(valoresData);
-      
-      // Verificar quais testes estão disponíveis
+    // ============================================
+    // ✅ FUNÇÃO: CARREGAR RESULTADOS - SUPABASE + FALLBACK
+    // ============================================
+    async function loadAllResults() {
+      try {
+        console.log('🔍 Tentando carregar resultados de todos os testes...');
+        
+        // Pegar ID da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const participantId = urlParams.get('participantId');
+        
+        if (!participantId) {
+          console.error('❌ Nenhum participantId na URL');
+          showToast('ID do participante não encontrado na URL', 'error');
+          return;
+        }
+        
+        // PRIMEIRO: Tentar carregar do Supabase (online)
+        if (window.VigorreDB && VigorreDB.supabase) {
+          console.log('🌐 Tentando carregar resultados do Supabase...');
+          
+          try {
+            // Buscar resultados DISC
+            const { data: discData, error: discError } = await VigorreDB.supabase
+              .from('test_results')
+              .select('*')
+              .eq('participant_id', participantId)
+              .eq('test_type', 'DISC')
+              .maybeSingle();
+            
+            if (discData && !discError) {
+              AppState.results.disc = {
+                percentages: discData.percentages || {},
+                scores: discData.scores || {},
+                dominant: discData.dominant,
+                date: discData.completed_at
+              };
+              console.log('✅ Resultados DISC carregados do Supabase');
+            }
+            
+            // Buscar resultados IE
+            const { data: ieData, error: ieError } = await VigorreDB.supabase
+              .from('test_results')
+              .select('*')
+              .eq('participant_id', participantId)
+              .eq('test_type', 'IE')
+              .maybeSingle();
+            
+            if (ieData && !ieError) {
+              AppState.results.ie = {
+                percentages: ieData.percentages || {},
+                scores: ieData.scores || {},
+                avgQE: ieData.avg_qe,
+                date: ieData.completed_at
+              };
+              console.log('✅ Resultados IE carregados do Supabase');
+            }
+            
+            // Buscar resultados Valores
+            const { data: valoresData, error: valoresError } = await VigorreDB.supabase
+              .from('test_results')
+              .select('*')
+              .eq('participant_id', participantId)
+              .eq('test_type', 'Valores')
+              .maybeSingle();
+            
+            if (valoresData && !valoresError) {
+              AppState.results.valores = {
+                percentages: valoresData.percentages || {},
+                scores: valoresData.scores || {},
+                dominant: valoresData.dominant,
+                date: valoresData.completed_at
+              };
+              console.log('✅ Resultados Valores carregados do Supabase');
+            }
+            
+            // Se todos os testes foram carregados do Supabase, gerar laudo
+            if (AppState.results.disc || AppState.results.ie || AppState.results.valores) {
+              generateLaudo(getAvailableTests());
+              return;
+            }
+          } catch (supabaseError) {
+            console.warn('⚠️ Erro ao buscar do Supabase, usando localStorage:', supabaseError);
+          }
+        }
+        
+        // SEGUNDO: Fallback para localStorage
+        console.log('📱 Buscando resultados no localStorage...');
+        
+        // Carregar resultados de todos os testes disponíveis - ✅ CHAVES CONSISTENTES EM PORTUGUÊS
+        const discData = localStorage.getItem('vigorre_last_disc_result');
+        const ieData = localStorage.getItem('vigorre_last_ie_result');
+        const valoresData = localStorage.getItem('vigorre_last_valores_result'); // ✅ português
+        
+        if (discData) AppState.results.disc = JSON.parse(discData);
+        if (ieData) AppState.results.ie = JSON.parse(ieData);
+        if (valoresData) AppState.results.valores = JSON.parse(valoresData);
+        
+        // Verificar quais testes estão disponíveis
+        const availableTests = getAvailableTests();
+        
+        if (availableTests.length === 0) {
+          console.error('❌ Nenhum resultado de teste encontrado');
+          showToast('Nenhum resultado de teste encontrado. Complete pelo menos um teste para gerar o laudo.', 'error');
+          setTimeout(() => window.location.href = 'index.html', 2000);
+          return;
+        }
+        
+        // Atualizar badges na capa
+        updateTestBadges(availableTests);
+        
+        // Gerar laudo dinâmico
+        generateLaudo(availableTests);
+        
+      } catch (e) {
+        console.error('❌ Erro ao carregar resultados:', e);
+        showToast('Erro ao processar laudo: ' + e.message, 'error');
+      }
+    }
+
+    // ============================================
+    // FUNÇÃO AUXILIAR: Obter testes disponíveis
+    // ============================================
+    function getAvailableTests() {
       const availableTests = [];
       if (AppState.results.disc) availableTests.push('DISC');
       if (AppState.results.ie) availableTests.push('IE');
       if (AppState.results.valores) availableTests.push('Valores');
-      
-      if (availableTests.length === 0) {
-        showToast('Nenhum resultado de teste encontrado. Complete pelo menos um teste para gerar o laudo.', 'error');
-        setTimeout(() => window.location.href = 'index.html', 2000);
-        return;
-      }
-      
-      // Atualizar badges na capa
+      return availableTests;
+    }
+
+    // ============================================
+    // FUNÇÃO AUXILIAR: Atualizar badges na capa
+    // ============================================
+    function updateTestBadges(availableTests) {
       const badgeDisc = safeGetElement('badgeDisc');
       const badgeIE = safeGetElement('badgeIE');
       const badgeValores = safeGetElement('badgeValores');
       
-      if (badgeDisc) badgeDisc.style.display = AppState.results.disc ? 'inline-flex' : 'none';
-      if (badgeIE) badgeIE.style.display = AppState.results.ie ? 'inline-flex' : 'none';
-      if (badgeValores) badgeValores.style.display = AppState.results.valores ? 'inline-flex' : 'none';
-      
-      // Gerar laudo dinâmico
-      generateLaudo(availableTests);
+      if (badgeDisc) badgeDisc.style.display = availableTests.includes('DISC') ? 'inline-flex' : 'none';
+      if (badgeIE) badgeIE.style.display = availableTests.includes('IE') ? 'inline-flex' : 'none';
+      if (badgeValores) badgeValores.style.display = availableTests.includes('Valores') ? 'inline-flex' : 'none';
     }
 
+    // ============================================
+    // FUNÇÃO PRINCIPAL: GERAR LAUDO
+    // ============================================
     function generateLaudo(availableTests) {
+      console.log('🎨 Gerando laudo com testes:', availableTests);
+      
       // Preencher Capa - CORREÇÃO: Verificar se elemento existe antes de acessar
       const coverName = safeGetElement('coverName');
       if (coverName) coverName.textContent = AppState.participant?.name || 'Participante';
@@ -1197,6 +1437,8 @@
         laudoContent.style.display = 'block';
         laudoContent.classList.remove('hidden');
       }
+      
+      console.log('✅ Laudo gerado com sucesso!');
     }
 
     // ============================================
@@ -2060,6 +2302,58 @@
         toast.classList.remove('show'); 
         setTimeout(() => toast.classList.add('hidden'), 300); 
       }, 4000);
+    }
+
+    // ============================================
+    // ✅ FUNÇÕES DO MODAL E LOGOFF
+    // ============================================
+    function openSimpleReportModal() {
+      console.log('🔒 Abrindo modal de laudo completo');
+      const modal = document.getElementById('simpleReportModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // Evitar scroll no fundo
+      }
+    }
+
+    function closeModalAndLogout() {
+      console.log('🔐 Fechando modal e realizando logoff');
+      const modal = document.getElementById('simpleReportModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+      }
+      performLogout();
+    }
+
+    // ============================================
+    // FUNÇÃO: FAZER LOGOFF DO SISTEMA
+    // ============================================
+    async function performLogout() {
+      console.log('🔐 Realizando logoff completo...');
+      
+      // Tentar remover sessão do Supabase se disponível
+      if (window.VigorreDB && VigorreDB.supabase) {
+        const token = sessionStorage.getItem('vigorre_session_token');
+        if (token) {
+          try {
+            await VigorreDB.supabase
+              .from('sessions')
+              .delete()
+              .eq('token', token);
+            console.log('✅ Sessão removida do Supabase');
+          } catch (e) {
+            console.warn('⚠️ Não foi possível remover sessão do Supabase:', e);
+          }
+        }
+      }
+      
+      // Limpar dados locais
+      localStorage.removeItem('vigorre_current_user');
+      sessionStorage.clear();
+      
+      // Redirecionar para login com parâmetros para evitar cache
+      window.location.href = 'login.html?loggedout=1&ts=' + Date.now();
     }
 
     // ============================================
