@@ -3,14 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Teste de Valores Pessoais | Vigorre People Analytics</title>
+  <title>Teste de Valores Pessoais | Vigorre One™ | People Analytics Enterprise</title>
+  
+  <!-- ✅ SUPABASE SDK - CARREGAR PRIMEIRO -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- ✅ CONFIGURAÇÃO SUPABASE - SUAS CHAVES -->
+  <script src="supabase-config.js"></script>
   
   <!-- Tailwind CSS & Chart.js -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   <!-- Tailwind Config -->
   <script>
@@ -26,16 +32,21 @@
               cyan: '#06B6D4',
               emerald: '#10B981',
               amber: '#F59E0B',
-              rose: '#F43F5E'
+              rose: '#F43F5E',
+              navy: '#0A1628'
             }
           }
         }
       }
-    }
+    };
   </script>
 
   <style>
+    /* ============================================
+       BASE & RESET - ENTERPRISE PREMIUM
+       ============================================ */
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body { 
       font-family: 'Inter', sans-serif; 
       background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%); 
@@ -43,9 +54,14 @@
       min-height: 100vh; 
       line-height: 1.6;
     }
+
+    /* ============================================
+       GLASSMORPHISM & PREMIUM EFFECTS
+       ============================================ */
     .glass { 
       background: rgba(30, 41, 59, 0.7); 
       backdrop-filter: blur(12px); 
+      -webkit-backdrop-filter: blur(12px); 
       border: 1px solid rgba(255, 255, 255, 0.1); 
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); 
     }
@@ -62,28 +78,65 @@
       -webkit-text-fill-color: transparent; 
       background-clip: text; 
     }
-    .chart-container {
-      position: relative;
-      height: 400px !important;
-      width: 100%;
-      overflow: hidden;
-    }
+
+    /* ============================================
+       BUTTONS & INTERACTIONS
+       ============================================ */
     .btn-primary { 
       background: linear-gradient(135deg, #1D4ED8, #7C3AED); 
-      transition: all 0.3s ease;
+      transition: all 0.3s ease; position: relative; overflow: hidden; 
     }
+    .btn-primary::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, #7C3AED, #06B6D4);
+      opacity: 0; transition: opacity 0.3s ease;
+    }
+    .btn-primary:hover::before { opacity: 1; }
     .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(124, 58, 237, 0.4); }
+    
     .btn-secondary {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: white;
       transition: all 0.3s ease;
     }
-    .btn-secondary:hover { background: rgba(255,255,255,0.2); }
+    .btn-secondary:hover { 
+      background: rgba(255,255,255,0.2); 
+      border-color: rgba(255,255,255,0.4);
+      transform: translateY(-1px); 
+    }
+
+    /* ============================================
+       PROGRESS & CHARTS
+       ============================================ */
     .progress-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
     .progress-fill { 
       height: 100%; background: linear-gradient(90deg, #1D4ED8, #7C3AED, #06B6D4); 
-      transition: width 0.4s ease;
+      transition: width 0.4s ease; position: relative; 
     }
+    .progress-fill::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shimmer 2s infinite;
+    }
+    @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+    /* ============================================
+       CORREÇÃO CRÍTICA: CONTAINERS DE GRÁFICOS COM ALTURA FIXA
+       ============================================ */
+    .chart-container {
+      position: relative;
+      height: 400px !important;
+      max-height: 400px !important;
+      width: 100%;
+    }
+    .chart-container canvas {
+      max-height: 400px !important;
+    }
+
+    /* ============================================
+       TEST INTERFACE
+       ============================================ */
     .option-btn { 
       width: 100%; padding: 16px 20px; border-radius: 12px; 
       border: 2px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); 
@@ -92,20 +145,142 @@
     }
     .option-btn:hover { border-color: #1D4ED8; background: rgba(29, 78, 216, 0.1); }
     .option-btn.selected { border-color: #F59E0B; background: rgba(245, 158, 11, 0.15); }
-    .option-btn .check-icon { width: 20px; height: 20px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; }
+    .option-btn .check-icon { width: 20px; height: 20px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .option-btn.selected .check-icon { background: #F59E0B; border-color: #F59E0B; }
-    .slide-up { animation: slideUp 0.4s ease-out; }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    #toast {
-      position: fixed; top: 20px; right: 20px; padding: 12px 20px; border-radius: 12px;
-      background: rgba(30, 41, 59, 0.95); border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4); display: flex; align-items: center; gap: 10px;
-      z-index: 9999; transform: translateX(400px); transition: transform 0.3s ease;
-    }
-    #toast.show { transform: translateX(0); }
-    
+
     /* ============================================
-       PRINT OPTIMIZATION - PREMIUM VIGORRE
+       MODAL PREMIUM - PARA RELATÓRIO SIMPLES
+       ============================================ */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      backdrop-filter: blur(12px);
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      padding: 45px 40px;
+      max-width: 540px;
+      width: 92%;
+      text-align: center;
+      box-shadow: 0 30px 90px rgba(0,0,0,0.45);
+      border: 1px solid #e2e8f0;
+      animation: slideUp 0.45s ease;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .modal-content h3 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #0F172A;
+      margin-bottom: 1.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    .modal-content p {
+      color: #64748B;
+      margin-bottom: 1.8rem;
+      line-height: 1.75;
+      font-size: 1.08rem;
+    }
+    .modal-highlight {
+      background: linear-gradient(135deg, #1D4ED8, #7C3AED);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 700;
+      font-size: 1.15rem;
+      margin: 1rem 0;
+    }
+    .modal-btn {
+      background: linear-gradient(135deg, #1D4ED8, #7C3AED);
+      color: white;
+      padding: 15px 40px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.35s ease;
+      box-shadow: 0 5px 20px rgba(29, 78, 216, 0.45);
+    }
+    .modal-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 32px rgba(29, 78, 216, 0.65);
+    }
+    .modal-footer {
+      margin-top: 2rem;
+      padding-top: 1.8rem;
+      border-top: 1px solid #e2e8f0;
+      font-size: 0.92rem;
+      color: #94a3b8;
+    }
+
+    /* ============================================
+       TOAST NOTIFICATIONS
+       ============================================ */
+    #toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 14px 24px;
+      border-radius: 14px;
+      background: rgba(30, 41, 59, 0.96);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 0 12px 45px rgba(0, 0, 0, 0.42);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 9999;
+      transform: translateX(420px);
+      transition: transform 0.32s ease;
+      max-width: 380px;
+    }
+    #toast.show {
+      transform: translateX(0);
+    }
+    #toast.success {
+      border-left: 4px solid #10B981;
+    }
+    #toast.error {
+      border-left: 4px solid #EF4444;
+    }
+    #toast .toast-icon {
+      font-size: 1.35rem;
+    }
+    #toast .toast-message {
+      font-size: 0.92rem;
+      color: #F8FAFC;
+      flex: 1;
+    }
+    #toast .toast-close {
+      background: none;
+      border: none;
+      color: #94A3B8;
+      cursor: pointer;
+      font-size: 1.35rem;
+      line-height: 1;
+      padding: 0;
+    }
+    #toast .toast-close:hover {
+      color: #F8FAFC;
+    }
+
+    /* ============================================
+       PRINT OPTIMIZATION - PREMIUM VIGORRE ONE™
        ============================================ */
     @media print {
       body { 
@@ -189,39 +364,83 @@
     }
     
     /* Header de impressão (oculto na tela) */
-    .print-header {
-      display: none;
+    .print-header { display: none; }
+    .print-watermark { display: none; }
+    .print-footer { display: none; }
+
+    /* ============================================
+       ANIMATIONS
+       ============================================ */
+    .fade-in { animation: fadeIn 0.5s ease-out; }
+    .slide-up { animation: slideUp 0.4s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0F172A; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+    /* ============================================
+       CORREÇÃO DE MARGENS - HEADER/FIXED ELEMENTS
+       ============================================ */
+    header {
+      height: 72px !important;
     }
-    .print-watermark {
-      display: none;
+    
+    main {
+      padding-top: 95px !important; /* ✅ Espaço para header fixo de 72px + margem */
+      padding-bottom: 45px !important;
     }
-    .print-footer {
-      display: none;
+    
+    /* Para telas menores */
+    @media (max-width: 768px) {
+      header { height: 68px !important; }
+      main { padding-top: 90px !important; }
     }
   </style>
 </head>
 <body class="antialiased">
 
   <!-- ============================================
+       MODAL PARA RELATÓRIO SIMPLES
+       ============================================ -->
+  <div id="simpleReportModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <h3>🔒 Acesso ao Relatório Completo</h3>
+      <p>Para obter acesso ao relatório completo com análise detalhada, plano de desenvolvimento personalizado e parecer executivo multinacional, entre em contato com nossa equipe de People Analytics.</p>
+      <p class="modal-highlight">Procure a Vigorre para maiores detalhes.</p>
+      <button class="modal-btn" onclick="closeModalAndLogout()">Sair e Voltar</button>
+      <div class="modal-footer">
+        <p>© 2024 Vigorre One™ • People Analytics Enterprise</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
        HEADER DE IMPRESSÃO (SÓ APARECE NO PRINT)
        ============================================ -->
   <div class="print-header">
     <div class="logo-v">V</div>
-    <h1>Vigorre People Analytics</h1>
+    <h1>Vigorre One™</h1>
     <p>Valores Pessoais • Relatório Profissional</p>
   </div>
   
   <!-- Marca d'água para impressão -->
-  <div class="print-watermark">VIGORRE</div>
+  <div class="print-watermark">VIGORRE ONE</div>
 
+  <!-- ============================================
+       HEADER / CONTROLS (NO PRINT)
+       ============================================ -->
   <header class="glass border-b border-white/10 sticky top-0 z-50 no-print">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <!-- ✅ LOGO VIGORRE COM FALLBACK -->
-        <img src="logo-vigorre.png" alt="Vigorre" class="w-10 h-10 rounded-xl" onerror="this.outerHTML='<div class=\'w-10 h-10 rounded-xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center font-bold text-white\'>V</div>'">
+        <img src="logo-vigorre.png" alt="Vigorre One™" class="w-10 h-10 rounded-xl" onerror="this.outerHTML='<div class=\'w-10 h-10 rounded-xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center font-bold text-white\'>V</div>'">
         <div>
-          <h1 class="font-bold text-lg">Vigorre</h1>
-          <p class="text-xs text-gray-400">Valores Pessoais • People Analytics</p>
+          <h1 class="font-bold text-lg">Vigorre One™</h1>
+          <p class="text-xs text-gray-400">Valores Pessoais • People Analytics Enterprise</p>
         </div>
       </div>
       <div class="flex items-center gap-4">
@@ -231,6 +450,9 @@
     </div>
   </header>
 
+  <!-- ============================================
+       TEST CONTAINER
+       ============================================ -->
   <main class="max-w-3xl mx-auto px-4 py-8 results-view" id="testContainer">
     <div class="glass-card p-6 md:p-8 slide-up">
       <div class="mb-6">
@@ -245,10 +467,13 @@
     </div>
   </main>
 
+  <!-- ============================================
+       RESULTS VIEW
+       ============================================ -->
   <div id="resultsView" class="hidden max-w-5xl mx-auto px-4 py-8 results-view">
     <div class="glass-card p-6 md:p-8 mb-8 text-center slide-up">
       <h1 class="text-3xl font-bold mb-2">Seus Valores Pessoais</h1>
-      <p class="text-gray-400 mb-4" id="participantName">Análise Motivacional Vigorre</p>
+      <p class="text-gray-400 mb-4" id="participantName">Análise Motivacional Vigorre One™</p>
       <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-amber/20 text-brand-amber border border-brand-amber/30" id="profileBadge">Valor Predominante</div>
     </div>
 
@@ -278,25 +503,27 @@
       <div id="recommendations"></div>
     </div>
 
+    <!-- CTAs - ✅ BOTÃO RELATÓRIO SIMPLES COM MODAL -->
     <div class="grid md:grid-cols-2 gap-4 no-print mb-8">
       <div class="glass-card p-6 text-center slide-up">
         <h4 class="font-semibold mb-2">📄 Relatório Simples</h4>
         <p class="text-sm text-gray-400 mb-4">Visão geral dos seus valores predominantes</p>
-        <button onclick="downloadSimpleReport()" class="btn-primary px-6 py-3 rounded-lg font-semibold w-full">Baixar Relatório Simples</button>
+        <button onclick="openSimpleReportModal()" class="btn-primary px-6 py-3 rounded-lg font-semibold w-full">Baixar Relatório Simples</button>
       </div>
       <div class="glass-card p-6 text-center slide-up">
         <h4 class="font-semibold mb-2">🔓 Desbloquear Análise Completa</h4>
         <p class="text-sm text-gray-400 mb-4">Laudo detalhado + fit cultural + plano de desenvolvimento</p>
-        <button onclick="window.location.href='laudo-vigorre.html?test=Valores'" class="btn-secondary px-6 py-3 rounded-lg font-semibold w-full">Ver Laudo Vigorre</button>
+        <button onclick="window.location.href='relatorio-valores-vigorre.html'" class="btn-secondary px-6 py-3 rounded-lg font-semibold w-full">Ver Relatório Completo</button>
       </div>
     </div>
     
     <!-- Rodapé de impressão -->
     <div class="print-footer">
-      © 2024 Vigorre People Analytics • Relatório gerado em <span id="printDate"></span> • www.vigorre.com.br
+      © 2024 Vigorre One™ • Relatório gerado em <span id="printDate"></span> • www.vigorre.com.br
     </div>
   </div>
 
+  <!-- Loading Overlay -->
   <div id="loadingOverlay" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden">
     <div class="text-center">
       <div class="relative w-20 h-20 mx-auto mb-4">
@@ -307,11 +534,15 @@
     </div>
   </div>
 
+  <!-- Toast Notification -->
   <div id="toast" class="fixed top-4 right-4 glass px-4 py-3 rounded-lg z-50 flex items-center gap-2 hidden">
-    <span>✅</span><span id="toastMessage">Ação realizada!</span>
+    <span id="toastIcon">✅</span><span id="toastMessage">Ação realizada!</span>
   </div>
 
   <script>
+    // ============================================
+    // ESTADO E DADOS
+    // ============================================
     const AppState = {
       currentQ: 0,
       answers: [],
@@ -320,9 +551,13 @@
       participant: null
     };
 
+    // ============================================
+    // VARIÁVEIS GLOBAIS PARA GRÁFICOS (CORREÇÃO CRÍTICA)
+    // ============================================
     let valuesRadarChartInstance = null;
     let valuesBarChartInstance = null;
 
+    // Banco de Perguntas de Valores Pessoais (30 perguntas)
     const VALUES_QUESTIONS = [
       { id: 1, theme: "Realização", text: "Para mim, sucesso profissional significa:", options: [
         { text: "Alcançar metas desafiadoras e superar expectativas", value: 4, type: "realizacao" },
@@ -506,6 +741,7 @@
       ]}
     ];
 
+    // Interpretações de Valores Pessoais
     const VALUES_INTERPRETATIONS = {
       realizacao: { name: 'Realização', desc: 'Busca por crescimento, performance e conquista de metas.', high: 'Forte motivação por resultados e superação de desafios.', medium: 'Boa orientação para resultados, com equilíbrio em outras áreas.', low: 'Pode beneficiar-se de definir metas mais desafiadoras.' },
       proposito: { name: 'Propósito', desc: 'Busca por significado, contribuição e impacto social.', high: 'Forte conexão entre trabalho e propósito de vida.', medium: 'Boa consciência de propósito, com espaço para aprofundar.', low: 'Pode beneficiar-se de explorar mais o significado do seu trabalho.' },
@@ -517,28 +753,110 @@
       equilibrio: { name: 'Equilíbrio', desc: 'Busca por qualidade de vida e estabilidade emocional.', high: 'Forte prioridade em balancear vida e trabalho.', medium: 'Boa consciência de limites com flexibilidade.', low: 'Pode beneficiar-se de praticar mais autocuidado e limites.' }
     };
 
+    // ============================================
+    // INICIALIZAÇÃO
+    // ============================================
     document.addEventListener('DOMContentLoaded', function() {
-      console.log('DOM carregado, inicializando...');
+      console.log('🔹 Inicializando Teste Valores Vigorre One™...');
+      
+      // ✅ DETECTAR CLIQUE NO BOTÃO "VOLTAR" DO NAVEGADOR PARA FAZER LOGOFF
+      window.addEventListener('popstate', function(event) {
+        console.log('🔙 Botão voltar detectado - realizando logoff');
+        performLogout();
+      });
+      
+      // Carregar sessão do participante
       loadSession();
       
       // ✅ CORREÇÃO: Se já estiver logado, vai direto para o teste
       if (AppState.session && AppState.session.id) {
+        console.log('✅ Usuário logado, carregando teste...');
         renderQuestion();
       } else {
         // Se não estiver logado, redireciona para login
+        console.log('⚠️ Usuário não autenticado - redirecionando para login');
         window.location.href = 'login.html';
       }
     });
 
-    function loadSession() {
+    // ============================================
+    // CARREGAR SESSÃO DO PARTICIPANTE - COM SUPABASE E FALLBACK
+    // ============================================
+    async function loadSession() {
       try {
+        console.log('🔍 Tentando carregar sessão...');
+        
+        // PRIMEIRO: Tentar carregar do Supabase (online)
+        if (window.VigorreDB && VigorreDB.supabase) {
+          console.log('🌐 Tentando carregar do Supabase...');
+          
+          const token = sessionStorage.getItem('vigorre_session_token');
+          
+          if (token) {
+            // Buscar sessão ativa no Supabase
+            const { data: sessionData, error: sessionError } = await VigorreDB.supabase
+              .from('sessions')
+              .select('participant_id, expires_at')
+              .eq('token', token)
+              .maybeSingle();
+            
+            if (sessionData && !sessionError) {
+              // Verificar se sessão não expirou
+              if (new Date(sessionData.expires_at) > new Date()) {
+                // Sessão válida - buscar dados do participante
+                const { data: participant, error: pError } = await VigorreDB.supabase
+                  .from('participants')
+                  .select('*')
+                  .eq('id', sessionData.participant_id)
+                  .maybeSingle();
+                
+                if (participant && !pError) {
+                  AppState.session = {
+                    id: participant.id,
+                    name: participant.name,
+                    email: participant.email,
+                    role: 'participant'
+                  };
+                  AppState.participant = participant;
+                  console.log('✅ Sessão carregada do Supabase:', participant.name);
+                  return true;
+                }
+              }
+            }
+          }
+        }
+        
+        // SEGUNDO: Fallback para localStorage (offline ou sem Supabase)
+        console.log('📱 Usando fallback localStorage...');
         const session = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
-        if (session && session.id) {
+        
+        if (session?.id) {
           AppState.session = session;
           const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
           AppState.participant = participants.find(p => p.id === session.id);
+          console.log('✅ Sessão carregada do localStorage:', AppState.session.name);
+          return true;
         }
-      } catch (e) { console.error('Erro ao carregar sessão:', e); }
+        
+        console.log('❌ Nenhuma sessão encontrada');
+        return false;
+        
+      } catch (e) { 
+        console.error('❌ Erro ao carregar sessão:', e); 
+        // Em caso de erro, tentar localStorage como último recurso
+        try {
+          const session = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+          if (session?.id) {
+            AppState.session = session;
+            const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+            AppState.participant = participants.find(p => p.id === session.id);
+            return true;
+          }
+        } catch (e2) {
+          console.error('❌ Erro no fallback:', e2);
+        }
+        return false;
+      }
     }
 
     function renderQuestion() {
@@ -581,7 +899,7 @@
 
     function nextQuestion() {
       if (AppState.answers[AppState.currentQ] === undefined) {
-        showToast('Por favor, selecione uma opção antes de continuar.', true);
+        showToast('Por favor, selecione uma opção antes de continuar.', 'error');
         return;
       }
       if (AppState.currentQ < VALUES_QUESTIONS.length - 1) {
@@ -593,36 +911,16 @@
     }
 
     // ============================================
-    // FUNÇÃO CORRIGIDA: finishTest com salvamento CONSISTENTE
+    // FUNÇÃO CORRIGIDA: finishTest com salvamento CONSISTENTE + SUPABASE
     // ============================================
-    function finishTest() {
+    async function finishTest() {
       console.log('🔄 Finalizando teste de Valores...');
       
-      // ============================================
-      // CORREÇÃO 1: Atualizar completedTests do participante
-      // ============================================
-      if (AppState.participant) {
-        const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-        const idx = participants.findIndex(function(p) { return p.id === AppState.participant.id; });
-        if (idx > -1) {
-          // Garantir que completedTests existe
-          if (!participants[idx].completedTests) {
-            participants[idx].completedTests = [];
-          }
-          // ✅ CORREÇÃO: Adicionar 'Valores' (com V maiúsculo) aos testes completados
-          if (participants[idx].completedTests.indexOf('Valores') === -1) {
-            participants[idx].completedTests.push('Valores');
-            console.log('✅ Valores adicionado a completedTests de', participants[idx].name);
-          }
-          localStorage.setItem('vigorre_participants', JSON.stringify(participants));
-          console.log('💾 Participante atualizado no localStorage');
-        }
-      }
-
       // ============================================
       // Calcular resultados
       // ============================================
       const values = { realizacao: 0, proposito: 0, seguranca: 0, autonomia: 0, reconhecimento: 0, relacionamento: 0, inovacao: 0, equilibrio: 0 };
+      
       VALUES_QUESTIONS.forEach(function(q, idx) {
         if (AppState.answers[idx] !== undefined) {
           const selected = q.options[AppState.answers[idx]];
@@ -646,46 +944,204 @@
       };
       
       // ============================================
-      // CORREÇÃO 2: Salvar resultado com chave CONSISTENTE em português
+      // ✅ SALVAR RESULTADOS NO SUPABASE COM FALLBACK
       // ============================================
-      // ❌ ANTES: 'vigorre_last_values_result' (inglês)
-      // ✅ AGORA: 'vigorre_last_valores_result' (português) - MESMA CHAVE DO ADMIN
-      localStorage.setItem('vigorre_last_valores_result', JSON.stringify(results));
-      console.log('✅ Resultado salvo em vigorre_last_valores_result');
+      await saveParticipantResultsValoresSupabase(results);
+
+      // Enviar relatório simples por e-mail (simulação)
+      sendSimpleReportEmail(results);
 
       // ============================================
-      // Salvar histórico de relatório
-      // ============================================
-      const reports = JSON.parse(localStorage.getItem('vigorre_reports') || '[]');
-      reports.push({ 
-        id: Date.now().toString(), 
-        participantId: AppState.session ? AppState.session.id : 'anonymous', 
-        participantName: AppState.session ? AppState.session.name : 'Participante', 
-        participantEmail: AppState.session ? AppState.session.email : '', 
-        type: 'simple', 
-        testType: 'Valores', 
-        date: new Date().toLocaleDateString('pt-BR'), 
-        status: 'completed', 
-        emailSent: true, 
-        emailDate: new Date().toLocaleString('pt-BR') 
-      });
-      localStorage.setItem('vigorre_reports', JSON.stringify(reports));
-
-      // ============================================
-      // Mostrar resultados
+      // Mostrar loading
       // ============================================
       document.getElementById('loadingOverlay').classList.remove('hidden');
+
+      // Aguardar e mostrar resultados
       setTimeout(function() { 
-        sendSimpleReportEmail(results); 
         showResults(results); 
       }, 1500);
     }
 
+    // ============================================
+    // ✅ FUNÇÃO: SALVAR RESULTADOS VALORES NO SUPABASE COM FALLBACK
+    // ============================================
+    async function saveParticipantResultsValoresSupabase(results) {
+      console.log('💾 Salvando resultados do teste Valores...');
+      
+      if (!AppState.participant) {
+        console.warn('⚠️ Participante não encontrado, salvando apenas no localStorage');
+        saveParticipantResultsValoresLocalStorage(results);
+        return;
+      }
+      
+      try {
+        // Preparar dados para salvar no Supabase
+        const resultData = {
+          id: VigorreDB.generateId(),
+          participant_id: AppState.participant.id,
+          test_type: 'Valores',
+          scores: results.values,
+          percentages: results.percentages,
+          dominant: results.dominant,
+          secondary: Object.entries(results.percentages).sort((a, b) => b[1] - a[1])[1]?.[0],
+          completed_at: new Date().toISOString()
+        };
+        
+        console.log('📋 Dados para salvar no Supabase:', resultData);
+        
+        // PRIMEIRO: Tentar salvar no Supabase
+        if (window.VigorreDB && VigorreDB.supabase) {
+          console.log('🌐 Tentando salvar no Supabase...');
+          
+          const { error } = await VigorreDB.supabase
+            .from('test_results')
+            .upsert(resultData);
+          
+          if (error) {
+            throw error;
+          }
+          
+          console.log('✅ Resultados Valores salvos no Supabase com sucesso!');
+          
+          // Atualizar participante no Supabase para marcar teste como completado
+          await updateParticipantCompletedTestsValores('Valores');
+        }
+        
+      } catch (e) {
+        // SEGUNDO: Fallback para localStorage se Supabase falhar
+        console.warn('⚠️ Falha ao salvar no Supabase, usando localStorage:', e);
+        saveParticipantResultsValoresLocalStorage(results);
+      }
+    }
+
+    // ============================================
+    // ✅ FUNÇÃO: ATUALIZAR TESTES COMPLETADOS DO PARTICIPANTE NO SUPABASE (VALORES)
+    // ============================================
+    async function updateParticipantCompletedTestsValores(testType) {
+      try {
+        if (!AppState.participant || !window.VigorreDB) return;
+        
+        // Buscar participante atual do Supabase
+        const { data: participant, error: fetchError } = await VigorreDB.supabase
+          .from('participants')
+          .select('completed_tests')
+          .eq('id', AppState.participant.id)
+          .maybeSingle();
+        
+        if (fetchError) throw fetchError;
+        
+        // Adicionar teste à lista de completados
+        const completedTests = participant?.completed_tests || [];
+        if (!completedTests.includes(testType)) {
+          completedTests.push(testType);
+          
+          // Atualizar no Supabase
+          const { error: updateError } = await VigorreDB.supabase
+            .from('participants')
+            .update({ completed_tests: completedTests })
+            .eq('id', AppState.participant.id);
+          
+          if (updateError) throw updateError;
+          
+          console.log(`✅ Teste ${testType} marcado como completado no Supabase`);
+        }
+        
+      } catch (e) {
+        console.warn('⚠️ Falha ao atualizar completed_tests no Supabase:', e);
+      }
+    }
+
+    // ============================================
+    // ✅ FUNÇÃO: SALVAR RESULTADOS VALORES NO LOCALSTORAGE (FALLBACK)
+    // ============================================
+    function saveParticipantResultsValoresLocalStorage(results) {
+      if (!AppState.participant) return;
+      
+      try {
+        const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+        const idx = participants.findIndex(function(p) { return p.id === AppState.participant.id; });
+        
+        if (idx > -1) {
+          // Garantir que completedTests exista
+          if (!participants[idx].completedTests) {
+            participants[idx].completedTests = [];
+          }
+          
+          // ✅ CORREÇÃO: Adicionar 'Valores' (com V maiúsculo) aos testes completados
+          if (participants[idx].completedTests.indexOf('Valores') === -1) {
+            participants[idx].completedTests.push('Valores');
+            console.log('✅ Valores adicionado a completedTests de', participants[idx].name);
+          }
+          
+          // Salvar resultados do teste
+          participants[idx].testResults = participants[idx].testResults || {};
+          participants[idx].testResults.Valores = {
+            date: results.date,
+            values: results.values,
+            percentages: results.percentages,
+            dominant: results.dominant
+          };
+          
+          // Salvar no localStorage
+          localStorage.setItem('vigorre_participants', JSON.stringify(participants));
+          
+          // ✅ CORREÇÃO: Salvar resultado com chave CONSISTENTE em português (mesma do admin)
+          // ❌ ANTES: 'vigorre_last_values_result' (inglês)
+          // ✅ AGORA: 'vigorre_last_valores_result' (português)
+          localStorage.setItem('vigorre_last_valores_result', JSON.stringify(results));
+          console.log('✅ Resultado Valores salvo em vigorre_last_valores_result');
+          
+          // Atualizar participant no AppState
+          AppState.participant = participants[idx];
+          
+          console.log('✅ Resultados Valores salvos no localStorage');
+        }
+      } catch (e) {
+        console.error('❌ Erro ao salvar resultados Valores no localStorage:', e);
+      }
+    }
+
+    // ============================================
+    // ENVIAR RELATÓRIO SIMPLES POR E-MAIL (SIMULAÇÃO)
+    // ============================================
     function sendSimpleReportEmail(results) {
-      console.log('📧 Enviando relatório Valores para:', AppState.session ? AppState.session.email : 'N/A');
+      // Em produção, aqui chamaria a API: /api/send-simple-report
+      console.log('📧 Enviando relatório Valores para:', AppState.session?.email);
+      
+      // Simular delay de envio
       setTimeout(function() { 
+        // Salvar histórico de relatório enviado
+        saveReportHistoryValores('Valores', 'simple');
+        
+        // Mostrar toast de confirmação
         showToast('✅ Relatório simples enviado para seu e-mail!', 'success'); 
       }, 1000);
+    }
+
+    // ============================================
+    // SALVAR HISTÓRICO DE RELATÓRIOS
+    // ============================================
+    function saveReportHistoryValores(testType, reportType) {
+      try {
+        const reports = JSON.parse(localStorage.getItem('vigorre_reports') || '[]');
+        
+        reports.push({ 
+          id: Date.now().toString(), 
+          participantId: AppState.session?.id || 'anonymous', 
+          participantName: AppState.participant?.name || 'Participante', 
+          participantEmail: AppState.session?.email || '', 
+          type: reportType, 
+          testType: testType, 
+          date: new Date().toLocaleDateString('pt-BR'), 
+          status: 'completed', 
+          emailSent: true, 
+          emailDate: new Date().toLocaleString('pt-BR') 
+        });
+        
+        localStorage.setItem('vigorre_reports', JSON.stringify(reports));
+      } catch (e) {
+        console.error('Erro ao salvar histórico:', e);
+      }
     }
 
     function showResults(results) {
@@ -694,7 +1150,7 @@
       document.querySelector('header').classList.add('hidden');
       document.getElementById('resultsView').classList.remove('hidden');
 
-      if (AppState.session && AppState.session.name) {
+      if (AppState.session?.name) {
         document.getElementById('participantName').textContent = AppState.session.name;
       }
       const dominant = VALUES_INTERPRETATIONS[results.dominant];
@@ -726,6 +1182,7 @@
     }
 
     function renderCharts(percentages) {
+      // CORREÇÃO: Destruir instâncias anteriores antes de criar novas
       if (valuesRadarChartInstance) { 
         valuesRadarChartInstance.destroy(); 
         valuesRadarChartInstance = null; 
@@ -764,6 +1221,8 @@
             maintainAspectRatio: false,
             scales: {
               r: {
+                min: 0,
+                max: 100,
                 angleLines: { color: 'rgba(255,255,255,0.1)' },
                 grid: { color: 'rgba(255,255,255,0.1)' },
                 pointLabels: { color: '#94A3B8', font: { size: 10 } },
@@ -810,61 +1269,75 @@
       }
     }
 
+    // ============================================
+    // ✅ FUNÇÕES DO MODAL E LOGOFF
+    // ============================================
+    function openSimpleReportModal() {
+      console.log('🔒 Abrindo modal de relatório completo Valores');
+      const modal = document.getElementById('simpleReportModal');
+      if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Evitar scroll no fundo
+      }
+    }
+
+    function closeModalAndLogout() {
+      console.log('🔐 Fechando modal e realizando logoff');
+      const modal = document.getElementById('simpleReportModal');
+      if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+      performLogout();
+    }
+
+    // ============================================
+    // FUNÇÃO: FAZER LOGOFF DO SISTEMA
+    // ============================================
+    async function performLogout() {
+      console.log('🔐 Realizando logoff completo...');
+      
+      // Tentar remover sessão do Supabase se disponível
+      if (window.VigorreDB && VigorreDB.supabase) {
+        const token = sessionStorage.getItem('vigorre_session_token');
+        if (token) {
+          try {
+            await VigorreDB.supabase
+              .from('sessions')
+              .delete()
+              .eq('token', token);
+            console.log('✅ Sessão removida do Supabase');
+          } catch (e) {
+            console.warn('⚠️ Não foi possível remover sessão do Supabase:', e);
+          }
+        }
+      }
+      
+      // Limpar dados locais
+      localStorage.removeItem('vigorre_current_user');
+      sessionStorage.clear();
+      
+      // Redirecionar para login com parâmetros para evitar cache
+      window.location.href = 'login.html?loggedout=1&ts=' + Date.now();
+    }
+
     function downloadSimpleReport() {
-      // ✅ CORREÇÃO: Buscar resultado com chave em português
-      const results = JSON.parse(localStorage.getItem('vigorre_last_valores_result'));
-      if (!results) return;
-      const session = JSON.parse(localStorage.getItem('vigorre_current_user'));
-      const dominant = VALUES_INTERPRETATIONS[results.dominant];
-      
-      let reportContent = 'RELATÓRIO SIMPLES - VALORES PESSOAIS\n=====================================\n';
-      reportContent += 'Participante: ' + (session && session.name ? session.name : 'Participante') + '\n';
-      reportContent += 'Data: ' + new Date().toLocaleDateString('pt-BR') + '\n';
-      reportContent += 'Valor Predominante: ' + dominant.name + ' (' + results.percentages[results.dominant] + '%)\n\n';
-      reportContent += 'RANKING DE VALORES\n------------------\n';
-      
-      const sorted = Object.entries(results.percentages).sort(function(a, b) { return b[1] - a[1]; });
-      for (let i = 0; i < sorted.length; i++) {
-        const k = sorted[i][0];
-        const v = sorted[i][1];
-        reportContent += VALUES_INTERPRETATIONS[k].name + ': ' + v + '%\n';
-      }
-      
-      reportContent += '\nAMBIENTE IDEAL\n--------------\n';
-      if (dominant.name === 'Realização') {
-        reportContent += 'Metas desafiadoras e crescimento contínuo';
-      } else if (dominant.name === 'Propósito') {
-        reportContent += 'Missão clara e impacto social';
-      } else {
-        reportContent += 'Ambiente alinhado ao seu valor predominante';
-      }
-      reportContent += '\n\nPara análise completa, acesse: laudo-vigorre.html\n\n© 2024 Vigorre People Analytics - Metodologia validada internacionalmente';
-      
-      const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; 
-      const filename = 'Relatorio-Simples-Valores-' + (session && session.name ? session.name.replace(/\s+/g, '-') : 'Vigorre') + '.txt';
-      a.download = filename;
-      document.body.appendChild(a); 
-      a.click(); 
-      document.body.removeChild(a); 
-      URL.revokeObjectURL(url);
-      showToast('✅ Relatório baixado com sucesso!', 'success');
+      // ✅ CORREÇÃO: Ao clicar em "Baixar Relatório Simples", abrir modal em vez de download direto
+      openSimpleReportModal();
     }
 
     function showToast(message, type) {
+      type = type || 'success';
       const toast = document.getElementById('toast');
-      const icon = toast.querySelector('span:first-child');
+      const icon = document.getElementById('toastIcon');
       const msg = document.getElementById('toastMessage');
       
-      if (type === 'success') {
-        icon.textContent = '✅';
-      } else {
-        icon.textContent = '⚠️';
-      }
+      if (!toast) return;
+      
+      icon.textContent = type === 'success' ? '✅' : '⚠️';
       msg.textContent = message;
       
+      toast.className = `toast ${type}`;
       toast.classList.remove('hidden');
       setTimeout(function() { 
         toast.classList.add('show'); 
@@ -878,24 +1351,30 @@
     }
 
     // ============================================
-    // >>> CORREÇÕES ADICIONADAS (SEM OTIMIZAR) <<<
+    // TRATAMENTO DE ERROS GLOBAIS
     // ============================================
-
-    // 1. Tratamento de erro global com fallback amigável
     window.addEventListener('error', function(e) {
-      console.error('Erro no Teste Valores Vigorre:', e);
+      console.error('❌ Erro no Teste Valores Vigorre One™:', e);
       showToast('⚠️ Ocorreu um erro. Recarregue a página se o problema persistir.', 'error');
-      return true; // Previne erro no console
+      return true; // Previne erro no console do navegador
     });
 
-    // 2. Debug: Logar estado inicial no console para diagnóstico
+    // ============================================
+    // DEBUG INICIAL
+    // ============================================
     console.log('🔍 Teste Valores - Estado inicial:', {
+      session: AppState.session?.name || 'não carregado',
       participant: AppState.participant?.name || 'não carregado',
       localStorage: {
+        user: !!localStorage.getItem('vigorre_current_user'),
+        participants: !!localStorage.getItem('vigorre_participants'),
         valores: !!localStorage.getItem('vigorre_last_valores_result')
+      },
+      supabase: {
+        available: !!window.VigorreDB,
+        url: window.VigorreDB?.supabase ? 'conectado' : 'não conectado'
       }
     });
-
   </script>
 </body>
 </html>
