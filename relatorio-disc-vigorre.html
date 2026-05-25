@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Relatório Completo DISC Vigorre One™ | People Analytics Enterprise</title>
   
+  <!-- ✅ SUPABASE SDK - CARREGAR PRIMEIRO -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- ✅ CONFIGURAÇÃO SUPABASE - SUAS CHAVES -->
+  <script src="supabase-config.js"></script>
+  
   <!-- Tailwind CSS & Chart.js -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -1034,18 +1040,24 @@
     // ============================================
     document.addEventListener('DOMContentLoaded', () => {
       console.log('🔹 Inicializando Relatório DISC Vigorre One™...');
-      loadSession();
-      loadDiscResults();
       
-      // ✅ CORREÇÃO: Detectar clique no botão "voltar" do navegador para fazer logoff
+      // ✅ DETECTAR CLIQUE NO BOTÃO "VOLTAR" DO NAVEGADOR PARA FAZER LOGOFF
       window.addEventListener('popstate', function(event) {
         console.log('🔙 Botão voltar detectado - realizando logoff');
         performLogout();
       });
+      
+      loadSession();
+      loadDiscResults();
     });
 
-    function loadSession() {
+    // ============================================
+    // ✅ FUNÇÃO: CARREGAR SESSÃO - SUPABASE + FALLBACK
+    // ============================================
+    async function loadSession() {
       try {
+        console.log('🔍 Tentando carregar sessão...');
+        
         // Pegar ID da URL
         const urlParams = new URLSearchParams(window.location.search);
         const participantId = urlParams.get('participantId');
@@ -1055,9 +1067,51 @@
           return;
         }
         
-        console.log('🔍 Buscando participante com ID:', participantId);
+        // PRIMEIRO: Tentar carregar do Supabase (online)
+        if (window.VigorreDB && VigorreDB.supabase) {
+          console.log('🌐 Tentando carregar do Supabase...');
+          
+          try {
+            // Buscar participante no Supabase
+            const { data: participant, error: pError } = await VigorreDB.supabase
+              .from('participants')
+              .select('*')
+              .eq('id', participantId)
+              .maybeSingle();
+            
+            if (participant && !pError) {
+              AppState.participant = participant;
+              console.log('✅ Participante carregado do Supabase:', participant.name);
+              
+              // Buscar empresa se houver companyId
+              if (participant.company_id) {
+                const { data: company } = await VigorreDB.supabase
+                  .from('companies')
+                  .select('*')
+                  .eq('id', participant.company_id)
+                  .maybeSingle();
+                if (company) {
+                  AppState.company = company;
+                  console.log('✅ Empresa carregada do Supabase:', company.name);
+                }
+              }
+              
+              // Buscar vagas se houver
+              if (participant.jobs && Array.isArray(participant.jobs)) {
+                AppState.jobs = participant.jobs;
+                console.log('✅ Vagas carregadas do Supabase');
+              }
+              
+              return;
+            }
+          } catch (supabaseError) {
+            console.warn('⚠️ Erro ao buscar do Supabase, usando localStorage:', supabaseError);
+          }
+        }
         
-        // Buscar participantes
+        // SEGUNDO: Fallback para localStorage (offline ou sem Supabase)
+        console.log('📱 Usando fallback localStorage...');
+        
         const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
         AppState.participant = participants.find(p => p.id === participantId);
         
@@ -1066,7 +1120,7 @@
           return;
         }
         
-        console.log('✅ Participante encontrado:', AppState.participant);
+        console.log('✅ Participante encontrado no localStorage:', AppState.participant.name);
         
         // Buscar empresas
         const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
@@ -1086,24 +1140,75 @@
       }
     }
 
-    function loadDiscResults() {
+    // ============================================
+    // ✅ FUNÇÃO: CARREGAR RESULTADOS DISC - SUPABASE + FALLBACK
+    // ============================================
+    async function loadDiscResults() {
       try {
+        console.log('🔍 Tentando carregar resultados DISC...');
+        
+        // Pegar ID da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const participantId = urlParams.get('participantId');
+        
+        if (!participantId) {
+          console.error('❌ Nenhum participantId na URL');
+          showToast('ID do participante não encontrado na URL', 'error');
+          return;
+        }
+        
+        // PRIMEIRO: Tentar carregar do Supabase (online)
+        if (window.VigorreDB && VigorreDB.supabase) {
+          console.log('🌐 Tentando carregar resultados do Supabase...');
+          
+          try {
+            const { data, error } = await VigorreDB.supabase
+              .from('test_results')
+              .select('*')
+              .eq('participant_id', participantId)
+              .eq('test_type', 'DISC')
+              .maybeSingle();
+            
+            if (data && !error) {
+              AppState.discResults = {
+                percentages: data.percentages || {},
+                scores: data.scores || {},
+                dominant: data.dominant,
+                date: data.completed_at
+              };
+              console.log('✅ Resultados DISC carregados do Supabase');
+              generateReport();
+              return;
+            }
+          } catch (supabaseError) {
+            console.warn('⚠️ Erro ao buscar do Supabase, usando localStorage:', supabaseError);
+          }
+        }
+        
+        // SEGUNDO: Fallback para localStorage
+        console.log('📱 Buscando resultados no localStorage...');
         const discData = localStorage.getItem('vigorre_last_disc_result');
+        
         if (!discData) {
           console.error('❌ Nenhum resultado DISC encontrado');
           showToast('Nenhum resultado DISC encontrado. Complete o teste primeiro.', 'error');
           setTimeout(() => window.location.href = 'teste-disc.html', 3000);
           return;
         }
+        
         AppState.discResults = JSON.parse(discData);
-        console.log('✅ Dados DISC carregados:', AppState.discResults);
+        console.log('✅ Dados DISC carregados do localStorage');
         generateReport();
+        
       } catch (e) {
         console.error('❌ Erro ao carregar resultados DISC:', e);
         showToast('Erro ao processar relatório.', 'error');
       }
     }
 
+    // ============================================
+    // FUNÇÃO PRINCIPAL: GERAR RELATÓRIO
+    // ============================================
     function generateReport() {
       const r = AppState.discResults;
       if (!r || !r.percentages) {
@@ -1168,7 +1273,7 @@
       // Empresa - CORREÇÃO: Sempre mostrar nome da empresa vinculada
       const coverCompany = safeGetElement('coverCompany');
       if (coverCompany) {
-        const companyName = AppState.company?.name || 'Independente';
+        const companyName = AppState.company?.name || AppState.company?.company_name || 'Independente';
         coverCompany.textContent = companyName;
         console.log('✓ Empresa:', companyName);
       }
@@ -1222,7 +1327,7 @@
       // ✅ CORREÇÃO: Mostrar nome da vaga vinculada e texto coerente
       const hasJob = AppState.jobs && AppState.jobs.length > 0;
       const vagaNome = hasJob ? (AppState.jobs[0].name || AppState.jobs[0].title || 'Vaga vinculada') : null;
-      const companyName = AppState.company?.name || 'Independente';
+      const companyName = AppState.company?.name || AppState.company?.company_name || 'Independente';
 
       container.innerHTML = `
         <div class="space-y-8">
@@ -1788,7 +1893,7 @@
       if (execConclusion) {
         const hasJob = AppState.jobs && AppState.jobs.length > 0;
         const jobName = hasJob ? (AppState.jobs[0].name || AppState.jobs[0].title) : null;
-        const companyName = AppState.company?.name || 'Independente';
+        const companyName = AppState.company?.name || AppState.company?.company_name || 'Independente';
         
         execConclusion.textContent = `O participante demonstra um perfil comportamental predominantemente ${profile.title.toLowerCase()}, caracterizado por ${profile.strengths.slice(0, 3).join(', ').toLowerCase()}. ${profile.summary} Este perfil indica potencial para ${dominant === 'D' || dominant === 'I' ? 'liderança, influência e alta performance em ambientes dinâmicos' : 'estabilidade, qualidade e excelência operacional em ambientes estruturados'}. ${hasJob ? `Para o cargo de ${jobName} na empresa ${companyName}, recomenda-se avaliação complementar das competências técnicas e experiência profissional para validação do fit comportamental.` : 'Sem cargo específico vinculado, este perfil pode ser aplicado em diversos contextos organizacionais que valorizem as competências identificadas.'} Recomenda-se acompanhamento contínuo via PDI focado em ${profile.risks[0].toLowerCase()} e ${profile.risks[1].toLowerCase()}, garantindo evolução comportamental e maximização de impacto organizacional. Este relatório deve ser utilizado como ferramenta estratégica de gestão de talentos, desenvolvimento de liderança e alocação de perfis em contextos de alta performance.`;
       }
@@ -1805,7 +1910,7 @@
       
       const hasJob = AppState.jobs && AppState.jobs.length > 0;
       const jobName = hasJob ? (AppState.jobs[0].name || AppState.jobs[0].title) : null;
-      const companyName = AppState.company?.name || 'Independente';
+      const companyName = AppState.company?.name || AppState.company?.company_name || 'Independente';
 
       const text = `
         <div class="prose max-w-none">
@@ -1906,28 +2011,55 @@
     }
 
     // ============================================
-    // FUNÇÕES DO MODAL E LOGOFF
+    // ✅ FUNÇÕES DO MODAL E LOGOFF
     // ============================================
     function openSimpleReportModal() {
+      console.log('🔒 Abrindo modal de relatório completo DISC');
       const modal = document.getElementById('simpleReportModal');
       if (modal) {
         modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // Evitar scroll no fundo
       }
     }
 
     function closeModalAndLogout() {
+      console.log('🔐 Fechando modal e realizando logoff');
       const modal = document.getElementById('simpleReportModal');
       if (modal) {
         modal.classList.add('hidden');
+        document.body.style.overflow = '';
       }
       performLogout();
     }
 
-    function performLogout() {
-      console.log('🔐 Realizando logoff...');
+    // ============================================
+    // FUNÇÃO: FAZER LOGOFF DO SISTEMA
+    // ============================================
+    async function performLogout() {
+      console.log('🔐 Realizando logoff completo...');
+      
+      // Tentar remover sessão do Supabase se disponível
+      if (window.VigorreDB && VigorreDB.supabase) {
+        const token = sessionStorage.getItem('vigorre_session_token');
+        if (token) {
+          try {
+            await VigorreDB.supabase
+              .from('sessions')
+              .delete()
+              .eq('token', token);
+            console.log('✅ Sessão removida do Supabase');
+          } catch (e) {
+            console.warn('⚠️ Não foi possível remover sessão do Supabase:', e);
+          }
+        }
+      }
+      
+      // Limpar dados locais
       localStorage.removeItem('vigorre_current_user');
       sessionStorage.clear();
-      window.location.href = 'login.html';
+      
+      // Redirecionar para login com parâmetros para evitar cache
+      window.location.href = 'login.html?loggedout=1&ts=' + Date.now();
     }
 
     // ============================================
@@ -1936,9 +2068,9 @@
 
     // 1. Tratamento de erro global com fallback amigável
     window.addEventListener('error', function(e) {
-      console.error('❌ Erro no relatório DISC:', e);
+      console.error('❌ Erro no relatório DISC Vigorre One™:', e);
       showToast('⚠️ Ocorreu um erro. Recarregue a página se o problema persistir.', 'error');
-      return true;
+      return true; // Previne erro no console do navegador
     });
 
     // 2. Debug: Logar resultados disponíveis no console para diagnóstico
@@ -1947,7 +2079,10 @@
       participant: AppState.participant?.name || 'não carregado',
       company: AppState.company?.name || 'não carregada',
       jobs: AppState.jobs || 'não carregadas',
-      allKeys: Object.keys(localStorage).filter(k => k.includes('vigorre'))
+      supabase: {
+        available: !!window.VigorreDB,
+        url: window.VigorreDB?.supabase ? 'conectado' : 'não conectado'
+      }
     });
 
   </script>
