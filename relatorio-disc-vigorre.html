@@ -214,7 +214,7 @@
     @media print {
       @page {
         size: A4 portrait;
-        margin: 15mm 15mm; /* Reduzido de 20mm para evitar corte */
+        margin: 12mm 15mm; /* Margens reduzidas para evitar corte */
       }
       
       body { 
@@ -229,12 +229,12 @@
       /* Esconder elementos não impressos */
       .no-print { display: none !important; }
       
-      /* Header de impressão - CORRIGIDO MARGEM SUPERIOR */
+      /* Header de impressão - POSICIONAMENTO CORRIGIDO */
       .print-header {
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 15px 25px !important; /* Reduzido padding */
+        padding: 12px 20px !important;
         position: fixed;
         top: 0;
         left: 0;
@@ -243,6 +243,7 @@
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
         box-shadow: 0 4px 20px rgba(0,0,0,0.3) !important;
+        height: 60px;
       }
       
       .print-header .print-header-content {
@@ -279,6 +280,7 @@
         font-weight: 800;
         margin: 0;
         color: white !important;
+        line-height: 1.2;
       }
       
       .print-header p {
@@ -303,8 +305,8 @@
       
       /* Conteúdo principal - MARGEM CORRIGIDA */
       main {
-        margin-top: 100px !important; /* Reduzido de 120px */
-        margin-bottom: 100px !important; /* Reduzido de 120px */
+        margin-top: 85px !important;
+        margin-bottom: 85px !important;
         padding: 0 !important;
       }
       
@@ -315,7 +317,7 @@
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
         break-inside: avoid !important;
         page-break-inside: avoid !important;
-        margin-bottom: 25px !important;
+        margin-bottom: 20px !important;
       }
       
       .vigorre-card .card-header {
@@ -323,9 +325,9 @@
         border-bottom: 2px solid #E2E8F0 !important;
       }
       
-      /* Gráficos na impressão - CORRIGIDO */
+      /* Gráficos na impressão */
       .chart-container {
-        height: 300px !important; /* Reduzido de 320px */
+        height: 280px !important;
         max-width: 100% !important;
         page-break-inside: avoid;
         break-inside: avoid;
@@ -348,12 +350,12 @@
         color: #334155 !important; 
       }
       
-      /* Rodapé de impressão - CORRIGIDO MARGEM INFERIOR */
+      /* Rodapé de impressão - POSICIONAMENTO CORRIGIDO */
       .print-footer {
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 15px 25px !important; /* Reduzido padding */
+        padding: 12px 20px !important;
         position: fixed;
         bottom: 0;
         left: 0;
@@ -361,6 +363,7 @@
         z-index: 9999;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
+        height: 60px;
       }
       
       .print-footer .print-footer-content {
@@ -403,6 +406,7 @@
         font-weight: 700;
         margin: 0;
         color: white !important;
+        line-height: 1.2;
       }
       
       .print-footer .footer-text p {
@@ -440,7 +444,6 @@
   <header class="no-print bg-brand-navy text-white shadow-lg sticky top-0 z-50" style="height: 70px;">
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
       <div class="flex items-center gap-4">
-        <!-- LOGO COM FUNDO BRANCO NA MOLDURA -->
         <div class="vigorre-logo-box">
            <img src="logo-vigorre.png" alt="Vigorre One™" onerror="this.outerHTML='<span class=\'text-brand-navy font-black text-2xl\'>V</span>'">
         </div>
@@ -458,7 +461,7 @@
   </header>
 
   <!-- ============================================
-       HEADER DE IMPRESSÃO (AZUL COMO NA TELA)
+       HEADER DE IMPRESSÃO
        ============================================ -->
   <div class="print-header">
     <div class="print-header-content">
@@ -484,7 +487,7 @@
   <div class="print-watermark">VIGORRE ONE</div>
 
   <!-- ============================================
-       RODAPÉ DE IMPRESSÃO (AZUL COMO NA TELA COM LOGO)
+       RODAPÉ DE IMPRESSÃO
        ============================================ -->
   <div class="print-footer">
     <div class="print-footer-content">
@@ -507,14 +510,13 @@
   </div>
 
   <!-- ============================================
-       MAIN REPORT CONTENT - MARGEM CORRIGIDA
+       MAIN REPORT CONTENT
        ============================================ -->
   <main class="max-w-5xl mx-auto px-4 py-12" style="padding-top: 90px; padding-bottom: 90px;">
     
     <!-- CAPA / DADOS DO PARTICIPANTE -->
     <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 mb-8">
       <div class="flex flex-col md:flex-row items-center gap-8">
-        <!-- LOGO NA CAPA COM FUNDO BRANCO -->
         <div class="vigorre-logo-box" style="width:80px; height:80px;">
            <img src="logo-vigorre.png" alt="Vigorre One™" onerror="this.outerHTML='<span class=\'text-brand-navy font-black text-4xl\'>V</span>'">
         </div>
@@ -600,7 +602,7 @@
       </div>
     </section>
 
-    <!-- SEÇÃO 4 — ANÁLISE DE ADERÊNCIA À VAGA (NOVA SEÇÃO PREMIUM) -->
+    <!-- SEÇÃO 4 — ANÁLISE DE ADERÊNCIA À VAGA -->
     <section id="sectionAderencia" class="vigorre-card executive-section">
       <div class="card-header" style="background: #1D4ED8; border-bottom: none;">
         <h2 style="color: white;">04. Análise de Aderência à Vaga / Cargo</h2>
@@ -857,7 +859,7 @@
       </div>
     </section>
 
-    <!-- SEÇÃO 19 — PARECER EXECUTIVO PREMIUM (ULTRA COMPLETO) -->
+    <!-- SEÇÃO 19 — PARECER EXECUTIVO PREMIUM -->
     <section class="vigorre-card executive-section">
       <div class="card-header" style="background: #1D4ED8; border-bottom: none;">
         <h2 style="color: white;">19. Parecer Executivo e Estratégico</h2>
@@ -1043,7 +1045,6 @@
     document.addEventListener('DOMContentLoaded', () => {
       console.log('🔹 Inicializando Relatório DISC Vigorre One™...');
       
-      // ✅ DETECTAR CLIQUE NO BOTÃO "VOLTAR" DO NAVEGADOR PARA FAZER LOGOFF
       window.addEventListener('popstate', function(event) {
         console.log('🔙 Botão voltar detectado - realizando logoff');
         performLogout();
@@ -1060,7 +1061,6 @@
       try {
         console.log('🔍 Tentando carregar sessão...');
         
-        // Pegar ID da URL
         const urlParams = new URLSearchParams(window.location.search);
         const participantId = urlParams.get('participantId');
         
@@ -1069,12 +1069,10 @@
           return;
         }
         
-        // PRIMEIRO: Tentar carregar do Supabase (online)
         if (window.VigorreDB && VigorreDB.supabase) {
           console.log('🌐 Tentando carregar do Supabase...');
           
           try {
-            // Buscar participante no Supabase
             const { data: participant, error: pError } = await VigorreDB.supabase
               .from('participants')
               .select('*')
@@ -1085,7 +1083,6 @@
               AppState.participant = participant;
               console.log('✅ Participante carregado do Supabase:', participant.name);
               
-              // Buscar empresa se houver companyId
               if (participant.company_id) {
                 const { data: company } = await VigorreDB.supabase
                   .from('companies')
@@ -1098,7 +1095,6 @@
                 }
               }
               
-              // Buscar vagas se houver
               if (participant.jobs && Array.isArray(participant.jobs)) {
                 AppState.jobs = participant.jobs;
                 console.log('✅ Vagas carregadas do Supabase');
@@ -1111,7 +1107,6 @@
           }
         }
         
-        // SEGUNDO: Fallback para localStorage (offline ou sem Supabase)
         console.log('📱 Usando fallback localStorage...');
         
         const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
@@ -1124,14 +1119,12 @@
         
         console.log('✅ Participante encontrado no localStorage:', AppState.participant.name);
         
-        // Buscar empresas
         const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
         if (AppState.participant.companyId) {
           AppState.company = companies.find(c => c.id === AppState.participant.companyId);
           console.log('✅ Empresa encontrada:', AppState.company);
         }
         
-        // Buscar vagas vinculadas
         if (AppState.participant.jobs && Array.isArray(AppState.participant.jobs)) {
           AppState.jobs = AppState.participant.jobs;
           console.log('✅ Vagas vinculadas:', AppState.jobs);
@@ -1143,13 +1136,12 @@
     }
 
     // ============================================
-    // ✅ FUNÇÃO: CARREGAR RESULTADOS DISC - SUPABASE + FALLBACK
+    // ✅ FUNÇÃO: CARREGAR RESULTADOS DISC
     // ============================================
     async function loadDiscResults() {
       try {
         console.log('🔍 Tentando carregar resultados DISC...');
         
-        // Pegar ID da URL
         const urlParams = new URLSearchParams(window.location.search);
         const participantId = urlParams.get('participantId');
         
@@ -1159,7 +1151,6 @@
           return;
         }
         
-        // PRIMEIRO: Tentar carregar do Supabase (online)
         if (window.VigorreDB && VigorreDB.supabase) {
           console.log('🌐 Tentando carregar resultados do Supabase...');
           
@@ -1187,7 +1178,6 @@
           }
         }
         
-        // SEGUNDO: Fallback para localStorage
         console.log('📱 Buscando resultados no localStorage...');
         const discData = localStorage.getItem('vigorre_last_disc_result');
         
@@ -1221,16 +1211,13 @@
 
       console.log('🎨 Gerando relatório DISC...');
 
-      // ✅ CORREÇÃO CRÍTICA: Preencher dados do participante COM VERIFICAÇÃO
       updateParticipantInfo();
 
-      // Calcular score e determinar perfil dominante
       const scores = Object.entries(r.percentages);
       const dominant = scores.sort((a, b) => b[1] - a[1])[0][0];
       const dominantScore = r.percentages[dominant];
       const profile = PREMIUM_CONTENT[dominant];
 
-      // Gerar todas as seções
       renderPerfilDetalhado(dominant, dominantScore, profile);
       renderCharts(r.percentages);
       renderAderenciaVaga(dominant, r.percentages);
@@ -1259,56 +1246,70 @@
     // ============================================
     function updateParticipantInfo() {
       console.log('📝 Atualizando informações do participante...');
-      console.log('Dados disponíveis:', {
-        participant: AppState.participant,
-        company: AppState.company,
-        jobs: AppState.jobs
-      });
       
       // Nome do participante
       const coverName = safeGetElement('coverName');
-      if (coverName && AppState.participant) {
-        coverName.textContent = AppState.participant.name || 'Participante';
-        console.log('✓ Nome:', AppState.participant.name);
+      if (coverName) {
+        if (AppState.participant && AppState.participant.name) {
+          coverName.textContent = AppState.participant.name;
+          console.log('✓ Nome:', AppState.participant.name);
+        } else {
+          coverName.textContent = 'Participante';
+        }
       }
       
-      // Empresa - CORRIGIDO: Sempre mostrar nome da empresa vinculada
+      // Empresa - CORRIGIDO: Buscar nome correto da empresa vinculada
       const coverCompany = safeGetElement('coverCompany');
       if (coverCompany) {
-        const companyName = AppState.company?.name || AppState.company?.company_name || 'Independente';
+        let companyName = 'Independente';
+        
+        if (AppState.company) {
+          companyName = AppState.company.name || 
+                       AppState.company.company_name || 
+                       AppState.company.razao_social || 
+                       AppState.company.fantasia || 
+                       'Independente';
+          console.log('✓ Empresa carregada:', companyName);
+        } else if (AppState.participant && AppState.participant.companyName) {
+          companyName = AppState.participant.companyName;
+          console.log('✓ Empresa do participante:', companyName);
+        }
+        
         coverCompany.textContent = companyName;
-        console.log('✓ Empresa:', companyName);
       }
       
       // Vaga/Cargo - CORRIGIDO: Mostrar primeira vaga ou "Não vinculada"
       const coverJob = safeGetElement('coverJob');
       if (coverJob) {
         if (AppState.jobs && AppState.jobs.length > 0) {
-          // Mostrar a primeira vaga vinculada
-          const jobName = AppState.jobs[0].name || AppState.jobs[0].title || 'Vaga vinculada';
+          const job = AppState.jobs[0];
+          const jobName = job.name || job.title || job.cargo || job.funcao || 'Vaga vinculada';
           coverJob.textContent = jobName;
           console.log('✓ Vaga/Cargo:', jobName);
+        } else if (AppState.participant && AppState.participant.jobName) {
+          coverJob.textContent = AppState.participant.jobName;
+          console.log('✓ Vaga do participante:', AppState.participant.jobName);
         } else {
           coverJob.textContent = 'Não vinculada';
-          console.log('✓ Vaga/Cargo: Não vinculada');
         }
       }
       
       // Código
       const coverCode = safeGetElement('coverCode');
       if (coverCode) {
-        coverCode.textContent = 'VIG-DISC-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 9000 + 1000);
+        const year = new Date().getFullYear();
+        const random = Math.floor(Math.random() * 9000 + 1000);
+        coverCode.textContent = `VIG-DISC-${year}-${random}`;
       }
     }
 
     // ============================================
-    // ✅ NOVA SEÇÃO: ANÁLISE DE ADERÊNCIA À VAGA (COM NOME DA VAGA E TEXTO COERENTE)
+    // ✅ ANÁLISE DE ADERÊNCIA À VAGA
     // ============================================
     function renderAderenciaVaga(dominant, percentages) {
       const container = safeGetElement('aderenciaContent');
       if (!container) return;
 
-      // Calcular percentual de aderência baseado no perfil dominante e intensidade
       const jobRequirements = {
         D: { leadership: 95, sales: 90, crisis: 95, innovation: 75, analysis: 40, support: 30 },
         I: { leadership: 80, sales: 85, crisis: 60, innovation: 85, analysis: 45, support: 70 },
@@ -1318,28 +1319,21 @@
 
       const requirements = jobRequirements[dominant] || jobRequirements.D;
       const intensity = percentages[dominant];
-      
-      // Calcular aderência geral
       const aderenciaGeral = Math.min(98, Math.round((intensity / 100) * 85 + 15));
       const aderenciaClass = aderenciaGeral >= 75 ? 'alta' : aderenciaGeral >= 50 ? 'media' : 'baixa';
-
-      // Gerar análise textual completa
       const analiseTextual = getAnaliseTextual(dominant, intensity, percentages);
       
-      // ✅ CORRIGIDO: Mostrar nome da vaga vinculada e texto coerente
       const hasJob = AppState.jobs && AppState.jobs.length > 0;
       const vagaNome = hasJob ? (AppState.jobs[0].name || AppState.jobs[0].title || 'Vaga vinculada') : null;
       const companyName = AppState.company?.name || AppState.company?.company_name || 'Independente';
 
       container.innerHTML = `
         <div class="space-y-8">
-          <!-- Cabeçalho com Nome da Vaga quando vinculada -->
           <div class="bg-gradient-to-r from-brand-blue to-brand-purple text-white p-6 rounded-xl">
             <h4 class="font-bold text-xl mb-2">📊 Análise de Aderência para: ${vagaNome || 'Perfil Geral'}</h4>
             <p class="text-sm opacity-90">Empresa: ${companyName} • Metodologia Vigorre V.I.G.O.R.</p>
           </div>
           
-          <!-- Percentual de Aderência -->
           <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
             <h4 class="font-bold text-brand-navy mb-4 text-lg">📈 Compatibilidade Comportamental Vigorre™</h4>
             <div class="flex items-center gap-4 mb-4">
@@ -1359,149 +1353,67 @@
             <div class="bg-slate-50 p-4 rounded-lg border border-gray-200">
               <p class="text-gray-700 leading-relaxed">
                 ${hasJob 
-                  ? `O perfil comportamental predominante <strong class="text-brand-blue">${PREMIUM_CONTENT[dominant].title}</strong> (${intensity}%) apresenta uma aderência de <strong>${aderenciaGeral}%</strong> às exigências comportamentais típicas para o cargo de <strong>${vagaNome}</strong> na empresa <strong>${companyName}</strong>. Este índice considera a intensidade do traço dominante em relação às competências comportamentais requeridas para a posição.`
-                  : `O perfil comportamental predominante <strong class="text-brand-blue">${PREMIUM_CONTENT[dominant].title}</strong> (${intensity}%) apresenta uma aderência de <strong>${aderenciaGeral}%</strong> às exigências comportamentais típicas para cargos de liderança e gestão em contextos corporativos gerais. Este índice considera a intensidade do traço dominante em relação às competências comportamentais requeridas para posições estratégicas.`
+                  ? `O perfil comportamental predominante <strong class="text-brand-blue">${PREMIUM_CONTENT[dominant].title}</strong> (${intensity}%) apresenta uma aderência de <strong>${aderenciaGeral}%</strong> às exigências comportamentais típicas para o cargo de <strong>${vagaNome}</strong> na empresa <strong>${companyName}</strong>.`
+                  : `O perfil comportamental predominante <strong class="text-brand-blue">${PREMIUM_CONTENT[dominant].title}</strong> (${intensity}%) apresenta uma aderência de <strong>${aderenciaGeral}%</strong> às exigências comportamentais típicas para cargos de liderança e gestão em contextos corporativos gerais.`
                 }
               </p>
             </div>
           </div>
 
-          <!-- Análise Detalhada por Competência -->
           <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
             <h4 class="font-bold text-brand-navy mb-4 text-lg">📋 Análise de Aderência por Competência Comportamental</h4>
             <div class="space-y-4">
-              <div>
-                <div class="flex justify-between mb-1">
-                  <span class="text-sm font-medium text-gray-700">Liderança e Gestão de Equipes</span>
-                  <span class="text-sm font-bold ${requirements.leadership >= 75 ? 'text-emerald-600' : requirements.leadership >= 50 ? 'text-amber-600' : 'text-red-600'}">${requirements.leadership}%</span>
+              ${Object.entries(requirements).map(([key, value]) => `
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span class="text-sm font-medium text-gray-700">${getCompetencyLabel(key)}</span>
+                    <span class="text-sm font-bold ${value >= 75 ? 'text-emerald-600' : value >= 50 ? 'text-amber-600' : 'text-red-600'}">${value}%</span>
+                  </div>
+                  <div class="aderencia-bar-container h-3">
+                    <div class="aderencia-bar-fill ${value >= 75 ? 'alta' : value >= 50 ? 'media' : 'baixa'}" style="width: ${value}%"></div>
+                  </div>
                 </div>
-                <div class="aderencia-bar-container h-3">
-                  <div class="aderencia-bar-fill ${requirements.leadership >= 75 ? 'alta' : requirements.leadership >= 50 ? 'media' : 'baixa'}" style="width: ${requirements.leadership}%"></div>
-                </div>
-              </div>
-              <div>
-                <div class="flex justify-between mb-1">
-                  <span class="text-sm font-medium text-gray-700">Vendas e Negociação</span>
-                  <span class="text-sm font-bold ${requirements.sales >= 75 ? 'text-emerald-600' : requirements.sales >= 50 ? 'text-amber-600' : 'text-red-600'}">${requirements.sales}%</span>
-                </div>
-                <div class="aderencia-bar-container h-3">
-                  <div class="aderencia-bar-fill ${requirements.sales >= 75 ? 'alta' : requirements.sales >= 50 ? 'media' : 'baixa'}" style="width: ${requirements.sales}%"></div>
-                </div>
-              </div>
-              <div>
-                <div class="flex justify-between mb-1">
-                  <span class="text-sm font-medium text-gray-700">Gestão de Crise e Pressão</span>
-                  <span class="text-sm font-bold ${requirements.crisis >= 75 ? 'text-emerald-600' : requirements.crisis >= 50 ? 'text-amber-600' : 'text-red-600'}">${requirements.crisis}%</span>
-                </div>
-                <div class="aderencia-bar-container h-3">
-                  <div class="aderencia-bar-fill ${requirements.crisis >= 75 ? 'alta' : requirements.crisis >= 50 ? 'media' : 'baixa'}" style="width: ${requirements.crisis}%"></div>
-                </div>
-              </div>
-              <div>
-                <div class="flex justify-between mb-1">
-                  <span class="text-sm font-medium text-gray-700">Inovação e Criatividade</span>
-                  <span class="text-sm font-bold ${requirements.innovation >= 75 ? 'text-emerald-600' : requirements.innovation >= 50 ? 'text-amber-600' : 'text-red-600'}">${requirements.innovation}%</span>
-                </div>
-                <div class="aderencia-bar-container h-3">
-                  <div class="aderencia-bar-fill ${requirements.innovation >= 75 ? 'alta' : requirements.innovation >= 50 ? 'media' : 'baixa'}" style="width: ${requirements.innovation}%"></div>
-                </div>
-              </div>
-              <div>
-                <div class="flex justify-between mb-1">
-                  <span class="text-sm font-medium text-gray-700">Análise Técnica e Qualidade</span>
-                  <span class="text-sm font-bold ${requirements.analysis >= 75 ? 'text-emerald-600' : requirements.analysis >= 50 ? 'text-amber-600' : 'text-red-600'}">${requirements.analysis}%</span>
-                </div>
-                <div class="aderencia-bar-container h-3">
-                  <div class="aderencia-bar-fill ${requirements.analysis >= 75 ? 'alta' : requirements.analysis >= 50 ? 'media' : 'baixa'}" style="width: ${requirements.analysis}%"></div>
-                </div>
-              </div>
-              <div>
-                <div class="flex justify-between mb-1">
-                  <span class="text-sm font-medium text-gray-700">Suporte e Atendimento</span>
-                  <span class="text-sm font-bold ${requirements.support >= 75 ? 'text-emerald-600' : requirements.support >= 50 ? 'text-amber-600' : 'text-red-600'}">${requirements.support}%</span>
-                </div>
-                <div class="aderencia-bar-container h-3">
-                  <div class="aderencia-bar-fill ${requirements.support >= 75 ? 'alta' : requirements.support >= 50 ? 'media' : 'baixa'}" style="width: ${requirements.support}%"></div>
-                </div>
-              </div>
+              `).join('')}
             </div>
           </div>
 
-          <!-- Metodologia Aplicada -->
-          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-            <h4 class="font-bold text-brand-navy mb-4 text-lg">📚 Metodologia Aplicada na Análise</h4>
-            <div class="text-gray-700 leading-relaxed space-y-3">
-              <p>
-                A análise de aderência à vaga foi desenvolvida utilizando a <strong>Metodologia Vigorre de Mapeamento Comportamental (VMMC)</strong>, que combina a teoria DISC de William Marston com modelos contemporâneos de psicologia organizacional e people analytics.
-              </p>
-              <p>
-                O cálculo do percentual de aderência considera três dimensões principais:
-              </p>
-              <ul class="list-disc pl-6 space-y-2">
-                <li><strong>Intensidade do Traço Dominante:</strong> A intensidade do perfil comportamental predominante do candidato (D, I, S ou C) em relação ao total de 100%.</li>
-                <li><strong>Compatibilidade com Requisitos do Cargo:</strong> Análise das competências comportamentais requeridas para o cargo em questão, mapeadas através de benchmarking com perfis de alta performance.</li>
-                <li><strong>Fatores de Ajuste:</strong> Consideração dos traços secundários e terciários que podem complementar ou potencializar a aderência ao cargo.</li>
-              </ul>
-              <p>
-                A fórmula de cálculo utiliza uma ponderação onde a intensidade do traço dominante tem peso de 60%, a compatibilidade com os requisitos do cargo tem peso de 30%, e os fatores de ajuste (traços complementares) têm peso de 10%.
-              </p>
-              <p class="text-sm text-gray-500 italic">
-                * Esta análise é baseada em modelos estatísticos e deve ser interpretada em conjunto com outras avaliações, como entrevistas comportamentais e análise de experiência profissional.
-              </p>
-            </div>
-          </div>
-
-          <!-- Parecer Psicológico -->
           <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
             <h4 class="font-bold text-brand-navy mb-4 text-lg">🧠 Parecer Psicológico Comportamental</h4>
             <div class="text-gray-700 leading-relaxed space-y-3">
               ${analiseTextual}
             </div>
           </div>
-
-          <!-- Recomendações de Desenvolvimento -->
-          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-            <h4 class="font-bold text-brand-navy mb-4 text-lg">💡 Recomendações de Desenvolvimento para Aderência</h4>
-            <div class="text-gray-700 leading-relaxed space-y-3">
-              <p>
-                Para maximizar a aderência ao cargo e potencializar a performance, recomendamos o seguinte plano de desenvolvimento comportamental:
-              </p>
-              <ul class="list-disc pl-6 space-y-2">
-                <li><strong>Curto Prazo (0-3 meses):</strong> Focar no desenvolvimento das competências comportamentais com menor aderência através de coaching comportamental e feedback estruturado.</li>
-                <li><strong>Médio Prazo (3-6 meses):</strong> Implementar programas de mentoria comportamental com profissionais de perfil complementar para equilibrar as competências.</li>
-                <li><strong>Longo Prazo (6-12 meses):</strong> Desenvolver um plano de carreira comportamental que leverage os pontos fortes do perfil e minimize os gaps identificados.</li>
-              </ul>
-              <p>
-                É fundamental que o desenvolvimento comportamental seja acompanhado por métricas de performance e feedback contínuo para garantir a efetividade do plano de desenvolvimento.
-              </p>
-            </div>
-          </div>
         </div>
       `;
     }
 
+    function getCompetencyLabel(key) {
+      const labels = {
+        leadership: 'Liderança e Gestão de Equipes',
+        sales: 'Vendas e Negociação',
+        crisis: 'Gestão de Crise e Pressão',
+        innovation: 'Inovação e Criatividade',
+        analysis: 'Análise Técnica e Qualidade',
+        support: 'Suporte e Atendimento'
+      };
+      return labels[key] || key;
+    }
+
     function getAnaliseTextual(dominant, intensity, percentages) {
       const profile = PREMIUM_CONTENT[dominant];
-      
       let analise = '';
       
-      // Texto base do perfil
       analise += `<p>O participante apresenta um perfil comportamental predominantemente <strong>${profile.title}</strong>, com intensidade de <strong>${intensity}%</strong>. Este perfil indica um profissional com características comportamentais que tendem a ${dominant === 'D' ? 'assumir liderança natural, tomar decisões rápidas e focar em resultados' : dominant === 'I' ? 'comunicar-se de forma impactante, engajar equipes e criar ambientes colaborativos' : dominant === 'S' ? 'manter estabilidade, oferecer suporte constante e preservar a harmonia da equipe' : 'analisar dados com profundidade, garantir qualidade e estruturar processos claros'}.</p>`;
       
-      // Texto sobre congruência com cargos
       analise += `<p>Do ponto de vista da psicologia comportamental, o perfil <strong>${profile.title}</strong> apresenta uma configuração de traços que sugere <strong>${intensity >= 70 ? 'alta congruência com cargos que demandam' : intensity >= 50 ? 'moderada congruência com cargos que beneficiam-se de' : 'baixa congruência com cargos que requerem'} ${dominant === 'D' ? 'liderança direta, assertividade e foco em resultados' : dominant === 'I' ? 'comunicação persuasiva, networking e engajamento' : dominant === 'S' ? 'estabilidade operacional, suporte e manutenção de processos' : 'análise técnica, qualidade e conformidade'}. A intensidade de ${intensity}% indica que este traço é <strong>${intensity >= 70 ? 'altamente predominante' : intensity >= 50 ? 'moderadamente presente' : 'pouco expressivo'} no repertório comportamental do participante.</strong></p>`;
       
-      // Texto sobre versatilidade do perfil
-      analise += `<p>A análise psicométrica revela que o participante possui um perfil comportamental com ${Object.entries(percentages).filter(([k, v]) => v >= 20).length} traços significativos (acima de 20%), o que indica ${Object.entries(percentages).filter(([k, v]) => v >= 20).length >= 3 ? 'um perfil versátil com múltiplas competências comportamentais' : 'um perfil focado com competências comportamentais bem definidas'}. Esta configuração sugere que o participante ${Object.entries(percentages).filter(([k, v]) => v >= 20).length >= 3 ? 'pode se adaptar a diferentes contextos profissionais, mas pode precisar de foco para evitar dispersão' : 'tem clareza sobre seu estilo comportamental, o que facilita a adequação a cargos específicos'}.</p>`;
-      
-      // Texto sobre potencial para cargos específicos
-      analise += `<p>Sob a ótica da psicologia organizacional, este perfil comportamental apresenta <strong>potencial significativo</strong> para cargos que demandem ${dominant === 'D' ? 'liderança, gestão de crise e tomada de decisão rápida' : dominant === 'I' ? 'comunicação, vendas e construção de relacionamentos' : dominant === 'S' ? 'estabilidade, suporte e operações consistentes' : 'análise, qualidade e processos estruturados'}. A aderência ao cargo deve ser avaliada em conjunto com outros fatores como experiência profissional, formação acadêmica e motivações pessoais.</p>`;
+      analise += `<p>A análise psicométrica revela que o participante possui um perfil comportamental com ${Object.entries(percentages).filter(([k, v]) => v >= 20).length} traços significativos (acima de 20%), o que indica ${Object.entries(percentages).filter(([k, v]) => v >= 20).length >= 3 ? 'um perfil versátil com múltiplas competências comportamentais' : 'um perfil focado com competências comportamentais bem definidas'}.</p>`;
       
       return analise;
     }
 
     // ============================================
-    // RENDERIZADORES PREMIUM - COMPLETOS
+    // RENDERIZADORES
     // ============================================
     function renderPerfilDetalhado(key, score, content) {
       const container = safeGetElement('perfilDetalhado');
@@ -1538,14 +1450,8 @@
     }
 
     function renderCharts(percentages) {
-      if (AppState.charts.radar) { 
-        AppState.charts.radar.destroy(); 
-        AppState.charts.radar = null; 
-      }
-      if (AppState.charts.bar) { 
-        AppState.charts.bar.destroy(); 
-        AppState.charts.bar = null; 
-      }
+      if (AppState.charts.radar) { AppState.charts.radar.destroy(); AppState.charts.radar = null; }
+      if (AppState.charts.bar) { AppState.charts.bar.destroy(); AppState.charts.bar = null; }
 
       const radarCanvas = document.getElementById('discRadarChart');
       if (radarCanvas) {
@@ -1610,12 +1516,14 @@
         }
       }
 
-      // Interpretação dos fatores
       const discInterpretation = safeGetElement('discInterpretation');
       if (discInterpretation) {
         discInterpretation.innerHTML = Object.entries(percentages).map(([key, value]) => {
           const insight = PREMIUM_CONTENT[key];
           const level = value >= 70 ? 'Alto' : value >= 50 ? 'Médio' : 'Baixo';
+          const color = PREMIUM_CONTENT[key].title.includes('Dominância') ? '#EF4444' : 
+                       PREMIUM_CONTENT[key].title.includes('Influência') ? '#3B82F6' : 
+                       PREMIUM_CONTENT[key].title.includes('Estabilidade') ? '#10B981' : '#7C3AED';
           return `
             <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm border border-gray-100">
               <div class="flex items-center gap-3">
@@ -1626,7 +1534,7 @@
                 </div>
               </div>
               <div class="w-32 bg-gray-200 rounded-full h-2">
-                <div class="h-2 rounded-full" style="width: ${value}%; background: ${insight ? PREMIUM_CONTENT[key].title.includes('Dominância') ? '#EF4444' : PREMIUM_CONTENT[key].title.includes('Influência') ? '#3B82F6' : PREMIUM_CONTENT[key].title.includes('Estabilidade') ? '#10B981' : '#7C3AED' : '#64748B'}"></div>
+                <div class="h-2 rounded-full" style="width: ${value}%; background: ${color}"></div>
               </div>
             </div>
           `;
@@ -1636,7 +1544,6 @@
 
     function renderProfessionalProfile(r, dominant) {
       const profile = PREMIUM_CONTENT[dominant];
-      
       const profPace = safeGetElement('profPace');
       if (profPace) profPace.textContent = dominant === 'D' || dominant === 'I' ? 'Ritmo acelerado e orientado a impacto' : 'Ritmo consistente e orientado a processos';
       
@@ -1648,17 +1555,14 @@
       
       const profExecution = safeGetElement('profExecution');
       if (profExecution) {
-        profExecution.textContent = `Estilo de execução marcado por ${dominant === 'D' ? 'iniciativa e cobramento' : dominant === 'I' ? 'engajamento e adaptabilidade' : dominant === 'S' ? 'constância e suporte' : 'organização e controle de qualidade'}. ${profile.summary} Consegue manter produtividade mesmo sob demandas concorrentes, desde que alinhado a ${profile.strengths[0].toLowerCase()}.`;
+        profExecution.textContent = `Estilo de execução marcado por ${dominant === 'D' ? 'iniciativa e cobramento' : dominant === 'I' ? 'engajamento e adaptabilidade' : dominant === 'S' ? 'constância e suporte' : 'organização e controle de qualidade'}. ${profile.summary}`;
       }
     }
 
     function renderLeadership(r, dominant) {
       const profile = PREMIUM_CONTENT[dominant];
-      
       const leadArchetype = safeGetElement('leadArchetype');
-      if (leadArchetype) {
-        leadArchetype.textContent = profile.leadership;
-      }
+      if (leadArchetype) leadArchetype.textContent = profile.leadership;
       
       const leadMotivation = safeGetElement('leadMotivation');
       if (leadMotivation) {
@@ -1679,35 +1583,29 @@
 
     function renderCommunication(r, dominant) {
       const profile = PREMIUM_CONTENT[dominant];
-      
       const commPattern = safeGetElement('commPattern');
       if (commPattern) commPattern.textContent = profile.decision.includes('rápido') ? 'Direto, objetivo e focado em eficiência.' : profile.decision.includes('consenso') ? 'Entusiasta, persuasivo e focado em conexões.' : profile.decision.includes('ponderada') ? 'Calmo, empático e focado em entendimento mútuo.' : 'Preciso, baseado em fatos e estruturado.';
       
       const commMeetings = safeGetElement('commMeetings');
       if (commMeetings) {
         commMeetings.textContent = dominant === 'D' ? 'Foca em pautas objetivas, cobra follow-ups e evita reuniões sem decisão clara.' : 
-                                  dominant === 'I' ? 'Engaja participantes, facilita brainstormings e mantém energia alta, podendo precisar de moderador para foco.' :
-                                  dominant === 'S' ? 'Ouve ativamente, valida contribuições e busca consenso. Pode precisar de incentivo para discordar.' :
+                                  dominant === 'I' ? 'Engaja participantes, facilita brainstormings e mantém energia alta.' :
+                                  dominant === 'S' ? 'Ouve ativamente, valida contribuições e busca consenso.' :
                                   'Estrutura atas claras, documenta decisões e garante que todos os pontos técnicos sejam cobertos.';
       }
       
       const commClarityBar = safeGetElement('commClarityBar');
       if (commClarityBar) commClarityBar.style.width = (dominant === 'D' || dominant === 'C' ? '85' : '65') + '%';
-      
       const commInfluenceBar = safeGetElement('commInfluenceBar');
       if (commInfluenceBar) commInfluenceBar.style.width = (dominant === 'I' ? '90' : dominant === 'D' ? '75' : '60') + '%';
-      
       const commEmpathyBar = safeGetElement('commEmpathyBar');
       if (commEmpathyBar) commEmpathyBar.style.width = (dominant === 'S' ? '92' : dominant === 'I' ? '80' : '55') + '%';
     }
 
     function renderTeamwork(r, dominant) {
       const profile = PREMIUM_CONTENT[dominant];
-      
       const teamColab = safeGetElement('teamColab');
-      if (teamColab) {
-        teamColab.textContent = profile.teamwork;
-      }
+      if (teamColab) teamColab.textContent = profile.teamwork;
       
       const teamIntegration = safeGetElement('teamIntegration');
       if (teamIntegration) {
@@ -1728,29 +1626,21 @@
 
     function renderPressureBehavior(r, dominant) {
       const profile = PREMIUM_CONTENT[dominant];
-      
       const pressureReaction = safeGetElement('pressureReaction');
-      if (pressureReaction) {
-        pressureReaction.textContent = profile.pressure;
-      }
+      if (pressureReaction) pressureReaction.textContent = profile.pressure;
       
       const pressStabilityBar = safeGetElement('pressStabilityBar');
       if (pressStabilityBar) pressStabilityBar.style.width = (dominant === 'S' || dominant === 'C' ? '88' : '65') + '%';
-      
       const pressToleranceBar = safeGetElement('pressToleranceBar');
       if (pressToleranceBar) pressToleranceBar.style.width = (dominant === 'C' ? '90' : dominant === 'S' ? '75' : '60') + '%';
-      
       const pressResilienceBar = safeGetElement('pressResilienceBar');
       if (pressResilienceBar) pressResilienceBar.style.width = (dominant === 'D' ? '92' : dominant === 'I' ? '78' : '70') + '%';
     }
 
     function renderDecisionMaking(r, dominant) {
       const profile = PREMIUM_CONTENT[dominant];
-      
       const decisionProfile = safeGetElement('decisionProfile');
-      if (decisionProfile) {
-        decisionProfile.textContent = profile.decision;
-      }
+      if (decisionProfile) decisionProfile.textContent = profile.decision;
       
       const decisionSpeed = safeGetElement('decisionSpeed');
       if (decisionSpeed) {
@@ -1771,8 +1661,7 @@
 
     function renderMotivators(r, dominant) {
       const profile = PREMIUM_CONTENT[dominant];
-      const icons = ['🎯', '', '🤝', '', '🏆', '', '🛡️', '🌱'];
-      
+      const icons = ['🎯', '💡', '🤝', '📊', '🏆', '🔄', '🛡️', '🌱'];
       const motivatorsGrid = safeGetElement('motivatorsGrid');
       if (motivatorsGrid) {
         motivatorsGrid.innerHTML = profile.strengths.slice(0, 4).map((mot, i) => 
@@ -1783,7 +1672,6 @@
 
     function renderStrengths(r, dominant) {
       const profile = PREMIUM_CONTENT[dominant];
-      
       const strengthsList = safeGetElement('strengthsList');
       if (strengthsList) {
         strengthsList.innerHTML = profile.strengths.map(s => 
@@ -1794,7 +1682,6 @@
 
     function renderDevelopmentAreas(r, dominant) {
       const profile = PREMIUM_CONTENT[dominant];
-      
       const developmentList = safeGetElement('developmentList');
       if (developmentList) {
         developmentList.innerHTML = profile.risks.map(d => 
@@ -1805,11 +1692,8 @@
 
     function renderTeamBehavior(r, dominant) {
       const profile = PREMIUM_CONTENT[dominant];
-      
       const teamBehavior = safeGetElement('teamBehavior');
-      if (teamBehavior) {
-        teamBehavior.textContent = profile.teamwork;
-      }
+      if (teamBehavior) teamBehavior.textContent = profile.teamwork;
       
       const teamContribution = safeGetElement('teamContribution');
       if (teamContribution) {
@@ -1827,10 +1711,9 @@
 
     function renderChangeProfile(r, dominant) {
       const profile = PREMIUM_CONTENT[dominant];
-      
       const changeProfile = safeGetElement('changeProfile');
       if (changeProfile) {
-        changeProfile.textContent = `Diante de mudanças organizacionais, o participante ${dominant === 'D' ? 'adapta-se rapidamente e busca controlar o processo de transformação' : dominant === 'I' ? 'abraça a mudança com entusiasmo e ajuda outros a se adaptarem' : dominant === 'S' ? 'precisa de tempo e estrutura para processar a transição, mas mantém estabilidade' : 'analisa cuidadosamente os impactos e busca manter padrões de qualidade durante a transição'}. ${profile.pressure}`;
+        changeProfile.textContent = `Diante de mudanças organizacionais, o participante ${dominant === 'D' ? 'adapta-se rapidamente e busca controlar o processo de transformação' : dominant === 'I' ? 'abraça a mudança com entusiasmo e ajuda outros a se adaptarem' : dominant === 'S' ? 'precisa de tempo e estrutura para processar a transição, mas mantém estabilidade' : 'analisa cuidadosamente os impactos e busca manter padrões de qualidade durante a transição'}.`;
       }
       
       const changeFlexibility = safeGetElement('changeFlexibility');
@@ -1846,10 +1729,9 @@
 
     function renderIdealEnvironment(r, dominant) {
       const profile = PREMIUM_CONTENT[dominant];
-      
       const envCulture = safeGetElement('envCulture');
       if (envCulture) {
-        envCulture.textContent = `Prospera em culturas que valorizam ${profile.strengths[0].toLowerCase()} e oferecem ${dominant === 'D' ? 'autonomia decisória e meritocracia' : dominant === 'I' ? 'espaço para criatividade e colaboração' : dominant === 'S' ? 'estabilidade e reconhecimento por lealdade' : 'excelência técnica e processos maduros'}. Ambientes excessivamente ${dominant === 'D' ? 'burocráticos' : dominant === 'I' ? 'rígidos' : dominant === 'S' ? 'caóticos' : 'improvisados'} tendem a reduzir engajamento.`;
+        envCulture.textContent = `Prospera em culturas que valorizam ${profile.strengths[0].toLowerCase()} e oferecem ${dominant === 'D' ? 'autonomia decisória e meritocracia' : dominant === 'I' ? 'espaço para criatividade e colaboração' : dominant === 'S' ? 'estabilidade e reconhecimento por lealdade' : 'excelência técnica e processos maduros'}.`;
       }
       
       const envManagement = safeGetElement('envManagement');
@@ -1867,13 +1749,11 @@
         'Solicitar feedback estruturado mensal sobre impacto em equipe',
         'Desenvolver competência específica identificada neste relatório'
       ];
-      
       const mediumTerm = [
         'Participar de treinamento em inteligência emocional e comunicação',
         'Aplicar técnicas de regulação em cenários reais de pressão',
         'Criar plano de desenvolvimento trimestral com métricas claras'
       ];
-      
       const longTerm = [
         'Assumir papel de modelo comportamental para a equipe',
         'Desenvolver programa de mentoria para pares',
@@ -1897,7 +1777,7 @@
         const jobName = hasJob ? (AppState.jobs[0].name || AppState.jobs[0].title) : null;
         const companyName = AppState.company?.name || AppState.company?.company_name || 'Independente';
         
-        execConclusion.textContent = `O participante demonstra um perfil comportamental predominantemente ${profile.title.toLowerCase()}, caracterizado por ${profile.strengths.slice(0, 3).join(', ').toLowerCase()}. ${profile.summary} Este perfil indica potencial para ${dominant === 'D' || dominant === 'I' ? 'liderança, influência e alta performance em ambientes dinâmicos' : 'estabilidade, qualidade e excelência operacional em ambientes estruturados'}. ${hasJob ? `Para o cargo de ${jobName} na empresa ${companyName}, recomenda-se avaliação complementar das competências técnicas e experiência profissional para validação do fit comportamental.` : 'Sem cargo específico vinculado, este perfil pode ser aplicado em diversos contextos organizacionais que valorizem as competências identificadas.'} Recomenda-se acompanhamento contínuo via PDI focado em ${profile.risks[0].toLowerCase()} e ${profile.risks[1].toLowerCase()}, garantindo evolução comportamental e maximização de impacto organizacional. Este relatório deve ser utilizado como ferramenta estratégica de gestão de talentos, desenvolvimento de liderança e alocação de perfis em contextos de alta performance.`;
+        execConclusion.textContent = `O participante demonstra um perfil comportamental predominantemente ${profile.title.toLowerCase()}, caracterizado por ${profile.strengths.slice(0, 3).join(', ').toLowerCase()}. ${profile.summary} Este perfil indica potencial para ${dominant === 'D' || dominant === 'I' ? 'liderança, influência e alta performance em ambientes dinâmicos' : 'estabilidade, qualidade e excelência operacional em ambientes estruturados'}. ${hasJob ? `Para o cargo de ${jobName} na empresa ${companyName}, recomenda-se avaliação complementar das competências técnicas e experiência profissional para validação do fit comportamental.` : 'Sem cargo específico vinculado, este perfil pode ser aplicado em diversos contextos organizacionais que valorizem as competências identificadas.'} Recomenda-se acompanhamento contínuo via PDI focado em ${profile.risks[0].toLowerCase()} e ${profile.risks[1].toLowerCase()}, garantindo evolução comportamental e maximização de impacto organizacional.`;
       }
     }
 
@@ -1905,7 +1785,6 @@
       const container = safeGetElement('executiveConclusion');
       if (!container) return;
       
-      // Gerar texto rico baseado nos dados
       const sortedKeys = Object.keys(percentages).sort((a,b) => percentages[b] - percentages[a]);
       const secondaryKey = sortedKeys[1];
       const secondaryContent = PREMIUM_CONTENT[secondaryKey];
@@ -1917,60 +1796,32 @@
       const text = `
         <div class="prose max-w-none">
           <h3 class="text-lg font-bold text-brand-navy mb-4">1. Resumo Executivo e Aderência Profissional</h3>
-          <p class="mb-4">
-            O participante exibe um perfil comportamental predominantemente <strong class="text-brand-blue">${content.title}</strong> (${Math.round(percentages[key])}%), com influência secundária de <strong>${secondaryContent ? secondaryContent.title : 'outro perfil'}</strong>. Este perfil indica um profissional com alta aderência a ambientes que demandam <strong>${key === 'D' ? 'liderança direta e foco em resultados' : key === 'I' ? 'comunicação, networking e criatividade' : key === 'S' ? 'estabilidade, processos e suporte à equipe' : 'análise técnica, precisão e planejamento'}</strong>.
-          </p>
-          <p class="mb-6">
-            A combinação destes traços sugere um potencial significativo para <strong>${key === 'D' || key === 'I' ? 'liderança, influência e gestão de pessoas' : 'gestão de processos, qualidade e operações técnicas'}</strong>, alinhando-se a posições estratégicas dentro da organização.
-          </p>
+          <p class="mb-4">O participante exibe um perfil comportamental predominantemente <strong class="text-brand-blue">${content.title}</strong> (${Math.round(percentages[key])}%), com influência secundária de <strong>${secondaryContent ? secondaryContent.title : 'outro perfil'}</strong>.</p>
+          <p class="mb-6">A combinação destes traços sugere um potencial significativo para <strong>${key === 'D' || key === 'I' ? 'liderança, influência e gestão de pessoas' : 'gestão de processos, qualidade e operações técnicas'}</strong>.</p>
 
           <h3 class="text-lg font-bold text-brand-navy mb-4">2. Potencial de Liderança e Performance</h3>
-          <p class="mb-4">
-            Em termos de liderança, o participante tende a adotar um estilo <strong>${content.leadership.toLowerCase()}</strong>. 
-            ${key === 'D' ? 'Demonstra alta capacidade de mobilizar a equipe para a ação e assumir riscos calculados, mantendo o foco no objetivo final.' : key === 'I' ? 'Demonstra forte capacidade de engajar stakeholders e criar um ambiente colaborativo e positivo, essencial para a coesão de equipes.' : key === 'S' ? 'Atua como um pilar de estabilidade e suporte, garantindo que os processos sejam seguidos e a equipe se sinta segura.' : 'Contribui com organização e precisão, garantindo que o trabalho do grupo siga os padrões de qualidade e minimizando riscos operacionais.'}
-          </p>
-          <p class="mb-6">
-            Sob pressão, o comportamento esperado é: <em>${content.pressure.toLowerCase()}</em>. A tomada de decisão é caracterizada por ser <em>${content.decision.toLowerCase()}</em>.
-          </p>
+          <p class="mb-4">Em termos de liderança, o participante tende a adotar um estilo <strong>${content.leadership.toLowerCase()}</strong>.</p>
+          <p class="mb-6">Sob pressão: <em>${content.pressure.toLowerCase()}</em>. Tomada de decisão: <em>${content.decision.toLowerCase()}</em>.</p>
 
           <h3 class="text-lg font-bold text-brand-navy mb-4">3. Riscos Comportamentais e Mitigação</h3>
-          <p class="mb-4">
-            Para garantir alta performance e evitar desgastes, recomenda-se atenção aos seguintes pontos de atenção:
-          </p>
           <ul class="list-disc pl-6 mb-6 text-gray-700 space-y-2">
             ${content.risks.map(r => `<li>${r}</li>`).join('')}
           </ul>
 
-          <h3 class="text-lg font-bold text-brand-navy mb-4">4. Recomendações Estratégicas de Desenvolvimento (PDI)</h3>
+          <h3 class="text-lg font-bold text-brand-navy mb-4">4. Recomendações de Desenvolvimento (PDI)</h3>
           <p class="mb-2 font-semibold text-gray-800">Curto Prazo (0-3 meses):</p>
           <ul class="list-disc pl-6 mb-4 text-gray-700 space-y-1">
             <li>Praticar auto-observação diária para identificar gatilhos de comportamento.</li>
             <li>Solicitar feedback estruturado mensal sobre impacto na equipe.</li>
             <li>Desenvolver competência específica identificada neste relatório.</li>
           </ul>
-          <p class="mb-2 font-semibold text-gray-800">Médio Prazo (3-12 meses):</p>
-          <ul class="list-disc pl-6 mb-4 text-gray-700 space-y-1">
-            <li>Participar de treinamento em ${key === 'D' || key === 'C' ? 'inteligência emocional e comunicação' : 'gestão de tempo e processos'}.</li>
-            <li>Aplicar técnicas de regulação em cenários reais de pressão.</li>
-            <li>Criar plano de desenvolvimento trimestral com métricas claras.</li>
-          </ul>
-          <p class="mb-2 font-semibold text-gray-800">Longo Prazo (12+ meses):</p>
-          <ul class="list-disc pl-6 mb-4 text-gray-700 space-y-1">
-            <li>Assumir papel de modelo comportamental para a equipe.</li>
-            <li>Desenvolver programa de mentoria para pares.</li>
-            <li>Integrar inteligência comportamental em processos estratégicos da empresa.</li>
-          </ul>
           
           ${hasJob 
             ? `<div class="bg-brand-blue/5 p-4 rounded-lg border border-brand-blue/20 mt-6">
-                <p class="text-sm text-brand-blue-900">
-                  <strong>Nota sobre o Cargo:</strong> Esta análise foi contextualizada para o cargo de <strong>${jobName}</strong> na empresa <strong>${companyName}</strong>. Recomenda-se revisão periódica do fit comportamental conforme evolução das responsabilidades e mudanças organizacionais.
-                </p>
+                <p class="text-sm text-brand-blue-900"><strong>Nota:</strong> Análise contextualizada para o cargo de <strong>${jobName}</strong> na empresa <strong>${companyName}</strong>.</p>
               </div>`
             : `<div class="bg-brand-purple/5 p-4 rounded-lg border border-brand-purple/20 mt-6">
-                <p class="text-sm text-brand-purple-900">
-                  <strong>Nota sobre Perfil Geral:</strong> Esta análise apresenta o perfil comportamental do participante em contexto geral. Para avaliação de fit com cargo específico, recomenda-se vincular o participante a uma vaga através do sistema Vigorre One™.
-                </p>
+                <p class="text-sm text-brand-purple-900"><strong>Nota:</strong> Perfil geral. Para fit com cargo específico, vincule o participante a uma vaga.</p>
               </div>`
           }
         </div>
@@ -1997,13 +1848,10 @@
     function showToast(message, type = 'success') {
       const toast = safeGetElement('toast');
       if (!toast) return;
-      
       const toastIcon = safeGetElement('toastIcon');
       const toastMessage = safeGetElement('toastMessage');
-      
       if (toastIcon) toastIcon.textContent = type === 'success' ? '✅' : '⚠️';
       if (toastMessage) toastMessage.textContent = message;
-      
       toast.classList.remove('hidden');
       setTimeout(() => toast.classList.add('show'), 10);
       setTimeout(() => { 
@@ -2012,20 +1860,15 @@
       }, 4000);
     }
 
-    // ============================================
-    // ✅ FUNÇÕES DO MODAL E LOGOFF
-    // ============================================
     function openSimpleReportModal() {
-      console.log('🔒 Abrindo modal de relatório completo DISC');
       const modal = document.getElementById('simpleReportModal');
       if (modal) {
         modal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden'; // Evitar scroll no fundo
+        document.body.style.overflow = 'hidden';
       }
     }
 
     function closeModalAndLogout() {
-      console.log('🔐 Fechando modal e realizando logoff');
       const modal = document.getElementById('simpleReportModal');
       if (modal) {
         modal.classList.add('hidden');
@@ -2034,59 +1877,43 @@
       performLogout();
     }
 
-    // ============================================
-    // FUNÇÃO: FAZER LOGOFF DO SISTEMA
-    // ============================================
     async function performLogout() {
-      console.log('🔐 Realizando logoff completo...');
-      
-      // Tentar remover sessão do Supabase se disponível
+      console.log('🔐 Realizando logoff...');
       if (window.VigorreDB && VigorreDB.supabase) {
         const token = sessionStorage.getItem('vigorre_session_token');
         if (token) {
           try {
-            await VigorreDB.supabase
-              .from('sessions')
-              .delete()
-              .eq('token', token);
-            console.log('✅ Sessão removida do Supabase');
-          } catch (e) {
-            console.warn('⚠️ Não foi possível remover sessão do Supabase:', e);
-          }
+            await VigorreDB.supabase.from('sessions').delete().eq('token', token);
+          } catch (e) { console.warn('⚠️ Erro ao remover sessão:', e); }
         }
       }
-      
-      // Limpar dados locais
       localStorage.removeItem('vigorre_current_user');
       sessionStorage.clear();
-      
-      // Redirecionar para login com parâmetros para evitar cache
       window.location.href = 'login.html?loggedout=1&ts=' + Date.now();
     }
 
-    // ============================================
-    // >>> CORREÇÕES ADICIONADAS (SEM OTIMIZAR) <<<
-    // ============================================
+    // Debug function
+    window.debugReport = function() {
+      console.log('=== DEBUG RELATÓRIO ===');
+      console.log('Participant:', AppState.participant);
+      console.log('Company:', AppState.company);
+      console.log('Jobs:', AppState.jobs);
+      console.log('======================');
+    };
 
-    // 1. Tratamento de erro global com fallback amigável
+    // Error handling
     window.addEventListener('error', function(e) {
-      console.error('❌ Erro no relatório DISC Vigorre One™:', e);
-      showToast('⚠️ Ocorreu um erro. Recarregue a página se o problema persistir.', 'error');
-      return true; // Previne erro no console do navegador
+      console.error('❌ Erro no relatório DISC:', e);
+      showToast('⚠️ Ocorreu um erro. Recarregue a página.', 'error');
+      return true;
     });
 
-    // 2. Debug: Logar resultados disponíveis no console para diagnóstico
-    console.log('🔍 Laudo DISC - Resultados disponíveis:', {
+    console.log('🔍 Laudo DISC - Estado:', {
       disc: !!localStorage.getItem('vigorre_last_disc_result'),
       participant: AppState.participant?.name || 'não carregado',
       company: AppState.company?.name || 'não carregada',
-      jobs: AppState.jobs || 'não carregadas',
-      supabase: {
-        available: !!window.VigorreDB,
-        url: window.VigorreDB?.supabase ? 'conectado' : 'não conectado'
-      }
+      jobs: AppState.jobs || 'não carregadas'
     });
-
   </script>
 </body>
 </html>
