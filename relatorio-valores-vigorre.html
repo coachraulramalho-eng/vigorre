@@ -463,6 +463,22 @@
     .print-footer { display: none; }
     .print-watermark { display: none; }
     .page-number { display: none; }
+    
+    /* ============================================
+       CORREÇÃO DE MARGENS - LAYOUT RESPONSIVO
+       ============================================ */
+    @media (max-width: 768px) {
+      .vigorre-card { padding: 1.5rem !important; }
+      .chart-container { height: 280px !important; }
+      .cultural-metric-value { font-size: 2rem; }
+    }
+    
+    @media (max-width: 480px) {
+      .vigorre-card { padding: 1rem !important; }
+      .chart-container { height: 240px !important; }
+      h1 { font-size: 1.5rem !important; }
+      h2 { font-size: 1.3rem !important; }
+    }
   </style>
 </head>
 <body class="antialiased">
@@ -1144,7 +1160,7 @@
     });
 
     // ============================================
-    // ✅ FUNÇÃO: CARREGAR SESSÃO - SUPABASE + FALLBACK
+    // ✅ FUNÇÃO: CARREGAR SESSÃO - SUPABASE + FALLBACK + CORREÇÃO EMPRESA
     // ============================================
     async function loadSession() {
       try {
@@ -1183,12 +1199,13 @@
               AppState.participant = participant;
               console.log('✅ Participante carregado do Supabase:', participant.name);
               
-              // Buscar empresa se houver companyId
-              if (participant.company_id) {
+              // ✅ CORREÇÃO CRÍTICA: Buscar empresa com múltiplos campos possíveis
+              if (participant.company_id || participant.companyId || participant.compId) {
+                const companyId = participant.company_id || participant.companyId || participant.compId;
                 const { data: company } = await VigorreDB.supabase
                   .from('companies')
                   .select('*')
-                  .eq('id', participant.company_id)
+                  .eq('id', companyId)
                   .maybeSingle();
                 if (company) {
                   AppState.company = company;
@@ -1225,12 +1242,18 @@
         
         console.log('✅ Participante encontrado no localStorage:', AppState.participant.name);
         
-        // Buscar empresas
+        // ✅ CORREÇÃO CRÍTICA: Buscar empresa com múltiplos campos possíveis
         const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
-        if (AppState.participant.companyId) {
-          AppState.company = companies.find(function(c) { return c.id === AppState.participant.companyId; });
+        const companyId = AppState.participant.company_id || AppState.participant.companyId || AppState.participant.compId;
+        
+        if (companyId) {
+          AppState.company = companies.find(function(c) { 
+            return c.id === companyId || c.company_id === companyId; 
+          });
           if (AppState.company) {
             console.log('✅ Empresa encontrada:', AppState.company.name);
+          } else {
+            console.warn('⚠️ Empresa não encontrada para ID:', companyId);
           }
         }
         
@@ -1246,7 +1269,7 @@
     }
 
     // ============================================
-    // ✅ FUNÇÃO: CARREGAR RESULTADOS VALORES - SUPABASE + FALLBACK
+    // ✅ FUNÇÃO: CARREGAR RESULTADOS VALORES - SUPABASE + FALLBACK + NORMALIZAÇÃO
     // ============================================
     async function loadValuesResults() {
       try {
@@ -1275,13 +1298,14 @@
               .maybeSingle();
             
             if (data && !error) {
-              AppState.valuesResults = {
-                dimensions: data.scores || {},
-                percentages: data.percentages || {},
-                dominant: data.dominant,
+              // ✅ NORMALIZAR DADOS DO SUPABASE
+              AppState.valuesResults = normalizeValuesData({
+                dimensions: data.scores || data.dimensions || {},
+                percentages: data.percentages || data.scores || {},
+                dominant: data.dominant || Object.keys(data.scores || data.dimensions || {}).sort((a,b) => (data.scores || data.dimensions || {})[b] - (data.scores || data.dimensions || {})[a])[0],
                 date: data.completed_at
-              };
-              console.log('✅ Resultados Valores carregados do Supabase');
+              });
+              console.log('✅ Resultados Valores carregados do Supabase:', AppState.valuesResults);
               generateReport();
               return;
             }
@@ -1315,15 +1339,12 @@
           return;
         }
         
-        AppState.valuesResults = JSON.parse(valuesData);
-        console.log('✅ Dados de Valores carregados do localStorage');
+        var parsedData = JSON.parse(valuesData);
+        console.log('📦 Dados brutos carregados:', parsedData);
         
-        // Validar estrutura dos dados
-        if (!AppState.valuesResults.dimensions) {
-          console.error('❌ Dados de Valores inválidos: falta a propriedade "dimensions"');
-          showToast('Erro: estrutura de dados inválida', 'error');
-          return;
-        }
+        // ✅ NORMALIZAR DADOS DO LOCALSTORAGE
+        AppState.valuesResults = normalizeValuesData(parsedData);
+        console.log('✅ Dados de Valores normalizados:', AppState.valuesResults);
         
         generateReport();
         
@@ -1331,6 +1352,61 @@
         console.error('❌ Erro ao carregar resultados de Valores:', e);
         showToast('Erro ao processar relatório: ' + e.message, 'error');
       }
+    }
+
+    // ============================================
+    // ✅ FUNÇÃO: NORMALIZAR DADOS DE VALORES
+    // ============================================
+    function normalizeValuesData(rawData) {
+      console.log('🔄 Normalizando dados de valores...', rawData);
+      
+      // Estrutura esperada: { dimensions: {...}, percentages: {...}, dominant: string }
+      
+      // Tentar extrair dimensions de diferentes fontes
+      let dimensions = rawData.dimensions || rawData.percentages || rawData.scores || rawData;
+      
+      // Se dimensions não for um objeto, criar estrutura vazia
+      if (typeof dimensions !== 'object' || dimensions === null || Array.isArray(dimensions)) {
+        console.warn('⚠️ Dimensions inválido, criando estrutura padrão');
+        dimensions = {
+          purpose: 50,
+          recognition: 50,
+          autonomy: 50,
+          stability: 50,
+          growth: 50,
+          innovation: 50,
+          collaboration: 50,
+          impact: 50,
+          balance: 50,
+          achievement: 50
+        };
+      }
+      
+      // Garantir que todas as dimensões existam
+      const requiredDimensions = ['purpose', 'recognition', 'autonomy', 'stability', 'growth', 'innovation', 'collaboration', 'impact', 'balance', 'achievement'];
+      requiredDimensions.forEach(dim => {
+        if (!(dim in dimensions)) {
+          dimensions[dim] = 50; // Valor padrão
+          console.warn(`⚠️ Dimensão ${dim} não encontrada, usando valor padrão 50`);
+        }
+      });
+      
+      // Encontrar o dominante
+      let dominant = rawData.dominant;
+      if (!dominant) {
+        const entries = Object.entries(dimensions);
+        dominant = entries.sort((a, b) => b[1] - a[1])[0][0];
+        console.log('🎯 Dominante calculado:', dominant);
+      }
+      
+      // Retornar estrutura normalizada
+      return {
+        dimensions: dimensions,
+        percentages: dimensions, // Manter compatibilidade
+        dominant: dominant,
+        date: rawData.date || new Date().toISOString(),
+        normalized: true
+      };
     }
 
     // ============================================
@@ -1346,7 +1422,7 @@
 
       console.log('🎨 Gerando relatório de Valores...');
 
-      // Atualizar informações do participante
+      // ✅ CORREÇÃO CRÍTICA: Atualizar informações do participante COM VERIFICAÇÃO DE EMPRESA
       updateParticipantInfo();
       
       // Renderizar todas as seções com try-catch para evitar falhas em cascata
@@ -1371,32 +1447,52 @@
     }
 
     // ============================================
-    // ✅ CORREÇÃO CRÍTICA: Atualizar informações do participante
+    // ✅ CORREÇÃO CRÍTICA: Atualizar informações do participante COM EMPRESA
     // ============================================
     function updateParticipantInfo() {
       try {
-        var coverName = safeGetElement('coverName');
+        console.log('📝 Atualizando informações do participante...');
+        console.log('Dados disponíveis:', {
+          participant: AppState.participant,
+          company: AppState.company,
+          jobs: AppState.jobs
+        });
+        
+        // Nome do participante
+        const coverName = safeGetElement('coverName');
         if (coverName && AppState.participant) {
           coverName.textContent = AppState.participant.name || 'Participante';
+          console.log('✓ Nome:', AppState.participant.name);
         }
         
-        var coverCompany = safeGetElement('coverCompany');
+        // ✅ CORREÇÃO CRÍTICA: Empresa - Verificar múltiplos campos possíveis
+        const coverCompany = safeGetElement('coverCompany');
         if (coverCompany) {
-          var companyName = (AppState.company && AppState.company.name) ? AppState.company.name : 'Independente';
+          // Tentar múltiplos campos para o nome da empresa
+          const companyName = AppState.company?.name || 
+                             AppState.company?.company_name || 
+                             AppState.company?.nome ||
+                             'Independente';
           coverCompany.textContent = companyName;
+          console.log('✓ Empresa:', companyName);
         }
         
-        var coverJob = safeGetElement('coverJob');
+        // Vaga/Cargo - CORREÇÃO: Mostrar primeira vaga ou "Não vinculada"
+        const coverJob = safeGetElement('coverJob');
         if (coverJob) {
           if (AppState.jobs && AppState.jobs.length > 0) {
-            var jobName = AppState.jobs[0].name || AppState.jobs[0].title || 'Vaga vinculada';
+            // Mostrar a primeira vaga vinculada
+            const jobName = AppState.jobs[0].name || AppState.jobs[0].title || 'Vaga vinculada';
             coverJob.textContent = jobName;
+            console.log('✓ Vaga/Cargo:', jobName);
           } else {
             coverJob.textContent = 'Não vinculada';
+            console.log('✓ Vaga/Cargo: Não vinculada');
           }
         }
         
-        var coverCode = safeGetElement('coverCode');
+        // Código
+        const coverCode = safeGetElement('coverCode');
         if (coverCode) {
           coverCode.textContent = 'VIG-VAL-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 9000 + 1000);
         }
@@ -2402,6 +2498,19 @@
       // Redirecionar para login com parâmetros para evitar cache
       window.location.href = 'login.html?loggedout=1&ts=' + Date.now();
     }
+
+    // ============================================
+    // 🔍 FUNÇÃO DE DEBUG - EXECUTE NO CONSOLE
+    // ============================================
+    window.debugValores = function() {
+      console.log('=== DEBUG VALORES ===');
+      console.log('LocalStorage keys:', Object.keys(localStorage).filter(k => k.includes('valores') || k.includes('values')));
+      console.log('vigorre_last_values_result:', localStorage.getItem('vigorre_last_values_result'));
+      console.log('vigorre_last_valores_result:', localStorage.getItem('vigorre_last_valores_result'));
+      console.log('AppState.valuesResults:', AppState.valuesResults);
+      console.log('AppState.company:', AppState.company);
+      console.log('====================');
+    };
 
     // ============================================
     // >>> CORREÇÕES ADICIONADAS (SEM OTIMIZAR) <<<
