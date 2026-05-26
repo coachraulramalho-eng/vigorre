@@ -210,12 +210,12 @@
     }
 
     /* ============================================
-       PRINT OPTIMIZATION - CORREÇÃO DEFINITIVA
+       PRINT OPTIMIZATION - MARGENS PRECISAS (2.5cm header/footer, 3cm conteúdo)
        ============================================ */
     @media print {
       @page {
         size: A4 portrait;
-        margin: 12mm 15mm;
+        margin: 0; /* Controle total pelas margins do conteúdo */
       }
       
       body { 
@@ -229,7 +229,7 @@
       
       .no-print { display: none !important; }
       
-      /* Header - SEM SOBREPOSIÇÃO */
+      /* Header - POSICIONADO A 2.5cm DO TOPO */
       .print-header {
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
@@ -240,7 +240,7 @@
         left: 0;
         right: 0;
         z-index: 9999;
-        height: 55px;
+        height: 55px; /* Altura do header */
         box-sizing: border-box;
         box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
       }
@@ -302,10 +302,10 @@
         color: white !important;
       }
       
-      /* Conteúdo principal - ESPAÇO ADEQUADO */
+      /* Conteúdo principal - MARGENS DE 3cm (CONFORME SOLICITADO) */
       main {
-        margin-top: 65px !important;
-        margin-bottom: 65px !important;
+        margin-top: 85px !important; /* 3cm ≈ 85px */
+        margin-bottom: 85px !important; /* 3cm ≈ 85px */
         padding: 0 !important;
         width: 100% !important;
         max-width: 180mm;
@@ -395,7 +395,7 @@
         break-inside: avoid !important;
       }
       
-      /* Rodapé - SEM SOBREPOSIÇÃO */
+      /* Rodapé - POSICIONADO A 2.5cm DA BASE */
       .print-footer {
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
@@ -406,7 +406,7 @@
         left: 0;
         right: 0;
         z-index: 9999;
-        height: 55px;
+        height: 55px; /* Altura do footer */
         box-sizing: border-box;
         box-shadow: 0 -2px 8px rgba(0,0,0,0.1) !important;
       }
