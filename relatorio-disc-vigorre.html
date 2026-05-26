@@ -129,6 +129,7 @@
       position: relative;
       height: 350px !important;
       width: 100%;
+      margin-bottom: 15px;
     }
 
     /* ============================================
@@ -209,19 +210,19 @@
     }
 
     /* ============================================
-       PRINT OPTIMIZATION - MARGENS CORRIGIDAS E GRÁFICOS LADO A LADO
+       PRINT OPTIMIZATION - LAYOUT PROFISSIONAL INTERNACIONAL
        ============================================ */
     @media print {
       @page {
         size: A4 portrait;
-        margin: 0; /* MARGEM ZERO */
+        margin: 15mm 18mm; /* MARGENS LATERAIS AUMENTADAS - Padrão internacional */
       }
       
       body { 
         background: #ffffff !important;
         color: #000000 !important;
-        font-size: 8.5pt; /* Fonte menor */
-        line-height: 1.3;
+        font-size: 9pt;
+        line-height: 1.4;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
         margin: 0 !important;
@@ -230,18 +231,18 @@
       
       .no-print { display: none !important; }
       
-      /* Header - MAIS COMPACTO */
+      /* Header - POSIÇÃO FIXA */
       .print-header {
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 6px 10px !important;
+        padding: 8px 15px !important;
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         z-index: 9999;
-        height: 45px;
+        height: 55px;
         box-sizing: border-box;
       }
       
@@ -250,19 +251,19 @@
         justify-content: space-between;
         align-items: center;
         width: 100%;
-        max-width: 210mm;
+        max-width: 174mm; /* Ajustado para margens laterais */
         margin: 0 auto;
       }
       
       .print-header .print-logo {
         display: flex;
         align-items: center;
-        gap: 5px;
+        gap: 8px;
       }
       
       .print-header .print-logo-box {
-        width: 25px;
-        height: 25px;
+        width: 32px;
+        height: 32px;
         background: #ffffff !important;
         color: #0A1628;
         border-radius: 6px;
@@ -270,12 +271,12 @@
         align-items: center;
         justify-content: center;
         font-weight: 900;
-        font-size: 12px;
+        font-size: 14px;
         border: 2px solid rgba(255,255,255,0.3);
       }
       
       .print-header h1 {
-        font-size: 10pt;
+        font-size: 11pt;
         font-weight: 800;
         margin: 0;
         color: white !important;
@@ -283,7 +284,7 @@
       }
       
       .print-header p {
-        font-size: 6.5pt;
+        font-size: 7pt;
         margin: 0;
         opacity: 0.9;
         color: rgba(255,255,255,0.9) !important;
@@ -291,53 +292,65 @@
       
       .print-header .print-method {
         text-align: right;
-        font-size: 6.5pt;
+        font-size: 7pt;
         color: rgba(255,255,255,0.9) !important;
       }
       
       .print-header .print-method strong {
-        font-size: 9pt;
+        font-size: 10pt;
         letter-spacing: 1px;
         display: block;
         color: white !important;
       }
       
-      /* Conteúdo principal - MARGEM MÍNIMA */
+      /* Conteúdo principal - LEITURA INTELIGENTE DE MARGEM */
       main {
-        margin-top: 52px !important;
-        margin-bottom: 52px !important;
-        padding: 5px 8px !important; /* Padding mínimo */
+        margin-top: 63px !important;
+        margin-bottom: 63px !important;
+        padding: 0 !important;
+        width: 174mm !important; /* Largura ajustada */
+        margin-left: auto !important;
+        margin-right: auto !important;
       }
       
-      /* Cards ultra compactos */
+      /* Cards - LAYOUT INTELIGENTE */
       .vigorre-card {
         break-inside: avoid !important;
         page-break-inside: avoid !important;
-        margin-bottom: 8px !important;
+        margin-bottom: 12px !important;
+        width: 100% !important;
       }
       
       .vigorre-card .card-header {
-        padding: 6px 10px !important;
+        padding: 10px 15px !important;
       }
       
       .vigorre-card .card-header h2 {
-        font-size: 11px !important;
+        font-size: 12px !important;
       }
       
       .vigorre-card .card-body {
-        padding: 10px !important;
+        padding: 15px !important;
       }
       
-      /* GRÁFICOS LADO A LADO NA IMPRESSÃO */
+      /* GRID SYSTEM INTELIGENTE PARA GRÁFICOS */
       .grid.md\:grid-cols-2 {
         display: grid !important;
         grid-template-columns: 1fr 1fr !important;
-        gap: 8px !important;
+        gap: 12px !important;
+        margin-bottom: 15px !important;
       }
       
-      /* Gráficos menores */
+      .grid.md\:grid-cols-2 > div {
+        min-width: 0 !important; /* Permite que o grid funcione corretamente */
+      }
+      
+      /* Gráficos com espaço adequado */
       .chart-container {
-        height: 180px !important; /* Reduzido ainda mais */
+        height: 200px !important;
+        margin-bottom: 10px !important;
+        position: relative !important;
+        width: 100% !important;
       }
       
       canvas {
@@ -347,25 +360,38 @@
         print-color-adjust: exact !important;
       }
       
-      /* Rodapé - MAIS COMPACTO */
+      /* Textos abaixo dos gráficos - ESPAÇAMENTO INTELIGENTE */
+      .chart-container + div,
+      .chart-container + .bg-slate-50 {
+        margin-top: 10px !important;
+        clear: both !important;
+      }
+      
+      /* Interpretação dos fatores - LAYOUT VERTICAL PARA EVITAR SOBREPOSIÇÃO */
+      #discInterpretation > div {
+        margin-bottom: 8px !important;
+        page-break-inside: avoid !important;
+      }
+      
+      /* Rodapé - POSIÇÃO FIXA */
       .print-footer {
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 6px 10px !important;
+        padding: 8px 15px !important;
         position: fixed;
         bottom: 0;
         left: 0;
         right: 0;
         z-index: 9999;
-        height: 45px;
+        height: 55px;
         box-sizing: border-box;
       }
       
       .print-footer .print-footer-content {
-        font-size: 6.5pt;
+        font-size: 7pt;
         width: 100%;
-        max-width: 210mm;
+        max-width: 174mm;
         margin: 0 auto;
         color: white !important;
       }
@@ -373,12 +399,12 @@
       .print-footer .footer-logo-box {
         display: flex;
         align-items: center;
-        gap: 5px;
+        gap: 8px;
       }
       
       .print-footer .footer-logo {
-        width: 22px;
-        height: 22px;
+        width: 28px;
+        height: 28px;
         background: #ffffff !important;
         color: #0A1628;
         border-radius: 6px;
@@ -386,11 +412,11 @@
         align-items: center;
         justify-content: center;
         font-weight: 900;
-        font-size: 11px;
+        font-size: 12px;
       }
       
       .print-footer .footer-text h4 {
-        font-size: 8.5pt;
+        font-size: 9pt;
         font-weight: 700;
         margin: 0;
         color: white !important;
@@ -398,7 +424,7 @@
       }
       
       .print-footer .footer-text p {
-        font-size: 6pt;
+        font-size: 6.5pt;
         margin: 0;
         opacity: 0.9;
         color: rgba(255,255,255,0.9) !important;
@@ -416,6 +442,12 @@
         font-weight: 900;
         pointer-events: none;
         z-index: 0;
+      }
+      
+      /* Evitar quebra de página no meio de seções importantes */
+      .vigorre-card,
+      section {
+        page-break-inside: avoid !important;
       }
     }
     
@@ -1230,46 +1262,41 @@
     }
 
     // ============================================
-    // ✅ CORREÇÃO CRÍTICA: Atualizar informações do participante
+    // ✅ CORREÇÃO DEFINITIVA: Atualizar informações do participante
     // ============================================
     function updateParticipantInfo() {
       console.log('📝 Atualizando informações do participante...');
-      console.log('📋 Dados completos:', {
+      console.log('📋 Dados brutos:', {
         participant: AppState.participant,
         company: AppState.company,
         jobs: AppState.jobs
       });
       
-      // Nome do participante - CORREÇÃO COMPLETA
+      // Nome do participante
       const coverName = safeGetElement('coverName');
       if (coverName) {
         let participantName = 'Participante';
         
         if (AppState.participant) {
-          // Tentar TODOS os campos possíveis
           participantName = AppState.participant.name || 
                            AppState.participant.nome || 
                            AppState.participant.fullName || 
                            AppState.participant.full_name ||
                            'Participante';
-          
-          console.log('✓ Nome extraído:', participantName);
         }
         
         coverName.textContent = participantName;
+        console.log('✓ Nome:', participantName);
       }
       
-      // Empresa - CORREÇÃO COMPLETA COM LOG DETALHADO
+      // Empresa - CORREÇÃO DEFINITIVA COM BUSCA EM CASCATA
       const coverCompany = safeGetElement('coverCompany');
       if (coverCompany) {
         let companyName = 'Independente';
+        let foundSource = 'nenhuma';
         
-        console.log('🔍 Buscando empresa...');
-        console.log('AppState.company:', AppState.company);
-        console.log('AppState.participant:', AppState.participant);
-        
-        // Verificar se AppState.company existe e tem dados
-        if (AppState.company && Object.keys(AppState.company).length > 0) {
+        // 1. Verificar AppState.company primeiro
+        if (AppState.company && typeof AppState.company === 'object') {
           companyName = AppState.company.name || 
                        AppState.company.company_name || 
                        AppState.company.razao_social || 
@@ -1277,21 +1304,18 @@
                        AppState.company.nome ||
                        AppState.company.business_name ||
                        'Independente';
-          console.log('✓ Empresa encontrada em AppState.company:', companyName);
-        } 
-        // Verificar se participant tem company_id ou companyId
-        else if (AppState.participant) {
+          if (companyName !== 'Independente') {
+            foundSource = 'AppState.company';
+          }
+        }
+        
+        // 2. Se não encontrou, buscar no participant.company_id
+        if (companyName === 'Independente' && AppState.participant) {
           const companyId = AppState.participant.company_id || 
-                           AppState.participant.companyId ||
-                           AppState.participant.company;
-          
-          console.log('Company ID encontrado:', companyId);
+                           AppState.participant.companyId;
           
           if (companyId) {
-            console.log('🔍 Buscando empresa com ID:', companyId);
-            // Se temos companies no localStorage, buscar
             const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
-            console.log('Companies no localStorage:', companies);
             const foundCompany = companies.find(c => c.id === companyId);
             
             if (foundCompany) {
@@ -1300,65 +1324,52 @@
                            foundCompany.razao_social || 
                            foundCompany.fantasia ||
                            'Independente';
-              console.log('✓ Empresa encontrada no localStorage:', companyName);
-            } else {
-              console.warn('⚠️ Empresa não encontrada no localStorage com ID:', companyId);
-            }
-          }
-          
-          // Tentar campo direto no participant
-          if (companyName === 'Independente') {
-            companyName = AppState.participant.companyName || 
-                         AppState.participant.company_name ||
-                         AppState.participant.empresa ||
-                         'Independente';
-            if (companyName !== 'Independente') {
-              console.log('✓ Empresa encontrada no participant:', companyName);
+              if (companyName !== 'Independente') {
+                foundSource = 'localStorage (companyId)';
+              }
             }
           }
         }
         
+        // 3. Tentar campos diretos no participant
+        if (companyName === 'Independente' && AppState.participant) {
+          companyName = AppState.participant.companyName || 
+                       AppState.participant.company_name ||
+                       AppState.participant.empresa ||
+                       'Independente';
+          if (companyName !== 'Independente') {
+            foundSource = 'participant fields';
+          }
+        }
+        
         coverCompany.textContent = companyName;
-        console.log('🏢 Empresa final:', companyName);
+        console.log(`✓ Empresa: ${companyName} (fonte: ${foundSource})`);
       }
       
-      // Vaga/Cargo - CORREÇÃO COMPLETA
+      // Vaga/Cargo
       const coverJob = safeGetElement('coverJob');
       if (coverJob) {
         let jobName = 'Não vinculada';
         
-        // Verificar se existe jobs no AppState
         if (AppState.jobs && AppState.jobs.length > 0) {
           const job = AppState.jobs[0];
-          console.log('📋 Dados da vaga:', job);
-          
           jobName = job.name || 
                    job.title || 
                    job.cargo || 
                    job.funcao || 
                    job.job_title ||
                    job.position ||
-                   job.funcao_cargo ||
                    'Vaga vinculada';
-                   
-          console.log('✓ Vaga encontrada:', jobName);
-        } 
-        // Verificar no participant
-        else if (AppState.participant) {
+        } else if (AppState.participant) {
           jobName = AppState.participant.jobName || 
                    AppState.participant.job_name ||
                    AppState.participant.cargo ||
                    AppState.participant.funcao ||
-                   AppState.participant.position ||
-                   AppState.participant.jobTitle ||
                    'Não vinculada';
-                   
-          if (jobName !== 'Não vinculada') {
-            console.log('✓ Vaga encontrada no participant:', jobName);
-          }
         }
         
         coverJob.textContent = jobName;
+        console.log('✓ Vaga:', jobName);
       }
       
       // Código
@@ -1368,12 +1379,6 @@
         const random = Math.floor(Math.random() * 9000 + 1000);
         coverCode.textContent = `VIG-DISC-${year}-${random}`;
       }
-      
-      console.log('✅ Informações atualizadas:', {
-        nome: coverName?.textContent,
-        empresa: coverCompany?.textContent,
-        vaga: coverJob?.textContent
-      });
     }
 
     // ============================================
