@@ -1320,41 +1320,46 @@
         console.log('✓ Nome:', participantName);
       }
       
-      // Empresa - ✅ CORREÇÃO DEFINITIVA: MESMA LÓGICA DA ÁREA DO PARTICIPANTE
+      // Empresa - ✅ CORREÇÃO DEFINITIVA: LÓGICA EXATA DO DASHBOARD
       const coverCompany = safeGetElement('coverCompany');
       if (coverCompany) {
         let companyName = 'Independente';
         
-        console.log('🔍 Buscando empresa (lógica da área do participante)...');
-        console.log('AppState.participant.companyId:', AppState.participant?.companyId);
-        console.log('AppState.participant.companyName:', AppState.participant?.companyName);
+        console.log('🔍 Buscando empresa (lógica EXATA do dashboard)...');
+        console.log('participant.companyId:', AppState.participant?.companyId);
+        console.log('participant.companyName:', AppState.participant?.companyName);
         console.log('AppState.company:', AppState.company);
         
-        // 1. Se temos AppState.company (carregado do Supabase ou localStorage)
-        if (AppState.company && typeof AppState.company === 'object') {
-          companyName = AppState.company.name || 'Independente';
-          console.log('✓ Empresa encontrada em AppState.company:', companyName);
-        }
-        // 2. Se o participante tem companyName direto
-        else if (AppState.participant && AppState.participant.companyName) {
+        // 1. ✅ Se o participante tem companyName direto (PRIORIDADE MÁXIMA - igual ao dashboard)
+        if (AppState.participant && AppState.participant.companyName) {
           companyName = AppState.participant.companyName;
           console.log('✓ Empresa encontrada em participant.companyName:', companyName);
         }
-        // 3. Se o participante tem companyId, buscar no localStorage
+        // 2. ✅ Se tem companyId, buscar no localStorage (igual ao dashboard)
         else if (AppState.participant && AppState.participant.companyId) {
+          console.log('🔍 Buscando empresa por companyId no localStorage...');
           const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+          console.log('Companies no localStorage:', companies.map(c => ({id: c.id, name: c.name})));
+          
           const company = companies.find(c => c.id === AppState.participant.companyId);
-          if (company) {
-            companyName = company.name || 'Independente';
-            console.log('✓ Empresa encontrada no localStorage por companyId:', companyName);
+          console.log('Resultado da busca por ID:', company);
+          
+          if (company && company.name) {
+            companyName = company.name;
+            console.log('✓ Empresa encontrada no localStorage:', companyName);
           }
+        }
+        // 3. ✅ Se AppState.company foi carregado do Supabase com nome
+        else if (AppState.company && AppState.company.name) {
+          companyName = AppState.company.name;
+          console.log('✓ Empresa encontrada em AppState.company:', companyName);
         }
         
         coverCompany.textContent = companyName;
         console.log('🏢 Empresa final:', companyName);
       }
       
-      // Vaga/Cargo - ✅ MESMA LÓGICA DA ÁREA DO PARTICIPANTE
+      // Vaga/Cargo - MESMA LÓGICA DO DASHBOARD
       const coverJob = safeGetElement('coverJob');
       if (coverJob) {
         let jobName = 'Não vinculada';
