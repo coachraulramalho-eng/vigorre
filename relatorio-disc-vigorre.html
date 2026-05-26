@@ -123,7 +123,7 @@
     }
 
     /* ============================================
-       CHART CONTAINERS - CORRIGIDO PARA IMPRESSÃO
+       CHART CONTAINERS
        ============================================ */
     .chart-container {
       position: relative;
@@ -209,19 +209,19 @@
     }
 
     /* ============================================
-       PRINT OPTIMIZATION - ULTRA PREMIUM CORRIGIDO
+       PRINT OPTIMIZATION - MARGENS CORRIGIDAS
        ============================================ */
     @media print {
       @page {
         size: A4 portrait;
-        margin: 10mm 15mm; /* Margens ainda mais reduzidas */
+        margin: 8mm 12mm; /* Margens MÍNIMAS para evitar corte */
       }
       
       body { 
         background: #ffffff !important;
         color: #000000 !important;
-        font-size: 10pt;
-        line-height: 1.6;
+        font-size: 9.5pt; /* Fonte ligeiramente menor */
+        line-height: 1.5;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
@@ -229,12 +229,12 @@
       /* Esconder elementos não impressos */
       .no-print { display: none !important; }
       
-      /* Header de impressão - POSICIONAMENTO CORRIGIDO */
+      /* Header de impressão - MAIS COMPACTO */
       .print-header {
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 10px 20px !important; /* Padding reduzido */
+        padding: 8px 15px !important; /* Padding mínimo */
         position: fixed;
         top: 0;
         left: 0;
@@ -243,7 +243,7 @@
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
         box-shadow: 0 4px 20px rgba(0,0,0,0.3) !important;
-        height: 55px; /* Altura reduzida */
+        height: 50px; /* Altura mínima */
       }
       
       .print-header .print-header-content {
@@ -258,25 +258,25 @@
       .print-header .print-logo {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
       }
       
       .print-header .print-logo-box {
-        width: 35px; /* Reduzido */
-        height: 35px; /* Reduzido */
+        width: 32px;
+        height: 32px;
         background: #ffffff !important;
         color: #0A1628;
-        border-radius: 8px;
+        border-radius: 6px;
         display: flex !important;
         align-items: center;
         justify-content: center;
         font-weight: 900;
-        font-size: 18px; /* Reduzido */
+        font-size: 16px;
         border: 2px solid rgba(255,255,255,0.3);
       }
       
       .print-header h1 {
-        font-size: 14pt; /* Reduzido */
+        font-size: 13pt;
         font-weight: 800;
         margin: 0;
         color: white !important;
@@ -284,7 +284,7 @@
       }
       
       .print-header p {
-        font-size: 8pt; /* Reduzido */
+        font-size: 7.5pt;
         margin: 0;
         opacity: 0.9;
         color: rgba(255,255,255,0.9) !important;
@@ -292,21 +292,21 @@
       
       .print-header .print-method {
         text-align: right;
-        font-size: 8pt; /* Reduzido */
+        font-size: 7.5pt;
         color: rgba(255,255,255,0.9) !important;
       }
       
       .print-header .print-method strong {
-        font-size: 12pt; /* Reduzido */
-        letter-spacing: 2px;
+        font-size: 11pt;
+        letter-spacing: 1px;
         display: block;
         color: white !important;
       }
       
-      /* Conteúdo principal - MARGEM CORRIGIDA */
+      /* Conteúdo principal - MARGEM MÍNIMA */
       main {
-        margin-top: 75px !important; /* Reduzido de 85px */
-        margin-bottom: 75px !important; /* Reduzido de 85px */
+        margin-top: 65px !important; /* Mínimo necessário */
+        margin-bottom: 65px !important; /* Mínimo necessário */
         padding: 0 !important;
       }
       
@@ -317,17 +317,22 @@
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
         break-inside: avoid !important;
         page-break-inside: avoid !important;
-        margin-bottom: 20px !important;
+        margin-bottom: 15px !important; /* Reduzido */
       }
       
       .vigorre-card .card-header {
         background: #F8FAFC !important;
         border-bottom: 2px solid #E2E8F0 !important;
+        padding: 12px 20px !important; /* Reduzido */
+      }
+      
+      .vigorre-card .card-body {
+        padding: 20px !important; /* Reduzido */
       }
       
       /* Gráficos na impressão */
       .chart-container {
-        height: 260px !important; /* Reduzido de 280px */
+        height: 240px !important; /* Reduzido */
         max-width: 100% !important;
         page-break-inside: avoid;
         break-inside: avoid;
@@ -350,12 +355,12 @@
         color: #334155 !important; 
       }
       
-      /* Rodapé de impressão - POSICIONAMENTO CORRIGIDO */
+      /* Rodapé de impressão - MAIS COMPACTO */
       .print-footer {
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 10px 20px !important; /* Reduzido */
+        padding: 8px 15px !important; /* Padding mínimo */
         position: fixed;
         bottom: 0;
         left: 0;
@@ -363,14 +368,14 @@
         z-index: 9999;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
-        height: 55px; /* Altura reduzida */
+        height: 50px; /* Altura mínima */
       }
       
       .print-footer .print-footer-content {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: 8pt; /* Reduzido */
+        font-size: 7.5pt; /* Reduzido */
         width: 100%;
         max-width: 210mm;
         margin: 0 auto;
@@ -385,12 +390,12 @@
       .print-footer .footer-logo-box {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
       }
       
       .print-footer .footer-logo {
-        width: 28px; /* Reduzido */
-        height: 28px; /* Reduzido */
+        width: 26px;
+        height: 26px;
         background: #ffffff !important;
         color: #0A1628;
         border-radius: 6px;
@@ -398,11 +403,11 @@
         align-items: center;
         justify-content: center;
         font-weight: 900;
-        font-size: 14px; /* Reduzido */
+        font-size: 13px;
       }
       
       .print-footer .footer-text h4 {
-        font-size: 10pt; /* Reduzido */
+        font-size: 9.5pt;
         font-weight: 700;
         margin: 0;
         color: white !important;
@@ -410,7 +415,7 @@
       }
       
       .print-footer .footer-text p {
-        font-size: 7pt; /* Reduzido */
+        font-size: 7pt;
         margin: 0;
         opacity: 0.9;
         color: rgba(255,255,255,0.9) !important;
@@ -1246,6 +1251,11 @@
     // ============================================
     function updateParticipantInfo() {
       console.log('📝 Atualizando informações do participante...');
+      console.log('Dados disponíveis:', {
+        participant: AppState.participant,
+        company: AppState.company,
+        jobs: AppState.jobs
+      });
       
       // Nome do participante
       const coverName = safeGetElement('coverName');
@@ -1264,15 +1274,23 @@
         let companyName = 'Independente';
         
         if (AppState.company) {
+          // Tentar TODOS os campos possíveis
           companyName = AppState.company.name || 
                        AppState.company.company_name || 
                        AppState.company.razao_social || 
                        AppState.company.fantasia || 
+                       AppState.company.nome ||
                        'Independente';
           console.log('✓ Empresa carregada:', companyName);
         } else if (AppState.participant && AppState.participant.companyName) {
           companyName = AppState.participant.companyName;
           console.log('✓ Empresa do participante:', companyName);
+        } else if (AppState.participant && AppState.participant.company) {
+          // Se company for um objeto dentro do participant
+          companyName = AppState.participant.company.name || 
+                       AppState.participant.company.company_name || 
+                       'Independente';
+          console.log('✓ Empresa do participant.company:', companyName);
         }
         
         coverCompany.textContent = companyName;
