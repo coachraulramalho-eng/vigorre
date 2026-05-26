@@ -210,12 +210,61 @@
     }
 
     /* ============================================
-       PRINT OPTIMIZATION - MARGENS PRECISAS (2.5cm header/footer, 3cm conteúdo)
+       MODAL VINCULAR EMPRESA
+       ============================================ */
+    .modal-company-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10001;
+      backdrop-filter: blur(8px);
+    }
+    .modal-company-content {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      max-width: 480px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .modal-company-content h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #0F172A;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    .company-select-list {
+      max-height: 300px;
+      overflow-y: auto;
+      margin: 15px 0;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+    }
+    .company-select-item {
+      padding: 12px 16px;
+      cursor: pointer;
+      border-bottom: 1px solid #f1f5f9;
+      transition: background 0.2s;
+    }
+    .company-select-item:hover { background: #f8fafc; }
+    .company-select-item.selected {
+      background: #dbeafe;
+      border-left: 3px solid #1D4ED8;
+    }
+    .company-select-item:last-child { border-bottom: none; }
+
+    /* ============================================
+       PRINT OPTIMIZATION - MARGENS EM MM (PRECISAS)
        ============================================ */
     @media print {
       @page {
         size: A4 portrait;
-        margin: 0; /* Controle total pelas margins do conteúdo */
+        margin: 0;
       }
       
       body { 
@@ -229,20 +278,19 @@
       
       .no-print { display: none !important; }
       
-      /* Header - POSICIONADO A 2.5cm DO TOPO */
+      /* Header - Altura: 15mm (~2.5cm visual) */
       .print-header {
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 8px 15px !important;
+        padding: 5mm 15mm !important;
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         z-index: 9999;
-        height: 55px; /* Altura do header */
+        height: 15mm;
         box-sizing: border-box;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
       }
       
       .print-header .print-header-content {
@@ -250,32 +298,27 @@
         justify-content: space-between;
         align-items: center;
         width: 100%;
-        max-width: 180mm;
+        max-width: 175mm;
         margin: 0 auto;
       }
       
-      .print-header .print-logo {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
+      .print-header .print-logo { display: flex; align-items: center; gap: 5mm; }
       
       .print-header .print-logo-box {
-        width: 32px;
-        height: 32px;
+        width: 10mm;
+        height: 10mm;
         background: #ffffff !important;
         color: #0A1628;
-        border-radius: 6px;
+        border-radius: 3mm;
         display: flex !important;
         align-items: center;
         justify-content: center;
         font-weight: 900;
-        font-size: 14px;
-        border: 2px solid rgba(255,255,255,0.3);
+        font-size: 9pt;
       }
       
       .print-header h1 {
-        font-size: 11pt;
+        font-size: 10pt;
         font-weight: 800;
         margin: 0;
         color: white !important;
@@ -283,7 +326,7 @@
       }
       
       .print-header p {
-        font-size: 7.5pt;
+        font-size: 6.5pt;
         margin: 0;
         opacity: 0.9;
         color: rgba(255,255,255,0.9) !important;
@@ -291,71 +334,61 @@
       
       .print-header .print-method {
         text-align: right;
-        font-size: 7.5pt;
+        font-size: 6.5pt;
         color: rgba(255,255,255,0.9) !important;
       }
       
       .print-header .print-method strong {
-        font-size: 10pt;
+        font-size: 9pt;
         letter-spacing: 1px;
         display: block;
         color: white !important;
       }
       
-      /* Conteúdo principal - MARGENS DE 3cm (CONFORME SOLICITADO) */
+      /* Conteúdo - MARGEM DE 25mm (2.5cm) DO HEADER/FOOTER */
       main {
-        margin-top: 85px !important; /* 3cm ≈ 85px */
-        margin-bottom: 85px !important; /* 3cm ≈ 85px */
+        margin-top: 40mm !important;  /* 15mm header + 25mm espaço = 40mm do topo da página */
+        margin-bottom: 40mm !important; /* 25mm espaço + 15mm footer = 40mm da base da página */
         padding: 0 !important;
         width: 100% !important;
-        max-width: 180mm;
+        max-width: 175mm;
         margin-left: auto !important;
         margin-right: auto !important;
         display: block !important;
       }
       
-      /* Cards - SEM QUEBRA */
+      /* Cards */
       .vigorre-card {
         break-inside: avoid !important;
         page-break-inside: avoid !important;
-        margin-bottom: 12px !important;
+        margin-bottom: 10mm !important;
         width: 100% !important;
       }
       
       .vigorre-card .card-header {
-        padding: 10px 15px !important;
+        padding: 8mm 12mm !important;
         page-break-after: avoid !important;
       }
       
-      .vigorre-card .card-header h2 {
-        font-size: 12pt !important;
-      }
+      .vigorre-card .card-header h2 { font-size: 11pt !important; }
+      .vigorre-card .card-body { padding: 12mm !important; }
       
-      .vigorre-card .card-body {
-        padding: 15px !important;
-      }
-      
-      /* Grid - LADO A LADO SEM SOBREPOSIÇÃO */
+      /* Grid */
       .grid.md\:grid-cols-2 {
         display: grid !important;
         grid-template-columns: 1fr 1fr !important;
-        gap: 12px !important;
-        margin-bottom: 12px !important;
+        gap: 10mm !important;
+        margin-bottom: 10mm !important;
       }
+      .grid.md\:grid-cols-2 > div { min-width: 0 !important; break-inside: avoid !important; }
       
-      .grid.md\:grid-cols-2 > div {
-        min-width: 0 !important;
-        break-inside: avoid !important;
-      }
-      
-      /* Gráficos - ALTURA CONTROLADA */
+      /* Gráficos */
       .chart-container {
-        height: 200px !important;
-        margin-bottom: 10px !important;
+        height: 70mm !important;
+        margin-bottom: 8mm !important;
         position: relative !important;
         width: 100% !important;
       }
-      
       canvas {
         max-width: 100% !important;
         height: auto !important;
@@ -363,23 +396,22 @@
         print-color-adjust: exact !important;
       }
       
-      /* Textos abaixo dos gráficos - ESPAÇAMENTO */
+      /* Textos abaixo dos gráficos */
       .chart-container + div,
       .chart-container + .bg-slate-50,
       .chart-container + h3 {
-        margin-top: 10px !important;
+        margin-top: 8mm !important;
         clear: both !important;
       }
       
-      /* Interpretação - VERTICAL */
+      /* Interpretação */
       #discInterpretation {
         display: flex !important;
         flex-direction: column !important;
-        gap: 8px !important;
+        gap: 6mm !important;
       }
-      
       #discInterpretation > div {
-        margin-bottom: 8px !important;
+        margin-bottom: 6mm !important;
         page-break-inside: avoid !important;
       }
       
@@ -387,34 +419,29 @@
       .grid.md\:grid-cols-3 {
         display: grid !important;
         grid-template-columns: repeat(3, 1fr) !important;
-        gap: 10px !important;
+        gap: 8mm !important;
       }
+      .grid.md\:grid-cols-3 > div { min-width: 0 !important; break-inside: avoid !important; }
       
-      .grid.md\:grid-cols-3 > div {
-        min-width: 0 !important;
-        break-inside: avoid !important;
-      }
-      
-      /* Rodapé - POSICIONADO A 2.5cm DA BASE */
+      /* Rodapé */
       .print-footer {
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 8px 15px !important;
+        padding: 5mm 15mm !important;
         position: fixed;
         bottom: 0;
         left: 0;
         right: 0;
         z-index: 9999;
-        height: 55px; /* Altura do footer */
+        height: 15mm;
         box-sizing: border-box;
-        box-shadow: 0 -2px 8px rgba(0,0,0,0.1) !important;
       }
       
       .print-footer .print-footer-content {
-        font-size: 7.5pt;
+        font-size: 6.5pt;
         width: 100%;
-        max-width: 180mm;
+        max-width: 175mm;
         margin: 0 auto;
         color: white !important;
         display: flex !important;
@@ -422,35 +449,28 @@
         align-items: center !important;
       }
       
-      .print-footer .footer-logo-box {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-      
+      .print-footer .footer-logo-box { display: flex; align-items: center; gap: 5mm; }
       .print-footer .footer-logo {
-        width: 28px;
-        height: 28px;
+        width: 9mm;
+        height: 9mm;
         background: #ffffff !important;
         color: #0A1628;
-        border-radius: 6px;
+        border-radius: 3mm;
         display: flex !important;
         align-items: center;
         justify-content: center;
         font-weight: 900;
-        font-size: 12px;
+        font-size: 8pt;
       }
-      
       .print-footer .footer-text h4 {
-        font-size: 9pt;
+        font-size: 8pt;
         font-weight: 700;
         margin: 0;
         color: white !important;
         line-height: 1.2;
       }
-      
       .print-footer .footer-text p {
-        font-size: 7pt;
+        font-size: 6pt;
         margin: 0;
         opacity: 0.9;
         color: rgba(255,255,255,0.9) !important;
@@ -463,33 +483,27 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%) rotate(-30deg);
-        font-size: 100pt;
-        color: rgba(15, 23, 42, 0.03) !important;
+        font-size: 80pt;
+        color: rgba(15, 23, 42, 0.04) !important;
         font-weight: 900;
         pointer-events: none;
         z-index: 0;
       }
       
       /* Evitar quebras */
-      section, .vigorre-card {
-        page-break-inside: avoid !important;
-      }
-      
-      h2, h3, h4 {
-        page-break-after: avoid !important;
-      }
+      section, .vigorre-card { page-break-inside: avoid !important; }
+      h2, h3, h4 { page-break-after: avoid !important; }
     }
     
     .print-header { display: none; }
     .print-footer { display: none; }
     .print-watermark { display: none; }
+    .modal-company-overlay { display: none; }
   </style>
 </head>
 <body class="antialiased">
 
-  <!-- ============================================
-       HEADER VIGORRE ONE™ PREMIUM (TELA)
-       ============================================ -->
+  <!-- HEADER VIGORRE ONE™ PREMIUM (TELA) -->
   <header class="no-print bg-brand-navy text-white shadow-lg sticky top-0 z-50" style="height: 70px;">
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
       <div class="flex items-center gap-4">
@@ -509,15 +523,11 @@
     </div>
   </header>
 
-  <!-- ============================================
-       HEADER DE IMPRESSÃO
-       ============================================ -->
+  <!-- HEADER DE IMPRESSÃO -->
   <div class="print-header">
     <div class="print-header-content">
       <div class="print-logo">
-        <div class="print-logo-box">
-            <img src="logo-vigorre.png" style="width:100%; height:100%; object-fit:contain;" onerror="this.outerHTML='<span style=\'color:#0A1628; font-weight:900; font-size:18px;\'>V</span>'">
-        </div>
+        <div class="print-logo-box">V</div>
         <div>
           <h1>Vigorre One™</h1>
           <p>People Analytics Enterprise</p>
@@ -530,14 +540,10 @@
     </div>
   </div>
   
-  <!-- ============================================
-       MARCA D'ÁGUA
-       ============================================ -->
+  <!-- MARCA D'ÁGUA -->
   <div class="print-watermark">VIGORRE ONE</div>
 
-  <!-- ============================================
-       RODAPÉ DE IMPRESSÃO
-       ============================================ -->
+  <!-- RODAPÉ DE IMPRESSÃO -->
   <div class="print-footer">
     <div class="print-footer-content">
       <div class="footer-logo-box">
@@ -548,19 +554,17 @@
         </div>
       </div>
       <div style="text-align: center;">
-        <p style="margin: 0; font-size: 9pt;">Relatório DISC Completo • Gerado automaticamente</p>
-        <p style="margin: 0; font-size: 8pt; opacity: 0.7;">Documento confidencial • Vigorre One™</p>
+        <p style="margin: 0; font-size: 8pt;">Relatório DISC Completo • Gerado automaticamente</p>
+        <p style="margin: 0; font-size: 7pt; opacity: 0.8;">Documento confidencial • Vigorre One™</p>
       </div>
       <div style="text-align: right;">
-        <p style="margin: 0; font-size: 9pt;">contato@vigorre.com.br</p>
-        <p style="margin: 0; font-size: 8pt; opacity: 0.7;">vigorre.com.br</p>
+        <p style="margin: 0; font-size: 8pt;">contato@vigorre.com.br</p>
+        <p style="margin: 0; font-size: 7pt; opacity: 0.8;">vigorre.com.br</p>
       </div>
     </div>
   </div>
 
-  <!-- ============================================
-       MAIN REPORT CONTENT
-       ============================================ -->
+  <!-- MAIN REPORT CONTENT -->
   <main class="max-w-5xl mx-auto px-4 py-12" style="padding-top: 90px; padding-bottom: 90px;">
     
     <!-- CAPA / DADOS DO PARTICIPANTE -->
@@ -583,7 +587,13 @@
         </div>
         <div>
           <p class="text-xs text-gray-400 uppercase font-bold tracking-wider mb-1">Empresa</p>
-          <p class="font-bold text-lg text-brand-navy" id="coverCompany">Independente</p>
+          <div class="flex items-center gap-2">
+            <p class="font-bold text-lg text-brand-navy" id="coverCompany">Independente</p>
+            <!-- ✅ BOTÃO VINCULAR EMPRESA -->
+            <button onclick="openCompanyModal()" class="no-print text-xs bg-brand-blue/10 text-brand-blue px-2 py-1 rounded hover:bg-brand-blue/20 transition">
+              Vincular
+            </button>
+          </div>
         </div>
         <div>
           <p class="text-xs text-gray-400 uppercase font-bold tracking-wider mb-1">Vaga / Cargo</p>
@@ -968,6 +978,21 @@
     </div>
   </div>
 
+  <!-- ✅ MODAL VINCULAR EMPRESA -->
+  <div id="companyModal" class="modal-company-overlay">
+    <div class="modal-company-content">
+      <h3>🏢 Vincular Empresa</h3>
+      <p class="text-sm text-gray-600 mb-4">Selecione a empresa para vincular ao participante:</p>
+      <div id="companySelectList" class="company-select-list">
+        <!-- Lista de empresas carregada via JS -->
+      </div>
+      <div class="flex gap-3 mt-4">
+        <button onclick="closeCompanyModal()" class="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-200 transition">Cancelar</button>
+        <button onclick="confirmCompanySelection()" class="flex-1 bg-brand-blue text-white px-4 py-2 rounded-lg font-medium hover:bg-brand-blue/90 transition">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ============================================
     // BANCO DE DADOS DE CONTEÚDO PROFUNDO (PREMIUM)
@@ -1076,7 +1101,9 @@
       company: null,
       jobs: [],
       discResults: null,
-      charts: { radar: null, bar: null }
+      charts: { radar: null, bar: null },
+      selectedCompanyId: null,
+      selectedCompanyName: null
     };
 
     // ============================================
@@ -1091,7 +1118,7 @@
     // ============================================
     // INICIALIZAÇÃO
     // ============================================
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       console.log('🔹 Inicializando Relatório DISC Vigorre One™...');
       
       window.addEventListener('popstate', function(event) {
@@ -1099,8 +1126,14 @@
         performLogout();
       });
       
-      loadSession();
-      loadDiscResults();
+      // Aguardar carregamento completo antes de iniciar
+      await loadSession();
+      await loadDiscResults();
+      
+      // Garantir que os dados estejam carregados antes de gerar o relatório
+      if (AppState.discResults) {
+        generateReport();
+      }
     });
 
     // ============================================
@@ -1118,6 +1151,7 @@
           return;
         }
         
+        // Tentar Supabase primeiro
         if (window.VigorreDB && VigorreDB.supabase) {
           console.log('🌐 Tentando carregar do Supabase...');
           
@@ -1132,7 +1166,7 @@
               AppState.participant = participant;
               console.log('✅ Participante carregado do Supabase:', participant.name);
               
-              // ✅ CORREÇÃO: Buscar empresa usando EXATAMENTE os mesmos campos da área do participante
+              // Buscar empresa vinculada
               if (participant.companyId) {
                 const { data: company } = await VigorreDB.supabase
                   .from('companies')
@@ -1141,7 +1175,7 @@
                   .maybeSingle();
                 if (company) {
                   AppState.company = company;
-                  console.log('✅ Empresa carregada do Supabase:', company);
+                  console.log('✅ Empresa carregada do Supabase:', company.name);
                 }
               }
               
@@ -1150,13 +1184,14 @@
                 console.log('✅ Vagas carregadas do Supabase');
               }
               
-              return;
+              return true;
             }
           } catch (supabaseError) {
-            console.warn('⚠️ Erro ao buscar do Supabase, usando localStorage:', supabaseError);
+            console.warn('⚠️ Erro ao buscar do Supabase:', supabaseError);
           }
         }
         
+        // Fallback para localStorage
         console.log('📱 Usando fallback localStorage...');
         
         const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
@@ -1164,16 +1199,19 @@
         
         if (!AppState.participant) {
           console.error('❌ Participante não encontrado');
-          return;
+          return false;
         }
         
-        console.log('✅ Participante encontrado no localStorage:', AppState.participant);
+        console.log('✅ Participante encontrado no localStorage:', AppState.participant.name);
         
-        // ✅ CORREÇÃO: Buscar empresa usando EXATAMENTE a mesma lógica da área do participante
-        const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+        // Buscar empresa no localStorage
         if (AppState.participant.companyId) {
-          AppState.company = companies.find(c => c.id === AppState.participant.companyId);
-          console.log('✅ Empresa encontrada:', AppState.company);
+          const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+          const company = companies.find(c => c.id === AppState.participant.companyId);
+          if (company) {
+            AppState.company = company;
+            console.log('✅ Empresa encontrada no localStorage:', company.name);
+          }
         }
         
         if (AppState.participant.jobs && Array.isArray(AppState.participant.jobs)) {
@@ -1181,8 +1219,11 @@
           console.log('✅ Vagas vinculadas:', AppState.jobs);
         }
         
+        return true;
+        
       } catch (e) { 
         console.error('❌ Erro ao carregar sessão:', e); 
+        return false;
       }
     }
 
@@ -1199,9 +1240,10 @@
         if (!participantId) {
           console.error('❌ Nenhum participantId na URL');
           showToast('ID do participante não encontrado na URL', 'error');
-          return;
+          return false;
         }
         
+        // Tentar Supabase
         if (window.VigorreDB && VigorreDB.supabase) {
           console.log('🌐 Tentando carregar resultados do Supabase...');
           
@@ -1221,14 +1263,14 @@
                 date: data.completed_at
               };
               console.log('✅ Resultados DISC carregados do Supabase');
-              generateReport();
-              return;
+              return true;
             }
           } catch (supabaseError) {
-            console.warn('⚠️ Erro ao buscar do Supabase, usando localStorage:', supabaseError);
+            console.warn('⚠️ Erro ao buscar do Supabase:', supabaseError);
           }
         }
         
+        // Fallback localStorage
         console.log('📱 Buscando resultados no localStorage...');
         const discData = localStorage.getItem('vigorre_last_disc_result');
         
@@ -1236,16 +1278,17 @@
           console.error('❌ Nenhum resultado DISC encontrado');
           showToast('Nenhum resultado DISC encontrado. Complete o teste primeiro.', 'error');
           setTimeout(() => window.location.href = 'teste-disc.html', 3000);
-          return;
+          return false;
         }
         
         AppState.discResults = JSON.parse(discData);
         console.log('✅ Dados DISC carregados do localStorage');
-        generateReport();
+        return true;
         
       } catch (e) {
         console.error('❌ Erro ao carregar resultados DISC:', e);
         showToast('Erro ao processar relatório.', 'error');
+        return false;
       }
     }
 
@@ -1262,6 +1305,7 @@
 
       console.log('🎨 Gerando relatório DISC...');
 
+      // ✅ GARANTIR que os dados do participante estão carregados
       updateParticipantInfo();
 
       const scores = Object.entries(r.percentages);
@@ -1297,17 +1341,11 @@
     // ============================================
     function updateParticipantInfo() {
       console.log('📝 Atualizando informações do participante...');
-      console.log('📋 Dados brutos:', {
-        participant: AppState.participant,
-        company: AppState.company,
-        jobs: AppState.jobs
-      });
       
-      // Nome do participante
+      // Nome do participante - BUSCA EM TODOS OS CAMPOS POSSÍVEIS
       const coverName = safeGetElement('coverName');
       if (coverName) {
         let participantName = 'Participante';
-        
         if (AppState.participant) {
           participantName = AppState.participant.name || 
                            AppState.participant.nome || 
@@ -1315,42 +1353,41 @@
                            AppState.participant.full_name ||
                            'Participante';
         }
-        
         coverName.textContent = participantName;
-        console.log('✓ Nome:', participantName);
       }
       
-      // Empresa - ✅ CORREÇÃO DEFINITIVA: LÓGICA EXATA DO DASHBOARD
+      // Empresa - ✅ BUSCA AGRESSIVA EM TODOS OS CAMPOS POSSÍVEIS
       const coverCompany = safeGetElement('coverCompany');
       if (coverCompany) {
         let companyName = 'Independente';
         
-        console.log('🔍 Buscando empresa (lógica EXATA do dashboard)...');
-        console.log('participant.companyId:', AppState.participant?.companyId);
-        console.log('participant.companyName:', AppState.participant?.companyName);
-        console.log('AppState.company:', AppState.company);
+        // Lista de campos possíveis para nome da empresa no participant
+        const participantCompanyFields = ['companyName', 'compName', 'empresa', 'razao_social', 'fantasia', 'business_name'];
         
-        // 1. ✅ Se o participante tem companyName direto (PRIORIDADE MÁXIMA - igual ao dashboard)
-        if (AppState.participant && AppState.participant.companyName) {
-          companyName = AppState.participant.companyName;
-          console.log('✓ Empresa encontrada em participant.companyName:', companyName);
-        }
-        // 2. ✅ Se tem companyId, buscar no localStorage (igual ao dashboard)
-        else if (AppState.participant && AppState.participant.companyId) {
-          console.log('🔍 Buscando empresa por companyId no localStorage...');
-          const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
-          console.log('Companies no localStorage:', companies.map(c => ({id: c.id, name: c.name})));
-          
-          const company = companies.find(c => c.id === AppState.participant.companyId);
-          console.log('Resultado da busca por ID:', company);
-          
-          if (company && company.name) {
-            companyName = company.name;
-            console.log('✓ Empresa encontrada no localStorage:', companyName);
+        // 1. Tentar campos diretos no participant
+        for (const field of participantCompanyFields) {
+          if (AppState.participant?.[field]) {
+            companyName = AppState.participant[field];
+            console.log(`✓ Empresa encontrada em participant.${field}:`, companyName);
+            break;
           }
         }
-        // 3. ✅ Se AppState.company foi carregado do Supabase com nome
-        else if (AppState.company && AppState.company.name) {
+        
+        // 2. Se não encontrou, tentar por ID no localStorage
+        if (companyName === 'Independente') {
+          const companyId = AppState.participant?.companyId || AppState.participant?.compId;
+          if (companyId) {
+            const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+            const company = companies.find(c => c.id === companyId);
+            if (company?.name) {
+              companyName = company.name;
+              console.log('✓ Empresa encontrada no localStorage por ID:', companyName);
+            }
+          }
+        }
+        
+        // 3. Tentar AppState.company (do Supabase)
+        if (companyName === 'Independente' && AppState.company?.name) {
           companyName = AppState.company.name;
           console.log('✓ Empresa encontrada em AppState.company:', companyName);
         }
@@ -1359,18 +1396,20 @@
         console.log('🏢 Empresa final:', companyName);
       }
       
-      // Vaga/Cargo - MESMA LÓGICA DO DASHBOARD
+      // Vaga/Cargo - BUSCA EM TODOS OS CAMPOS POSSÍVEIS
       const coverJob = safeGetElement('coverJob');
       if (coverJob) {
         let jobName = 'Não vinculada';
         
-        if (AppState.jobs && AppState.jobs.length > 0) {
+        if (AppState.jobs?.length > 0) {
           const job = AppState.jobs[0];
-          jobName = job.name || job.title || 'Vaga vinculada';
-          console.log('✓ Vaga encontrada:', jobName);
-        } else if (AppState.participant && AppState.participant.jobName) {
-          jobName = AppState.participant.jobName;
-          console.log('✓ Vaga encontrada no participant:', jobName);
+          jobName = job.name || job.title || job.cargo || job.funcao || 'Vaga vinculada';
+        } else if (AppState.participant) {
+          jobName = AppState.participant.jobName || 
+                   AppState.participant.cargo || 
+                   AppState.participant.funcao || 
+                   AppState.participant.job_title ||
+                   'Não vinculada';
         }
         
         coverJob.textContent = jobName;
@@ -1383,12 +1422,97 @@
         const random = Math.floor(Math.random() * 9000 + 1000);
         coverCode.textContent = `VIG-DISC-${year}-${random}`;
       }
+    }
+
+    // ============================================
+    // ✅ FUNÇÕES DO MODAL VINCULAR EMPRESA
+    // ============================================
+    function openCompanyModal() {
+      const modal = document.getElementById('companyModal');
+      const list = document.getElementById('companySelectList');
       
-      console.log('✅ Informações atualizadas:', {
-        nome: coverName?.textContent,
-        empresa: coverCompany?.textContent,
-        vaga: coverJob?.textContent
+      if (!modal || !list) return;
+      
+      // Carregar lista de empresas do localStorage
+      const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+      
+      if (companies.length === 0) {
+        list.innerHTML = '<p class="p-4 text-center text-gray-500 text-sm">Nenhuma empresa cadastrada no sistema</p>';
+      } else {
+        list.innerHTML = companies.map(c => `
+          <div class="company-select-item ${AppState.selectedCompanyId === c.id ? 'selected' : ''}" 
+               onclick="selectCompany('${c.id}', '${c.name.replace(/'/g, "\\'")}')">
+            ${c.name}
+          </div>
+        `).join('');
+      }
+      
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeCompanyModal() {
+      const modal = document.getElementById('companyModal');
+      if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+      AppState.selectedCompanyId = null;
+      AppState.selectedCompanyName = null;
+    }
+
+    function selectCompany(id, name) {
+      AppState.selectedCompanyId = id;
+      AppState.selectedCompanyName = name;
+      
+      // Atualizar visual da seleção
+      document.querySelectorAll('.company-select-item').forEach(item => {
+        item.classList.remove('selected');
       });
+      event.currentTarget.classList.add('selected');
+    }
+
+    function confirmCompanySelection() {
+      if (!AppState.selectedCompanyId || !AppState.selectedCompanyName) {
+        showToast('Selecione uma empresa', 'error');
+        return;
+      }
+      
+      // Atualizar AppState
+      AppState.company = { 
+        id: AppState.selectedCompanyId, 
+        name: AppState.selectedCompanyName 
+      };
+      
+      // Atualizar participant se existir
+      if (AppState.participant) {
+        AppState.participant.companyId = AppState.selectedCompanyId;
+        AppState.participant.companyName = AppState.selectedCompanyName;
+        
+        // Salvar no localStorage para persistência
+        const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+        const index = participants.findIndex(p => p.id === AppState.participant.id);
+        if (index !== -1) {
+          participants[index] = AppState.participant;
+          localStorage.setItem('vigorre_participants', JSON.stringify(participants));
+        }
+      }
+      
+      // Atualizar interface
+      const coverCompany = safeGetElement('coverCompany');
+      if (coverCompany) {
+        coverCompany.textContent = AppState.selectedCompanyName;
+      }
+      
+      closeCompanyModal();
+      showToast('Empresa vinculada com sucesso! ✅');
+      
+      // Recarregar seções que dependem do nome da empresa
+      const dominant = Object.entries(AppState.discResults?.percentages || {})
+        .sort((a,b) => b[1]-a[1])[0]?.[0] || 'C';
+      renderAderenciaVaga(dominant, AppState.discResults?.percentages || {});
+      renderConclusion(AppState.discResults, dominant, PREMIUM_CONTENT[dominant]);
+      renderExecutiveConclusion(dominant, AppState.discResults?.percentages || {}, PREMIUM_CONTENT[dominant]);
     }
 
     // ============================================
@@ -1501,35 +1625,26 @@
     }
 
     // ============================================
-    // RENDERIZADORES
+    // RENDERIZADORES (versões otimizadas)
     // ============================================
     function renderPerfilDetalhado(key, score, content) {
       const container = safeGetElement('perfilDetalhado');
       if (!container) return;
-      
       const colorMap = { D: '#EF4444', I: '#3B82F6', S: '#10B981', C: '#7C3AED' };
-      const color = colorMap[key];
-
       container.innerHTML = `
         <div class="flex flex-col md:flex-row items-center gap-6 text-left">
-          <div class="w-24 h-24 rounded-full flex items-center justify-center text-4xl font-bold text-white shadow-lg" style="background: ${color}">
-            ${key}
-          </div>
+          <div class="w-24 h-24 rounded-full flex items-center justify-center text-4xl font-bold text-white shadow-lg" style="background: ${colorMap[key]}">${key}</div>
           <div class="flex-1">
-            <h3 class="text-2xl font-bold mb-2" style="color: ${color}">${content.title}</h3>
+            <h3 class="text-2xl font-bold mb-2" style="color: ${colorMap[key]}">${content.title}</h3>
             <p class="text-gray-600 text-lg mb-4">${content.summary}</p>
             <div class="grid md:grid-cols-2 gap-4">
               <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
                 <h4 class="font-semibold mb-2 text-emerald-600">Características Principais</h4>
-                <ul class="space-y-1 text-sm text-gray-600">
-                  ${content.strengths.slice(0, 4).map(s => `<li class="flex items-center gap-2"><span class="text-emerald-500">✓</span> ${s}</li>`).join('')}
-                </ul>
+                <ul class="space-y-1 text-sm text-gray-600">${content.strengths.slice(0,4).map(s => `<li>✓ ${s}</li>`).join('')}</ul>
               </div>
               <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
                 <h4 class="font-semibold mb-2 text-amber-600">Áreas de Desenvolvimento</h4>
-                <ul class="space-y-1 text-sm text-gray-600">
-                  ${content.risks.slice(0, 4).map(d => `<li class="flex items-center gap-2"><span class="text-amber-500">⚡</span> ${d}</li>`).join('')}
-                </ul>
+                <ul class="space-y-1 text-sm text-gray-600">${content.risks.slice(0,4).map(d => `<li>⚡ ${d}</li>`).join('')}</ul>
               </div>
             </div>
           </div>
@@ -1540,394 +1655,188 @@
     function renderCharts(percentages) {
       if (AppState.charts.radar) { AppState.charts.radar.destroy(); AppState.charts.radar = null; }
       if (AppState.charts.bar) { AppState.charts.bar.destroy(); AppState.charts.bar = null; }
-
+      
       const radarCanvas = document.getElementById('discRadarChart');
       if (radarCanvas) {
-        const ctxRadar = radarCanvas.getContext('2d');
-        if (ctxRadar) {
-          AppState.charts.radar = new Chart(ctxRadar, {
-            type: 'radar',
-            data: {
-              labels: ['Dominância', 'Influência', 'Estabilidade', 'Conformidade'],
-              datasets: [{
-                label: 'Perfil Comportamental',
-                data: [percentages.D, percentages.I, percentages.S, percentages.C],
-                backgroundColor: 'rgba(29, 78, 216, 0.2)',
-                borderColor: '#1D4ED8',
-                borderWidth: 2,
-                pointBackgroundColor: '#1D4ED8'
-              }]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                r: {
-                  angleLines: { color: 'rgba(0,0,0,0.1)' },
-                  grid: { color: 'rgba(0,0,0,0.1)' },
-                  pointLabels: { color: '#374151', font: { size: 12, weight: '600' } },
-                  ticks: { display: false, backdropColor: 'transparent' },
-                  suggestedMin: 0, suggestedMax: 100
-                }
-              },
-              plugins: { legend: { display: true, position: 'bottom', labels: { usePointStyle: true } } }
-            }
-          });
-        }
+        AppState.charts.radar = new Chart(radarCanvas.getContext('2d'), {
+          type: 'radar',
+          data: {
+            labels: ['Dominância', 'Influência', 'Estabilidade', 'Conformidade'],
+            datasets: [{
+              label: 'Perfil Comportamental',
+              data: [percentages.D, percentages.I, percentages.S, percentages.C],
+              backgroundColor: 'rgba(29, 78, 216, 0.2)',
+              borderColor: '#1D4ED8',
+              borderWidth: 2,
+              pointBackgroundColor: '#1D4ED8'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { r: { suggestedMin: 0, suggestedMax: 100, ticks: { display: false } } },
+            plugins: { legend: { display: true, position: 'bottom' } }
+          }
+        });
       }
-
+      
       const barCanvas = document.getElementById('discBarChart');
       if (barCanvas) {
-        const ctxBar = barCanvas.getContext('2d');
-        if (ctxBar) {
-          AppState.charts.bar = new Chart(ctxBar, {
-            type: 'bar',
-            data: {
-              labels: ['D', 'I', 'S', 'C'],
-              datasets: [{
-                label: 'Intensidade (%)',
-                data: [percentages.D, percentages.I, percentages.S, percentages.C],
-                backgroundColor: ['#EF4444', '#3B82F6', '#10B981', '#7C3AED'],
-                borderRadius: 4
-              }]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                y: { beginAtZero: true, max: 100, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#6B7280' } },
-                x: { grid: { display: false }, ticks: { color: '#374151', font: { weight: 'bold' } } }
-              },
-              plugins: { legend: { display: false } }
-            }
-          });
-        }
+        AppState.charts.bar = new Chart(barCanvas.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: ['D', 'I', 'S', 'C'],
+            datasets: [{
+              label: 'Intensidade (%)',
+              data: [percentages.D, percentages.I, percentages.S, percentages.C],
+              backgroundColor: ['#EF4444', '#3B82F6', '#10B981', '#7C3AED'],
+              borderRadius: 4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true, max: 100 }, x: { grid: { display: false } } },
+            plugins: { legend: { display: false } }
+          }
+        });
       }
-
+      
       const discInterpretation = safeGetElement('discInterpretation');
       if (discInterpretation) {
         discInterpretation.innerHTML = Object.entries(percentages).map(([key, value]) => {
-          const insight = PREMIUM_CONTENT[key];
           const level = value >= 70 ? 'Alto' : value >= 50 ? 'Médio' : 'Baixo';
-          const color = PREMIUM_CONTENT[key].title.includes('Dominância') ? '#EF4444' : 
-                       PREMIUM_CONTENT[key].title.includes('Influência') ? '#3B82F6' : 
-                       PREMIUM_CONTENT[key].title.includes('Estabilidade') ? '#10B981' : '#7C3AED';
-          return `
-            <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm border border-gray-100">
-              <div class="flex items-center gap-3">
-                <span class="text-xl">${insight ? insight.title.split(' ')[0] : key}</span>
-                <div>
-                  <p class="font-semibold text-gray-800">${insight ? insight.title : key} (${key})</p>
-                  <p class="text-sm text-gray-500">${level} - ${value}%</p>
-                </div>
-              </div>
-              <div class="w-32 bg-gray-200 rounded-full h-2">
-                <div class="h-2 rounded-full" style="width: ${value}%; background: ${color}"></div>
-              </div>
-            </div>
-          `;
+          const color = {D:'#EF4444',I:'#3B82F6',S:'#10B981',C:'#7C3AED'}[key];
+          return `<div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm border border-gray-100">
+            <div><p class="font-semibold">${PREMIUM_CONTENT[key].title} (${key})</p><p class="text-sm text-gray-500">${level} - ${value}%</p></div>
+            <div class="w-32 bg-gray-200 rounded-full h-2"><div class="h-2 rounded-full" style="width:${value}%;background:${color}"></div></div>
+          </div>`;
         }).join('');
       }
     }
 
+    // Funções de renderização restantes (otimizadas para espaço)
     function renderProfessionalProfile(r, dominant) {
-      const profile = PREMIUM_CONTENT[dominant];
-      const profPace = safeGetElement('profPace');
-      if (profPace) profPace.textContent = dominant === 'D' || dominant === 'I' ? 'Ritmo acelerado e orientado a impacto' : 'Ritmo consistente e orientado a processos';
-      
-      const profAutonomy = safeGetElement('profAutonomy');
-      if (profAutonomy) profAutonomy.textContent = dominant === 'D' ? 'Alta necessidade de autonomia. Prospera com liberdade decisória.' : dominant === 'C' ? 'Autonomia técnica com processos definidos.' : 'Equilíbrio entre autonomia e colaboração';
-      
-      const profResults = safeGetElement('profResults');
-      if (profResults) profResults.textContent = dominant === 'D' ? 'Orientação extrema a resultados. Usa métricas como bússola principal.' : 'Equilíbrio entre entregas e qualidade relacional/processual.';
-      
-      const profExecution = safeGetElement('profExecution');
-      if (profExecution) {
-        profExecution.textContent = `Estilo de execução marcado por ${dominant === 'D' ? 'iniciativa e cobramento' : dominant === 'I' ? 'engajamento e adaptabilidade' : dominant === 'S' ? 'constância e suporte' : 'organização e controle de qualidade'}. ${profile.summary}`;
-      }
+      const p = PREMIUM_CONTENT[dominant];
+      safeGetElement('profPace').textContent = dominant === 'D'||dominant === 'I'?'Ritmo acelerado e orientado a impacto':'Ritmo consistente e orientado a processos';
+      safeGetElement('profAutonomy').textContent = dominant === 'D'?'Alta necessidade de autonomia':dominant === 'C'?'Autonomia técnica com processos definidos.':'Equilíbrio entre autonomia e colaboração';
+      safeGetElement('profResults').textContent = dominant === 'D'?'Orientação extrema a resultados. Usa métricas como bússola principal.':'Equilíbrio entre entregas e qualidade relacional/processual.';
+      safeGetElement('profExecution').textContent = `Estilo de execução marcado por ${dominant === 'D'?'iniciativa e cobramento':dominant === 'I'?'engajamento e adaptabilidade':dominant === 'S'?'constância e suporte':'organização e controle de qualidade'}. ${p.summary}`;
     }
-
     function renderLeadership(r, dominant) {
-      const profile = PREMIUM_CONTENT[dominant];
-      const leadArchetype = safeGetElement('leadArchetype');
-      if (leadArchetype) leadArchetype.textContent = profile.leadership;
-      
-      const leadMotivation = safeGetElement('leadMotivation');
-      if (leadMotivation) {
-        leadMotivation.textContent = dominant === 'I' ? 'Usa reconhecimento público e desafios criativos.' : 
-                                    dominant === 'D' ? 'Define metas agressivas e celebra marcos de entrega.' : 
-                                    dominant === 'S' ? 'Oferece segurança psicológica e crescimento estável.' : 
-                                    'Proporciona autonomia técnica e recursos para excelência.';
-      }
-      
-      const leadDelegation = safeGetElement('leadDelegation');
-      if (leadDelegation) {
-        leadDelegation.textContent = dominant === 'D' ? 'Delega autoridade, mas cobra resultados semanalmente.' : 
-                                    dominant === 'I' ? 'Delega com confiança, mas mantém check-ins motivacionais.' : 
-                                    dominant === 'S' ? 'Delega com suporte próximo. Prefere acompanhar sem microgerenciar.' : 
-                                    'Delega com manuais e critérios claros. Valida entregas contra padrões.';
-      }
+      const p = PREMIUM_CONTENT[dominant];
+      safeGetElement('leadArchetype').textContent = p.leadership;
+      safeGetElement('leadMotivation').textContent = dominant === 'I'?'Usa reconhecimento público e desafios criativos.':dominant === 'D'?'Define metas agressivas e celebra marcos de entrega.':dominant === 'S'?'Oferece segurança psicológica e crescimento estável.':'Proporciona autonomia técnica e recursos para excelência.';
+      safeGetElement('leadDelegation').textContent = dominant === 'D'?'Delega autoridade, mas cobra resultados semanalmente.':dominant === 'I'?'Delega com confiança, mas mantém check-ins motivacionais.':dominant === 'S'?'Delega com suporte próximo. Prefere acompanhar sem microgerenciar.':'Delega com manuais e critérios claros. Valida entregas contra padrões.';
     }
-
     function renderCommunication(r, dominant) {
-      const profile = PREMIUM_CONTENT[dominant];
-      const commPattern = safeGetElement('commPattern');
-      if (commPattern) commPattern.textContent = profile.decision.includes('rápido') ? 'Direto, objetivo e focado em eficiência.' : profile.decision.includes('consenso') ? 'Entusiasta, persuasivo e focado em conexões.' : profile.decision.includes('ponderada') ? 'Calmo, empático e focado em entendimento mútuo.' : 'Preciso, baseado em fatos e estruturado.';
-      
-      const commMeetings = safeGetElement('commMeetings');
-      if (commMeetings) {
-        commMeetings.textContent = dominant === 'D' ? 'Foca em pautas objetivas, cobra follow-ups e evita reuniões sem decisão clara.' : 
-                                  dominant === 'I' ? 'Engaja participantes, facilita brainstormings e mantém energia alta.' :
-                                  dominant === 'S' ? 'Ouve ativamente, valida contribuições e busca consenso.' :
-                                  'Estrutura atas claras, documenta decisões e garante que todos os pontos técnicos sejam cobertos.';
-      }
-      
-      const commClarityBar = safeGetElement('commClarityBar');
-      if (commClarityBar) commClarityBar.style.width = (dominant === 'D' || dominant === 'C' ? '85' : '65') + '%';
-      const commInfluenceBar = safeGetElement('commInfluenceBar');
-      if (commInfluenceBar) commInfluenceBar.style.width = (dominant === 'I' ? '90' : dominant === 'D' ? '75' : '60') + '%';
-      const commEmpathyBar = safeGetElement('commEmpathyBar');
-      if (commEmpathyBar) commEmpathyBar.style.width = (dominant === 'S' ? '92' : dominant === 'I' ? '80' : '55') + '%';
+      const p = PREMIUM_CONTENT[dominant];
+      safeGetElement('commPattern').textContent = p.decision.includes('rápido')?'Direto, objetivo e focado em eficiência.':p.decision.includes('consenso')?'Entusiasta, persuasivo e focado em conexões.':p.decision.includes('ponderada')?'Calmo, empático e focado em entendimento mútuo.':'Preciso, baseado em fatos e estruturado.';
+      safeGetElement('commMeetings').textContent = dominant === 'D'?'Foca em pautas objetivas, cobra follow-ups e evita reuniões sem decisão clara.':dominant === 'I'?'Engaja participantes, facilita brainstormings e mantém energia alta.':dominant === 'S'?'Ouve ativamente, valida contribuições e busca consenso.':'Estrutura atas claras, documenta decisões e garante que todos os pontos técnicos sejam cobertos.';
+      safeGetElement('commClarityBar').style.width = (dominant === 'D'||dominant === 'C'?85:65)+'%';
+      safeGetElement('commInfluenceBar').style.width = (dominant === 'I'?90:dominant === 'D'?75:60)+'%';
+      safeGetElement('commEmpathyBar').style.width = (dominant === 'S'?92:dominant === 'I'?80:55)+'%';
     }
-
     function renderTeamwork(r, dominant) {
-      const profile = PREMIUM_CONTENT[dominant];
-      const teamColab = safeGetElement('teamColab');
-      if (teamColab) teamColab.textContent = profile.teamwork;
-      
-      const teamIntegration = safeGetElement('teamIntegration');
-      if (teamIntegration) {
-        teamIntegration.textContent = dominant === 'I' ? 'Natural networker. Conecta departamentos e facilita trocas de conhecimento.' : 
-                                     dominant === 'S' ? 'Cola do time. Mantém coesão e apoia membros em dificuldade.' : 
-                                     dominant === 'D' ? 'Impulsiona o time com metas claras. Pode precisar desenvolver escuta ativa.' : 
-                                     'Garante que processos e padrões sejam seguidos pelo grupo. Eleva a barra técnica.';
-      }
-      
-      const teamConflict = safeGetElement('teamConflict');
-      if (teamConflict) {
-        teamConflict.textContent = dominant === 'D' ? 'Enfrenta conflitos diretamente. Foca em resolver, não em agradar.' : 
-                                  dominant === 'I' ? 'Media com diplomacia. Busca soluções win-win e restaura harmonia.' : 
-                                  dominant === 'S' ? 'Evita confronto aberto. Prefere conversas privadas e acordos silenciosos.' : 
-                                  'Analisa a raiz do conflito com frieza. Propõe soluções baseadas em regras e dados.';
-      }
+      const p = PREMIUM_CONTENT[dominant];
+      safeGetElement('teamColab').textContent = p.teamwork;
+      safeGetElement('teamIntegration').textContent = dominant === 'I'?'Natural networker. Conecta departamentos e facilita trocas de conhecimento.':dominant === 'S'?'Cola do time. Mantém coesão e apoia membros em dificuldade.':dominant === 'D'?'Impulsiona o time com metas claras. Pode precisar desenvolver escuta ativa.':'Garante que processos e padrões sejam seguidos pelo grupo. Eleva a barra técnica.';
+      safeGetElement('teamConflict').textContent = dominant === 'D'?'Enfrenta conflitos diretamente. Foca em resolver, não em agradar.':dominant === 'I'?'Media com diplomacia. Busca soluções win-win e restaura harmonia.':dominant === 'S'?'Evita confronto aberto. Prefere conversas privadas e acordos silenciosos.':'Analisa a raiz do conflito com frieza. Propõe soluções baseadas em regras e dados.';
     }
-
     function renderPressureBehavior(r, dominant) {
-      const profile = PREMIUM_CONTENT[dominant];
-      const pressureReaction = safeGetElement('pressureReaction');
-      if (pressureReaction) pressureReaction.textContent = profile.pressure;
-      
-      const pressStabilityBar = safeGetElement('pressStabilityBar');
-      if (pressStabilityBar) pressStabilityBar.style.width = (dominant === 'S' || dominant === 'C' ? '88' : '65') + '%';
-      const pressToleranceBar = safeGetElement('pressToleranceBar');
-      if (pressToleranceBar) pressToleranceBar.style.width = (dominant === 'C' ? '90' : dominant === 'S' ? '75' : '60') + '%';
-      const pressResilienceBar = safeGetElement('pressResilienceBar');
-      if (pressResilienceBar) pressResilienceBar.style.width = (dominant === 'D' ? '92' : dominant === 'I' ? '78' : '70') + '%';
+      const p = PREMIUM_CONTENT[dominant];
+      safeGetElement('pressureReaction').textContent = p.pressure;
+      safeGetElement('pressStabilityBar').style.width = (dominant === 'S'||dominant === 'C'?88:65)+'%';
+      safeGetElement('pressToleranceBar').style.width = (dominant === 'C'?90:dominant === 'S'?75:60)+'%';
+      safeGetElement('pressResilienceBar').style.width = (dominant === 'D'?92:dominant === 'I'?78:70)+'%';
     }
-
     function renderDecisionMaking(r, dominant) {
-      const profile = PREMIUM_CONTENT[dominant];
-      const decisionProfile = safeGetElement('decisionProfile');
-      if (decisionProfile) decisionProfile.textContent = profile.decision;
-      
-      const decisionSpeed = safeGetElement('decisionSpeed');
-      if (decisionSpeed) {
-        decisionSpeed.textContent = dominant === 'D' ? 'Rápido e assertivo. Prioriza ação sobre análise prolongada.' :
-                                   dominant === 'I' ? 'Ágil, mas busca validação social antes de finalizar.' :
-                                   dominant === 'S' ? 'Cauteloso. Prefere avaliar impactos a médio/longo prazo.' :
-                                   'Metódico. Coleta dados extensivos antes de concluir.';
-      }
-      
-      const decisionLogic = safeGetElement('decisionLogic');
-      if (decisionLogic) {
-        decisionLogic.textContent = dominant === 'C' ? 'Altamente racional. Baseia escolhas em fatos, métricas e precedentes.' :
-                                   dominant === 'D' ? 'Pragmático. Usa lógica focada em ROI e eficiência operacional.' :
-                                   dominant === 'I' ? 'Intuitivo-estratégico. Combina dados com leitura de cenário e oportunidades.' :
-                                   'Equilibrado. Pondera dados técnicos com impacto humano e cultural.';
-      }
+      const p = PREMIUM_CONTENT[dominant];
+      safeGetElement('decisionProfile').textContent = p.decision;
+      safeGetElement('decisionSpeed').textContent = dominant === 'D'?'Rápido e assertivo. Prioriza ação sobre análise prolongada.':dominant === 'I'?'Ágil, mas busca validação social antes de finalizar.':dominant === 'S'?'Cauteloso. Prefere avaliar impactos a médio/longo prazo.':'Metódico. Coleta dados extensivos antes de concluir.';
+      safeGetElement('decisionLogic').textContent = dominant === 'C'?'Altamente racional. Baseia escolhas em fatos, métricas e precedentes.':dominant === 'D'?'Pragmático. Usa lógica focada em ROI e eficiência operacional.':dominant === 'I'?'Intuitivo-estratégico. Combina dados com leitura de cenário e oportunidades.':'Equilibrado. Pondera dados técnicos com impacto humano e cultural.';
     }
-
     function renderMotivators(r, dominant) {
-      const profile = PREMIUM_CONTENT[dominant];
-      const icons = ['🎯', '', '🤝', '📊', '', '🔄', '🛡️', '🌱'];
-      const motivatorsGrid = safeGetElement('motivatorsGrid');
-      if (motivatorsGrid) {
-        motivatorsGrid.innerHTML = profile.strengths.slice(0, 4).map((mot, i) => 
-          `<div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3"><span class="text-2xl">${icons[i % icons.length]}</span><div><h4 class="font-semibold text-gray-800">${mot}</h4><p class="text-xs text-gray-500">Driver de engajamento e retenção</p></div></div>`
-        ).join('');
-      }
+      const p = PREMIUM_CONTENT[dominant];
+      const icons = ['🎯','','🤝','📊','','🔄','🛡️','🌱'];
+      safeGetElement('motivatorsGrid').innerHTML = p.strengths.slice(0,4).map((mot,i) => 
+        `<div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3"><span class="text-2xl">${icons[i%icons.length]}</span><div><h4 class="font-semibold text-gray-800">${mot}</h4><p class="text-xs text-gray-500">Driver de engajamento e retenção</p></div></div>`
+      ).join('');
     }
-
     function renderStrengths(r, dominant) {
-      const profile = PREMIUM_CONTENT[dominant];
-      const strengthsList = safeGetElement('strengthsList');
-      if (strengthsList) {
-        strengthsList.innerHTML = profile.strengths.map(s => 
-          `<div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3"><span class="text-emerald-500 text-2xl">✓</span><p class="font-medium text-gray-800">${s}</p></div>`
-        ).join('');
-      }
+      const p = PREMIUM_CONTENT[dominant];
+      safeGetElement('strengthsList').innerHTML = p.strengths.map(s => 
+        `<div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3"><span class="text-emerald-500 text-2xl">✓</span><p class="font-medium text-gray-800">${s}</p></div>`
+      ).join('');
     }
-
     function renderDevelopmentAreas(r, dominant) {
-      const profile = PREMIUM_CONTENT[dominant];
-      const developmentList = safeGetElement('developmentList');
-      if (developmentList) {
-        developmentList.innerHTML = profile.risks.map(d => 
-          `<div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3"><span class="text-amber-500 text-2xl">⚡</span><p class="font-medium text-gray-800">${d}</p></div>`
-        ).join('');
-      }
+      const p = PREMIUM_CONTENT[dominant];
+      safeGetElement('developmentList').innerHTML = p.risks.map(d => 
+        `<div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3"><span class="text-amber-500 text-2xl">⚡</span><p class="font-medium text-gray-800">${d}</p></div>`
+      ).join('');
     }
-
     function renderTeamBehavior(r, dominant) {
-      const profile = PREMIUM_CONTENT[dominant];
-      const teamBehavior = safeGetElement('teamBehavior');
-      if (teamBehavior) teamBehavior.textContent = profile.teamwork;
-      
-      const teamContribution = safeGetElement('teamContribution');
-      if (teamContribution) {
-        teamContribution.textContent = dominant === 'D' ? 'Contribui com direção clara, tomada de decisão rápida e foco em resultados.' : 
-                                      dominant === 'I' ? 'Contribui com energia, criatividade e capacidade de engajar o grupo.' : 
-                                      dominant === 'S' ? 'Contribui com estabilidade, suporte e manutenção da harmonia.' : 
-                                      'Contribui com organização, precisão e garantia de qualidade.';
-      }
-      
-      const teamInformalLead = safeGetElement('teamInformalLead');
-      if (teamInformalLead) {
-        teamInformalLead.textContent = dominant === 'D' || dominant === 'I' ? 'Tende a assumir liderança informal naturalmente, influenciando o grupo através de sua presença e iniciativa.' : 'Prefere apoiar a liderança formal, contribuindo de forma consistente sem necessariamente buscar protagonismo.';
-      }
+      const p = PREMIUM_CONTENT[dominant];
+      safeGetElement('teamBehavior').textContent = p.teamwork;
+      safeGetElement('teamContribution').textContent = dominant === 'D'?'Contribui com direção clara, tomada de decisão rápida e foco em resultados.':dominant === 'I'?'Contribui com energia, criatividade e capacidade de engajar o grupo.':dominant === 'S'?'Contribui com estabilidade, suporte e manutenção da harmonia.':'Contribui com organização, precisão e garantia de qualidade.';
+      safeGetElement('teamInformalLead').textContent = dominant === 'D'||dominant === 'I'?'Tende a assumir liderança informal naturalmente, influenciando o grupo através de sua presença e iniciativa.':'Prefere apoiar a liderança formal, contribuindo de forma consistente sem necessariamente buscar protagonismo.';
     }
-
     function renderChangeProfile(r, dominant) {
-      const profile = PREMIUM_CONTENT[dominant];
-      const changeProfile = safeGetElement('changeProfile');
-      if (changeProfile) {
-        changeProfile.textContent = `Diante de mudanças organizacionais, o participante ${dominant === 'D' ? 'adapta-se rapidamente e busca controlar o processo de transformação' : dominant === 'I' ? 'abraça a mudança com entusiasmo e ajuda outros a se adaptarem' : dominant === 'S' ? 'precisa de tempo e estrutura para processar a transição, mas mantém estabilidade' : 'analisa cuidadosamente os impactos e busca manter padrões de qualidade durante a transição'}.`;
-      }
-      
-      const changeFlexibility = safeGetElement('changeFlexibility');
-      if (changeFlexibility) {
-        changeFlexibility.textContent = dominant === 'D' || dominant === 'I' ? 'Alta flexibilidade cognitiva. Pivota rapidamente diante de novas informações.' : 'Flexibilidade moderada. Prefere mudanças graduais com transição estruturada.';
-      }
-      
-      const changeOpenness = safeGetElement('changeOpenness');
-      if (changeOpenness) {
-        changeOpenness.textContent = dominant === 'I' || dominant === 'D' ? 'Alta abertura ao novo. Vê mudanças como oportunidades de crescimento.' : 'Abertura moderada. Avalia riscos e benefícios antes de aderir completamente.';
-      }
+      const p = PREMIUM_CONTENT[dominant];
+      safeGetElement('changeProfile').textContent = `Diante de mudanças organizacionais, o participante ${dominant === 'D'?'adapta-se rapidamente e busca controlar o processo de transformação':dominant === 'I'?'abraça a mudança com entusiasmo e ajuda outros a se adaptarem':dominant === 'S'?'precisa de tempo e estrutura para processar a transição, mas mantém estabilidade':'analisa cuidadosamente os impactos e busca manter padrões de qualidade durante a transição'}.`;
+      safeGetElement('changeFlexibility').textContent = dominant === 'D'||dominant === 'I'?'Alta flexibilidade cognitiva. Pivota rapidamente diante de novas informações.':'Flexibilidade moderada. Prefere mudanças graduais com transição estruturada.';
+      safeGetElement('changeOpenness').textContent = dominant === 'I'||dominant === 'D'?'Alta abertura ao novo. Vê mudanças como oportunidades de crescimento.':'Abertura moderada. Avalia riscos e benefícios antes de aderir completamente.';
     }
-
     function renderIdealEnvironment(r, dominant) {
-      const profile = PREMIUM_CONTENT[dominant];
-      const envCulture = safeGetElement('envCulture');
-      if (envCulture) {
-        envCulture.textContent = `Prospera em culturas que valorizam ${profile.strengths[0].toLowerCase()} e oferecem ${dominant === 'D' ? 'autonomia decisória e meritocracia' : dominant === 'I' ? 'espaço para criatividade e colaboração' : dominant === 'S' ? 'estabilidade e reconhecimento por lealdade' : 'excelência técnica e processos maduros'}.`;
-      }
-      
-      const envManagement = safeGetElement('envManagement');
-      if (envManagement) {
-        envManagement.textContent = dominant === 'D' ? 'Gestão por objetivos e resultados. Check-ins focados em métricas e remoção de bloqueios.' : 
-                                   dominant === 'I' ? 'Gestão participativa. Feedback frequente, reconhecimento público e co-criação.' : 
-                                   dominant === 'S' ? 'Gestão de suporte. Comunicação clara, previsibilidade e desenvolvimento contínuo.' : 
-                                   'Gestão técnica. Padrões definidos, revisão por pares e autonomia especializada.';
-      }
+      const p = PREMIUM_CONTENT[dominant];
+      safeGetElement('envCulture').textContent = `Prospera em culturas que valorizam ${p.strengths[0].toLowerCase()} e oferecem ${dominant === 'D'?'autonomia decisória e meritocracia':dominant === 'I'?'espaço para criatividade e colaboração':dominant === 'S'?'estabilidade e reconhecimento por lealdade':'excelência técnica e processos maduros'}.`;
+      safeGetElement('envManagement').textContent = dominant === 'D'?'Gestão por objetivos e resultados. Check-ins focados em métricas e remoção de bloqueios.':dominant === 'I'?'Gestão participativa. Feedback frequente, reconhecimento público e co-criação.':dominant === 'S'?'Gestão de suporte. Comunicação clara, previsibilidade e desenvolvimento contínuo.':'Gestão técnica. Padrões definidos, revisão por pares e autonomia especializada.';
     }
-
     function renderPDI(r, dominant) {
-      const shortTerm = [
-        'Praticar auto-observação diária (5 min de reflexão sobre reações comportamentais)',
-        'Solicitar feedback estruturado mensal sobre impacto em equipe',
-        'Desenvolver competência específica identificada neste relatório'
-      ];
-      const mediumTerm = [
-        'Participar de treinamento em inteligência emocional e comunicação',
-        'Aplicar técnicas de regulação em cenários reais de pressão',
-        'Criar plano de desenvolvimento trimestral com métricas claras'
-      ];
-      const longTerm = [
-        'Assumir papel de modelo comportamental para a equipe',
-        'Desenvolver programa de mentoria para pares',
-        'Integrar inteligência comportamental em processos estratégicos'
-      ];
-      
-      const pdiShort = safeGetElement('pdiShort');
-      if (pdiShort) pdiShort.innerHTML = shortTerm.map(item => `<li class="flex items-start gap-2"><span class="text-emerald-500 mt-1">●</span> ${item}</li>`).join('');
-      
-      const pdiMedium = safeGetElement('pdiMedium');
-      if (pdiMedium) pdiMedium.innerHTML = mediumTerm.map(item => `<li class="flex items-start gap-2"><span class="text-amber-500 mt-1">●</span> ${item}</li>`).join('');
-      
-      const pdiLong = safeGetElement('pdiLong');
-      if (pdiLong) pdiLong.innerHTML = longTerm.map(item => `<li class="flex items-start gap-2"><span class="text-purple-500 mt-1">●</span> ${item}</li>`).join('');
+      const short = ['Praticar auto-observação diária (5 min de reflexão sobre reações comportamentais)','Solicitar feedback estruturado mensal sobre impacto em equipe','Desenvolver competência específica identificada neste relatório'];
+      const medium = ['Participar de treinamento em inteligência emocional e comunicação','Aplicar técnicas de regulação em cenários reais de pressão','Criar plano de desenvolvimento trimestral com métricas claras'];
+      const long = ['Assumir papel de modelo comportamental para a equipe','Desenvolver programa de mentoria para pares','Integrar inteligência comportamental em processos estratégicos'];
+      safeGetElement('pdiShort').innerHTML = short.map(i => `<li class="flex items-start gap-2"><span class="text-emerald-500 mt-1">●</span> ${i}</li>`).join('');
+      safeGetElement('pdiMedium').innerHTML = medium.map(i => `<li class="flex items-start gap-2"><span class="text-amber-500 mt-1">●</span> ${i}</li>`).join('');
+      safeGetElement('pdiLong').innerHTML = long.map(i => `<li class="flex items-start gap-2"><span class="text-purple-500 mt-1">●</span> ${i}</li>`).join('');
     }
-
     function renderConclusion(r, dominant, profile) {
-      const execConclusion = safeGetElement('execConclusion');
-      if (execConclusion) {
-        const hasJob = AppState.jobs && AppState.jobs.length > 0;
+      const exec = safeGetElement('execConclusion');
+      if (exec) {
+        const hasJob = AppState.jobs?.length > 0;
         const jobName = hasJob ? (AppState.jobs[0].name || AppState.jobs[0].title) : null;
         const companyName = AppState.company?.name || AppState.participant?.companyName || 'Independente';
-        
-        execConclusion.textContent = `O participante demonstra um perfil comportamental predominantemente ${profile.title.toLowerCase()}, caracterizado por ${profile.strengths.slice(0, 3).join(', ').toLowerCase()}. ${profile.summary} Este perfil indica potencial para ${dominant === 'D' || dominant === 'I' ? 'liderança, influência e alta performance em ambientes dinâmicos' : 'estabilidade, qualidade e excelência operacional em ambientes estruturados'}. ${hasJob ? `Para o cargo de ${jobName} na empresa ${companyName}, recomenda-se avaliação complementar das competências técnicas e experiência profissional para validação do fit comportamental.` : 'Sem cargo específico vinculado, este perfil pode ser aplicado em diversos contextos organizacionais que valorizem as competências identificadas.'} Recomenda-se acompanhamento contínuo via PDI focado em ${profile.risks[0].toLowerCase()} e ${profile.risks[1].toLowerCase()}, garantindo evolução comportamental e maximização de impacto organizacional.`;
+        exec.textContent = `O participante demonstra um perfil comportamental predominantemente ${profile.title.toLowerCase()}, caracterizado por ${profile.strengths.slice(0,3).join(', ').toLowerCase()}. ${profile.summary} Este perfil indica potencial para ${dominant === 'D'||dominant === 'I'?'liderança, influência e alta performance em ambientes dinâmicos':'estabilidade, qualidade e excelência operacional em ambientes estruturados'}. ${hasJob?`Para o cargo de ${jobName} na empresa ${companyName}, recomenda-se avaliação complementar das competências técnicas e experiência profissional para validação do fit comportamental.`:'Sem cargo específico vinculado, este perfil pode ser aplicado em diversos contextos organizacionais que valorizem as competências identificadas.'} Recomenda-se acompanhamento contínuo via PDI focado em ${profile.risks[0].toLowerCase()} e ${profile.risks[1].toLowerCase()}, garantindo evolução comportamental e maximização de impacto organizacional.`;
       }
     }
-
     function renderExecutiveConclusion(key, percentages, content) {
       const container = safeGetElement('executiveConclusion');
       if (!container) return;
-      
-      const sortedKeys = Object.keys(percentages).sort((a,b) => percentages[b] - percentages[a]);
-      const secondaryKey = sortedKeys[1];
-      const secondaryContent = PREMIUM_CONTENT[secondaryKey];
-      
-      const hasJob = AppState.jobs && AppState.jobs.length > 0;
+      const sorted = Object.keys(percentages).sort((a,b) => percentages[b]-percentages[a]);
+      const secondary = PREMIUM_CONTENT[sorted[1]];
+      const hasJob = AppState.jobs?.length > 0;
       const jobName = hasJob ? (AppState.jobs[0].name || AppState.jobs[0].title) : null;
       const companyName = AppState.company?.name || AppState.participant?.companyName || 'Independente';
-
-      const text = `
+      container.innerHTML = `
         <div class="prose max-w-none">
           <h3 class="text-lg font-bold text-brand-navy mb-4">1. Resumo Executivo e Aderência Profissional</h3>
-          <p class="mb-4">O participante exibe um perfil comportamental predominantemente <strong class="text-brand-blue">${content.title}</strong> (${Math.round(percentages[key])}%), com influência secundária de <strong>${secondaryContent ? secondaryContent.title : 'outro perfil'}</strong>.</p>
-          <p class="mb-6">A combinação destes traços sugere um potencial significativo para <strong>${key === 'D' || key === 'I' ? 'liderança, influência e gestão de pessoas' : 'gestão de processos, qualidade e operações técnicas'}</strong>.</p>
-
+          <p class="mb-4">O participante exibe um perfil comportamental predominantemente <strong class="text-brand-blue">${content.title}</strong> (${Math.round(percentages[key])}%), com influência secundária de <strong>${secondary?.title||'outro perfil'}</strong>.</p>
+          <p class="mb-6">A combinação destes traços sugere um potencial significativo para <strong>${key === 'D'||key === 'I'?'liderança, influência e gestão de pessoas':'gestão de processos, qualidade e operações técnicas'}</strong>.</p>
           <h3 class="text-lg font-bold text-brand-navy mb-4">2. Potencial de Liderança e Performance</h3>
           <p class="mb-4">Em termos de liderança, o participante tende a adotar um estilo <strong>${content.leadership.toLowerCase()}</strong>.</p>
           <p class="mb-6">Sob pressão: <em>${content.pressure.toLowerCase()}</em>. Tomada de decisão: <em>${content.decision.toLowerCase()}</em>.</p>
-
           <h3 class="text-lg font-bold text-brand-navy mb-4">3. Riscos Comportamentais e Mitigação</h3>
-          <ul class="list-disc pl-6 mb-6 text-gray-700 space-y-2">
-            ${content.risks.map(r => `<li>${r}</li>`).join('')}
-          </ul>
-
+          <ul class="list-disc pl-6 mb-6 text-gray-700 space-y-2">${content.risks.map(r => `<li>${r}</li>`).join('')}</ul>
           <h3 class="text-lg font-bold text-brand-navy mb-4">4. Recomendações de Desenvolvimento (PDI)</h3>
           <p class="mb-2 font-semibold text-gray-800">Curto Prazo (0-3 meses):</p>
-          <ul class="list-disc pl-6 mb-4 text-gray-700 space-y-1">
-            <li>Praticar auto-observação diária para identificar gatilhos de comportamento.</li>
-            <li>Solicitar feedback estruturado mensal sobre impacto na equipe.</li>
-            <li>Desenvolver competência específica identificada neste relatório.</li>
-          </ul>
-          
-          ${hasJob 
-            ? `<div class="bg-brand-blue/5 p-4 rounded-lg border border-brand-blue/20 mt-6">
-                <p class="text-sm text-brand-blue-900"><strong>Nota:</strong> Análise contextualizada para o cargo de <strong>${jobName}</strong> na empresa <strong>${companyName}</strong>.</p>
-              </div>`
-            : `<div class="bg-brand-purple/5 p-4 rounded-lg border border-brand-purple/20 mt-6">
-                <p class="text-sm text-brand-purple-900"><strong>Nota:</strong> Perfil geral. Para fit com cargo específico, vincule o participante a uma vaga.</p>
-              </div>`
-          }
+          <ul class="list-disc pl-6 mb-4 text-gray-700 space-y-1"><li>Praticar auto-observação diária para identificar gatilhos de comportamento.</li><li>Solicitar feedback estruturado mensal sobre impacto na equipe.</li><li>Desenvolver competência específica identificada neste relatório.</li></ul>
+          ${hasJob ? `<div class="bg-brand-blue/5 p-4 rounded-lg border border-brand-blue/20 mt-6"><p class="text-sm text-brand-blue-900"><strong>Nota:</strong> Análise contextualizada para o cargo de <strong>${jobName}</strong> na empresa <strong>${companyName}</strong>.</p></div>` : `<div class="bg-brand-purple/5 p-4 rounded-lg border border-brand-purple/20 mt-6"><p class="text-sm text-brand-purple-900"><strong>Nota:</strong> Perfil geral. Para fit com cargo específico, vincule o participante a uma vaga.</p></div>`}
         </div>
       `;
-      
-      container.innerHTML = text;
     }
-
     function renderFinalQuote() {
-      const quotes = [
-        "O autoconhecimento transforma potencial em performance.",
-        "Compreender comportamento é acelerar resultados.",
-        "Pessoas alinhadas ao ambiente certo entregam performance extraordinária.",
-        "Liderança não é cargo, é comportamento. E comportamento se desenvolve.",
-        "A maturidade comportamental é o maior diferencial competitivo do século XXI."
-      ];
-      const finalQuote = safeGetElement('finalQuote');
-      if (finalQuote) finalQuote.textContent = quotes[Math.floor(Math.random() * quotes.length)];
+      const quotes = ["O autoconhecimento transforma potencial em performance.","Compreender comportamento é acelerar resultados.","Pessoas alinhadas ao ambiente certo entregam performance extraordinária.","Liderança não é cargo, é comportamento. E comportamento se desenvolve.","A maturidade comportamental é o maior diferencial competitivo do século XXI."];
+      safeGetElement('finalQuote').textContent = quotes[Math.floor(Math.random()*quotes.length)];
     }
 
     // ============================================
@@ -1936,67 +1845,47 @@
     function showToast(message, type = 'success') {
       const toast = safeGetElement('toast');
       if (!toast) return;
-      const toastIcon = safeGetElement('toastIcon');
-      const toastMessage = safeGetElement('toastMessage');
-      if (toastIcon) toastIcon.textContent = type === 'success' ? '✅' : '⚠️';
-      if (toastMessage) toastMessage.textContent = message;
+      safeGetElement('toastIcon').textContent = type === 'success' ? '✅' : '⚠️';
+      safeGetElement('toastMessage').textContent = message;
       toast.classList.remove('hidden');
       setTimeout(() => toast.classList.add('show'), 10);
-      setTimeout(() => { 
-        toast.classList.remove('show'); 
-        setTimeout(() => toast.classList.add('hidden'), 300); 
-      }, 4000);
+      setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.classList.add('hidden'), 300); }, 4000);
     }
 
     function openSimpleReportModal() {
       const modal = document.getElementById('simpleReportModal');
-      if (modal) {
-        modal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-      }
+      if (modal) { modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
     }
-
     function closeModalAndLogout() {
       const modal = document.getElementById('simpleReportModal');
-      if (modal) {
-        modal.classList.add('hidden');
-        document.body.style.overflow = '';
-      }
+      if (modal) { modal.classList.add('hidden'); document.body.style.overflow = ''; }
       performLogout();
     }
-
     async function performLogout() {
       console.log('🔐 Realizando logoff...');
       if (window.VigorreDB && VigorreDB.supabase) {
         const token = sessionStorage.getItem('vigorre_session_token');
-        if (token) {
-          try {
-            await VigorreDB.supabase.from('sessions').delete().eq('token', token);
-          } catch (e) { console.warn('⚠️ Erro ao remover sessão:', e); }
-        }
+        if (token) { try { await VigorreDB.supabase.from('sessions').delete().eq('token', token); } catch(e) { console.warn('⚠️',e); } }
       }
       localStorage.removeItem('vigorre_current_user');
       sessionStorage.clear();
       window.location.href = 'login.html?loggedout=1&ts=' + Date.now();
     }
 
-    // Debug function
     window.debugReport = function() {
-      console.log('=== DEBUG RELATÓRIO ===');
+      console.log('=== DEBUG ===');
       console.log('Participant:', AppState.participant);
       console.log('Company:', AppState.company);
       console.log('Jobs:', AppState.jobs);
-      console.log('======================');
     };
 
-    // Error handling
     window.addEventListener('error', function(e) {
-      console.error('❌ Erro no relatório DISC:', e);
+      console.error('❌ Erro:', e);
       showToast('⚠️ Ocorreu um erro. Recarregue a página.', 'error');
       return true;
     });
 
-    console.log('🔍 Laudo DISC - Estado:', {
+    console.log('🔍 Estado inicial:', {
       disc: !!localStorage.getItem('vigorre_last_disc_result'),
       participant: AppState.participant?.name || 'não carregado',
       company: AppState.company?.name || AppState.participant?.companyName || 'não carregada',
