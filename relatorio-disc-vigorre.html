@@ -214,7 +214,7 @@
     @media print {
       @page {
         size: A4 portrait;
-        margin: 12mm 15mm; /* Margens reduzidas para evitar corte */
+        margin: 10mm 15mm; /* Margens ainda mais reduzidas */
       }
       
       body { 
@@ -234,7 +234,7 @@
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 12px 20px !important;
+        padding: 10px 20px !important; /* Padding reduzido */
         position: fixed;
         top: 0;
         left: 0;
@@ -243,7 +243,7 @@
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
         box-shadow: 0 4px 20px rgba(0,0,0,0.3) !important;
-        height: 60px;
+        height: 55px; /* Altura reduzida */
       }
       
       .print-header .print-header-content {
@@ -262,8 +262,8 @@
       }
       
       .print-header .print-logo-box {
-        width: 40px;
-        height: 40px;
+        width: 35px; /* Reduzido */
+        height: 35px; /* Reduzido */
         background: #ffffff !important;
         color: #0A1628;
         border-radius: 8px;
@@ -271,12 +271,12 @@
         align-items: center;
         justify-content: center;
         font-weight: 900;
-        font-size: 20px;
+        font-size: 18px; /* Reduzido */
         border: 2px solid rgba(255,255,255,0.3);
       }
       
       .print-header h1 {
-        font-size: 16pt;
+        font-size: 14pt; /* Reduzido */
         font-weight: 800;
         margin: 0;
         color: white !important;
@@ -284,7 +284,7 @@
       }
       
       .print-header p {
-        font-size: 9pt;
+        font-size: 8pt; /* Reduzido */
         margin: 0;
         opacity: 0.9;
         color: rgba(255,255,255,0.9) !important;
@@ -292,12 +292,12 @@
       
       .print-header .print-method {
         text-align: right;
-        font-size: 9pt;
+        font-size: 8pt; /* Reduzido */
         color: rgba(255,255,255,0.9) !important;
       }
       
       .print-header .print-method strong {
-        font-size: 14pt;
+        font-size: 12pt; /* Reduzido */
         letter-spacing: 2px;
         display: block;
         color: white !important;
@@ -305,8 +305,8 @@
       
       /* Conteúdo principal - MARGEM CORRIGIDA */
       main {
-        margin-top: 85px !important;
-        margin-bottom: 85px !important;
+        margin-top: 75px !important; /* Reduzido de 85px */
+        margin-bottom: 75px !important; /* Reduzido de 85px */
         padding: 0 !important;
       }
       
@@ -327,7 +327,7 @@
       
       /* Gráficos na impressão */
       .chart-container {
-        height: 280px !important;
+        height: 260px !important; /* Reduzido de 280px */
         max-width: 100% !important;
         page-break-inside: avoid;
         break-inside: avoid;
@@ -355,7 +355,7 @@
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 12px 20px !important;
+        padding: 10px 20px !important; /* Reduzido */
         position: fixed;
         bottom: 0;
         left: 0;
@@ -363,14 +363,14 @@
         z-index: 9999;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
-        height: 60px;
+        height: 55px; /* Altura reduzida */
       }
       
       .print-footer .print-footer-content {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: 9pt;
+        font-size: 8pt; /* Reduzido */
         width: 100%;
         max-width: 210mm;
         margin: 0 auto;
@@ -389,8 +389,8 @@
       }
       
       .print-footer .footer-logo {
-        width: 30px;
-        height: 30px;
+        width: 28px; /* Reduzido */
+        height: 28px; /* Reduzido */
         background: #ffffff !important;
         color: #0A1628;
         border-radius: 6px;
@@ -398,11 +398,11 @@
         align-items: center;
         justify-content: center;
         font-weight: 900;
-        font-size: 16px;
+        font-size: 14px; /* Reduzido */
       }
       
       .print-footer .footer-text h4 {
-        font-size: 11pt;
+        font-size: 10pt; /* Reduzido */
         font-weight: 700;
         margin: 0;
         color: white !important;
@@ -410,7 +410,7 @@
       }
       
       .print-footer .footer-text p {
-        font-size: 8pt;
+        font-size: 7pt; /* Reduzido */
         margin: 0;
         opacity: 0.9;
         color: rgba(255,255,255,0.9) !important;
@@ -1661,7 +1661,7 @@
 
     function renderMotivators(r, dominant) {
       const profile = PREMIUM_CONTENT[dominant];
-      const icons = ['🎯', '💡', '🤝', '📊', '🏆', '🔄', '🛡️', '🌱'];
+      const icons = ['🎯', '', '🤝', '📊', '🏆', '🔄', '🛡️', '🌱'];
       const motivatorsGrid = safeGetElement('motivatorsGrid');
       if (motivatorsGrid) {
         motivatorsGrid.innerHTML = profile.strengths.slice(0, 4).map((mot, i) => 
