@@ -214,14 +214,14 @@
     @media print {
       @page {
         size: A4 portrait;
-        margin: 8mm 12mm; /* Margens MÍNIMAS para evitar corte */
+        margin: 5mm 10mm; /* Margens MÍNIMAS para evitar corte */
       }
       
       body { 
         background: #ffffff !important;
         color: #000000 !important;
-        font-size: 9.5pt; /* Fonte ligeiramente menor */
-        line-height: 1.5;
+        font-size: 9pt; /* Fonte ligeiramente menor */
+        line-height: 1.4;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
@@ -234,7 +234,7 @@
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 8px 15px !important; /* Padding mínimo */
+        padding: 6px 12px !important; /* Padding mínimo */
         position: fixed;
         top: 0;
         left: 0;
@@ -243,7 +243,7 @@
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
         box-shadow: 0 4px 20px rgba(0,0,0,0.3) !important;
-        height: 50px; /* Altura mínima */
+        height: 45px; /* Altura mínima */
       }
       
       .print-header .print-header-content {
@@ -258,12 +258,12 @@
       .print-header .print-logo {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
       }
       
       .print-header .print-logo-box {
-        width: 32px;
-        height: 32px;
+        width: 28px;
+        height: 28px;
         background: #ffffff !important;
         color: #0A1628;
         border-radius: 6px;
@@ -271,12 +271,12 @@
         align-items: center;
         justify-content: center;
         font-weight: 900;
-        font-size: 16px;
+        font-size: 14px;
         border: 2px solid rgba(255,255,255,0.3);
       }
       
       .print-header h1 {
-        font-size: 13pt;
+        font-size: 11pt;
         font-weight: 800;
         margin: 0;
         color: white !important;
@@ -284,7 +284,7 @@
       }
       
       .print-header p {
-        font-size: 7.5pt;
+        font-size: 7pt;
         margin: 0;
         opacity: 0.9;
         color: rgba(255,255,255,0.9) !important;
@@ -292,12 +292,12 @@
       
       .print-header .print-method {
         text-align: right;
-        font-size: 7.5pt;
+        font-size: 7pt;
         color: rgba(255,255,255,0.9) !important;
       }
       
       .print-header .print-method strong {
-        font-size: 11pt;
+        font-size: 10pt;
         letter-spacing: 1px;
         display: block;
         color: white !important;
@@ -305,8 +305,8 @@
       
       /* Conteúdo principal - MARGEM MÍNIMA */
       main {
-        margin-top: 65px !important; /* Mínimo necessário */
-        margin-bottom: 65px !important; /* Mínimo necessário */
+        margin-top: 55px !important; /* Mínimo necessário */
+        margin-bottom: 55px !important; /* Mínimo necessário */
         padding: 0 !important;
       }
       
@@ -317,22 +317,26 @@
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
         break-inside: avoid !important;
         page-break-inside: avoid !important;
-        margin-bottom: 15px !important; /* Reduzido */
+        margin-bottom: 12px !important; /* Reduzido */
       }
       
       .vigorre-card .card-header {
         background: #F8FAFC !important;
         border-bottom: 2px solid #E2E8F0 !important;
-        padding: 12px 20px !important; /* Reduzido */
+        padding: 10px 15px !important; /* Reduzido */
+      }
+      
+      .vigorre-card .card-header h2 {
+        font-size: 14px !important; /* Reduzido */
       }
       
       .vigorre-card .card-body {
-        padding: 20px !important; /* Reduzido */
+        padding: 15px !important; /* Reduzido */
       }
       
       /* Gráficos na impressão */
       .chart-container {
-        height: 240px !important; /* Reduzido */
+        height: 220px !important; /* Reduzido */
         max-width: 100% !important;
         page-break-inside: avoid;
         break-inside: avoid;
@@ -360,7 +364,7 @@
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 8px 15px !important; /* Padding mínimo */
+        padding: 6px 12px !important; /* Padding mínimo */
         position: fixed;
         bottom: 0;
         left: 0;
@@ -368,14 +372,14 @@
         z-index: 9999;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
-        height: 50px; /* Altura mínima */
+        height: 45px; /* Altura mínima */
       }
       
       .print-footer .print-footer-content {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: 7.5pt; /* Reduzido */
+        font-size: 7pt; /* Reduzido */
         width: 100%;
         max-width: 210mm;
         margin: 0 auto;
@@ -390,12 +394,12 @@
       .print-footer .footer-logo-box {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
       }
       
       .print-footer .footer-logo {
-        width: 26px;
-        height: 26px;
+        width: 24px;
+        height: 24px;
         background: #ffffff !important;
         color: #0A1628;
         border-radius: 6px;
@@ -403,11 +407,11 @@
         align-items: center;
         justify-content: center;
         font-weight: 900;
-        font-size: 13px;
+        font-size: 12px;
       }
       
       .print-footer .footer-text h4 {
-        font-size: 9.5pt;
+        font-size: 9pt;
         font-weight: 700;
         margin: 0;
         color: white !important;
@@ -415,7 +419,7 @@
       }
       
       .print-footer .footer-text p {
-        font-size: 7pt;
+        font-size: 6.5pt;
         margin: 0;
         opacity: 0.9;
         color: rgba(255,255,255,0.9) !important;
@@ -1096,7 +1100,7 @@
                   .maybeSingle();
                 if (company) {
                   AppState.company = company;
-                  console.log('✅ Empresa carregada do Supabase:', company.name);
+                  console.log('✅ Empresa carregada do Supabase:', company);
                 }
               }
               
@@ -1122,7 +1126,7 @@
           return;
         }
         
-        console.log('✅ Participante encontrado no localStorage:', AppState.participant.name);
+        console.log('✅ Participante encontrado no localStorage:', AppState.participant);
         
         const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
         if (AppState.participant.companyId) {
@@ -1282,6 +1286,7 @@
                        AppState.company.nome ||
                        'Independente';
           console.log('✓ Empresa carregada:', companyName);
+          console.log('📋 Dados completos da empresa:', AppState.company);
         } else if (AppState.participant && AppState.participant.companyName) {
           companyName = AppState.participant.companyName;
           console.log('✓ Empresa do participante:', companyName);
@@ -1291,6 +1296,8 @@
                        AppState.participant.company.company_name || 
                        'Independente';
           console.log('✓ Empresa do participant.company:', companyName);
+        } else {
+          console.warn('⚠️ Empresa não encontrada em nenhum campo');
         }
         
         coverCompany.textContent = companyName;
