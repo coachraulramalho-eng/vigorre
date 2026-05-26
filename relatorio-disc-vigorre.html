@@ -210,12 +210,12 @@
     }
 
     /* ============================================
-       PRINT OPTIMIZATION - LAYOUT INTELIGENTE PREMIUM INTERNACIONAL
+       PRINT OPTIMIZATION - CORREÇÃO DEFINITIVA SEM SOBREPOSIÇÃO
        ============================================ */
     @media print {
       @page {
         size: A4 portrait;
-        margin: 15mm 20mm; /* Margens laterais aumentadas - padrão internacional */
+        margin: 12mm 15mm;
       }
       
       body { 
@@ -225,25 +225,22 @@
         line-height: 1.5;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        width: 100% !important;
       }
       
       .no-print { display: none !important; }
       
-      /* Header - POSIÇÃO FIXA COM ALTURA CALCULADA */
+      /* Header - SEM SOBREPOSIÇÃO */
       .print-header {
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 10px 20px !important;
+        padding: 8px 15px !important;
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         z-index: 9999;
-        height: 60px;
+        height: 55px;
         box-sizing: border-box;
         box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
       }
@@ -253,19 +250,19 @@
         justify-content: space-between;
         align-items: center;
         width: 100%;
-        max-width: 170mm; /* Ajustado para margens de 20mm */
+        max-width: 180mm;
         margin: 0 auto;
       }
       
       .print-header .print-logo {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
       }
       
       .print-header .print-logo-box {
-        width: 35px;
-        height: 35px;
+        width: 32px;
+        height: 32px;
         background: #ffffff !important;
         color: #0A1628;
         border-radius: 6px;
@@ -273,12 +270,12 @@
         align-items: center;
         justify-content: center;
         font-weight: 900;
-        font-size: 16px;
+        font-size: 14px;
         border: 2px solid rgba(255,255,255,0.3);
       }
       
       .print-header h1 {
-        font-size: 12pt;
+        font-size: 11pt;
         font-weight: 800;
         margin: 0;
         color: white !important;
@@ -299,68 +296,64 @@
       }
       
       .print-header .print-method strong {
-        font-size: 10.5pt;
+        font-size: 10pt;
         letter-spacing: 1px;
         display: block;
         color: white !important;
       }
       
-      /* Conteúdo principal - LEITURA INTELIGENTE DE MARGEM */
+      /* Conteúdo principal - ESPAÇO ADEQUADO */
       main {
-        margin-top: 70px !important; /* Altura do header + 10px */
-        margin-bottom: 70px !important; /* Altura do footer + 10px */
+        margin-top: 65px !important;
+        margin-bottom: 65px !important;
         padding: 0 !important;
-        width: 170mm !important; /* Largura útil A4 com margens */
+        width: 100% !important;
+        max-width: 180mm;
         margin-left: auto !important;
         margin-right: auto !important;
         display: block !important;
       }
       
-      /* Cards - LAYOUT INTELIGENTE SEM SOBREPOSIÇÃO */
+      /* Cards - SEM QUEBRA */
       .vigorre-card {
         break-inside: avoid !important;
         page-break-inside: avoid !important;
-        margin-bottom: 15px !important;
+        margin-bottom: 12px !important;
         width: 100% !important;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
       }
       
       .vigorre-card .card-header {
-        padding: 12px 18px !important;
+        padding: 10px 15px !important;
         page-break-after: avoid !important;
       }
       
       .vigorre-card .card-header h2 {
-        font-size: 12.5pt !important;
-        font-weight: 700 !important;
+        font-size: 12pt !important;
       }
       
       .vigorre-card .card-body {
-        padding: 18px !important;
+        padding: 15px !important;
       }
       
-      /* GRID SYSTEM INTELIGENTE PARA GRÁFICOS - LADO A LADO */
+      /* Grid - LADO A LADO SEM SOBREPOSIÇÃO */
       .grid.md\:grid-cols-2 {
         display: grid !important;
         grid-template-columns: 1fr 1fr !important;
-        gap: 15px !important;
-        margin-bottom: 15px !important;
-        width: 100% !important;
+        gap: 12px !important;
+        margin-bottom: 12px !important;
       }
       
       .grid.md\:grid-cols-2 > div {
         min-width: 0 !important;
-        width: 100% !important;
         break-inside: avoid !important;
       }
       
-      /* Gráficos com espaço adequado e SEM SOBREPOSIÇÃO */
+      /* Gráficos - ALTURA CONTROLADA */
       .chart-container {
-        height: 220px !important;
-        margin-bottom: 12px !important;
+        height: 200px !important;
+        margin-bottom: 10px !important;
         position: relative !important;
         width: 100% !important;
-        max-width: 100% !important;
       }
       
       canvas {
@@ -368,19 +361,17 @@
         height: auto !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
-        display: block !important;
       }
       
-      /* Textos abaixo dos gráficos - ESPAÇAMENTO INTELIGENTE */
+      /* Textos abaixo dos gráficos - ESPAÇAMENTO */
       .chart-container + div,
       .chart-container + .bg-slate-50,
       .chart-container + h3 {
-        margin-top: 12px !important;
+        margin-top: 10px !important;
         clear: both !important;
-        page-break-before: avoid !important;
       }
       
-      /* Interpretação dos fatores - LAYOUT VERTICAL PARA EVITAR SOBREPOSIÇÃO */
+      /* Interpretação - VERTICAL */
       #discInterpretation {
         display: flex !important;
         flex-direction: column !important;
@@ -390,15 +381,13 @@
       #discInterpretation > div {
         margin-bottom: 8px !important;
         page-break-inside: avoid !important;
-        break-inside: avoid !important;
       }
       
-      /* Grid de 3 colunas - barras de progresso */
+      /* Grid 3 colunas */
       .grid.md\:grid-cols-3 {
         display: grid !important;
         grid-template-columns: repeat(3, 1fr) !important;
-        gap: 12px !important;
-        margin-top: 12px !important;
+        gap: 10px !important;
       }
       
       .grid.md\:grid-cols-3 > div {
@@ -406,18 +395,18 @@
         break-inside: avoid !important;
       }
       
-      /* Rodapé - POSIÇÃO FIXA */
+      /* Rodapé - SEM SOBREPOSIÇÃO */
       .print-footer {
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 10px 20px !important;
+        padding: 8px 15px !important;
         position: fixed;
         bottom: 0;
         left: 0;
         right: 0;
         z-index: 9999;
-        height: 60px;
+        height: 55px;
         box-sizing: border-box;
         box-shadow: 0 -2px 8px rgba(0,0,0,0.1) !important;
       }
@@ -425,7 +414,7 @@
       .print-footer .print-footer-content {
         font-size: 7.5pt;
         width: 100%;
-        max-width: 170mm;
+        max-width: 180mm;
         margin: 0 auto;
         color: white !important;
         display: flex !important;
@@ -436,12 +425,12 @@
       .print-footer .footer-logo-box {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
       }
       
       .print-footer .footer-logo {
-        width: 30px;
-        height: 30px;
+        width: 28px;
+        height: 28px;
         background: #ffffff !important;
         color: #0A1628;
         border-radius: 6px;
@@ -449,11 +438,11 @@
         align-items: center;
         justify-content: center;
         font-weight: 900;
-        font-size: 13px;
+        font-size: 12px;
       }
       
       .print-footer .footer-text h4 {
-        font-size: 9.5pt;
+        font-size: 9pt;
         font-weight: 700;
         margin: 0;
         color: white !important;
@@ -481,24 +470,13 @@
         z-index: 0;
       }
       
-      /* Evitar quebra de página no meio de seções importantes */
+      /* Evitar quebras */
       section, .vigorre-card {
         page-break-inside: avoid !important;
-        break-inside: avoid !important;
       }
       
-      /* Títulos sempre juntos com conteúdo */
       h2, h3, h4 {
         page-break-after: avoid !important;
-      }
-      
-      /* Listas */
-      ul, ol {
-        page-break-inside: avoid !important;
-      }
-      
-      li {
-        page-break-inside: avoid !important;
       }
     }
     
@@ -1317,145 +1295,66 @@
     // ============================================
     function updateParticipantInfo() {
       console.log('📝 Atualizando informações do participante...');
-      console.log('📋 Dados brutos recebidos:', {
+      console.log('📋 Dados brutos:', {
         participant: AppState.participant,
         company: AppState.company,
         jobs: AppState.jobs
       });
       
-      // Nome do participante - BUSCA INTELIGENTE EM TODOS OS CAMPOS
+      // Nome do participante
       const coverName = safeGetElement('coverName');
       if (coverName) {
         let participantName = 'Participante';
         
         if (AppState.participant) {
-          // Verificar TODOS os campos possíveis de nome
           participantName = AppState.participant.name || 
                            AppState.participant.nome || 
                            AppState.participant.fullName || 
                            AppState.participant.full_name ||
-                           AppState.participant.nome_completo ||
-                           AppState.participant.participant_name ||
                            'Participante';
-          
-          console.log('✓ Nome extraído:', participantName);
         }
         
         coverName.textContent = participantName;
+        console.log('✓ Nome:', participantName);
       }
       
-      // Empresa - BUSCA INTELIGENTE EM CASCATA COMPLETA
+      // Empresa - CORREÇÃO DEFINITIVA
       const coverCompany = safeGetElement('coverCompany');
       if (coverCompany) {
         let companyName = 'Independente';
-        let foundSource = 'nenhuma';
         
-        console.log('🔍 Iniciando busca inteligente da empresa...');
-        console.log('AppState.company:', AppState.company);
-        console.log('AppState.participant:', AppState.participant);
-        
-        // 1. Verificar AppState.company primeiro (Supabase ou localStorage)
-        if (AppState.company && typeof AppState.company === 'object' && Object.keys(AppState.company).length > 0) {
+        if (AppState.company && typeof AppState.company === 'object') {
           companyName = AppState.company.name || 
                        AppState.company.company_name || 
                        AppState.company.razao_social || 
                        AppState.company.fantasia || 
                        AppState.company.nome ||
-                       AppState.company.business_name ||
-                       AppState.company.corporate_name ||
                        'Independente';
-          if (companyName !== 'Independente') {
-            foundSource = 'AppState.company';
-            console.log(`✓ Empresa encontrada em ${foundSource}:`, companyName);
-          }
-        }
-        
-        // 2. Se não encontrou, buscar no participant.company_id ou companyId
-        if (companyName === 'Independente' && AppState.participant) {
-          const companyId = AppState.participant.company_id || 
-                           AppState.participant.companyId ||
-                           AppState.participant.company;
-          
-          console.log('Company ID encontrado:', companyId);
-          
-          if (companyId) {
-            // Buscar companies no localStorage
-            const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
-            console.log('Companies no localStorage:', companies);
-            
-            const foundCompany = companies.find(c => c.id === companyId);
-            
-            if (foundCompany) {
-              companyName = foundCompany.name || 
-                           foundCompany.company_name || 
-                           foundCompany.razao_social || 
-                           foundCompany.fantasia ||
-                           foundCompany.nome ||
-                           'Independente';
-              if (companyName !== 'Independente') {
-                foundSource = 'localStorage (companyId)';
-                console.log(`✓ Empresa encontrada em ${foundSource}:`, companyName);
-              }
-            }
-          }
-        }
-        
-        // 3. Tentar campos diretos no participant
-        if (companyName === 'Independente' && AppState.participant) {
-          companyName = AppState.participant.companyName || 
-                       AppState.participant.company_name ||
-                       AppState.participant.empresa ||
-                       AppState.participant.organization ||
-                       AppState.participant.organization_name ||
-                       'Independente';
-          if (companyName !== 'Independente') {
-            foundSource = 'participant fields';
-            console.log(`✓ Empresa encontrada em ${foundSource}:`, companyName);
-          }
+          console.log('✓ Empresa encontrada:', companyName);
+        } else if (AppState.participant && AppState.participant.companyName) {
+          companyName = AppState.participant.companyName;
+          console.log('✓ Empresa do participant:', companyName);
         }
         
         coverCompany.textContent = companyName;
-        console.log(`🏢 Empresa final: ${companyName} (fonte: ${foundSource})`);
       }
       
-      // Vaga/Cargo - BUSCA INTELIGENTE
+      // Vaga/Cargo
       const coverJob = safeGetElement('coverJob');
       if (coverJob) {
         let jobName = 'Não vinculada';
         
-        // Verificar se existe jobs no AppState
         if (AppState.jobs && AppState.jobs.length > 0) {
           const job = AppState.jobs[0];
-          console.log('📋 Dados da vaga:', job);
-          
           jobName = job.name || 
                    job.title || 
                    job.cargo || 
                    job.funcao || 
-                   job.job_title ||
-                   job.position ||
-                   job.funcao_cargo ||
-                   job.job_name ||
-                   job.role ||
                    'Vaga vinculada';
-                   
           console.log('✓ Vaga encontrada:', jobName);
-        } 
-        // Verificar no participant
-        else if (AppState.participant) {
-          jobName = AppState.participant.jobName || 
-                   AppState.participant.job_name ||
-                   AppState.participant.cargo ||
-                   AppState.participant.funcao ||
-                   AppState.participant.position ||
-                   AppState.participant.jobTitle ||
-                   AppState.participant.role ||
-                   AppState.participant.vaga ||
-                   'Não vinculada';
-                   
-          if (jobName !== 'Não vinculada') {
-            console.log('✓ Vaga encontrada no participant:', jobName);
-          }
+        } else if (AppState.participant && AppState.participant.jobName) {
+          jobName = AppState.participant.jobName;
+          console.log('✓ Vaga do participant:', jobName);
         }
         
         coverJob.textContent = jobName;
@@ -1468,12 +1367,6 @@
         const random = Math.floor(Math.random() * 9000 + 1000);
         coverCode.textContent = `VIG-DISC-${year}-${random}`;
       }
-      
-      console.log('✅ Informações atualizadas:', {
-        nome: coverName?.textContent,
-        empresa: coverCompany?.textContent,
-        vaga: coverJob?.textContent
-      });
     }
 
     // ============================================
@@ -1834,7 +1727,7 @@
 
     function renderMotivators(r, dominant) {
       const profile = PREMIUM_CONTENT[dominant];
-      const icons = ['🎯', '', '🤝', '📊', '🏆', '🔄', '🛡️', '🌱'];
+      const icons = ['🎯', '', '🤝', '📊', '', '🔄', '🛡️', '🌱'];
       const motivatorsGrid = safeGetElement('motivatorsGrid');
       if (motivatorsGrid) {
         motivatorsGrid.innerHTML = profile.strengths.slice(0, 4).map((mot, i) => 
