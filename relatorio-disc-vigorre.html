@@ -209,41 +209,40 @@
     }
 
     /* ============================================
-       PRINT OPTIMIZATION - MARGENS CORRIGIDAS
+       PRINT OPTIMIZATION - MARGENS CORRIGIDAS DEFINITIVAMENTE
        ============================================ */
     @media print {
       @page {
         size: A4 portrait;
-        margin: 5mm 10mm; /* Margens MÍNIMAS para evitar corte */
+        margin: 0; /* MARGEM ZERO - controle total pelo conteúdo */
       }
       
       body { 
         background: #ffffff !important;
         color: #000000 !important;
-        font-size: 9pt; /* Fonte ligeiramente menor */
+        font-size: 9pt;
         line-height: 1.4;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
+        margin: 0 !important;
+        padding: 0 !important;
       }
       
-      /* Esconder elementos não impressos */
       .no-print { display: none !important; }
       
-      /* Header de impressão - MAIS COMPACTO */
+      /* Header - POSIÇÃO FIXA */
       .print-header {
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 6px 12px !important; /* Padding mínimo */
+        padding: 8px 15px !important;
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         z-index: 9999;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.3) !important;
-        height: 45px; /* Altura mínima */
+        height: 50px;
+        box-sizing: border-box;
       }
       
       .print-header .print-header-content {
@@ -303,43 +302,35 @@
         color: white !important;
       }
       
-      /* Conteúdo principal - MARGEM MÍNIMA */
+      /* Conteúdo principal - MARGEM CONTROLADA */
       main {
-        margin-top: 55px !important; /* Mínimo necessário */
-        margin-bottom: 55px !important; /* Mínimo necessário */
-        padding: 0 !important;
+        margin-top: 58px !important;
+        margin-bottom: 58px !important;
+        padding: 8px 12px !important;
       }
       
-      /* Cards na impressão */
+      /* Cards compactos */
       .vigorre-card {
-        background: #ffffff !important;
-        border: 1px solid #e2e8f0 !important;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
         break-inside: avoid !important;
         page-break-inside: avoid !important;
-        margin-bottom: 12px !important; /* Reduzido */
+        margin-bottom: 10px !important;
       }
       
       .vigorre-card .card-header {
-        background: #F8FAFC !important;
-        border-bottom: 2px solid #E2E8F0 !important;
-        padding: 10px 15px !important; /* Reduzido */
+        padding: 8px 12px !important;
       }
       
       .vigorre-card .card-header h2 {
-        font-size: 14px !important; /* Reduzido */
+        font-size: 13px !important;
       }
       
       .vigorre-card .card-body {
-        padding: 15px !important; /* Reduzido */
+        padding: 12px !important;
       }
       
-      /* Gráficos na impressão */
+      /* Gráficos menores */
       .chart-container {
-        height: 220px !important; /* Reduzido */
-        max-width: 100% !important;
-        page-break-inside: avoid;
-        break-inside: avoid;
+        height: 200px !important;
       }
       
       canvas {
@@ -349,48 +340,29 @@
         print-color-adjust: exact !important;
       }
       
-      /* Textos na impressão */
-      h1, h2, h3, h4 {
-        color: #0F172A !important;
-        page-break-after: avoid;
-      }
-      
-      p, li, td { 
-        color: #334155 !important; 
-      }
-      
-      /* Rodapé de impressão - MAIS COMPACTO */
+      /* Rodapé - POSIÇÃO FIXA */
       .print-footer {
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 6px 12px !important; /* Padding mínimo */
+        padding: 8px 15px !important;
         position: fixed;
         bottom: 0;
         left: 0;
         right: 0;
         z-index: 9999;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-        height: 45px; /* Altura mínima */
+        height: 50px;
+        box-sizing: border-box;
       }
       
       .print-footer .print-footer-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 7pt; /* Reduzido */
+        font-size: 7pt;
         width: 100%;
         max-width: 210mm;
         margin: 0 auto;
         color: white !important;
       }
       
-      .print-footer .print-footer-content div {
-        color: rgba(255,255,255,0.9) !important;
-      }
-      
-      /* Logo no rodapé */
       .print-footer .footer-logo-box {
         display: flex;
         align-items: center;
@@ -1255,68 +1227,122 @@
     // ============================================
     function updateParticipantInfo() {
       console.log('📝 Atualizando informações do participante...');
-      console.log('Dados disponíveis:', {
+      console.log('📋 Dados completos:', {
         participant: AppState.participant,
         company: AppState.company,
         jobs: AppState.jobs
       });
       
-      // Nome do participante
+      // Nome do participante - CORREÇÃO COMPLETA
       const coverName = safeGetElement('coverName');
       if (coverName) {
-        if (AppState.participant && AppState.participant.name) {
-          coverName.textContent = AppState.participant.name;
-          console.log('✓ Nome:', AppState.participant.name);
-        } else {
-          coverName.textContent = 'Participante';
+        let participantName = 'Participante';
+        
+        if (AppState.participant) {
+          // Tentar TODOS os campos possíveis
+          participantName = AppState.participant.name || 
+                           AppState.participant.nome || 
+                           AppState.participant.fullName || 
+                           AppState.participant.full_name ||
+                           'Participante';
+          
+          console.log('✓ Nome extraído:', participantName);
         }
+        
+        coverName.textContent = participantName;
       }
       
-      // Empresa - CORRIGIDO: Buscar nome correto da empresa vinculada
+      // Empresa - CORREÇÃO COMPLETA
       const coverCompany = safeGetElement('coverCompany');
       if (coverCompany) {
         let companyName = 'Independente';
         
-        if (AppState.company) {
-          // Tentar TODOS os campos possíveis
+        // Verificar se AppState.company existe e tem dados
+        if (AppState.company && Object.keys(AppState.company).length > 0) {
           companyName = AppState.company.name || 
                        AppState.company.company_name || 
                        AppState.company.razao_social || 
                        AppState.company.fantasia || 
                        AppState.company.nome ||
+                       AppState.company.business_name ||
                        'Independente';
-          console.log('✓ Empresa carregada:', companyName);
-          console.log('📋 Dados completos da empresa:', AppState.company);
-        } else if (AppState.participant && AppState.participant.companyName) {
-          companyName = AppState.participant.companyName;
-          console.log('✓ Empresa do participante:', companyName);
-        } else if (AppState.participant && AppState.participant.company) {
-          // Se company for um objeto dentro do participant
-          companyName = AppState.participant.company.name || 
-                       AppState.participant.company.company_name || 
-                       'Independente';
-          console.log('✓ Empresa do participant.company:', companyName);
-        } else {
-          console.warn('⚠️ Empresa não encontrada em nenhum campo');
+          console.log('✓ Empresa encontrada em AppState.company:', companyName);
+        } 
+        // Verificar se participant tem company_id ou companyId
+        else if (AppState.participant) {
+          const companyId = AppState.participant.company_id || 
+                           AppState.participant.companyId ||
+                           AppState.participant.company;
+          
+          if (companyId) {
+            console.log('🔍 Buscando empresa com ID:', companyId);
+            // Se temos companies no localStorage, buscar
+            const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+            const foundCompany = companies.find(c => c.id === companyId);
+            
+            if (foundCompany) {
+              companyName = foundCompany.name || 
+                           foundCompany.company_name || 
+                           foundCompany.razao_social || 
+                           foundCompany.fantasia ||
+                           'Independente';
+              console.log('✓ Empresa encontrada no localStorage:', companyName);
+            }
+          }
+          
+          // Tentar campo direto no participant
+          if (companyName === 'Independente') {
+            companyName = AppState.participant.companyName || 
+                         AppState.participant.company_name ||
+                         AppState.participant.empresa ||
+                         'Independente';
+            if (companyName !== 'Independente') {
+              console.log('✓ Empresa encontrada no participant:', companyName);
+            }
+          }
         }
         
         coverCompany.textContent = companyName;
+        console.log('🏢 Empresa final:', companyName);
       }
       
-      // Vaga/Cargo - CORRIGIDO: Mostrar primeira vaga ou "Não vinculada"
+      // Vaga/Cargo - CORREÇÃO COMPLETA
       const coverJob = safeGetElement('coverJob');
       if (coverJob) {
+        let jobName = 'Não vinculada';
+        
+        // Verificar se existe jobs no AppState
         if (AppState.jobs && AppState.jobs.length > 0) {
           const job = AppState.jobs[0];
-          const jobName = job.name || job.title || job.cargo || job.funcao || 'Vaga vinculada';
-          coverJob.textContent = jobName;
-          console.log('✓ Vaga/Cargo:', jobName);
-        } else if (AppState.participant && AppState.participant.jobName) {
-          coverJob.textContent = AppState.participant.jobName;
-          console.log('✓ Vaga do participante:', AppState.participant.jobName);
-        } else {
-          coverJob.textContent = 'Não vinculada';
+          console.log('📋 Dados da vaga:', job);
+          
+          jobName = job.name || 
+                   job.title || 
+                   job.cargo || 
+                   job.funcao || 
+                   job.job_title ||
+                   job.position ||
+                   job.funcao_cargo ||
+                   'Vaga vinculada';
+                   
+          console.log('✓ Vaga encontrada:', jobName);
+        } 
+        // Verificar no participant
+        else if (AppState.participant) {
+          jobName = AppState.participant.jobName || 
+                   AppState.participant.job_name ||
+                   AppState.participant.cargo ||
+                   AppState.participant.funcao ||
+                   AppState.participant.position ||
+                   AppState.participant.jobTitle ||
+                   'Não vinculada';
+                   
+          if (jobName !== 'Não vinculada') {
+            console.log('✓ Vaga encontrada no participant:', jobName);
+          }
         }
+        
+        coverJob.textContent = jobName;
       }
       
       // Código
@@ -1326,6 +1352,12 @@
         const random = Math.floor(Math.random() * 9000 + 1000);
         coverCode.textContent = `VIG-DISC-${year}-${random}`;
       }
+      
+      console.log('✅ Informações atualizadas:', {
+        nome: coverName?.textContent,
+        empresa: coverCompany?.textContent,
+        vaga: coverJob?.textContent
+      });
     }
 
     // ============================================
