@@ -57,22 +57,10 @@
             'float': 'float 6s ease-in-out infinite'
           },
           keyframes: {
-            fadeIn: {
-              '0%': { opacity: '0' },
-              '100%': { opacity: '1' }
-            },
-            slideUp: {
-              '0%': { opacity: '0', transform: 'translateY(20px)' },
-              '100%': { opacity: '1', transform: 'translateY(0)' }
-            },
-            shimmer: {
-              '0%': { transform: 'translateX(-100%)' },
-              '100%': { transform: 'translateX(100%)' }
-            },
-            float: {
-              '0%, 100%': { transform: 'translateY(0)' },
-              '50%': { transform: 'translateY(-10px)' }
-            }
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+            slideUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+            shimmer: { '0%': { transform: 'translateX(-100%)' }, '100%': { transform: 'translateX(100%)' } },
+            float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } }
           }
         }
       }
@@ -83,78 +71,30 @@
     /* ============================================
        RESET & BASE - ENTERPRISE PREMIUM
        ============================================ */
-    *, *::before, *::after { 
-      margin: 0; 
-      padding: 0; 
-      box-sizing: border-box; 
-    }
-    
-    html {
-      scroll-behavior: smooth;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
     
     :root {
-      /* Sombras Premium */
       --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
       --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-      
-      /* Bordas */
-      --radius: 0.5rem;
-      --radius-md: 0.75rem;
-      --radius-lg: 1rem;
-      --radius-xl: 1.5rem;
-      --radius-2xl: 2rem;
-      
-      /* Transições */
-      --transition-fast: 150ms ease;
+      --radius: 0.5rem; --radius-lg: 1rem; --radius-xl: 1.5rem; --radius-2xl: 2rem;
       --transition: 250ms ease;
-      --transition-slow: 350ms ease;
     }
     
     body { 
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
       background: linear-gradient(135deg, var(--brand-navy) 0%, var(--brand-slate-800) 50%, var(--brand-slate-900) 100%);
-      color: var(--brand-slate-50); 
-      min-height: 100vh;
-      line-height: 1.6;
-      position: relative;
-      overflow-x: hidden;
+      color: var(--brand-slate-50); min-height: 100vh; line-height: 1.6; position: relative; overflow-x: hidden;
     }
     
-    /* Background animado sutil */
     body::before {
-      content: '';
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: 
-        radial-gradient(ellipse at 20% 80%, rgba(29, 78, 216, 0.12) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 20%, rgba(124, 58, 237, 0.10) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 50%, rgba(6, 182, 212, 0.08) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
-      animation: float 20s ease-in-out infinite;
-    }
-    
-    /* Partículas sutis de fundo */
-    body::after {
-      content: '';
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-image: 
-        radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.08), transparent),
-        radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.06), transparent),
-        radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.10), transparent),
-        radial-gradient(1px 1px at 160px 120px, rgba(255,255,255,0.05), transparent);
-      background-size: 200px 200px;
-      animation: float 25s linear infinite;
-      pointer-events: none;
-      z-index: 0;
+      content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 20% 80%, rgba(29, 78, 216, 0.12) 0%, transparent 50%),
+                  radial-gradient(ellipse at 80% 20%, rgba(124, 58, 237, 0.10) 0%, transparent 50%);
+      pointer-events: none; z-index: 0; animation: float 20s ease-in-out infinite;
     }
     
     /* ============================================
@@ -162,479 +102,29 @@
        ============================================ */
     .glass {
       background: rgba(30, 41, 59, 0.75);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.12);
       box-shadow: var(--shadow-lg);
     }
     
     .glass-card {
       background: linear-gradient(145deg, rgba(30, 41, 59, 0.92), rgba(15, 23, 42, 0.96));
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
       border: 1px solid rgba(255, 255, 255, 0.10);
       border-radius: var(--radius-2xl);
       box-shadow: var(--shadow-2xl);
-      position: relative;
-      overflow: hidden;
+      position: relative; overflow: hidden;
     }
     
     .glass-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 1px;
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
       background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.4), transparent);
       pointer-events: none;
     }
     
-    .glass-card::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(29, 78, 216, 0.03), transparent 40%, rgba(124, 58, 237, 0.03) 60%, transparent);
-      pointer-events: none;
-      opacity: 0.5;
-    }
-    
     .gradient-text {
       background: linear-gradient(135deg, #60A5FA, #A78BFA, #22D3EE);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    
-    .gradient-border {
-      position: relative;
-      border-radius: var(--radius-lg);
-    }
-    
-    .gradient-border::before {
-      content: '';
-      position: absolute;
-      inset: -2px;
-      border-radius: calc(var(--radius-lg) + 2px);
-      background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple), var(--brand-cyan));
-      z-index: -1;
-      opacity: 0.7;
-      filter: blur(10px);
-      animation: pulse 3s ease-in-out infinite;
-    }
-    
-    @keyframes pulse {
-      0%, 100% { opacity: 0.6; }
-      50% { opacity: 0.8; }
-    }
-    
-    /* ============================================
-       ANIMAÇÕES E MICROINTERAÇÕES
-       ============================================ */
-    .animate-on-scroll {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    
-    .animate-on-scroll.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    
-    .hover-lift {
-      transition: transform var(--transition), box-shadow var(--transition);
-      will-change: transform, box-shadow;
-    }
-    
-    .hover-lift:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-xl);
-    }
-    
-    .hover-lift:active {
-      transform: translateY(-2px);
-    }
-    
-    .pulse-ring {
-      position: relative;
-    }
-    
-    .pulse-ring::after {
-      content: '';
-      position: absolute;
-      inset: -4px;
-      border-radius: inherit;
-      border: 2px solid transparent;
-      border-top-color: var(--brand-cyan);
-      border-right-color: var(--brand-purple);
-      animation: spin 2s linear infinite;
-      opacity: 0.6;
-      pointer-events: none;
-    }
-    
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    
-    .scale-hover {
-      transition: transform var(--transition);
-    }
-    
-    .scale-hover:hover {
-      transform: scale(1.02);
-    }
-    
-    /* ============================================
-       COMPONENTES DO TESTE
-       ============================================ */
-    .question-card {
-      transition: all var(--transition);
-      border-left: 4px solid transparent;
-    }
-    
-    .question-card.active {
-      border-left-color: var(--brand-cyan);
-      background: rgba(6, 182, 212, 0.06);
-    }
-    
-    .rank-item {
-      cursor: grab;
-      transition: all var(--transition-fast);
-      user-select: none;
-      position: relative;
-    }
-    
-    .rank-item:active {
-      cursor: grabbing;
-    }
-    
-    .rank-item.dragging {
-      opacity: 0.85;
-      transform: scale(1.03);
-      z-index: 50;
-      box-shadow: var(--shadow-xl);
-    }
-    
-    .rank-item.placeholder {
-      opacity: 0.4;
-      background: rgba(255, 255, 255, 0.05);
-    }
-    
-    .rank-badge {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 0.875rem;
-      transition: all var(--transition-fast);
-      flex-shrink: 0;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .rank-badge::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: inherit;
-      opacity: 0.2;
-    }
-    
-    .rank-1 { 
-      background: linear-gradient(135deg, var(--brand-emerald), #059669); 
-      color: white;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-    }
-    .rank-2 { 
-      background: linear-gradient(135deg, var(--brand-blue), #2563EB); 
-      color: white;
-      box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3);
-    }
-    .rank-3 { 
-      background: linear-gradient(135deg, var(--brand-amber), #D97706); 
-      color: white;
-      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
-    }
-    .rank-4 { 
-      background: linear-gradient(135deg, var(--brand-rose), #DC2626); 
-      color: white;
-      box-shadow: 0 4px 12px rgba(244, 63, 94, 0.3);
-    }
-    
-    .progress-bar {
-      height: 6px;
-      background: rgba(255, 255, 255, 0.12);
-      border-radius: 3px;
-      overflow: hidden;
-      position: relative;
-    }
-    
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--brand-blue), var(--brand-purple), var(--brand-cyan));
-      border-radius: 3px;
-      transition: width 0.5s ease;
-      position: relative;
-    }
-    
-    .progress-fill::after {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
-      animation: shimmer 2s infinite;
-    }
-    
-    /* ============================================
-       DASHBOARD DE RESULTADOS
-       ============================================ */
-    .disc-chart-container {
-      position: relative;
-      height: 320px;
-      max-width: 420px;
-      margin: 0 auto;
-    }
-    
-    .profile-badge {
-      padding: 8px 18px;
-      border-radius: 100px;
-      font-weight: 700;
-      font-size: 0.875rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border: 1px solid;
-      transition: all var(--transition);
-    }
-    
-    .profile-badge:hover {
-      transform: translateY(-1px);
-    }
-    
-    .profile-d { 
-      background: rgba(239, 68, 68, 0.18); 
-      color: #FCA5A5; 
-      border-color: rgba(239, 68, 68, 0.35); 
-    }
-    .profile-i { 
-      background: rgba(59, 130, 246, 0.18); 
-      color: #93C5FD; 
-      border-color: rgba(59, 130, 246, 0.35); 
-    }
-    .profile-s { 
-      background: rgba(16, 185, 129, 0.18); 
-      color: #86EFAC; 
-      border-color: rgba(16, 185, 129, 0.35); 
-    }
-    .profile-c { 
-      background: rgba(124, 58, 237, 0.18); 
-      color: #C4B5FD; 
-      border-color: rgba(124, 58, 237, 0.35); 
-    }
-    
-    .insight-card {
-      border-left: 4px solid;
-      transition: all var(--transition);
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .insight-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.02), transparent);
-      opacity: 0;
-      transition: opacity var(--transition);
-    }
-    
-    .insight-card:hover {
-      transform: translateX(4px);
-      background: rgba(255, 255, 255, 0.04);
-    }
-    
-    .insight-card:hover::before {
-      opacity: 1;
-    }
-    
-    .insight-d { border-left-color: var(--brand-rose); }
-    .insight-i { border-left-color: var(--brand-blue); }
-    .insight-s { border-left-color: var(--brand-emerald); }
-    .insight-c { border-left-color: var(--brand-purple); }
-    
-    /* ============================================
-       MODAL PREMIUM - GLASSMORPHISM
-       ============================================ */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(15, 23, 42, 0.94);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10000;
-      padding: 20px;
-      animation: fadeIn 0.25s ease;
-    }
-    
-    .modal-content {
-      background: white;
-      border-radius: var(--radius-2xl);
-      padding: 2.75rem 2.5rem;
-      max-width: 560px;
-      width: 100%;
-      text-align: center;
-      box-shadow: var(--shadow-2xl);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      position: relative;
-      animation: slideUp 0.45s ease;
-    }
-    
-    .modal-content::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), transparent);
-      pointer-events: none;
-    }
-    
-    .modal-content h3 {
-      font-size: 1.625rem;
-      font-weight: 800;
-      color: var(--brand-slate-800);
-      margin-bottom: 1.25rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      letter-spacing: -0.01em;
-    }
-    
-    .modal-content p {
-      color: var(--brand-slate-600);
-      margin-bottom: 1.75rem;
-      line-height: 1.75;
-      font-size: 1.05rem;
-    }
-    
-    .modal-highlight {
-      background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-weight: 700;
-      font-size: 1.125rem;
-      display: block;
-      margin: 1rem 0;
-    }
-    
-    .modal-btn {
-      background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
-      color: white;
-      padding: 14px 42px;
-      border-radius: var(--radius-lg);
-      font-weight: 700;
-      font-size: 1rem;
-      border: none;
-      cursor: pointer;
-      transition: all var(--transition);
-      box-shadow: 0 5px 20px rgba(29, 78, 216, 0.45);
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .modal-btn::before {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%;
-      width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
-      transition: left 0.5s ease;
-    }
-    
-    .modal-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 32px rgba(29, 78, 216, 0.65);
-    }
-    
-    .modal-btn:hover::before {
-      left: 100%;
-    }
-    
-    .modal-footer {
-      margin-top: 2rem;
-      padding-top: 1.75rem;
-      border-top: 1px solid var(--brand-slate-200);
-      font-size: 0.875rem;
-      color: var(--brand-slate-400);
-    }
-    
-    /* ============================================
-       TOAST NOTIFICATIONS PREMIUM
-       ============================================ */
-    .toast {
-      position: fixed;
-      top: 24px;
-      right: 24px;
-      background: white;
-      padding: 14px 24px;
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-xl);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 600;
-      color: var(--brand-slate-800);
-      z-index: 10001;
-      border-left: 4px solid var(--brand-emerald);
-      animation: slideIn 0.3s ease;
-      border: 1px solid var(--brand-slate-200);
-      max-width: 420px;
-      font-size: 0.875rem;
-      transition: opacity var(--transition), transform var(--transition);
-    }
-    
-    @keyframes slideIn {
-      from { transform: translateX(120%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-    
-    .toast.error {
-      border-left-color: var(--brand-rose);
-    }
-    
-    .toast.warning {
-      border-left-color: var(--brand-amber);
-    }
-    
-    .toast-icon {
-      font-size: 1.25rem;
-      flex-shrink: 0;
-    }
-    
-    .toast-close {
-      background: none;
-      border: none;
-      color: var(--brand-slate-400);
-      cursor: pointer;
-      padding: 4px;
-      border-radius: 6px;
-      transition: all var(--transition-fast);
-      font-size: 1.25rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 28px;
-      height: 28px;
-    }
-    
-    .toast-close:hover {
-      color: var(--brand-slate-600);
-      background: var(--brand-slate-100);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
     
     /* ============================================
@@ -642,391 +132,162 @@
        ============================================ */
     .btn-primary {
       background: linear-gradient(135deg, var(--brand-blue), var(--brand-blueDark));
-      color: white;
-      transition: all var(--transition);
-      position: relative;
-      overflow: hidden;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-weight: 700;
-      letter-spacing: 0.01em;
+      color: white; transition: all var(--transition); position: relative; overflow: hidden;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      font-weight: 700; letter-spacing: 0.01em;
     }
-    
     .btn-primary::before {
-      content: '';
-      position: absolute;
-      inset: 0;
+      content: ''; position: absolute; inset: 0;
       background: linear-gradient(135deg, var(--brand-purple), var(--brand-cyan));
-      opacity: 0;
-      transition: opacity var(--transition);
+      opacity: 0; transition: opacity var(--transition);
     }
-    
-    .btn-primary:hover::before {
-      opacity: 1;
-    }
-    
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 40px rgba(30, 64, 175, 0.45);
-    }
-    
-    .btn-primary:active {
-      transform: translateY(-1px);
-    }
-    
-    .btn-primary:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
+    .btn-primary:hover::before { opacity: 1; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(30, 64, 175, 0.45); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
     
     .btn-secondary {
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.25);
-      color: white;
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25);
+      color: white; transition: all var(--transition); font-weight: 600;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.4); transform: translateY(-1px); }
+    
+    .option-btn {
+      width: 100%; padding: 16px 20px; border-radius: var(--radius-lg);
+      border: 2px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05);
+      color: var(--brand-slate-50); text-align: left; cursor: pointer;
+      transition: all var(--transition); display: flex; align-items: center; gap: 12px;
+      font-size: 1rem; position: relative; overflow: hidden;
+    }
+    .option-btn:hover { border-color: var(--brand-blue); background: rgba(37, 99, 235, 0.12); }
+    .option-btn.selected { border-color: var(--brand-emerald); background: rgba(16, 185, 129, 0.15); }
+    .option-btn .check-icon {
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.3);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
       transition: all var(--transition);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-weight: 600;
+    }
+    .option-btn.selected .check-icon { background: var(--brand-emerald); border-color: var(--brand-emerald); }
+    
+    /* ============================================
+       PROGRESS BAR & CHARTS
+       ============================================ */
+    .progress-bar {
+      height: 6px; background: rgba(255, 255, 255, 0.12);
+      border-radius: 3px; overflow: hidden; position: relative;
+    }
+    .progress-fill {
+      height: 100%; background: linear-gradient(90deg, var(--brand-blue), var(--brand-purple), var(--brand-cyan));
+      border-radius: 3px; transition: width 0.5s ease; position: relative;
+    }
+    .progress-fill::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+      animation: shimmer 2s infinite;
     }
     
-    .btn-secondary:hover {
-      background: rgba(255,255,255,0.2);
-      border-color: rgba(255,255,255,0.4);
-      transform: translateY(-1px);
-      color: white;
-    }
+    .chart-container { position: relative; height: 300px !important; width: 100%; }
     
-    .btn-secondary:active {
-      transform: translateY(0);
+    /* ============================================
+       MODAL PREMIUM
+       ============================================ */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.94); backdrop-filter: blur(16px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10000; padding: 20px; animation: fadeIn 0.25s ease;
     }
-    
-    .btn-outline {
-      background: transparent;
-      border: 2px solid var(--brand-slate-300);
-      color: var(--brand-slate-200);
-      transition: all var(--transition);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-weight: 600;
+    .modal-content {
+      background: white; border-radius: var(--radius-2xl);
+      padding: 2.75rem 2.5rem; max-width: 560px; width: 100%;
+      text-align: center; box-shadow: var(--shadow-2xl);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      animation: slideUp 0.45s ease;
     }
-    
-    .btn-outline:hover {
-      border-color: var(--brand-blue);
-      color: var(--brand-blue);
-      background: rgba(29, 78, 216, 0.08);
+    .modal-content h3 {
+      font-size: 1.625rem; font-weight: 800; color: var(--brand-slate-800);
+      margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: center; gap: 10px;
     }
-    
-    .btn-icon {
-      padding: 10px;
-      border-radius: var(--radius);
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all var(--transition-fast);
+    .modal-content p { color: var(--brand-slate-600); margin-bottom: 1.75rem; line-height: 1.75; font-size: 1.05rem; }
+    .modal-highlight {
+      background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      font-weight: 700; font-size: 1.125rem; display: block; margin: 1rem 0;
     }
-    
-    .btn-icon:hover {
-      background: rgba(255,255,255,0.1);
-      transform: scale(1.05);
+    .modal-btn {
+      background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
+      color: white; padding: 14px 42px; border-radius: var(--radius-lg);
+      font-weight: 700; font-size: 1rem; border: none; cursor: pointer;
+      transition: all var(--transition); box-shadow: 0 5px 20px rgba(29, 78, 216, 0.45);
+      position: relative; overflow: hidden;
     }
-    
-    /* Loading state para botões */
-    .btn-loading {
-      position: relative;
-      color: transparent !important;
-      pointer-events: none;
-    }
-    
-    .btn-loading::after {
-      content: '';
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      top: 50%;
-      left: 50%;
-      margin: -10px 0 0 -10px;
-      border: 2px solid rgba(255,255,255,0.35);
-      border-top-color: white;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+    .modal-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(29, 78, 216, 0.65); }
+    .modal-footer {
+      margin-top: 2rem; padding-top: 1.75rem; border-top: 1px solid var(--brand-slate-200);
+      font-size: 0.875rem; color: var(--brand-slate-400);
     }
     
     /* ============================================
-       FORMULÁRIOS E INPUTS
+       TOAST NOTIFICATIONS
        ============================================ */
-    .input-premium {
-      width: 100%;
-      padding: 14px 16px;
-      border: 2px solid var(--brand-slate-300);
-      border-radius: var(--radius-lg);
-      font-size: 0.9375rem;
-      font-family: inherit;
-      transition: all var(--transition);
-      background: rgba(255, 255, 255, 0.95);
-      color: var(--brand-slate-800);
+    .toast {
+      position: fixed; top: 24px; right: 24px; background: white;
+      padding: 14px 24px; border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl); display: flex; align-items: center; gap: 12px;
+      font-weight: 600; color: var(--brand-slate-800); z-index: 10001;
+      border-left: 4px solid var(--brand-emerald); animation: slideIn 0.3s ease;
+      border: 1px solid var(--brand-slate-200); max-width: 420px; font-size: 0.875rem;
+      transition: opacity var(--transition), transform var(--transition);
     }
-    
-    .input-premium::placeholder {
-      color: var(--brand-slate-400);
-      font-weight: 400;
+    @keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    .toast.error { border-left-color: var(--brand-rose); }
+    .toast.warning { border-left-color: var(--brand-amber); }
+    .toast-icon { font-size: 1.25rem; flex-shrink: 0; }
+    .toast-close {
+      background: none; border: none; color: var(--brand-slate-400);
+      cursor: pointer; padding: 4px; border-radius: 6px;
+      transition: all var(--transition); font-size: 1.25rem;
+      display: flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px;
     }
-    
-    .input-premium:focus {
-      outline: none;
-      border-color: var(--brand-blue);
-      box-shadow: 
-        0 0 0 4px rgba(29, 78, 216, 0.15),
-        0 4px 14px rgba(30, 64, 175, 0.1);
-      background: white;
-    }
-    
-    .input-premium:disabled {
-      background: var(--brand-slate-100);
-      cursor: not-allowed;
-      color: var(--brand-slate-400);
-    }
-    
-    /* ============================================
-       SEÇÃO TÍTULOS
-       ============================================ */
-    .section-title {
-      position: relative;
-      padding-bottom: 12px;
-      margin-bottom: 1.5rem;
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--brand-slate-50);
-    }
-    
-    .section-title::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 60px;
-      height: 3px;
-      background: linear-gradient(90deg, var(--brand-blue), var(--brand-purple));
-      border-radius: 2px;
-    }
-    
-    /* ============================================
-       RESPONSIVIDADE
-       ============================================ */
-    @media (max-width: 1024px) {
-      .disc-chart-container {
-        height: 280px;
-      }
-    }
-    
-    @media (max-width: 768px) {
-      .rank-item {
-        padding: 14px 12px;
-      }
-      
-      .disc-chart-container {
-        height: 260px;
-      }
-      
-      .modal-content {
-        padding: 2rem 1.75rem;
-        margin: 10px;
-      }
-      
-      .modal-content h3 {
-        font-size: 1.375rem;
-      }
-      
-      .btn-primary,
-      .btn-secondary {
-        width: 100%;
-      }
-      
-      .form-actions {
-        flex-direction: column;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      body {
-        font-size: 0.875rem;
-      }
-      
-      .glass-card {
-        padding: 1.5rem !important;
-        border-radius: var(--radius-xl) !important;
-      }
-      
-      .rank-badge {
-        width: 32px;
-        height: 32px;
-        font-size: 0.8125rem;
-      }
-    }
+    .toast-close:hover { color: var(--brand-slate-600); background: var(--brand-slate-100); }
     
     /* ============================================
        PRINT OPTIMIZATION
        ============================================ */
     @media print {
-      header, .no-print, .toast, .modal-overlay, .btn-primary, .btn-secondary { 
-        display: none !important; 
-      }
-      
-      body { 
-        background: white !important; 
-        color: #000 !important;
-        font-size: 10pt;
-      }
-      
-      .glass, .glass-card { 
-        background: white !important; 
-        border: 1px solid #ccc !important; 
-        box-shadow: none !important; 
-        backdrop-filter: none !important; 
-      }
-      
-      .gradient-text { 
-        -webkit-text-fill-color: var(--brand-blue) !important; 
-        color: var(--brand-blue) !important; 
-      }
-      
-      main {
-        padding-top: 20px !important;
-        max-width: 100%;
-      }
+      body { background: white !important; color: #000 !important; font-size: 10pt; }
+      .no-print, header, .toast, .modal-overlay { display: none !important; }
+      .glass, .glass-card { background: white !important; border: 1px solid #ccc !important; box-shadow: none !important; backdrop-filter: none !important; }
+      .gradient-text { -webkit-text-fill-color: var(--brand-blue) !important; color: var(--brand-blue) !important; }
+      main { padding-top: 20px !important; max-width: 100%; }
     }
     
     /* ============================================
-       ACESSIBILIDADE - FOCUS VISIBLE
+       ACESSIBILIDADE & UTILITÁRIOS
        ============================================ */
-    .btn-primary:focus-visible,
-    .btn-secondary:focus-visible,
-    .btn-outline:focus-visible,
-    .btn-icon:focus-visible,
-    .modal-btn:focus-visible,
-    .toast-close:focus-visible,
-    .rank-item:focus-visible,
-    input:focus-visible,
-    select:focus-visible {
-      outline: 2px solid var(--brand-blue);
-      outline-offset: 2px;
+    .btn-primary:focus-visible, .btn-secondary:focus-visible, .option-btn:focus-visible, .modal-btn:focus-visible {
+      outline: 2px solid var(--brand-blue); outline-offset: 2px;
     }
-    
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    .hidden { display: none !important; }
     
     /* ============================================
-       LOADING SKELETON
+       CORREÇÃO DE MARGENS
        ============================================ */
-    .loading-skeleton {
-      background: linear-gradient(90deg, var(--brand-slate-200) 25%, var(--brand-slate-100) 50%, var(--brand-slate-200) 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-      border-radius: var(--radius);
-    }
-    
-    .loading-skeleton.text {
-      height: 1rem;
-      margin: 0.5rem 0;
-    }
-    
-    .loading-skeleton.text.short { width: 40%; }
-    .loading-skeleton.text.medium { width: 70%; }
-    .loading-skeleton.text.long { width: 90%; }
-    
-    /* ============================================
-       CORREÇÃO DE MARGENS - HEADER/FIXED ELEMENTS
-       ============================================ */
-    header {
-      height: 72px !important;
-    }
-    
-    main {
-      padding-top: 95px !important;
-      padding-bottom: 45px !important;
-    }
-    
-    @media (max-width: 768px) {
-      header { height: 68px !important; }
-      main { padding-top: 90px !important; }
-    }
-    
-    /* ============================================
-       UTILITÁRIOS GLOBAIS
-       ============================================ */
-    .text-gradient {
-      background: linear-gradient(135deg, #60A5FA, #A78BFA, #22D3EE);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    
-    .flex-center {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .flex-between {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    
-    .hidden {
-      display: none !important;
-    }
-    
-    /* Scrollbar personalizada */
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-    
-    ::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 4px;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.25);
-      border-radius: 4px;
-      transition: background var(--transition);
-    }
-    
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.4);
-    }
+    header { height: 72px !important; }
+    main { padding-top: 95px !important; padding-bottom: 45px !important; }
+    @media (max-width: 768px) { header { height: 68px !important; } main { padding-top: 90px !important; } }
   </style>
 </head>
 <body class="antialiased">
-  
+
   <!-- ============================================
        TOAST NOTIFICATION
        ============================================ -->
   <div id="toast" class="toast hidden" role="alert" aria-live="polite">
     <span class="toast-icon" id="toastIcon" aria-hidden="true">✅</span>
     <span class="toast-message" id="toastMessage">Mensagem</span>
-    <button class="toast-close" onclick="hideToast()" aria-label="Fechar notificação">
-      <span aria-hidden="true">×</span>
-    </button>
+    <button class="toast-close" onclick="hideToast()" aria-label="Fechar notificação"><span aria-hidden="true">×</span></button>
   </div>
   
   <!-- ============================================
@@ -1034,940 +295,305 @@
        ============================================ -->
   <div id="simpleReportModal" class="modal-overlay hidden" role="dialog" aria-labelledby="modalTitle" aria-modal="true">
     <div class="modal-content">
-      <h3 id="modalTitle">
-        <span aria-hidden="true">🔒</span>
-        Acesso ao Relatório Completo
-      </h3>
-      <p>
-        Para obter acesso ao relatório completo com análise detalhada, plano de desenvolvimento personalizado e parecer executivo multinacional, entre em contato com nossa equipe de People Analytics.
-      </p>
+      <h3 id="modalTitle"><span aria-hidden="true">🔒</span> Acesso ao Relatório Completo</h3>
+      <p>Para obter acesso ao relatório completo com análise detalhada, plano de desenvolvimento personalizado e parecer executivo multinacional, entre em contato com nossa equipe de People Analytics.</p>
       <span class="modal-highlight">Procure a Vigorre para maiores detalhes.</span>
-      <button class="modal-btn" onclick="closeModalAndLogout()" aria-label="Fechar e sair do sistema">
-        Sair e Voltar
-      </button>
-      <div class="modal-footer">
-        <p>© <time datetime="2024">2024</time> Vigorre One™ • People Analytics Enterprise</p>
-      </div>
-    </div>
-  </div>
-  
-  <!-- ============================================
-       LANDING PAGE / HERO SECTION
-       ============================================ -->
-  <div id="landingPage" class="min-h-screen flex flex-col hidden">
-    
-    <!-- Header -->
-    <header class="glass border-b border-white/10 sticky top-0 z-50" role="banner">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div class="flex-between">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center font-bold text-white shadow-lg" aria-hidden="true">
-              V
-            </div>
-            <div>
-              <h1 class="font-bold text-lg">Vigorre One™</h1>
-              <p class="text-xs text-gray-400">People Analytics Enterprise</p>
-            </div>
-          </div>
-          <nav class="hidden md:flex items-center gap-6" role="navigation" aria-label="Menu principal">
-            <a href="#" class="text-sm text-gray-300 hover:text-white transition">Metodologia</a>
-            <a href="#" class="text-sm text-gray-300 hover:text-white transition">Recursos</a>
-            <a href="#" class="text-sm text-gray-300 hover:text-white transition">Empresas</a>
-            <button onclick="startTest()" class="btn-primary px-5 py-2 rounded-xl text-sm font-medium text-white">
-              Iniciar Avaliação
-            </button>
-          </nav>
-        </div>
-      </div>
-    </header>
-
-    <!-- Hero -->
-    <main class="flex-1 flex items-center justify-center px-4 py-12" role="main">
-      <div class="max-w-4xl mx-auto text-center animate-on-scroll">
-        
-        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6" role="status">
-          <span class="w-2 h-2 rounded-full bg-brand-cyan animate-pulse" aria-hidden="true"></span>
-          <span class="text-sm text-gray-300">Assessment DISC Corporativo Premium</span>
-        </div>
-        
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-          Assessment <span class="gradient-text">DISC Inteligente</span><br>
-          para Alta Performance
-        </h1>
-        
-        <p class="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-          Mapeie comportamentos, identifique talentos e desenvolva equipes com inteligência comportamental baseada na metodologia DISC validada globalmente.
-        </p>
-        
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-          <button onclick="startTest()" class="btn-primary px-8 py-4 rounded-xl font-semibold text-white text-lg w-full sm:w-auto" aria-label="Iniciar avaliação DISC gratuita">
-            Iniciar Avaliação Gratuita
-          </button>
-          <button class="px-8 py-4 rounded-xl font-medium text-gray-300 border border-white/20 hover:border-white/40 transition w-full sm:w-auto">
-            Ver Demonstração
-          </button>
-        </div>
-        
-        <!-- Benefícios -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto" role="list">
-          <div class="glass-card p-4 hover-lift" role="listitem">
-            <div class="text-2xl mb-2" aria-hidden="true">🎯</div>
-            <h3 class="font-semibold text-sm">Perfil Profissional</h3>
-          </div>
-          <div class="glass-card p-4 hover-lift" role="listitem">
-            <div class="text-2xl mb-2" aria-hidden="true">📊</div>
-            <h3 class="font-semibold text-sm">People Analytics</h3>
-          </div>
-          <div class="glass-card p-4 hover-lift" role="listitem">
-            <div class="text-2xl mb-2" aria-hidden="true">👥</div>
-            <h3 class="font-semibold text-sm">Gestão de Equipes</h3>
-          </div>
-          <div class="glass-card p-4 hover-lift" role="listitem">
-            <div class="text-2xl mb-2" aria-hidden="true">🚀</div>
-            <h3 class="font-semibold text-sm">Desenvolvimento</h3>
-          </div>
-        </div>
-        
-      </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="glass border-t border-white/10 py-6" role="contentinfo">
-      <div class="max-w-7xl mx-auto px-4 text-center text-sm text-gray-400">
-        <p>© 2024 Vigorre One™. Metodologia DISC validada internacionalmente.</p>
-      </div>
-    </footer>
-    
-  </div>
-
-  <!-- ============================================
-       TELA DE INSTRUÇÕES DO TESTE
-       ============================================ -->
-  <div id="instructionsPage" class="hidden min-h-screen flex items-center justify-center px-4 py-12">
-    <div class="max-w-2xl mx-auto">
-      
-      <div class="glass-card p-8 animate-on-scroll">
-        
-        <div class="text-center mb-8">
-          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center mx-auto mb-4 animate-float" aria-hidden="true">
-            <span class="text-2xl">🧠</span>
-          </div>
-          <h2 class="text-2xl font-bold mb-2">Assessment DISC</h2>
-          <p class="text-gray-400">Análise Comportamental Profissional</p>
-        </div>
-        
-        <div class="space-y-4 mb-8 text-gray-300">
-          <p>
-            Este assessment foi desenvolvido com base na metodologia <strong>DISC</strong>, uma das ferramentas mais utilizadas globalmente para análise comportamental, desenvolvimento profissional e gestão de talentos.
-          </p>
-          <p>
-            A avaliação identifica padrões naturais de comportamento relacionados a liderança, tomada de decisão, comunicação, estabilidade emocional e relacionamento interpessoal.
-          </p>
-        </div>
-        
-        <div class="glass p-5 rounded-xl mb-8">
-          <h3 class="font-semibold mb-3 flex items-center gap-2">
-            <span class="text-brand-cyan" aria-hidden="true">ⓘ</span>
-            Instruções Importantes
-          </h3>
-          <ul class="space-y-2 text-sm text-gray-300" role="list">
-            <li class="flex items-start gap-2" role="listitem">
-              <span class="text-brand-emerald mt-0.5" aria-hidden="true">✓</span>
-              <span>Não existem respostas certas ou erradas</span>
-            </li>
-            <li class="flex items-start gap-2" role="listitem">
-              <span class="text-brand-emerald mt-0.5" aria-hidden="true">✓</span>
-              <span>Seja totalmente sincero em suas respostas</span>
-            </li>
-            <li class="flex items-start gap-2" role="listitem">
-              <span class="text-brand-emerald mt-0.5" aria-hidden="true">✓</span>
-              <span>Responda conforme seu comportamento natural, não o ideal</span>
-            </li>
-            <li class="flex items-start gap-2" role="listitem">
-              <span class="text-brand-emerald mt-0.5" aria-hidden="true">✓</span>
-              <span>O teste não possui limite de tempo</span>
-            </li>
-            <li class="flex items-start gap-2" role="listitem">
-              <span class="text-brand-emerald mt-0.5" aria-hidden="true">✓</span>
-              <span>Para cada pergunta, ranqueie as 4 características da MAIS para a MENOS aderente</span>
-            </li>
-          </ul>
-        </div>
-        
-        <div class="flex gap-3" role="group" aria-label="Ações de navegação">
-          <button onclick="goBack()" class="flex-1 px-4 py-3 rounded-xl font-medium text-gray-300 border border-white/20 hover:border-white/40 transition">
-            Voltar
-          </button>
-          <button onclick="startAssessment()" class="flex-1 btn-primary px-4 py-3 rounded-xl font-semibold text-white">
-            Entendi, Iniciar Teste
-          </button>
-        </div>
-        
-      </div>
-      
+      <button class="modal-btn" onclick="closeModalAndLogout()" aria-label="Fechar e sair do sistema">Sair e Voltar</button>
+      <div class="modal-footer"><p>© <time datetime="2024">2024</time> Vigorre One™ • People Analytics Enterprise</p></div>
     </div>
   </div>
 
   <!-- ============================================
-       TELA DO TESTE - PERGUNTAS
+       HEADER / CONTROLS
        ============================================ -->
-  <div id="testPage" class="hidden min-h-screen flex flex-col">
-    
-    <!-- Header do Teste -->
-    <header class="glass border-b border-white/10 px-4 py-3 sticky top-0 z-40" role="banner">
-      <div class="max-w-4xl mx-auto flex-between">
-        <div class="flex items-center gap-3">
-          <button onclick="confirmExit()" class="btn-icon" aria-label="Sair do teste">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-            </svg>
-          </button>
-          <div>
-            <h2 class="font-semibold">Assessment DISC</h2>
-            <p class="text-xs text-gray-400">Pergunta <span id="currentQuestion">1</span> de 25</p>
-          </div>
+  <header class="glass border-b border-white/10 sticky top-0 z-50 no-print" role="banner">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <img src="logo-vigorre.png" alt="Vigorre One™" class="w-10 h-10 rounded-xl" onerror="this.outerHTML='<div class=\'w-10 h-10 rounded-xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center font-bold text-white\' aria-hidden=\'true\'>V</div>'">
+        <div>
+          <h1 class="font-bold text-lg">Vigorre One™</h1>
+          <p class="text-xs text-gray-400">Assessment DISC • People Analytics Enterprise</p>
         </div>
-        <div class="w-48" aria-label="Progresso do teste">
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="text-sm text-gray-300" id="progressText">Pergunta 1 de 25</span>
+        <div class="w-32 md:w-48" aria-label="Progresso do teste">
           <div class="progress-bar" role="progressbar" aria-valuenow="4" aria-valuemin="0" aria-valuemax="100">
             <div class="progress-fill" id="progressFill" style="width: 4%"></div>
           </div>
         </div>
       </div>
-    </header>
-
-    <!-- Área da Pergunta -->
-    <main class="flex-1 flex items-center justify-center px-4 py-8" role="main">
-      <div class="max-w-3xl mx-auto w-full">
-        
-        <div id="questionContainer" class="glass-card p-6 md:p-8 animate-on-scroll">
-          
-          <!-- Contexto da Pergunta -->
-          <div class="mb-6">
-            <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-blue/20 text-brand-blue text-xs font-medium mb-3" id="questionCategory">
-              Liderança
-            </span>
-            <h3 class="text-xl md:text-2xl font-semibold" id="questionText">
-              Quando enfrento um desafio importante no trabalho...
-            </h3>
-          </div>
-          
-          <!-- Instruções de Ranqueamento -->
-          <div class="glass p-4 rounded-xl mb-6" role="note">
-            <p class="text-sm text-gray-300">
-              <strong class="text-white">Instrução:</strong> Arraste as características abaixo para ordená-las da <span class="text-brand-emerald">MAIS parecida com você</span> (topo) para a <span class="text-brand-rose">MENOS parecida com você</span> (base).
-            </p>
-          </div>
-          
-          <!-- Lista de Ranqueamento (Drag & Drop) -->
-          <div id="rankList" class="space-y-3 mb-8" role="list" aria-label="Lista de características para ranquear">
-            <!-- Itens serão inseridos via JavaScript -->
-          </div>
-          
-          <!-- Botões de Navegação -->
-          <div class="flex gap-3" role="group" aria-label="Navegação entre perguntas">
-            <button id="prevBtn" onclick="prevQuestion()" class="flex-1 px-4 py-3 rounded-xl font-medium text-gray-300 border border-white/20 hover:border-white/40 transition disabled:opacity-50 disabled:cursor-not-allowed" disabled aria-label="Pergunta anterior">
-              Anterior
-            </button>
-            <button id="nextBtn" onclick="nextQuestion()" class="flex-1 btn-primary px-4 py-3 rounded-xl font-semibold text-white" aria-label="Próxima pergunta ou ver resultados">
-              Próxima Pergunta
-            </button>
-          </div>
-          
-        </div>
-        
-      </div>
-    </main>
-    
-  </div>
+    </div>
+  </header>
 
   <!-- ============================================
-       TELA DE CARREGAMENTO DE RESULTADOS
+       TEST CONTAINER
        ============================================ -->
-  <div id="loadingResults" class="hidden min-h-screen flex items-center justify-center px-4">
-    <div class="text-center animate-on-scroll">
-      
-      <div class="relative w-24 h-24 mx-auto mb-6" aria-hidden="true">
+  <main class="max-w-3xl mx-auto px-4 py-8 results-view" id="testContainer" role="main">
+    <article class="glass-card p-6 md:p-8 slide-up">
+      <div class="mb-6">
+        <h2 class="text-xl md:text-2xl font-semibold leading-relaxed" id="qText">Carregando situação...</h2>
+      </div>
+      <div class="space-y-3 mb-8" id="optionsContainer" role="radiogroup" aria-label="Opções de resposta"></div>
+      <div class="flex gap-3 no-print" role="group" aria-label="Navegação entre perguntas">
+        <button id="prevBtn" onclick="prevQuestion()" class="flex-1 px-4 py-3 rounded-xl font-medium text-gray-300 btn-secondary disabled:opacity-50 disabled:cursor-not-allowed" disabled aria-label="Pergunta anterior">Anterior</button>
+        <button id="nextBtn" onclick="nextQuestion()" class="flex-1 btn-primary px-4 py-3 rounded-xl font-semibold text-white" aria-label="Próxima pergunta ou finalizar teste">Próxima Pergunta</button>
+      </div>
+    </article>
+  </main>
+
+  <!-- ============================================
+       RESULTS VIEW
+       ============================================ -->
+  <div id="resultsView" class="hidden max-w-5xl mx-auto px-4 py-8 results-view" role="main">
+    <!-- Header -->
+    <div class="glass-card p-6 md:p-8 mb-8 text-center slide-up">
+      <h1 class="text-3xl font-bold mb-2">Seu Perfil Comportamental DISC</h1>
+      <p class="text-gray-400 mb-4" id="participantName">Análise Comportamental Vigorre One™</p>
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-emerald/20 text-brand-emerald border border-brand-emerald/30" id="profileBadge" role="status">Perfil: --</div>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="grid md:grid-cols-2 gap-6 mb-8">
+      <div class="glass-card p-6 slide-up">
+        <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">Radar DISC</h3>
+        <div class="chart-container"><canvas id="discRadarChart" role="img" aria-label="Gráfico radar dos fatores DISC"></canvas></div>
+      </div>
+      <div class="glass-card p-6 slide-up">
+        <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">Intensidade por Fator</h3>
+        <div class="chart-container"><canvas id="discBarChart" role="img" aria-label="Gráfico de barras da intensidade DISC"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Resumo Executivo -->
+    <div class="glass-card p-6 md:p-8 mb-8 slide-up">
+      <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">📊 Resumo Executivo</h3>
+      <div id="executiveSummary"></div>
+    </div>
+
+    <!-- Análise Detalhada -->
+    <div class="glass-card p-6 md:p-8 mb-8 slide-up">
+      <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">🧠 Análise das Dimensões DISC</h3>
+      <div id="detailedAnalysis"></div>
+    </div>
+
+    <!-- Recomendações -->
+    <div class="glass-card p-6 md:p-8 mb-8 slide-up">
+      <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">💡 Plano de Desenvolvimento</h3>
+      <div id="recommendations"></div>
+    </div>
+
+    <!-- CTAs - ✅ BOTÃO RELATÓRIO SIMPLES COM MODAL + TOOLTIPS -->
+    <div class="grid md:grid-cols-2 gap-4 no-print mb-8">
+      <div class="glass-card p-6 text-center slide-up">
+        <h4 class="font-semibold mb-2">📄 Relatório Simples</h4>
+        <p class="text-sm text-gray-400 mb-4">Visão geral do seu perfil DISC</p>
+        <button onclick="openSimpleReportModal()" class="btn-primary px-6 py-3 rounded-lg font-semibold w-full" title="Baixar relatório simples em PDF" aria-label="Baixar relatório simples">Baixar Relatório Simples</button>
+      </div>
+      <div class="glass-card p-6 text-center slide-up">
+        <h4 class="font-semibold mb-2">🔓 Laudo Vigorre Completo</h4>
+        <p class="text-sm text-gray-400 mb-4">Análise integrada com IE + Valores + Fit Cultural</p>
+        <button onclick="window.location.href='relatorio-disc-vigorre.html'" class="btn-secondary px-6 py-3 rounded-lg font-semibold w-full" title="Ver relatório completo Vigorre One™" aria-label="Ver relatório completo">Ver Relatório Completo</button>
+      </div>
+    </div>
+
+    <!-- Frase Final -->
+    <div class="glass-card p-8 text-center slide-up mb-8">
+      <blockquote class="text-lg italic text-gray-300 mb-4">"<span>A maturidade comportamental é o maior diferencial competitivo do século XXI.</span>"</blockquote>
+      <p class="text-sm text-gray-400">— Vigorre One™</p>
+    </div>
+    
+    <!-- Rodapé de impressão -->
+    <div class="print-footer">© 2024 Vigorre One™ • Relatório gerado em <span id="printDate"></span> • www.vigorre.com.br</div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden">
+    <div class="text-center">
+      <div class="relative w-20 h-20 mx-auto mb-4" aria-hidden="true">
         <div class="absolute inset-0 rounded-full border-4 border-white/10"></div>
         <div class="absolute inset-0 rounded-full border-4 border-t-brand-cyan border-r-brand-purple border-b-transparent border-l-transparent animate-spin"></div>
-        <div class="absolute inset-4 rounded-full bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center">
-          <span class="text-2xl">📊</span>
-        </div>
       </div>
-      
-      <h3 class="text-xl font-semibold mb-2">Analisando seu Perfil</h3>
-      <p class="text-gray-400 mb-6">Processando suas respostas com algoritmo DISC...</p>
-      
-      <div class="w-64 mx-auto" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Processando resultados">
-        <div class="progress-bar">
-          <div class="progress-fill" id="loadingProgress" style="width: 0%"></div>
-        </div>
-      </div>
-      
+      <p class="text-gray-300">Calculando seu perfil DISC...</p>
     </div>
   </div>
 
-  <!-- ============================================
-       DASHBOARD DE RESULTADOS
-       ============================================ -->
-  <div id="resultsPage" class="hidden min-h-screen">
-    
-    <!-- Header de Resultados -->
-    <header class="glass border-b border-white/10 px-4 py-4 sticky top-0 z-40" role="banner">
-      <div class="max-w-6xl mx-auto flex-between">
-        <div class="flex items-center gap-3">
-          <button onclick="resetTest()" class="btn-icon" aria-label="Refazer teste">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-            </svg>
-          </button>
-          <div>
-            <h2 class="font-semibold">Resultado da Análise</h2>
-            <p class="text-xs text-gray-400">Assessment DISC Completo</p>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <!-- Conteúdo de Resultados -->
-    <main class="max-w-6xl mx-auto px-4 py-8" role="main">
-      
-      <!-- Header do Perfil -->
-      <div class="glass-card p-6 md:p-8 mb-6 animate-on-scroll">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <div class="flex items-center gap-3 mb-2">
-              <h1 class="text-2xl md:text-3xl font-bold">Seu Perfil Comportamental</h1>
-              <span id="profileBadge" class="profile-badge profile-d" role="status">
-                <span id="profileLetter" aria-hidden="true">D</span>
-                <span id="profileName">Dominância</span>
-              </span>
-            </div>
-            <p class="text-gray-400">
-              Baseado em 25 perguntas de análise comportamental
-            </p>
-          </div>
-          <div class="flex items-center gap-4">
-            <div class="text-center">
-              <div class="text-3xl font-bold gradient-text" id="dominantPercent">68%</div>
-              <div class="text-xs text-gray-400">Perfil Predominante</div>
-            </div>
-            <div class="w-px h-12 bg-white/10" aria-hidden="true"></div>
-            <div class="text-center">
-              <div class="text-3xl font-bold" id="secondaryPercent">24%</div>
-              <div class="text-xs text-gray-400">Perfil Secundário</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Gráficos DISC -->
-      <div class="grid md:grid-cols-2 gap-6 mb-6">
-        
-        <!-- Gráfico Radar -->
-        <div class="glass-card p-6 animate-on-scroll">
-          <h3 class="font-semibold mb-4 section-title">Distribuição DISC</h3>
-          <div class="disc-chart-container">
-            <canvas id="radarChart" role="img" aria-label="Gráfico radar mostrando distribuição dos fatores DISC"></canvas>
-          </div>
-        </div>
-        
-        <!-- Gráfico de Barras -->
-        <div class="glass-card p-6 animate-on-scroll">
-          <h3 class="font-semibold mb-4 section-title">Intensidade por Fator</h3>
-          <div class="h-64">
-            <canvas id="barChart" role="img" aria-label="Gráfico de barras mostrando intensidade de cada fator DISC"></canvas>
-          </div>
-        </div>
-        
-      </div>
-
-      <!-- Análise Detalhada -->
-      <div class="glass-card p-6 md:p-8 mb-6 animate-on-scroll">
-        <h3 class="font-semibold mb-6 section-title">Análise Comportamental Detalhada</h3>
-        
-        <div class="grid md:grid-cols-2 gap-6">
-          
-          <!-- Comunicação -->
-          <div class="insight-card insight-d p-4 rounded-xl">
-            <h4 class="font-medium mb-2 flex items-center gap-2">
-              <span class="text-brand-rose" aria-hidden="true">💬</span>
-              Estilo de Comunicação
-            </h4>
-            <p class="text-sm text-gray-300" id="communicationInsight">
-              Você comunica-se de forma direta e objetiva, preferindo ir direto ao ponto. Valoriza clareza e eficiência nas interações profissionais.
-            </p>
-          </div>
-          
-          <!-- Liderança -->
-          <div class="insight-card insight-d p-4 rounded-xl">
-            <h4 class="font-medium mb-2 flex items-center gap-2">
-              <span class="text-brand-rose" aria-hidden="true">👑</span>
-              Estilo de Liderança
-            </h4>
-            <p class="text-sm text-gray-300" id="leadershipInsight">
-              Lidera com foco em resultados, tomando decisões rápidas e assumindo responsabilidades. Motiva equipes através de desafios e metas claras.
-            </p>
-          </div>
-          
-          <!-- Tomada de Decisão -->
-          <div class="insight-card insight-c p-4 rounded-xl">
-            <h4 class="font-medium mb-2 flex items-center gap-2">
-              <span class="text-brand-purple" aria-hidden="true">🎯</span>
-              Tomada de Decisão
-            </h4>
-            <p class="text-sm text-gray-300" id="decisionInsight">
-              Baseia decisões em dados e análise lógica. Prefere avaliar informações completas antes de agir, buscando precisão e minimizar riscos.
-            </p>
-          </div>
-          
-          <!-- Sob Pressão -->
-          <div class="insight-card insight-i p-4 rounded-xl">
-            <h4 class="font-medium mb-2 flex items-center gap-2">
-              <span class="text-brand-blue" aria-hidden="true">⚡</span>
-              Comportamento Sob Pressão
-            </h4>
-            <p class="text-sm text-gray-300" id="pressureInsight">
-              Mantém energia e otimismo mesmo em situações desafiadoras. Usa a comunicação para engajar outros e encontrar soluções colaborativas.
-            </p>
-          </div>
-          
-        </div>
-      </div>
-
-      <!-- Pontos Fortes e de Atenção -->
-      <div class="grid md:grid-cols-2 gap-6 mb-6">
-        
-        <!-- Pontos Fortes -->
-        <div class="glass-card p-6 animate-on-scroll">
-          <h3 class="font-semibold mb-4 section-title">Pontos Fortes</h3>
-          <ul class="space-y-3" id="strengthsList" role="list">
-            <!-- Inserido via JS -->
-          </ul>
-        </div>
-        
-        <!-- Pontos de Atenção -->
-        <div class="glass-card p-6 animate-on-scroll">
-          <h3 class="font-semibold mb-4 section-title">Pontos de Desenvolvimento</h3>
-          <ul class="space-y-3" id="developmentList" role="list">
-            <!-- Inserido via JS -->
-          </ul>
-        </div>
-        
-      </div>
-
-      <!-- Sugestões de Carreira -->
-      <div class="glass-card p-6 md:p-8 mb-6 animate-on-scroll">
-        <h3 class="font-semibold mb-6 section-title">Áreas e Carreiras Compatíveis</h3>
-        <div class="flex flex-wrap gap-2" id="careerSuggestions" role="list">
-          <!-- Inserido via JS -->
-        </div>
-      </div>
-
-      <!-- Insights Inteligentes -->
-      <div class="glass-card p-6 md:p-8 animate-on-scroll">
-        <h3 class="font-semibold mb-6 section-title">Insights Estratégicos</h3>
-        <div class="grid md:grid-cols-3 gap-4" id="smartInsights" role="list">
-          <!-- Inserido via JS -->
-        </div>
-      </div>
-
-      <!-- CTAs de Relatório -->
-      <div class="grid md:grid-cols-2 gap-4 mb-8">
-        <div class="glass-card p-6 text-center animate-on-scroll">
-          <h4 class="font-semibold mb-2">📄 Relatório Simples</h4>
-          <p class="text-sm text-gray-400 mb-4">Visão geral do seu perfil DISC para download</p>
-          <button onclick="openSimpleReportModal()" class="btn-primary px-6 py-3 rounded-lg font-semibold w-full" aria-label="Baixar relatório simples">
-            Baixar Relatório Simples
-          </button>
-        </div>
-        <div class="glass-card p-6 text-center animate-on-scroll">
-          <h4 class="font-semibold mb-2">🔓 Laudo Vigorre Completo</h4>
-          <p class="text-sm text-gray-400 mb-4">Análise integrada com IE + Valores + Fit Cultural</p>
-          <button onclick="window.location.href='relatorio-disc-vigorre.html'" class="btn-secondary px-6 py-3 rounded-lg font-semibold w-full" aria-label="Ver relatório completo Vigorre">
-            Ver Relatório Completo
-          </button>
-        </div>
-      </div>
-
-    </main>
-
-    <!-- Footer de Resultados -->
-    <footer class="glass border-t border-white/10 py-6 mt-8" role="contentinfo">
-      <div class="max-w-6xl mx-auto px-4 text-center text-sm text-gray-400">
-        <p class="mb-2">Este relatório foi gerado automaticamente pela plataforma Vigorre One™.</p>
-        <p>Metodologia DISC © Vigorre One™. Para uso profissional e desenvolvimento de equipes.</p>
-      </div>
-    </footer>
-    
-  </div>
-
-  <!-- ============================================
-       JAVASCRIPT - LÓGICA COMPLETA COM SUPABASE
-       ============================================ -->
   <script>
-    'use strict';
-    
     // ============================================
-    // ESTADO GLOBAL DA APLICAÇÃO
+    // ESTADO E DADOS
     // ============================================
-    const AppState = {
-      currentView: 'landing',
-      currentQuestionIndex: 0,
-      answers: [],
-      discScores: { D: 0, I: 0, S: 0, C: 0 },
-      questions: [],
-      participant: null,
-      session: null,
-      shuffledOptions: {},
-      dragData: {
-        item: null,
-        originalIndex: null
-      }
-    };
+    const AppState = { currentQ: 0, answers: [], completed: false, session: null, participant: null };
+    let discRadarChartInstance = null; let discBarChartInstance = null;
 
-    // ============================================
-    // BANCO DE PERGUNTAS DISC (25 QUESTÕES)
-    // ============================================
+    // Banco de Perguntas DISC (25 perguntas)
     const DISC_QUESTIONS = [
-      {
-        id: 1,
-        category: 'Liderança',
-        text: 'Quando enfrento um desafio importante no trabalho...',
-        options: [
-          { text: 'Assumo o controle e busco soluções rápidas', type: 'D' },
-          { text: 'Envolvo a equipe e busco consenso', type: 'I' },
-          { text: 'Analiso cuidadosamente antes de agir', type: 'C' },
-          { text: 'Mantenho a calma e apoio quem precisa', type: 'S' }
-        ]
-      },
-      {
-        id: 2,
-        category: 'Comunicação',
-        text: 'Em reuniões de equipe, minha postura natural é...',
-        options: [
-          { text: 'Direta e focada em resultados', type: 'D' },
-          { text: 'Entusiasta e motivadora', type: 'I' },
-          { text: 'Equilibrada e acolhedora', type: 'S' },
-          { text: 'Precisa e baseada em dados', type: 'C' }
-        ]
-      },
-      {
-        id: 3,
-        category: 'Tomada de Decisão',
-        text: 'Ao tomar uma decisão importante, priorizo...',
-        options: [
-          { text: 'Velocidade e impacto nos resultados', type: 'D' },
-          { text: 'O impacto nas pessoas e no clima', type: 'I' },
-          { text: 'Estabilidade e segurança da escolha', type: 'S' },
-          { text: 'Análise detalhada e precisão', type: 'C' }
-        ]
-      },
-      {
-        id: 4,
-        category: 'Conflitos',
-        text: 'Diante de um conflito profissional, eu...',
-        options: [
-          { text: 'Enfrento a situação de frente para resolver', type: 'D' },
-          { text: 'Busco mediar e restaurar a harmonia', type: 'I' },
-          { text: 'Evito confronto e busco entendimento', type: 'S' },
-          { text: 'Analiso os fatos antes de me posicionar', type: 'C' }
-        ]
-      },
-      {
-        id: 5,
-        category: 'Produtividade',
-        text: 'Para ser produtivo, preciso de...',
-        options: [
-          { text: 'Autonomia e liberdade para agir', type: 'D' },
-          { text: 'Ambiente dinâmico e colaborativo', type: 'I' },
-          { text: 'Rotina estável e previsível', type: 'S' },
-          { text: 'Processos claros e bem definidos', type: 'C' }
-        ]
-      },
-      {
-        id: 6,
-        category: 'Mudanças',
-        text: 'Quando há mudanças organizacionais, eu...',
-        options: [
-          { text: 'Vejo como oportunidade e ajo rápido', type: 'D' },
-          { text: 'Me adapto e ajudo outros a se adaptarem', type: 'I' },
-          { text: 'Preciso de tempo para me ajustar', type: 'S' },
-          { text: 'Analiso impactos antes de me envolver', type: 'C' }
-        ]
-      },
-      {
-        id: 7,
-        category: 'Relacionamento',
-        text: 'No relacionamento com colegas, valorizo...',
-        options: [
-          { text: 'Respeito e eficiência', type: 'D' },
-          { text: 'Conexão e bom clima', type: 'I' },
-          { text: 'Confiança e lealdade', type: 'S' },
-          { text: 'Competência e profissionalismo', type: 'C' }
-        ]
-      },
-      {
-        id: 8,
-        category: 'Pressão',
-        text: 'Sob pressão e prazos curtos, eu...',
-        options: [
-          { text: 'Foco no essencial e entrego rápido', type: 'D' },
-          { text: 'Mantenho o ânimo e engajo a equipe', type: 'I' },
-          { text: 'Busco apoio e divido responsabilidades', type: 'S' },
-          { text: 'Organizo prioridades e sigo o plano', type: 'C' }
-        ]
-      },
-      {
-        id: 9,
-        category: 'Inovação',
-        text: 'Diante de novas ideias e projetos, eu...',
-        options: [
-          { text: 'Quero testar e implementar logo', type: 'D' },
-          { text: 'Me entusiasmo e compartilho com outros', type: 'I' },
-          { text: 'Prefiro avaliar antes de me comprometer', type: 'S' },
-          { text: 'Analiso viabilidade e riscos detalhadamente', type: 'C' }
-        ]
-      },
-      {
-        id: 10,
-        category: 'Feedback',
-        text: 'Ao receber feedback, minha reação é...',
-        options: [
-          { text: 'Foco no que posso melhorar para resultados', type: 'D' },
-          { text: 'Agradeço e busco entender a perspectiva', type: 'I' },
-          { text: 'Refleto com calma e busco equilíbrio', type: 'S' },
-          { text: 'Analiso os pontos com objetividade', type: 'C' }
-        ]
-      },
-      {
-        id: 11,
-        category: 'Planejamento',
-        text: 'Ao planejar uma tarefa complexa, eu...',
-        options: [
-          { text: 'Defino metas claras e prazos agressivos', type: 'D' },
-          { text: 'Envolvo pessoas e busco ideias criativas', type: 'I' },
-          { text: 'Estabeleço etapas seguras e realistas', type: 'S' },
-          { text: 'Detalho processos e antecipo obstáculos', type: 'C' }
-        ]
-      },
-      {
-        id: 12,
-        category: 'Vendas/Negociação',
-        text: 'Em uma negociação, minha abordagem é...',
-        options: [
-          { text: 'Direta, focada em fechar o acordo', type: 'D' },
-          { text: 'Persuasiva, criando conexão e entusiasmo', type: 'I' },
-          { text: 'Paciente, buscando entendimento mútuo', type: 'S' },
-          { text: 'Analítica, baseada em dados e lógica', type: 'C' }
-        ]
-      },
-      {
-        id: 13,
-        category: 'Trabalho em Equipe',
-        text: 'Em equipes, meu papel natural é...',
-        options: [
-          { text: 'Liderar e direcionar para resultados', type: 'D' },
-          { text: 'Motivar e integrar os membros', type: 'I' },
-          { text: 'Apoiar e manter a harmonia', type: 'S' },
-          { text: 'Organizar e garantir qualidade', type: 'C' }
-        ]
-      },
-      {
-        id: 14,
-        category: 'Erros',
-        text: 'Quando cometo um erro profissional, eu...',
-        options: [
-          { text: 'Assumo e foco em corrigir rapidamente', type: 'D' },
-          { text: 'Comunico e busco aprendizado coletivo', type: 'I' },
-          { text: 'Refleto e busco não repetir', type: 'S' },
-          { text: 'Analiso causas para evitar recorrência', type: 'C' }
-        ]
-      },
-      {
-        id: 15,
-        category: 'Rotina',
-        text: 'Em relação à rotina de trabalho, prefiro...',
-        options: [
-          { text: 'Variedade e novos desafios constantes', type: 'D' },
-          { text: 'Dinamismo e interação com pessoas', type: 'I' },
-          { text: 'Estabilidade e previsibilidade', type: 'S' },
-          { text: 'Estrutura e processos bem definidos', type: 'C' }
-        ]
-      },
-      {
-        id: 16,
-        category: 'Competitividade',
-        text: 'Em ambientes competitivos, eu...',
-        options: [
-          { text: 'Busco vencer e superar metas', type: 'D' },
-          { text: 'Me motivo pelo reconhecimento', type: 'I' },
-          { text: 'Foco na colaboração, não na competição', type: 'S' },
-          { text: 'Busco excelência técnica e precisão', type: 'C' }
-        ]
-      },
-      {
-        id: 17,
-        category: 'Detalhes',
-        text: 'Ao lidar com detalhes em um projeto, eu...',
-        options: [
-          { text: 'Foco no macro e delego os detalhes', type: 'D' },
-          { text: 'Confio na equipe para os detalhes', type: 'I' },
-          { text: 'Sigo o processo com cuidado', type: 'S' },
-          { text: 'Reviso minuciosamente cada ponto', type: 'C' }
-        ]
-      },
-      {
-        id: 18,
-        category: 'Empatia',
-        text: 'Ao lidar com alguém em dificuldade, eu...',
-        options: [
-          { text: 'Ofereço soluções práticas para resolver', type: 'D' },
-          { text: 'Ofereço apoio emocional e escuta', type: 'I' },
-          { text: 'Ofereço presença e paciência', type: 'S' },
-          { text: 'Ofereço análise e orientação técnica', type: 'C' }
-        ]
-      },
-      {
-        id: 19,
-        category: 'Riscos',
-        text: 'Diante de riscos calculados, eu...',
-        options: [
-          { text: 'Assumo se o retorno for significativo', type: 'D' },
-          { text: 'Avalio o impacto nas pessoas envolvidas', type: 'I' },
-          { text: 'Prefiro segurança e evito riscos', type: 'S' },
-          { text: 'Analiso dados antes de decidir', type: 'C' }
-        ]
-      },
-      {
-        id: 20,
-        category: 'Reconhecimento',
-        text: 'O que mais me motiva profissionalmente é...',
-        options: [
-          { text: 'Resultados visíveis e conquistas', type: 'D' },
-          { text: 'Reconhecimento e admiração', type: 'I' },
-          { text: 'Estabilidade e segurança', type: 'S' },
-          { text: 'Excelência e precisão no trabalho', type: 'C' }
-        ]
-      },
-      {
-        id: 21,
-        category: 'Prazos',
-        text: 'Ao lidar com prazos apertados, eu...',
-        options: [
-          { text: 'Acelero e foco no essencial', type: 'D' },
-          { text: 'Mobilizo a equipe com energia', type: 'I' },
-          { text: 'Organizo e divido para cumprir', type: 'S' },
-          { text: 'Planejo cada etapa para não errar', type: 'C' }
-        ]
-      },
-      {
-        id: 22,
-        category: 'Criatividade',
-        text: 'Para resolver problemas criativamente, eu...',
-        options: [
-          { text: 'Testo ideias rapidamente na prática', type: 'D' },
-          { text: 'Brainstorm com outras pessoas', type: 'I' },
-          { text: 'Refleto e busco soluções equilibradas', type: 'S' },
-          { text: 'Pesquiso e analiso alternativas', type: 'C' }
-        ]
-      },
-      {
-        id: 23,
-        category: 'Autoridade',
-        text: 'Diante de autoridades ou superiores, eu...',
-        options: [
-          { text: 'Sou direto e foco em resultados', type: 'D' },
-          { text: 'Sou comunicativo e busco conexão', type: 'I' },
-          { text: 'Sou respeitoso e busco harmonia', type: 'S' },
-          { text: 'Sou preciso e baseado em fatos', type: 'C' }
-        ]
-      },
-      {
-        id: 24,
-        category: 'Aprendizado',
-        text: 'Meu estilo preferido de aprendizado é...',
-        options: [
-          { text: 'Prático, aprendo fazendo', type: 'D' },
-          { text: 'Social, aprendo trocando com outros', type: 'I' },
-          { text: 'Gradual, aprendo com consistência', type: 'S' },
-          { text: 'Estruturado, aprendo com método', type: 'C' }
-        ]
-      },
-      {
-        id: 25,
-        category: 'Sucesso',
-        text: 'Para mim, sucesso profissional significa...',
-        options: [
-          { text: 'Alcançar metas desafiadoras', type: 'D' },
-          { text: 'Ser reconhecido e influente', type: 'I' },
-          { text: 'Ter equilíbrio e relações saudáveis', type: 'S' },
-          { text: 'Entregar excelência e precisão', type: 'C' }
-        ]
-      }
+      { id: 1, text: "Quando enfrento um desafio importante no trabalho...", options: [
+        { text: "Assumo o controle e busco soluções rápidas", value: 4, type: 'D' },
+        { text: "Envolvo a equipe e busco consenso", value: 3, type: 'I' },
+        { text: "Analiso cuidadosamente antes de agir", value: 2, type: 'C' },
+        { text: "Mantenho a calma e apoio quem precisa", value: 1, type: 'S' }
+      ]},
+      { id: 2, text: "Em reuniões de equipe, minha postura natural é...", options: [
+        { text: "Direta e focada em resultados", value: 4, type: 'D' },
+        { text: "Entusiasta e motivadora", value: 3, type: 'I' },
+        { text: "Precisa e baseada em dados", value: 2, type: 'C' },
+        { text: "Equilibrada e acolhedora", value: 1, type: 'S' }
+      ]},
+      { id: 3, text: "Ao tomar uma decisão importante, priorizo...", options: [
+        { text: "Velocidade e impacto nos resultados", value: 4, type: 'D' },
+        { text: "O impacto nas pessoas e no clima", value: 3, type: 'I' },
+        { text: "Análise detalhada e precisão", value: 2, type: 'C' },
+        { text: "Estabilidade e segurança da escolha", value: 1, type: 'S' }
+      ]},
+      { id: 4, text: "Diante de um conflito profissional, eu...", options: [
+        { text: "Enfrento a situação de frente para resolver", value: 4, type: 'D' },
+        { text: "Busco mediar e restaurar a harmonia", value: 3, type: 'I' },
+        { text: "Analiso os fatos antes de me posicionar", value: 2, type: 'C' },
+        { text: "Evito confronto e busco entendimento", value: 1, type: 'S' }
+      ]},
+      { id: 5, text: "Para ser produtivo, preciso de...", options: [
+        { text: "Autonomia e liberdade para agir", value: 4, type: 'D' },
+        { text: "Ambiente dinâmico e colaborativo", value: 3, type: 'I' },
+        { text: "Processos claros e bem definidos", value: 2, type: 'C' },
+        { text: "Rotina estável e previsível", value: 1, type: 'S' }
+      ]},
+      { id: 6, text: "Quando há mudanças organizacionais, eu...", options: [
+        { text: "Vejo como oportunidade e ajo rápido", value: 4, type: 'D' },
+        { text: "Me adapto e ajudo outros a se adaptarem", value: 3, type: 'I' },
+        { text: "Analiso impactos antes de me envolver", value: 2, type: 'C' },
+        { text: "Preciso de tempo para me ajustar", value: 1, type: 'S' }
+      ]},
+      { id: 7, text: "No relacionamento com colegas, valorizo...", options: [
+        { text: "Respeito e eficiência", value: 4, type: 'D' },
+        { text: "Conexão e bom clima", value: 3, type: 'I' },
+        { text: "Competência e profissionalismo", value: 2, type: 'C' },
+        { text: "Confiança e lealdade", value: 1, type: 'S' }
+      ]},
+      { id: 8, text: "Sob pressão e prazos curtos, eu...", options: [
+        { text: "Foco no essencial e entrego rápido", value: 4, type: 'D' },
+        { text: "Mantenho o ânimo e engajo a equipe", value: 3, type: 'I' },
+        { text: "Organizo prioridades e sigo o plano", value: 2, type: 'C' },
+        { text: "Busco apoio e divido responsabilidades", value: 1, type: 'S' }
+      ]},
+      { id: 9, text: "Diante de novas ideias e projetos, eu...", options: [
+        { text: "Quero testar e implementar logo", value: 4, type: 'D' },
+        { text: "Me entusiasmo e compartilho com outros", value: 3, type: 'I' },
+        { text: "Analiso viabilidade e riscos detalhadamente", value: 2, type: 'C' },
+        { text: "Prefiro avaliar antes de me comprometer", value: 1, type: 'S' }
+      ]},
+      { id: 10, text: "Ao receber feedback, minha reação é...", options: [
+        { text: "Foco no que posso melhorar para resultados", value: 4, type: 'D' },
+        { text: "Agradeço e busco entender a perspectiva", value: 3, type: 'I' },
+        { text: "Analiso os pontos com objetividade", value: 2, type: 'C' },
+        { text: "Refleto com calma e busco equilíbrio", value: 1, type: 'S' }
+      ]},
+      { id: 11, text: "Ao planejar uma tarefa complexa, eu...", options: [
+        { text: "Defino metas claras e prazos agressivos", value: 4, type: 'D' },
+        { text: "Envolvo pessoas e busco ideias criativas", value: 3, type: 'I' },
+        { text: "Detalho processos e antecipo obstáculos", value: 2, type: 'C' },
+        { text: "Estabeleço etapas seguras e realistas", value: 1, type: 'S' }
+      ]},
+      { id: 12, text: "Em uma negociação, minha abordagem é...", options: [
+        { text: "Direta, focada em fechar o acordo", value: 4, type: 'D' },
+        { text: "Persuasiva, criando conexão e entusiasmo", value: 3, type: 'I' },
+        { text: "Analítica, baseada em dados e lógica", value: 2, type: 'C' },
+        { text: "Paciente, buscando entendimento mútuo", value: 1, type: 'S' }
+      ]},
+      { id: 13, text: "Em equipes, meu papel natural é...", options: [
+        { text: "Liderar e direcionar para resultados", value: 4, type: 'D' },
+        { text: "Motivar e integrar os membros", value: 3, type: 'I' },
+        { text: "Organizar e garantir qualidade", value: 2, type: 'C' },
+        { text: "Apoiar e manter a harmonia", value: 1, type: 'S' }
+      ]},
+      { id: 14, text: "Quando cometo um erro profissional, eu...", options: [
+        { text: "Assumo e foco em corrigir rapidamente", value: 4, type: 'D' },
+        { text: "Comunico e busco aprendizado coletivo", value: 3, type: 'I' },
+        { text: "Analiso causas para evitar recorrência", value: 2, type: 'C' },
+        { text: "Refleto e busco não repetir", value: 1, type: 'S' }
+      ]},
+      { id: 15, text: "Em relação à rotina de trabalho, prefiro...", options: [
+        { text: "Variedade e novos desafios constantes", value: 4, type: 'D' },
+        { text: "Dinamismo e interação com pessoas", value: 3, type: 'I' },
+        { text: "Estrutura e processos bem definidos", value: 2, type: 'C' },
+        { text: "Estabilidade e previsibilidade", value: 1, type: 'S' }
+      ]},
+      { id: 16, text: "Em ambientes competitivos, eu...", options: [
+        { text: "Busco vencer e superar metas", value: 4, type: 'D' },
+        { text: "Me motivo pelo reconhecimento", value: 3, type: 'I' },
+        { text: "Busco excelência técnica e precisão", value: 2, type: 'C' },
+        { text: "Foco na colaboração, não na competição", value: 1, type: 'S' }
+      ]},
+      { id: 17, text: "Ao lidar com detalhes em um projeto, eu...", options: [
+        { text: "Foco no macro e delego os detalhes", value: 4, type: 'D' },
+        { text: "Confio na equipe para os detalhes", value: 3, type: 'I' },
+        { text: "Reviso minuciosamente cada ponto", value: 2, type: 'C' },
+        { text: "Sigo o processo com cuidado", value: 1, type: 'S' }
+      ]},
+      { id: 18, text: "Ao lidar com alguém em dificuldade, eu...", options: [
+        { text: "Ofereço soluções práticas para resolver", value: 4, type: 'D' },
+        { text: "Ofereço apoio emocional e escuta", value: 3, type: 'I' },
+        { text: "Ofereço análise e orientação técnica", value: 2, type: 'C' },
+        { text: "Ofereço presença e paciência", value: 1, type: 'S' }
+      ]},
+      { id: 19, text: "Diante de riscos calculados, eu...", options: [
+        { text: "Assumo se o retorno for significativo", value: 4, type: 'D' },
+        { text: "Avalio o impacto nas pessoas envolvidas", value: 3, type: 'I' },
+        { text: "Analiso dados antes de decidir", value: 2, type: 'C' },
+        { text: "Prefiro segurança e evito riscos", value: 1, type: 'S' }
+      ]},
+      { id: 20, text: "O que mais me motiva profissionalmente é...", options: [
+        { text: "Resultados visíveis e conquistas", value: 4, type: 'D' },
+        { text: "Reconhecimento e admiração", value: 3, type: 'I' },
+        { text: "Excelência e precisão no trabalho", value: 2, type: 'C' },
+        { text: "Estabilidade e segurança", value: 1, type: 'S' }
+      ]},
+      { id: 21, text: "Ao lidar com prazos apertados, eu...", options: [
+        { text: "Acelero e foco no essencial", value: 4, type: 'D' },
+        { text: "Mobilizo a equipe com energia", value: 3, type: 'I' },
+        { text: "Planejo cada etapa para não errar", value: 2, type: 'C' },
+        { text: "Organizo e divido para cumprir", value: 1, type: 'S' }
+      ]},
+      { id: 22, text: "Para resolver problemas criativamente, eu...", options: [
+        { text: "Testo ideias rapidamente na prática", value: 4, type: 'D' },
+        { text: "Brainstorm com outras pessoas", value: 3, type: 'I' },
+        { text: "Pesquiso e analiso alternativas", value: 2, type: 'C' },
+        { text: "Refleto e busco soluções equilibradas", value: 1, type: 'S' }
+      ]},
+      { id: 23, text: "Diante de autoridades ou superiores, eu...", options: [
+        { text: "Sou direto e foco em resultados", value: 4, type: 'D' },
+        { text: "Sou comunicativo e busco conexão", value: 3, type: 'I' },
+        { text: "Sou preciso e baseado em fatos", value: 2, type: 'C' },
+        { text: "Sou respeitoso e busco harmonia", value: 1, type: 'S' }
+      ]},
+      { id: 24, text: "Meu estilo preferido de aprendizado é...", options: [
+        { text: "Prático, aprendo fazendo", value: 4, type: 'D' },
+        { text: "Social, aprendo trocando com outros", value: 3, type: 'I' },
+        { text: "Estruturado, aprendo com método", value: 2, type: 'C' },
+        { text: "Gradual, aprendo com consistência", value: 1, type: 'S' }
+      ]},
+      { id: 25, text: "Para mim, sucesso profissional significa...", options: [
+        { text: "Alcançar metas desafiadoras", value: 4, type: 'D' },
+        { text: "Ser reconhecido e influente", value: 3, type: 'I' },
+        { text: "Entregar excelência e precisão", value: 2, type: 'C' },
+        { text: "Ter equilíbrio e relações saudáveis", value: 1, type: 'S' }
+      ]}
     ];
 
-    // ============================================
-    // PERFIS DISC - DADOS COMPLETOS
-    // ============================================
-    const DISC_PROFILES = {
-      D: {
-        name: 'Dominância',
-        color: '#EF4444',
-        gradient: 'from-rose-500 to-rose-700',
-        badge: 'profile-d',
-        characteristics: [
-          'Competitivo', 'Direto', 'Rápido', 'Estratégico', 'Executor',
-          'Decisivo', 'Ousado', 'Focado em resultados', 'Assertivo', 'Independente'
-        ],
-        strengths: [
-          'Liderança natural em situações desafiadoras',
-          'Tomada de decisão rápida e corajosa',
-          'Foco intenso em resultados e metas',
-          'Capacidade de assumir responsabilidades',
-          'Visão estratégica e orientação para ação'
-        ],
-        development: [
-          'Pode ser percebido como impaciente ou autoritário',
-          'Tendência a ignorar detalhes em prol da velocidade',
-          'Pode negligenciar o impacto emocional nas pessoas',
-          'Dificuldade em delegar e confiar em processos',
-          'Pode ser muito direto em situações que exigem diplomacia'
-        ],
-        careers: [
-          'Executivo / CEO', 'Empreendedor', 'Gestor de Projetos',
-          'Vendas Complexas', 'Consultoria Estratégica', 'Desenvolvimento de Negócios',
-          'Operações', 'Turnaround', 'Startups'
-        ],
-        insights: {
-          communication: 'Comunica-se de forma direta e objetiva, preferindo ir direto ao ponto. Valoriza clareza e eficiência nas interações profissionais.',
-          leadership: 'Lidera com foco em resultados, tomando decisões rápidas e assumindo responsabilidades. Motiva equipes através de desafios e metas claras.',
-          decision: 'Decisões baseadas em impacto e velocidade. Avalia riscos de forma pragmática e age com determinação.',
-          pressure: 'Sob pressão, mantém foco e acelera a execução. Pode tornar-se mais direto e exigente com prazos.'
-        }
-      },
-      I: {
-        name: 'Influência',
-        color: '#3B82F6',
-        gradient: 'from-blue-500 to-blue-700',
-        badge: 'profile-i',
-        characteristics: [
-          'Comunicativo', 'Persuasivo', 'Sociável', 'Otimista', 'Entusiasta',
-          'Carismático', 'Colaborativo', 'Inspirador', 'Networking', 'Criativo'
-        ],
-        strengths: [
-          'Excelente habilidade de comunicação e persuasão',
-          'Capacidade de motivar e engajar equipes',
-          'Networking natural e construção de relacionamentos',
-          'Criatividade e pensamento fora da caixa',
-          'Adaptabilidade em ambientes dinâmicos'
-        ],
-        development: [
-          'Pode priorizar relacionamentos em detrimento de prazos',
-          'Tendência a ser otimista demais em avaliações de risco',
-          'Pode dispersar foco com muitas ideias simultâneas',
-          'Dificuldade com tarefas repetitivas ou muito detalhadas',
-          'Pode evitar confrontos necessários para manter harmonia'
-        ],
-        careers: [
-          'Vendas', 'Marketing', 'Recursos Humanos', 'Treinamento',
-          'Relações Públicas', 'Atendimento ao Cliente', 'Mediação',
-          'Eventos', 'Comunicação Corporativa', 'Desenvolvimento de Pessoas'
-        ],
-        insights: {
-          communication: 'Comunica-se com entusiasmo e empatia, criando conexões genuínas. Usa histórias e exemplos para engajar e persuadir.',
-          leadership: 'Lidera inspirando e motivando pessoas. Cria ambientes colaborativos e valoriza o reconhecimento e o clima positivo.',
-          decision: 'Decisões consideram impacto nas pessoas e oportunidades de crescimento. Valoriza consenso e engajamento.',
-          pressure: 'Sob pressão, mantém otimismo e busca soluções colaborativas. Pode dispersar energia se não houver direção clara.'
-        }
-      },
-      S: {
-        name: 'Estabilidade',
-        color: '#10B981',
-        gradient: 'from-emerald-500 to-emerald-700',
-        badge: 'profile-s',
-        characteristics: [
-          'Paciente', 'Empático', 'Equilibrado', 'Colaborativo', 'Leal',
-          'Estável', 'Apoiador', 'Confiável', 'Harmonioso', 'Consistente'
-        ],
-        strengths: [
-          'Excelente capacidade de escuta e apoio',
-          'Constância e confiabilidade em entregas',
-          'Habilidade em manter harmonia em equipes',
-          'Paciência para processos de longo prazo',
-          'Empatia e inteligência emocional'
-        ],
-        development: [
-          'Pode resistir a mudanças rápidas ou disruptivas',
-          'Tendência a evitar conflitos mesmo quando necessário',
-          'Pode ter dificuldade em priorizar em meio a múltiplas demandas',
-          'Dificuldade em dizer "não" e estabelecer limites',
-          'Pode demorar para tomar decisões por buscar consenso'
-        ],
-        careers: [
-          'Suporte ao Cliente', 'Recursos Humanos', 'Enfermagem', 'Educação',
-          'Assistência Social', 'Administração', 'Coordenação de Equipes',
-          'Atendimento', 'Mediação de Conflitos', 'Gestão de Relacionamento'
-        ],
-        insights: {
-          communication: 'Comunica-se com calma e empatia, priorizando entendimento mútuo. Evita confrontos e busca harmonia nas interações.',
-          leadership: 'Lidera servindo e apoiando a equipe. Cria ambientes seguros e valoriza a colaboração e o bem-estar coletivo.',
-          decision: 'Decisões consideram impacto nas pessoas e estabilidade. Prefere avaliar com calma e buscar consenso antes de agir.',
-          pressure: 'Sob pressão, busca apoio e divide responsabilidades. Pode precisar de tempo para processar mudanças abruptas.'
-        }
-      },
-      C: {
-        name: 'Conformidade',
-        color: '#7C3AED',
-        gradient: 'from-purple-500 to-purple-700',
-        badge: 'profile-c',
-        characteristics: [
-          'Analítico', 'Detalhista', 'Organizado', 'Preciso', 'Metódico',
-          'Sistemático', 'Qualidade', 'Planejador', 'Objetivo', 'Cauteloso'
-        ],
-        strengths: [
-          'Excelência na análise de dados e informações',
-          'Precisão e atenção a detalhes críticos',
-          'Planejamento estruturado e antecipação de riscos',
-          'Compromisso com qualidade e padrões',
-          'Pensamento lógico e resolução de problemas complexos'
-        ],
-        development: [
-          'Pode demorar para decidir por buscar perfeição',
-          'Tendência a ser crítico demais com erros próprios e alheios',
-          'Pode ter dificuldade em ambientes muito dinâmicos ou ambíguos',
-          'Dificuldade em delegar por preocupação com qualidade',
-          'Pode ser percebido como distante ou muito formal'
-        ],
-        careers: [
-          'Engenharia', 'TI / Desenvolvimento', 'Finanças', 'Auditoria',
-          'Pesquisa', 'Qualidade', 'Compliance', 'Análise de Dados',
-          'Contabilidade', 'Planejamento Estratégico', 'Gestão de Processos'
-        ],
-        insights: {
-          communication: 'Comunica-se com precisão e base em fatos. Prefere clareza, dados e estrutura nas interações profissionais.',
-          leadership: 'Lidera através de processos claros e padrões de qualidade. Valoriza competência, planejamento e execução precisa.',
-          decision: 'Decisões baseadas em análise detalhada e dados. Avalia riscos minuciosamente antes de agir.',
-          pressure: 'Sob pressão, organiza prioridades e segue planos. Pode precisar de estrutura para manter eficiência.'
-        }
-      }
+    // Interpretações DISC
+    const DISC_INTERPRETATIONS = {
+      D: { name: 'Dominância', high: 'Excelente capacidade de liderança em situações desafiadoras. Toma decisões rápidas e assume responsabilidades.', medium: 'Boa capacidade de decisão, com espaço para desenvolver maior assertividade em contextos de pressão.', low: 'Pode beneficiar-se de práticas para desenvolver maior confiança em tomada de decisão e liderança.' },
+      I: { name: 'Influência', high: 'Excelente habilidade de comunicação e persuasão. Motiva e engaja equipes com entusiasmo genuíno.', medium: 'Boa capacidade de influência, com oportunidades para desenvolver networking estratégico.', low: 'Pode beneficiar-se de práticas para desenvolver maior confiança em comunicação e apresentação.' },
+      S: { name: 'Estabilidade', high: 'Excelente capacidade de manter harmonia e apoiar equipes. Constância e confiabilidade em entregas.', medium: 'Boa estabilidade, com espaço para desenvolver maior flexibilidade em mudanças.', low: 'Pode beneficiar-se de técnicas para gerenciar melhor transições e incertezas.' },
+      C: { name: 'Conformidade', high: 'Excelência na análise de dados e atenção a detalhes. Planejamento estruturado e antecipação de riscos.', medium: 'Boa capacidade analítica, com oportunidades para desenvolver maior agilidade decisória.', low: 'Pode beneficiar-se de práticas para equilibrar análise com ação em contextos dinâmicos.' }
     };
 
     // ============================================
-    // INICIALIZAÇÃO DA APLICAÇÃO
+    // INICIALIZAÇÃO
     // ============================================
     document.addEventListener('DOMContentLoaded', () => {
-      console.log('🔹 Inicializando Assessment DISC Vigorre One™...');
+      console.log('🔹 Inicializando Teste DISC Vigorre One™...');
       
-      // Copiar perguntas para o estado
-      AppState.questions = JSON.parse(JSON.stringify(DISC_QUESTIONS));
-      
-      // Inicializar respostas vazias
-      AppState.answers = new Array(25).fill(null);
-      
-      // Carregar sessão do participante
-      loadSession();
-      
-      // ✅ DETECTAR CLIQUE NO BOTÃO "VOLTAR" DO NAVEGADOR
+      // ✅ DETECTAR CLIQUE NO BOTÃO "VOLTAR" DO NAVEGADOR PARA FAZER LOGOFF
       window.addEventListener('popstate', function(event) {
         console.log('🔙 Botão voltar detectado - realizando logoff');
         performLogout();
@@ -1978,108 +604,56 @@
         window.history.replaceState(null, null, window.location.href);
       }
       
-      // Se já tiver sessão, vai direto para instruções
+      // Carregar sessão do participante
+      loadSession();
+      
+      // Se já estiver logado, vai direto para o teste
       if (AppState.session && AppState.session.id) {
-        showView('instructionsPage');
+        console.log('✅ Usuário logado, carregando teste...');
+        renderQuestion();
       } else {
-        showView('landingPage');
+        console.log('⚠️ Usuário não autenticado - redirecionando para login');
+        window.location.href = 'login.html';
       }
-      
-      // Configurar observers para animações
-      setupScrollAnimations();
-      
-      // Carregar progresso salvo se existir
-      loadProgress();
       
       // Configurar listeners globais
       setupGlobalListeners();
     });
 
-    // ============================================
-    // LISTENERS GLOBAIS
-    // ============================================
     function setupGlobalListeners() {
-      // Fechar modal ao clicar fora
-      document.getElementById('simpleReportModal')?.addEventListener('click', function(e) {
-        if (e.target === this) {
-          closeModalAndLogout();
-        }
-      });
-      
-      // Fechar modal com tecla Escape
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-          const modal = document.getElementById('simpleReportModal');
-          if (modal && !modal.classList.contains('hidden')) {
-            closeModalAndLogout();
-          }
-        }
-      });
-      
-      // Prevenir back button após logout
-      window.addEventListener('pageshow', function(event) {
-        if (event.persisted) {
-          const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
-          const sessionActive = sessionStorage.getItem('vigorre_session_active') === 'true';
-          
-          if (!currentUser.role || !sessionActive) {
-            window.location.replace('login.html');
-          }
-        }
-      });
+      document.getElementById('simpleReportModal')?.addEventListener('click', function(e) { if (e.target === this) closeModalAndLogout(); });
+      document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { const modal = document.getElementById('simpleReportModal'); if (modal && !modal.classList.contains('hidden')) closeModalAndLogout(); } });
+      window.addEventListener('pageshow', function(event) { if (event.persisted) { const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}'); const sessionActive = sessionStorage.getItem('vigorre_session_active') === 'true'; if (!currentUser.role || !sessionActive) window.location.replace('login.html'); } });
     }
 
     // ============================================
-    // FUNÇÃO: CARREGAR SESSÃO DO PARTICIPANTE
+    // CARREGAR SESSÃO DO PARTICIPANTE - COM SUPABASE E FALLBACK
     // ============================================
     async function loadSession() {
       try {
         console.log('🔍 Tentando carregar sessão...');
         
-        // PRIMEIRO: Tentar carregar do Supabase (online)
-        if (window.VigorreDB && VigorreDB.supabase) {
+        // ✅ CORREÇÃO: Verificação robusta do VigorreDB
+        if (typeof window.VigorreDB !== 'undefined' && VigorreDB && VigorreDB.supabase) {
           console.log('🌐 Tentando carregar do Supabase...');
-          
           const token = sessionStorage.getItem('vigorre_session_token');
-          
           if (token) {
-            // Buscar sessão ativa no Supabase
-            const { data: sessionData, error: sessionError } = await VigorreDB.supabase
-              .from('sessions')
-              .select('participant_id, expires_at')
-              .eq('token', token)
-              .maybeSingle();
-            
-            if (sessionData && !sessionError) {
-              // Verificar se sessão não expirou
-              if (new Date(sessionData.expires_at) > new Date()) {
-                // Sessão válida - buscar dados do participante
-                const { data: participant, error: pError } = await VigorreDB.supabase
-                  .from('participants')
-                  .select('*')
-                  .eq('id', sessionData.participant_id)
-                  .maybeSingle();
-                
-                if (participant && !pError) {
-                  AppState.session = {
-                    id: participant.id,
-                    name: participant.name,
-                    email: participant.email,
-                    role: 'participant'
-                  };
-                  AppState.participant = participant;
-                  console.log('✅ Sessão carregada do Supabase:', participant.name);
-                  return true;
-                }
+            const { data: sessionData, error: sessionError } = await VigorreDB.supabase.from('sessions').select('participant_id, expires_at').eq('token', token).maybeSingle();
+            if (sessionData && !sessionError && new Date(sessionData.expires_at) > new Date()) {
+              const { data: participant, error: pError } = await VigorreDB.supabase.from('participants').select('*').eq('id', sessionData.participant_id).maybeSingle();
+              if (participant && !pError) {
+                AppState.session = { id: participant.id, name: participant.name, email: participant.email, role: 'participant' };
+                AppState.participant = participant;
+                console.log('✅ Sessão carregada do Supabase:', participant.name);
+                return true;
               }
             }
           }
         }
         
-        // SEGUNDO: Fallback para localStorage (offline ou sem Supabase)
+        // Fallback para localStorage
         console.log('📱 Usando fallback localStorage...');
         const session = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
-        
         if (session?.id) {
           AppState.session = session;
           const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
@@ -2087,1080 +661,327 @@
           console.log('✅ Sessão carregada do localStorage:', AppState.session?.name);
           return true;
         }
-        
         console.log('❌ Nenhuma sessão encontrada');
         return false;
-        
       } catch (e) { 
-        console.error('❌ Erro ao carregar sessão:', e); 
-        // Em caso de erro, tentar localStorage como último recurso
+        console.error('❌ Erro ao carregar sessão:', e);
         try {
           const session = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
-          if (session?.id) {
-            AppState.session = session;
-            const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-            AppState.participant = participants.find(p => p.id === session.id);
-            return true;
-          }
-        } catch (e2) {
-          console.error('❌ Erro no fallback:', e2);
-        }
+          if (session?.id) { AppState.session = session; const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]'); AppState.participant = participants.find(p => p.id === session.id); return true; }
+        } catch (e2) { console.error('❌ Erro no fallback:', e2); }
         return false;
       }
     }
 
-    // ============================================
-    // ANIMAÇÕES DE SCROLL
-    // ============================================
-    function setupScrollAnimations() {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      }, { threshold: 0.1 });
-      
-      document.querySelectorAll('.animate-on-scroll').forEach(el => {
-        observer.observe(el);
-      });
-    }
-
-    // ============================================
-    // NAVEGAÇÃO ENTRE TELAS
-    // ============================================
-    function showView(viewId) {
-      // Esconder todas as views
-      ['landingPage', 'instructionsPage', 'testPage', 'loadingResults', 'resultsPage'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.classList.add('hidden');
-      });
-      
-      // Mostrar view solicitada
-      const targetEl = document.getElementById(viewId);
-      if (targetEl) {
-        targetEl.classList.remove('hidden');
-        // Trigger reflow para animações
-        void targetEl.offsetWidth;
-      }
-      
-      // Atualizar estado
-      AppState.currentView = viewId;
-      
-      // Scroll para topo
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function startTest() {
-      showView('instructionsPage');
-    }
-
-    function goBack() {
-      showView('landingPage');
-    }
-
-    function startAssessment() {
-      // Resetar estado do teste
-      AppState.currentQuestionIndex = 0;
-      AppState.answers = new Array(25).fill(null);
-      AppState.discScores = { D: 0, I: 0, S: 0, C: 0 };
-      AppState.shuffledOptions = {};
-      
-      // Carregar primeira pergunta
-      renderQuestion();
-      
-      // Mostrar tela do teste
-      showView('testPage');
-      
-      // Salvar progresso inicial
-      saveProgress();
-    }
-
-    function confirmExit() {
-      if (confirm('Deseja realmente sair do teste? Seu progresso será perdido.')) {
-        showView('landingPage');
-      }
-    }
-
-    function resetTest() {
-      if (confirm('Deseja refazer o teste? Seus resultados atuais serão perdidos.')) {
-        startAssessment();
-      }
-    }
-
-    // ============================================
-    // RENDERIZAÇÃO DE PERGUNTAS
-    // ============================================
     function renderQuestion() {
-      const question = AppState.questions[AppState.currentQuestionIndex];
-      const container = document.getElementById('questionContainer');
+      const q = DISC_QUESTIONS[AppState.currentQ];
+      document.getElementById('progressText').textContent = `Pergunta ${AppState.currentQ + 1} de ${DISC_QUESTIONS.length}`;
+      document.getElementById('progressFill').style.width = `${((AppState.currentQ + 1) / DISC_QUESTIONS.length) * 100}%`;
+      document.getElementById('progressFill').parentElement?.setAttribute('aria-valuenow', Math.round(((AppState.currentQ + 1) / DISC_QUESTIONS.length) * 100));
+      document.getElementById('qText').textContent = q.text;
       
-      if (!question || !container) {
-        console.error('❌ Pergunta ou container não encontrado');
-        return;
-      }
+      document.getElementById('prevBtn').disabled = AppState.currentQ === 0;
+      document.getElementById('nextBtn').textContent = AppState.currentQ === DISC_QUESTIONS.length - 1 ? 'Finalizar Teste' : 'Próxima Pergunta';
+      document.getElementById('nextBtn').setAttribute('aria-label', AppState.currentQ === DISC_QUESTIONS.length - 1 ? 'Finalizar teste' : 'Próxima pergunta');
       
-      // Atualizar informações da pergunta
-      const currentQEl = document.getElementById('currentQuestion');
-      const categoryEl = document.getElementById('questionCategory');
-      const textEl = document.getElementById('questionText');
+      const container = document.getElementById('optionsContainer');
+      container.innerHTML = '';
+      container.setAttribute('aria-label', `Opções para: ${q.text}`);
       
-      if (currentQEl) currentQEl.textContent = AppState.currentQuestionIndex + 1;
-      if (categoryEl) categoryEl.textContent = question.category;
-      if (textEl) textEl.textContent = question.text;
-      
-      // Atualizar barra de progresso
-      const progress = ((AppState.currentQuestionIndex + 1) / 25) * 100;
-      const progressFill = document.getElementById('progressFill');
-      if (progressFill) {
-        progressFill.style.width = `${progress}%`;
-        progressFill.parentElement?.setAttribute('aria-valuenow', Math.round(progress));
-      }
-      
-      // Atualizar botões
-      const prevBtn = document.getElementById('prevBtn');
-      const nextBtn = document.getElementById('nextBtn');
-      
-      if (prevBtn) prevBtn.disabled = AppState.currentQuestionIndex === 0;
-      if (nextBtn) {
-        nextBtn.textContent = AppState.currentQuestionIndex === 24 ? 'Ver Resultados' : 'Próxima Pergunta';
-        nextBtn.setAttribute('aria-label', AppState.currentQuestionIndex === 24 ? 'Ver resultados do teste' : 'Próxima pergunta');
-      }
-      
-      // Renderizar lista de ranqueamento
-      renderRankList(question.options, question.id);
-      
-      // Animar entrada
-      if (container) {
-        container.style.opacity = '0';
-        container.style.transform = 'translateY(20px)';
-        setTimeout(() => {
-          container.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-          container.style.opacity = '1';
-          container.style.transform = 'translateY(0)';
-        }, 50);
-      }
-    }
-
-    function renderRankList(options, questionId) {
-      const list = document.getElementById('rankList');
-      if (!list) return;
-      
-      list.innerHTML = '';
-      
-      // ✅ CORREÇÃO: Embaralhar UMA VEZ por pergunta e armazenar
-      if (!AppState.shuffledOptions[questionId]) {
-        const shuffled = [...options].sort(() => Math.random() - 0.5);
-        AppState.shuffledOptions[questionId] = shuffled;
-      }
-      
-      const shuffled = AppState.shuffledOptions[questionId];
-      
-      shuffled.forEach((option, index) => {
-        const item = document.createElement('div');
-        item.className = 'rank-item glass p-4 rounded-xl flex items-center gap-4';
-        item.setAttribute('role', 'listitem');
-        item.setAttribute('draggable', 'true');
-        item.setAttribute('tabindex', '0');
-        item.dataset.type = option.type;
-        item.dataset.index = index;
-        item.dataset.text = option.text;
-        
-        item.innerHTML = `
-          <div class="rank-badge rank-${index + 1}" id="badge-${index}" aria-label="Posição ${index + 1}">${index + 1}º</div>
-          <div class="flex-1">
-            <p class="font-medium">${option.text}</p>
-          </div>
-          <div class="text-gray-400" aria-hidden="true">⋮</div>
-        `;
-        
-        // Event listeners para drag & drop
-        item.addEventListener('dragstart', handleDragStart);
-        item.addEventListener('dragover', handleDragOver);
-        item.addEventListener('drop', handleDrop);
-        item.addEventListener('dragend', handleDragEnd);
-        
-        // Suporte para teclado (setas para reordenar)
-        item.addEventListener('keydown', handleRankKeyboard);
-        
-        list.appendChild(item);
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `option-btn ${AppState.answers[AppState.currentQ] === idx ? 'selected' : ''}`;
+        btn.setAttribute('role', 'radio');
+        btn.setAttribute('aria-checked', AppState.answers[AppState.currentQ] === idx);
+        btn.setAttribute('tabindex', '0');
+        btn.innerHTML = `<span class="check-icon" aria-hidden="true">${AppState.answers[AppState.currentQ] === idx ? '✓' : ''}</span><span>${opt.text}</span>`;
+        btn.onclick = () => { AppState.answers[AppState.currentQ] = idx; renderQuestion(); };
+        btn.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); } };
+        container.appendChild(btn);
       });
-      
-      // Aplicar ranking salvo se existir
-      if (AppState.answers[AppState.currentQuestionIndex]) {
-        applySavedRanking(AppState.answers[AppState.currentQuestionIndex]);
-      }
+
+      const card = document.querySelector('.glass-card');
+      if (card) { card.style.opacity = '0'; card.style.transform = 'translateY(10px)'; setTimeout(() => { card.style.transition = 'all 0.3s ease'; card.style.opacity = '1'; card.style.transform = 'translateY(0)'; }, 50); }
     }
 
-    function applySavedRanking(savedOrder) {
-      const list = document.getElementById('rankList');
-      if (!list) return;
-      
-      const items = Array.from(list.children);
-      
-      savedOrder.forEach((type, newIndex) => {
-        const item = items.find(el => el.dataset.type === type);
-        if (item) {
-          list.appendChild(item);
-          updateRankBadge(item, newIndex + 1);
-        }
-      });
-    }
-
-    function updateRankBadge(item, rank) {
-      const badge = item.querySelector('.rank-badge');
-      if (badge) {
-        badge.className = `rank-badge rank-${rank}`;
-        badge.textContent = `${rank}º`;
-        badge.setAttribute('aria-label', `Posição ${rank}`);
-      }
-    }
-
-    // ============================================
-    // SUPORTE PARA TECLADO NO RANQUEAMENTO
-    // ============================================
-    function handleRankKeyboard(e) {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-        e.preventDefault();
-        const item = e.currentTarget;
-        const list = item.parentNode;
-        const items = Array.from(list.children);
-        const currentIndex = items.indexOf(item);
-        
-        let newIndex;
-        if (e.key === 'ArrowUp' && currentIndex > 0) {
-          newIndex = currentIndex - 1;
-        } else if (e.key === 'ArrowDown' && currentIndex < items.length - 1) {
-          newIndex = currentIndex + 1;
-        } else {
-          return;
-        }
-        
-        // Mover item
-        if (newIndex === 0) {
-          list.insertBefore(item, list.firstChild);
-        } else {
-          list.insertBefore(item, items[newIndex].nextSibling);
-        }
-        
-        updateAllBadges();
-        saveCurrentAnswer();
-      }
-    }
-
-    // ============================================
-    // DRAG AND DROP - RANQUEAMENTO
-    // ============================================
-    function handleDragStart(e) {
-      AppState.dragData.item = this;
-      AppState.dragData.originalIndex = Array.from(this.parentNode.children).indexOf(this);
-      
-      this.classList.add('dragging');
-      e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.setData('text/plain', this.dataset.type);
-      
-      // Efeito visual no drag
-      setTimeout(() => {
-        this.style.opacity = '0.5';
-      }, 0);
-    }
-
-    function handleDragOver(e) {
-      e.preventDefault();
-      e.dataTransfer.dropEffect = 'move';
-      
-      // Efeito visual ao passar sobre item
-      if (this !== AppState.dragData.item) {
-        this.style.transform = 'scale(1.02)';
-        this.style.background = 'rgba(255, 255, 255, 0.08)';
-      }
-      
-      return false;
-    }
-
-    function handleDrop(e) {
-      e.stopPropagation();
-      
-      const target = this;
-      const dragged = AppState.dragData.item;
-      
-      if (dragged && target && dragged !== target && dragged.parentNode === target.parentNode) {
-        const list = document.getElementById('rankList');
-        const items = Array.from(list.children);
-        
-        const draggedIndex = items.indexOf(dragged);
-        const targetIndex = items.indexOf(target);
-        
-        // Mover item na lista
-        if (draggedIndex < targetIndex) {
-          target.parentNode.insertBefore(dragged, target.nextSibling);
-        } else {
-          target.parentNode.insertBefore(dragged, target);
-        }
-        
-        // Atualizar badges
-        updateAllBadges();
-        
-        // Salvar resposta
-        saveCurrentAnswer();
-      }
-      
-      // Resetar estilos
-      document.querySelectorAll('.rank-item').forEach(item => {
-        item.style.transform = '';
-        item.style.background = '';
-      });
-      
-      return false;
-    }
-
-    function handleDragEnd() {
-      if (this) {
-        this.classList.remove('dragging');
-        this.style.opacity = '1';
-      }
-      AppState.dragData.item = null;
-      AppState.dragData.originalIndex = null;
-    }
-
-    function updateAllBadges() {
-      const list = document.getElementById('rankList');
-      if (!list) return;
-      
-      const items = Array.from(list.children);
-      
-      items.forEach((item, index) => {
-        updateRankBadge(item, index + 1);
-      });
-    }
-
-    // ============================================
-    // SALVAR E CARREGAR RESPOSTAS
-    // ============================================
-    function saveCurrentAnswer() {
-      const list = document.getElementById('rankList');
-      if (!list) return;
-      
-      const items = Array.from(list.children);
-      
-      const ranking = [];
-      items.forEach((item) => {
-        if (item.dataset.type) {
-          ranking.push(item.dataset.type);
-        }
-      });
-      
-      // Só salvar se tiver 4 itens
-      if (ranking.length === 4) {
-        AppState.answers[AppState.currentQuestionIndex] = ranking;
-        saveProgress();
-      }
-    }
-
-    function saveProgress() {
-      const progress = {
-        currentQuestion: AppState.currentQuestionIndex,
-        answers: AppState.answers,
-        shuffledOptions: AppState.shuffledOptions,
-        timestamp: Date.now(),
-        sessionId: AppState.session?.id
-      };
-      
-      try {
-        localStorage.setItem('disc_assessment_progress', JSON.stringify(progress));
-      } catch (e) {
-        console.warn('⚠️ Não foi possível salvar progresso:', e);
-      }
-    }
-
-    function loadProgress() {
-      try {
-        const saved = localStorage.getItem('disc_assessment_progress');
-        if (saved) {
-          const progress = JSON.parse(saved);
-          
-          // Validar se progresso é recente (24h) e da mesma sessão
-          if (Date.now() - progress.timestamp < 24 * 60 * 60 * 1000) {
-            if (!progress.sessionId || progress.sessionId === AppState.session?.id) {
-              AppState.currentQuestionIndex = progress.currentQuestion || 0;
-              AppState.answers = progress.answers || new Array(25).fill(null);
-              AppState.shuffledOptions = progress.shuffledOptions || {};
-              console.log('✅ Progresso carregado:', AppState.currentQuestionIndex + 1, '/ 25');
-              return true;
-            }
-          }
-        }
-      } catch (e) {
-        console.warn('⚠️ Erro ao carregar progresso:', e);
-      }
-      return false;
-    }
-
-    // ============================================
-    // NAVEGAÇÃO NO TESTE
-    // ============================================
-    function prevQuestion() {
-      if (AppState.currentQuestionIndex > 0) {
-        saveCurrentAnswer();
-        AppState.currentQuestionIndex--;
-        renderQuestion();
-        saveProgress();
-      }
-    }
-
+    function prevQuestion() { if (AppState.currentQ > 0) { AppState.currentQ--; renderQuestion(); } }
     function nextQuestion() {
-      saveCurrentAnswer();
-      
-      const list = document.getElementById('rankList');
-      if (list && list.children.length !== 4) {
-        showToast('Por favor, ranqueie todas as 4 características antes de continuar.', 'warning');
-        return;
-      }
-      
-      if (AppState.currentQuestionIndex < 24) {
-        AppState.currentQuestionIndex++;
-        renderQuestion();
-        saveProgress();
-      } else {
-        finishTest();
-      }
+      if (AppState.answers[AppState.currentQ] === undefined) { showToast('Por favor, selecione uma opção antes de continuar.', 'warning'); return; }
+      if (AppState.currentQ < DISC_QUESTIONS.length - 1) { AppState.currentQ++; renderQuestion(); } else { finishTest(); }
     }
 
     // ============================================
     // FINALIZAR TESTE E PROCESSAR RESULTADOS
     // ============================================
     async function finishTest() {
-      console.log('🏁 Finalizando teste...');
+      console.log('🔄 Finalizando teste DISC...');
       
       // Calcular resultados
-      const results = calculateResults();
+      const dimensions = { D: 0, I: 0, S: 0, C: 0 };
+      DISC_QUESTIONS.forEach((q, idx) => { if (AppState.answers[idx] !== undefined) { dimensions[q.options[AppState.answers[idx]].type] += q.options[AppState.answers[idx]].value; } });
+      
+      const percentages = {}; Object.keys(dimensions).forEach(k => { percentages[k] = Math.round((dimensions[k] / 100) * 100); });
+      const avgDISC = Math.round(Object.values(percentages).reduce((a, b) => a + b, 0) / 4);
+      
+      const results = { date: new Date().toISOString(), type: 'DISC', dimensions, percentages, avgDISC };
       
       // Salvar resultados no Supabase com fallback
-      await saveParticipantResultsSupabase(results);
+      await saveParticipantResultsDISCSupabase(results);
       
-      // Enviar relatório simples por e-mail (simulado)
+      // Enviar relatório simples por e-mail (simulação)
       sendSimpleReportEmail(results);
       
       // Mostrar loading
-      showLoadingResults();
+      document.getElementById('loadingOverlay').classList.remove('hidden');
+      setTimeout(() => { showResults(results); }, 1500);
     }
 
     // ============================================
-    // ✅ FUNÇÃO: SALVAR RESULTADOS NO SUPABASE COM FALLBACK
+    // ✅ FUNÇÃO: SALVAR RESULTADOS DISC NO SUPABASE COM FALLBACK
     // ============================================
-    async function saveParticipantResultsSupabase(results) {
+    async function saveParticipantResultsDISCSupabase(results) {
       console.log('💾 Salvando resultados do teste DISC...');
-      
-      if (!AppState.participant) {
-        console.warn('⚠️ Participante não encontrado, salvando apenas no localStorage');
-        saveParticipantResultsLocalStorage(results);
-        return;
-      }
+      if (!AppState.participant) { console.warn('⚠️ Participante não encontrado, salvando apenas no localStorage'); saveParticipantResultsDISCLocalStorage(results); return; }
       
       try {
-        // Preparar dados para salvar no Supabase
         const resultData = {
-          id: VigorreDB?.generateId?.() || Date.now().toString(),
+          id: (typeof VigorreDB !== 'undefined' && VigorreDB?.generateId) ? VigorreDB.generateId() : Date.now().toString(),
           participant_id: AppState.participant.id,
           test_type: 'DISC',
-          scores: results.scores,
+          scores: results.dimensions,
           percentages: results.percentages,
           dominant: Object.entries(results.percentages).sort((a, b) => b[1] - a[1])[0][0],
           secondary: Object.entries(results.percentages).sort((a, b) => b[1] - a[1])[1]?.[0],
           completed_at: new Date().toISOString()
         };
+        console.log('📋 Dados para salvar no Supabase:', resultData);
         
-        console.log('📋 Dados para salvar:', resultData);
-        
-        // PRIMEIRO: Tentar salvar no Supabase
-        if (window.VigorreDB && VigorreDB.supabase) {
+        // ✅ CORREÇÃO: Verificação robusta do VigorreDB
+        if (typeof window.VigorreDB !== 'undefined' && VigorreDB && VigorreDB.supabase) {
           console.log('🌐 Tentando salvar no Supabase...');
-          
-          const { error } = await VigorreDB.supabase
-            .from('test_results')
-            .upsert(resultData);
-          
-          if (error) {
-            throw error;
-          }
-          
-          console.log('✅ Resultados salvos no Supabase com sucesso!');
-          
-          // Atualizar participante no Supabase para marcar teste como completado
-          await updateParticipantCompletedTests('DISC');
+          const { error } = await VigorreDB.supabase.from('test_results').upsert(resultData);
+          if (error) throw error;
+          console.log('✅ Resultados DISC salvos no Supabase com sucesso!');
+          await updateParticipantCompletedTestsDISC('DISC');
         }
-        
       } catch (e) {
-        // SEGUNDO: Fallback para localStorage se Supabase falhar
         console.warn('⚠️ Falha ao salvar no Supabase, usando localStorage:', e);
-        saveParticipantResultsLocalStorage(results);
+        saveParticipantResultsDISCLocalStorage(results);
       }
     }
 
-    // ============================================
-    // FUNÇÃO: ATUALIZAR TESTES COMPLETADOS DO PARTICIPANTE NO SUPABASE
-    // ============================================
-    async function updateParticipantCompletedTests(testType) {
+    async function updateParticipantCompletedTestsDISC(testType) {
       try {
-        if (!AppState.participant || !window.VigorreDB) return;
-        
-        // Buscar participante atual do Supabase
-        const { data: participant, error: fetchError } = await VigorreDB.supabase
-          .from('participants')
-          .select('completed_tests')
-          .eq('id', AppState.participant.id)
-          .maybeSingle();
-        
+        if (!AppState.participant || typeof window.VigorreDB === 'undefined' || !VigorreDB) return;
+        const { data: participant, error: fetchError } = await VigorreDB.supabase.from('participants').select('completed_tests').eq('id', AppState.participant.id).maybeSingle();
         if (fetchError) throw fetchError;
-        
-        // Adicionar teste à lista de completados
         const completedTests = participant?.completed_tests || [];
         if (!completedTests.includes(testType)) {
           completedTests.push(testType);
-          
-          // Atualizar no Supabase
-          const { error: updateError } = await VigorreDB.supabase
-            .from('participants')
-            .update({ completed_tests: completedTests })
-            .eq('id', AppState.participant.id);
-          
+          const { error: updateError } = await VigorreDB.supabase.from('participants').update({ completed_tests: completedTests }).eq('id', AppState.participant.id);
           if (updateError) throw updateError;
-          
           console.log(`✅ Teste ${testType} marcado como completado no Supabase`);
         }
-        
-      } catch (e) {
-        console.warn('⚠️ Falha ao atualizar completed_tests no Supabase:', e);
-      }
+      } catch (e) { console.warn('⚠️ Falha ao atualizar completed_tests no Supabase:', e); }
     }
 
-    // ============================================
-    // FUNÇÃO: SALVAR RESULTADOS NO LOCALSTORAGE (FALLBACK)
-    // ============================================
-    function saveParticipantResultsLocalStorage(results) {
+    function saveParticipantResultsDISCLocalStorage(results) {
       if (!AppState.participant) return;
-      
       try {
         const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
         const idx = participants.findIndex(p => p.id === AppState.participant.id);
-        
         if (idx > -1) {
-          // Garantir que completedTests exista
-          if (!participants[idx].completedTests) {
-            participants[idx].completedTests = [];
-          }
-          
-          // Adicionar DISC aos testes concluídos se ainda não estiver
-          if (!participants[idx].completedTests.includes('DISC')) {
-            participants[idx].completedTests.push('DISC');
-            console.log('✅ DISC adicionado a completedTests');
-          }
-          
-          // Salvar resultados do teste
+          if (!participants[idx].completedTests) participants[idx].completedTests = [];
+          if (!participants[idx].completedTests.includes('DISC')) participants[idx].completedTests.push('DISC');
           participants[idx].testResults = participants[idx].testResults || {};
-          participants[idx].testResults.DISC = {
-            date: new Date().toISOString(),
-            scores: results.scores,
-            percentages: results.percentages,
-            dominant: Object.entries(results.percentages).sort((a, b) => b[1] - a[1])[0][0]
-          };
-          
-          // Salvar no localStorage
+          participants[idx].testResults.DISC = { date: results.date, dimensions: results.dimensions, percentages: results.percentages, avgDISC: results.avgDISC };
           localStorage.setItem('vigorre_participants', JSON.stringify(participants));
-          
-          // Salvar resultado no localStorage para relatórios
-          localStorage.setItem('vigorre_last_disc_result', JSON.stringify({
-            scores: results.scores,
-            percentages: results.percentages,
-            dominant: Object.entries(results.percentages).sort((a, b) => b[1] - a[1])[0][0],
-            date: new Date().toISOString()
-          }));
-          
-          // Atualizar participant no AppState
+          localStorage.setItem('vigorre_last_disc_result', JSON.stringify(results));
           AppState.participant = participants[idx];
-          
-          console.log('✅ Resultados salvos no localStorage');
+          console.log('✅ Resultados DISC salvos no localStorage');
         }
-      } catch (e) {
-        console.error('❌ Erro ao salvar resultados no localStorage:', e);
-      }
+      } catch (e) { console.error('❌ Erro ao salvar resultados DISC no localStorage:', e); }
     }
 
-    // ============================================
-    // ENVIAR RELATÓRIO SIMPLES POR E-MAIL (SIMULADO)
-    // ============================================
     function sendSimpleReportEmail(results) {
-      // Em produção, aqui chamaria a API: /api/send-simple-report
       console.log('📧 Enviando relatório DISC para:', AppState.session?.email);
-      
-      // Simular delay de envio
-      setTimeout(() => {
-        // Salvar histórico de relatório enviado
-        saveReportHistory('DISC', 'simple');
-        
-        // Mostrar toast de confirmação
-        showToast('✅ Relatório simples enviado para seu e-mail!', 'success');
-      }, 1000);
+      setTimeout(() => { saveReportHistoryDISC('DISC', 'simple'); showToast('✅ Relatório simples enviado para seu e-mail!', 'success'); }, 1000);
     }
 
-    // ============================================
-    // SALVAR HISTÓRICO DE RELATÓRIOS
-    // ============================================
-    function saveReportHistory(testType, reportType) {
+    function saveReportHistoryDISC(testType, reportType) {
       try {
         const reports = JSON.parse(localStorage.getItem('vigorre_reports') || '[]');
-        
-        reports.push({
-          id: Date.now().toString(),
-          participantId: AppState.session?.id || 'anonymous',
-          participantName: AppState.participant?.name || 'Participante',
-          participantEmail: AppState.session?.email || '',
-          type: reportType,
-          testType: testType,
-          date: new Date().toLocaleDateString('pt-BR'),
-          status: 'completed',
-          emailSent: true,
-          emailDate: new Date().toLocaleString('pt-BR')
-        });
-        
+        reports.push({ id: Date.now().toString(), participantId: AppState.session?.id || 'anonymous', participantName: AppState.participant?.name || 'Participante', participantEmail: AppState.session?.email || '', type: reportType, testType: testType, date: new Date().toLocaleDateString('pt-BR'), status: 'completed', emailSent: true, emailDate: new Date().toLocaleString('pt-BR') });
         localStorage.setItem('vigorre_reports', JSON.stringify(reports));
-      } catch (e) {
-        console.error('Erro ao salvar histórico:', e);
-      }
-    }
-
-    // ============================================
-    // CÁLCULO DOS RESULTADOS DISC
-    // ============================================
-    function calculateResults() {
-      // Resetar scores
-      AppState.discScores = { D: 0, I: 0, S: 0, C: 0 };
-      
-      // Processar cada resposta
-      AppState.answers.forEach((ranking, questionIndex) => {
-        if (ranking && ranking.length === 4) {
-          // Pontuação: 1º = 4pts, 2º = 3pts, 3º = 2pts, 4º = 1pt
-          ranking.forEach((type, position) => {
-            const points = 4 - position;
-            AppState.discScores[type] += points;
-          });
-        }
-      });
-      
-      // Calcular totais e percentuais
-      const total = Object.values(AppState.discScores).reduce((a, b) => a + b, 0);
-      
-      const percentages = {
-        D: total > 0 ? Math.round((AppState.discScores.D / total) * 100) : 0,
-        I: total > 0 ? Math.round((AppState.discScores.I / total) * 100) : 0,
-        S: total > 0 ? Math.round((AppState.discScores.S / total) * 100) : 0,
-        C: total > 0 ? Math.round((AppState.discScores.C / total) * 100) : 0
-      };
-      
-      return {
-        scores: AppState.discScores,
-        percentages: percentages,
-        total: total
-      };
-    }
-
-    function showLoadingResults() {
-      showView('loadingResults');
-      
-      // Animar barra de loading
-      let progress = 0;
-      const interval = setInterval(() => {
-        progress += Math.random() * 15;
-        if (progress >= 100) {
-          progress = 100;
-          clearInterval(interval);
-          setTimeout(showResults, 500);
-        }
-        const progressEl = document.getElementById('loadingProgress');
-        if (progressEl) {
-          progressEl.style.width = `${Math.min(progress, 100)}%`;
-          progressEl.parentElement?.setAttribute('aria-valuenow', Math.round(progress));
-        }
-      }, 200);
+      } catch (e) { console.error('Erro ao salvar histórico:', e); }
     }
 
     // ============================================
     // EXIBIÇÃO DE RESULTADOS
     // ============================================
-    function showResults() {
-      const results = calculateResults();
+    function showResults(results) {
+      document.getElementById('loadingOverlay').classList.add('hidden');
+      document.getElementById('testContainer').classList.add('hidden');
+      document.querySelector('header')?.classList.add('hidden');
+      document.getElementById('resultsView').classList.remove('hidden');
+
+      if (AppState.session?.name) document.getElementById('participantName').textContent = AppState.session.name;
       
-      // Identificar perfil predominante e secundário
-      const sorted = Object.entries(results.percentages)
-        .sort((a, b) => b[1] - a[1]);
-      
+      // Determinar perfil predominante
+      const sorted = Object.entries(results.percentages).sort((a, b) => b[1] - a[1]);
       const [dominant, secondary] = sorted;
+      const dominantProfile = DISC_INTERPRETATIONS[dominant[0]];
       
-      // Atualizar header do perfil
-      const dominantProfile = DISC_PROFILES[dominant[0]];
-      const profileBadge = document.getElementById('profileBadge');
-      const profileLetter = document.getElementById('profileLetter');
-      const profileName = document.getElementById('profileName');
-      const dominantPercent = document.getElementById('dominantPercent');
-      const secondaryPercent = document.getElementById('secondaryPercent');
+      document.getElementById('profileBadge').textContent = `Perfil: ${dominantProfile.name} (${dominant[1]}%)`;
       
-      if (profileBadge) {
-        profileBadge.className = `profile-badge ${dominantProfile.badge}`;
-      }
-      if (profileLetter) profileLetter.textContent = dominant[0];
-      if (profileName) profileName.textContent = dominantProfile.name;
-      if (dominantPercent) dominantPercent.textContent = `${dominant[1]}%`;
-      if (secondaryPercent) secondaryPercent.textContent = `${secondary[1]}%`;
-      
+      // Resumo Executivo
+      document.getElementById('executiveSummary').innerHTML = `<p class="text-gray-300 mb-4">Seu perfil DISC predominante é <strong style="color: ${dominant[1] >= 70 ? '#10B981' : dominant[1] >= 50 ? '#F59E0B' : '#F43F5E'}">${dominantProfile.name}</strong> com <strong>${dominant[1]}%</strong> de intensidade. ${dominantProfile.high}</p><div class="grid md:grid-cols-4 gap-4">${Object.entries(results.percentages).map(([key, value]) => { const interp = DISC_INTERPRETATIONS[key]; return `<div class="glass p-4 rounded-lg"><h4 class="font-semibold mb-1">${interp.name}</h4><div class="w-full bg-white/10 rounded-full h-2 mb-2"><div class="bg-brand-emerald h-2 rounded-full" style="width: ${value}%"></div></div><p class="text-xs text-gray-400">${value}%</p></div>`; }).join('')}</div>`;
+
+      // Análise Detalhada
+      document.getElementById('detailedAnalysis').innerHTML = Object.entries(results.percentages).map(([key, value]) => { const interp = DISC_INTERPRETATIONS[key]; const level = value >= 70 ? 'high' : value >= 50 ? 'medium' : 'low'; const desc = level === 'high' ? interp.high : level === 'medium' ? interp.medium : interp.low; return `<div class="glass p-4 rounded-lg mb-4"><div class="flex justify-between items-center mb-2"><h4 class="font-semibold">${interp.name}</h4><span class="px-2 py-1 rounded-full text-xs ${value >= 70 ? 'bg-brand-emerald/20 text-brand-emerald' : value >= 50 ? 'bg-brand-amber/20 text-brand-amber' : 'bg-brand-rose/20 text-brand-rose'}">${value}%</span></div><p class="text-sm text-gray-300">${desc}</p></div>`; }).join('');
+
+      // Recomendações
+      document.getElementById('recommendations').innerHTML = `<ul class="space-y-2 text-sm text-gray-300"><li class="flex gap-2"><span class="text-brand-emerald">➤</span> Pratique auto-observação diária para fortalecer consciência comportamental.</li><li class="flex gap-2"><span class="text-brand-emerald">➤</span> Solicite feedback regular sobre seu impacto nas relações profissionais.</li><li class="flex gap-2"><span class="text-brand-emerald">➤</span> Considere o laudo completo Vigorre para análise integrada com IE e Valores Pessoais.</li></ul>`;
+
       // Renderizar gráficos
       renderCharts(results.percentages);
-      
-      // Renderizar insights
-      renderInsights(dominant[0], secondary[0], results.percentages);
-      
-      // Mostrar página de resultados
-      showView('resultsPage');
-      
-      // Remover progresso salvo
-      localStorage.removeItem('disc_assessment_progress');
+      document.getElementById('printDate').textContent = new Date().toLocaleDateString('pt-BR');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // ============================================
+    // RENDERIZAR GRÁFICOS
+    // ============================================
     function renderCharts(percentages) {
-      // Destruir charts existentes se houver
-      const radarCanvas = document.getElementById('radarChart');
-      const barCanvas = document.getElementById('barChart');
-      
-      if (radarCanvas?.chart) {
-        radarCanvas.chart.destroy();
-      }
-      if (barCanvas?.chart) {
-        barCanvas.chart.destroy();
-      }
-      
-      // Gráfico Radar
-      if (radarCanvas) {
-        const radarCtx = radarCanvas.getContext('2d');
-        radarCanvas.chart = new Chart(radarCtx, {
-          type: 'radar',
-          data: {
-            labels: ['Dominância', 'Influência', 'Estabilidade', 'Conformidade'],
-            datasets: [{
-              label: 'Seu Perfil',
-              data: [percentages.D, percentages.I, percentages.S, percentages.C],
-              backgroundColor: 'rgba(124, 58, 237, 0.2)',
-              borderColor: '#7C3AED',
-              borderWidth: 3,
-              pointBackgroundColor: '#7C3AED',
-              pointBorderColor: '#fff',
-              pointHoverBackgroundColor: '#fff',
-              pointHoverBorderColor: '#7C3AED'
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-              r: {
-                angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
-                grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                pointLabels: { 
-                  color: '#F8FAFC', 
-                  font: { size: 11, family: 'Inter' } 
-                },
-                ticks: { display: false, backdropColor: 'transparent' }
-              }
-            },
-            plugins: {
-              legend: { display: false }
-            }
-          }
-        });
-      }
-      
-      // Gráfico de Barras
-      if (barCanvas) {
-        const barCtx = barCanvas.getContext('2d');
-        barCanvas.chart = new Chart(barCtx, {
-          type: 'bar',
-          data: {
-            labels: ['D', 'I', 'S', 'C'],
-            datasets: [{
-              label: 'Intensidade',
-              data: [percentages.D, percentages.I, percentages.S, percentages.C],
-              backgroundColor: [
-                'rgba(239, 68, 68, 0.8)',
-                'rgba(59, 130, 246, 0.8)',
-                'rgba(16, 185, 129, 0.8)',
-                'rgba(124, 58, 237, 0.8)'
-              ],
-              borderColor: [
-                '#EF4444',
-                '#3B82F6',
-                '#10B981',
-                '#7C3AED'
-              ],
-              borderWidth: 2,
-              borderRadius: 4
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-              y: {
-                beginAtZero: true,
-                max: 100,
-                grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                ticks: { color: '#94A3B8', font: { family: 'Inter' } }
-              },
-              x: {
-                grid: { display: false },
-                ticks: { 
-                  color: '#F8FAFC', 
-                  font: { weight: 'bold', family: 'Inter' } 
-                }
-              }
-            },
-            plugins: {
-              legend: { display: false }
-            }
-          }
-        });
-      }
-    }
+      if (discRadarChartInstance) { discRadarChartInstance.destroy(); discRadarChartInstance = null; }
+      if (discBarChartInstance) { discBarChartInstance.destroy(); discBarChartInstance = null; }
 
-    function renderInsights(dominant, secondary, percentages) {
-      const profile = DISC_PROFILES[dominant];
-      
-      if (!profile) return;
-      
-      // Atualizar insights principais
-      const commInsight = document.getElementById('communicationInsight');
-      const leadInsight = document.getElementById('leadershipInsight');
-      const decInsight = document.getElementById('decisionInsight');
-      const presInsight = document.getElementById('pressureInsight');
-      
-      if (commInsight) commInsight.textContent = profile.insights.communication;
-      if (leadInsight) leadInsight.textContent = profile.insights.leadership;
-      if (decInsight) decInsight.textContent = profile.insights.decision;
-      if (presInsight) presInsight.textContent = profile.insights.pressure;
-      
-      // Pontos fortes
-      const strengthsList = document.getElementById('strengthsList');
-      if (strengthsList) {
-        strengthsList.innerHTML = profile.strengths.map(strength => `
-          <li class="flex items-start gap-2 text-sm text-gray-300" role="listitem">
-            <span class="text-brand-emerald mt-0.5" aria-hidden="true">✓</span>
-            <span>${strength}</span>
-          </li>
-        `).join('');
+      const radarCtx = document.getElementById('discRadarChart');
+      if (radarCtx) {
+        discRadarChartInstance = new Chart(radarCtx.getContext('2d'), {
+          type: 'radar',
+          data: { labels: ['Dominância', 'Influência', 'Estabilidade', 'Conformidade'], datasets: [{ label: 'Seu Perfil', data: [percentages.D, percentages.I, percentages.S, percentages.C], backgroundColor: 'rgba(124, 58, 237, 0.2)', borderColor: '#7C3AED', borderWidth: 2, pointBackgroundColor: '#7C3AED' }] },
+          options: { responsive: true, maintainAspectRatio: false, scales: { r: { min: 0, max: 100, angleLines: { color: 'rgba(255,255,255,0.1)' }, grid: { color: 'rgba(255,255,255,0.1)' }, pointLabels: { color: '#94A3B8', font: { size: 10, family: 'Inter' } }, ticks: { display: false, backdropColor: 'transparent' } } }, plugins: { legend: { display: false } } }
+        });
       }
-      
-      // Pontos de desenvolvimento
-      const devList = document.getElementById('developmentList');
-      if (devList) {
-        devList.innerHTML = profile.development.map(point => `
-          <li class="flex items-start gap-2 text-sm text-gray-300" role="listitem">
-            <span class="text-brand-rose mt-0.5" aria-hidden="true">•</span>
-            <span>${point}</span>
-          </li>
-        `).join('');
-      }
-      
-      // Sugestões de carreira
-      const careers = document.getElementById('careerSuggestions');
-      if (careers) {
-        careers.innerHTML = profile.careers.map(career => `
-          <span class="px-3 py-1.5 rounded-full text-xs font-medium glass border border-white/10 hover:border-white/30 transition cursor-default" role="listitem">
-            ${career}
-          </span>
-        `).join('');
-      }
-      
-      // Insights inteligentes
-      const insights = document.getElementById('smartInsights');
-      if (insights) {
-        const smartInsights = [
-          {
-            icon: '🎯',
-            title: 'Ambiente Ideal',
-            text: 'Ambientes dinâmicos com autonomia para tomar decisões e foco em resultados.'
-          },
-          {
-            icon: '👥',
-            title: 'Estilo de Colaboração',
-            text: 'Trabalha melhor com equipes que valorizam objetividade e eficiência.'
-          },
-          {
-            icon: '🚀',
-            title: 'Potencial de Crescimento',
-            text: 'Desenvolver habilidades de escuta ativa pode ampliar sua influência.'
-          }
-        ];
-        
-        insights.innerHTML = smartInsights.map(insight => `
-          <div class="glass p-4 rounded-xl" role="listitem">
-            <div class="text-2xl mb-2" aria-hidden="true">${insight.icon}</div>
-            <h4 class="font-medium text-sm mb-1">${insight.title}</h4>
-            <p class="text-xs text-gray-400">${insight.text}</p>
-          </div>
-        `).join('');
+
+      const barCtx = document.getElementById('discBarChart');
+      if (barCtx) {
+        discBarChartInstance = new Chart(barCtx.getContext('2d'), {
+          type: 'bar',
+          data: { labels: ['D', 'I', 'S', 'C'], datasets: [{ label: '%', data: [percentages.D, percentages.I, percentages.S, percentages.C], backgroundColor: ['#EF4444', '#3B82F6', '#10B981', '#7C3AED'], borderRadius: 6 }] },
+          options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#94A3B8', font: { family: 'Inter' } } }, x: { grid: { display: false }, ticks: { color: '#F8FAFC', font: { weight: 'bold', size: 10, family: 'Inter' } } } }, plugins: { legend: { display: false } } }
+        });
       }
     }
 
     // ============================================
-    // FUNÇÕES DO MODAL E LOGOFF
+    // ✅ FUNÇÕES DO MODAL E LOGOFF + openVigorreReport
     // ============================================
     function openSimpleReportModal() {
-      console.log('🔒 Abrindo modal de relatório completo');
+      console.log('🔒 Abrindo modal de relatório completo DISC');
       const modal = document.getElementById('simpleReportModal');
-      if (modal) {
-        modal.classList.remove('hidden');
-        // Impedir scroll na página de fundo
-        document.body.style.overflow = 'hidden';
-        // Focar no botão do modal para acessibilidade
-        const btn = modal.querySelector('.modal-btn');
-        if (btn) setTimeout(() => btn.focus(), 100);
-      }
+      if (modal) { modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; const btn = modal.querySelector('.modal-btn'); if (btn) setTimeout(() => btn.focus(), 100); }
     }
 
     function closeModalAndLogout() {
       console.log('🔐 Fechando modal e realizando logoff');
       const modal = document.getElementById('simpleReportModal');
-      if (modal) {
-        modal.classList.add('hidden');
-        // Restaurar scroll na página
-        document.body.style.overflow = '';
-      }
-      // Fazer logoff
+      if (modal) { modal.classList.add('hidden'); document.body.style.overflow = ''; }
       performLogout();
     }
 
-    function performLogout() {
-      console.log('🔐 Realizando logoff completo...');
-      
-      // Tentar remover sessão do Supabase se disponível
-      if (window.VigorreDB && VigorreDB.supabase) {
-        const token = sessionStorage.getItem('vigorre_session_token');
-        if (token) {
-          VigorreDB.supabase
-            .from('sessions')
-            .delete()
-            .eq('token', token)
-            .then(() => console.log('✅ Sessão removida do Supabase'))
-            .catch(e => console.warn('⚠️ Não foi possível remover sessão do Supabase:', e));
+    // ✅ CORREÇÃO: Função openVigorreReport ADICIONADA (estava faltando)
+    function openVigorreReport(participantId, reportType) {
+      try {
+        // Buscar participante no localStorage (fallback)
+        const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+        const participant = participants.find(p => p.id === participantId);
+        
+        if (!participant) {
+          showToast('Participante não encontrado', 'error');
+          return;
         }
+        
+        // Verificar se teste foi completado
+        const completedTests = participant.completedTests || [];
+        if (!completedTests.includes(reportType)) {
+          showToast(`Participante ainda não completou o teste de ${reportType}`, 'warning');
+          return;
+        }
+        
+        // Salvar dados do participante para o relatório
+        localStorage.setItem('vigorre_report_participant', JSON.stringify({
+          id: participant.id,
+          name: participant.name
+        }));
+        
+        // Definir arquivo do relatório baseado no tipo
+        let reportFile = '';
+        if (reportType === 'DISC') reportFile = 'relatorio-disc-vigorre.html';
+        else if (reportType === 'IE') reportFile = 'relatorio-ie-vigorre.html';
+        else if (reportType === 'Valores') reportFile = 'relatorio-valores-vigorre.html';
+        
+        if (reportFile) {
+          // Abrir relatório em nova aba com parâmetros
+          const newWindow = window.open(reportFile + '?participantId=' + participantId + '&ts=' + Date.now(), '_blank');
+          if (newWindow) {
+            showToast('📊 Abrindo relatório Vigorre One™...', 'success');
+          } else {
+            showToast('⚠️ Bloqueador de pop-up pode estar impedindo.', 'warning');
+          }
+        } else {
+          showToast('Arquivo de relatório não encontrado.', 'error');
+        }
+      } catch (e) {
+        console.error('Erro ao abrir relatório:', e);
+        showToast('Erro ao abrir relatório', 'error');
       }
-      
-      // Marcar logout para sincronização entre abas
+    }
+
+    async function performLogout() {
+      console.log('🔐 Realizando logoff completo...');
+      if (typeof window.VigorreDB !== 'undefined' && VigorreDB && VigorreDB.supabase) {
+        const token = sessionStorage.getItem('vigorre_session_token');
+        if (token) { try { await VigorreDB.supabase.from('sessions').delete().eq('token', token); console.log('✅ Sessão removida do Supabase'); } catch (e) { console.warn('⚠️ Não foi possível remover sessão do Supabase:', e); } }
+      }
       sessionStorage.setItem('vigorre_logged_out', 'true');
-      
-      // Limpar dados locais
-      localStorage.removeItem('vigorre_current_user');
-      localStorage.removeItem('vigorre_password_temp');
-      sessionStorage.clear();
-      
-      // Redirecionar para login com parâmetros para evitar cache
+      localStorage.removeItem('vigorre_current_user'); localStorage.removeItem('vigorre_password_temp'); sessionStorage.clear();
       window.location.href = 'login.html?loggedout=1&ts=' + Date.now();
     }
+
+    function downloadSimpleReport() { openSimpleReportModal(); }
 
     // ============================================
     // TOAST NOTIFICATIONS
     // ============================================
     function showToast(message, type) {
       type = type || 'success';
-      const toast = document.getElementById('toast');
-      const icon = document.getElementById('toastIcon');
-      const msg = document.getElementById('toastMessage');
-      
+      const toast = document.getElementById('toast'), icon = document.getElementById('toastIcon'), msg = document.getElementById('toastMessage');
       if (!toast) return;
-      
-      // Configurar conteúdo
-      icon.textContent = type === 'success' ? '✅' : type === 'error' ? '❌' : '⚠️';
-      msg.textContent = message;
-      
-      // Aplicar classe de estilo
-      toast.className = `toast ${type}`;
-      
-      // Mostrar toast
-      toast.classList.remove('hidden');
+      icon.textContent = type === 'success' ? '✅' : type === 'error' ? '❌' : '⚠️'; msg.textContent = message;
+      toast.className = `toast ${type}`; toast.classList.remove('hidden');
       setTimeout(() => toast.classList.add('show'), 10);
-      
-      // Esconder após tempo
       if (toast.timeoutId) clearTimeout(toast.timeoutId);
-      toast.timeoutId = setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => {
-          toast.classList.add('hidden');
-          toast.style.opacity = '1';
-          toast.style.transform = 'translateX(0)';
-        }, 300);
-      }, type === 'error' ? 6000 : 4000);
+      toast.timeoutId = setTimeout(() => { toast.classList.remove('show'); setTimeout(() => { toast.classList.add('hidden'); toast.style.opacity = '1'; toast.style.transform = 'translateX(0)'; }, 300); }, type === 'error' ? 6000 : 4000);
     }
 
-    function hideToast() {
-      const toast = document.getElementById('toast');
-      if (!toast) return;
-      
-      toast.classList.remove('show');
-      setTimeout(() => {
-        toast.classList.add('hidden');
-        toast.style.opacity = '1';
-        toast.style.transform = 'translateX(0)';
-      }, 300);
-    }
+    function hideToast() { const toast = document.getElementById('toast'); if (!toast) return; toast.classList.remove('show'); setTimeout(() => { toast.classList.add('hidden'); toast.style.opacity = '1'; toast.style.transform = 'translateX(0)'; }, 300); }
 
     // ============================================
     // TRATAMENTO DE ERROS GLOBAIS
     // ============================================
-    window.addEventListener('error', function(e) {
-      console.error('❌ Erro no teste DISC Vigorre One™:', e);
-      showToast('⚠️ Ocorreu um erro. Recarregue a página se o problema persistir.', 'error');
-      return true;
-    });
-
-    // ============================================
-    // PREVENÇÃO DE BACK BUTTON APÓS LOGOUT
-    // ============================================
-    window.addEventListener('pageshow', function(event) {
-      if (event.persisted) {
-        const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
-        const sessionActive = sessionStorage.getItem('vigorre_session_active') === 'true';
-        
-        if (!currentUser.role || !sessionActive) {
-          window.location.replace('login.html');
-        }
-      }
-    });
+    window.addEventListener('error', function(e) { console.error('❌ Erro no Teste DISC Vigorre One™:', e); showToast('⚠️ Ocorreu um erro. Recarregue a página se o problema persistir.', 'error'); return true; });
 
     // ============================================
     // DEBUG INICIAL
     // ============================================
-    console.log('🔍 Teste DISC - Estado inicial:', {
-      session: AppState.session?.name || 'não carregado',
-      participant: AppState.participant?.name || 'não carregado',
-      localStorage: {
-        user: !!localStorage.getItem('vigorre_current_user'),
-        participants: !!localStorage.getItem('vigorre_participants'),
-        progress: !!localStorage.getItem('disc_assessment_progress')
-      },
-      supabase: {
-        available: !!window.VigorreDB,
-        url: window.VigorreDB?.supabase ? 'conectado' : 'não conectado'
-      }
-    });
+    console.log('🔍 Teste DISC - Estado inicial:', { session: AppState.session?.name || 'não carregado', participant: AppState.participant?.name || 'não carregado', localStorage: { user: !!localStorage.getItem('vigorre_current_user'), participants: !!localStorage.getItem('vigorre_participants'), disc: !!localStorage.getItem('vigorre_last_disc_result') }, supabase: { available: typeof window.VigorreDB !== 'undefined', url: (typeof VigorreDB !== 'undefined' && VigorreDB?.supabase) ? 'conectado' : 'não conectado' } });
 
     // ============================================
     // EXPORTS PARA MÓDULOS (OPCIONAL)
     // ============================================
-    if (typeof module !== 'undefined' && module.exports) {
-      module.exports = { 
-        showToast, 
-        performLogout, 
-        startAssessment,
-        DISC_PROFILES 
-      };
-    }
+    if (typeof module !== 'undefined' && module.exports) { module.exports = { showToast, performLogout, openVigorreReport, DISC_INTERPRETATIONS }; }
   </script>
 </body>
 </html>
