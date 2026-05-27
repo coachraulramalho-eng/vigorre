@@ -14,6 +14,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   
+  <!-- ✅ FIREBASE SDK - CARREGAR ANTES DO CONFIG -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  
+  <!-- ✅ SUA CONFIGURAÇÃO FIREBASE -->
+  <script src="firebase-config.js"></script>
+  
   <style>
     /* ============================================
        RESET & BASE - ENTERPRISE PREMIUM
@@ -839,7 +847,7 @@
   </main>
 
   <!-- ============================================
-       SCRIPTS - SEGURANÇA E FUNCIONALIDADE
+       SCRIPTS - SEGURANÇA E FUNCIONALIDADE COM FIREBASE
        ============================================ -->
   <script>
     'use strict';
@@ -878,12 +886,6 @@
           e.preventDefault();
         }
       });
-      
-      // Prevenir paste em campo de senha (opcional, pode ser removido se necessário)
-      // document.getElementById('password').addEventListener('paste', function(e) {
-      //   e.preventDefault();
-      //   showAlert('⚠️ Cole sua senha com cuidado em um ambiente seguro', 'warning');
-      // });
     });
     
     // ============================================
@@ -1038,9 +1040,9 @@
     }
 
     // ============================================
-    // FUNÇÃO PRINCIPAL: Processar login
+    // FUNÇÃO PRINCIPAL: Processar login COM FIREBASE
     // ============================================
-    function handleLogin(e) {
+    async function handleLogin(e) {
       e.preventDefault(); // Impede recarregamento da página
       
       // Captura os valores dos campos
@@ -1067,11 +1069,7 @@
       // Esconder alertas anteriores
       hideAlert();
 
-      // Simula tempo de processamento seguro (600-900ms)
-      const processingTime = 600 + Math.random() * 300;
-      
-      setTimeout(function() {
-        
+      try {
         // ========================================
         // 1. LOGIN ADMIN MASTER (CREDENCIAL FIXA)
         // ========================================
@@ -1101,8 +1099,70 @@
         }
 
         // ========================================
-        // 2. LOGIN STAFF VIGORRE (BANCO LOCAL)
+        // 2. LOGIN COM FIREBASE AUTH
         // ========================================
+        // Verificar se Firebase está disponível
+        if (typeof firebase !== 'undefined' && firebase.auth) {
+          
+          // Tentar autenticação com Firebase
+          const userCredential = await firebase.auth()
+            .signInWithEmailAndPassword(input, pass)
+            .catch(function(error) {
+              // Se falhar no Firebase, tenta fallback no localStorage
+              throw error;
+            });
+          
+          // Login Firebase bem-sucedido
+          const user = userCredential.user;
+          
+          // Buscar dados adicionais do usuário no Firestore
+          let userData = {
+            id: user.uid,
+            name: user.displayName || input.split('@')[0],
+            email: user.email,
+            role: currentEnv === 'admin' ? 'admin' : 'participant',
+            type: currentEnv,
+            loginAt: new Date().toISOString()
+          };
+          
+          // Tentar buscar dados completos do Firestore
+          if (window.firebaseDB && firebaseDB.db) {
+            try {
+              const doc = await firebaseDB.db.collection('users').doc(user.uid).get();
+              if (doc.exists) {
+                userData = { ...userData, ...doc.data() };
+              }
+            } catch (e) {
+              console.log('ℹ️ Dados adicionais não encontrados, usando padrão');
+            }
+          }
+          
+          // Armazenar sessão
+          localStorage.setItem('vigorre_current_user', JSON.stringify(userData));
+          sessionStorage.setItem('vigorre_session_active', 'true');
+          
+          showAlert('✅ Bem-vindo, ' + userData.name.split(' ')[0] + '!', 'success');
+          
+          // Redirecionar conforme papel
+          const redirectMap = {
+            'admin': 'admin.html',
+            'staff': 'admin.html',
+            'participant': 'dashboard-participante.html'
+          };
+          
+          setTimeout(function() {
+            window.location.href = (redirectMap[userData.role] || 'admin.html') + '?t=' + Date.now();
+          }, 1200);
+          
+          return;
+        }
+        
+        // ========================================
+        // 3. FALLBACK: LOGIN LOCAL (SEM FIREBASE)
+        // ========================================
+        // Se Firebase não estiver disponível, usa localStorage como fallback
+        
+        // Login Staff Vigorre (banco local)
         if (currentEnv === 'admin') {
           const staff = JSON.parse(localStorage.getItem('vigorre_staff') || '[]');
           const staffUser = staff.find(function(s) { 
@@ -1134,9 +1194,7 @@
           }
         }
 
-        // ========================================
-        // 3. LOGIN PARTICIPANTE (BANCO LOCAL)
-        // ========================================
+        // Login Participante (banco local)
         if (currentEnv === 'participant') {
           const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
           const participant = participants.find(function(p) { 
@@ -1161,7 +1219,6 @@
             showAlert('✅ Bem-vindo, ' + participant.name.split(' ')[0] + '!', 'success');
             
             setTimeout(function() {
-              // Redirecionar para dashboard do participante
               window.location.href = 'dashboard-participante.html?t=' + Date.now();
             }, 1200);
             return;
@@ -1169,19 +1226,33 @@
         }
 
         // ========================================
-        // 4. CREDENCIAIS INVÁLIDAS - SEGURANÇA
+        // 4. CREDENCIAIS INVÁLIDAS
         // ========================================
-        // Log tentativa falha (em produção, enviar para analytics)
         console.warn('🔐 Tentativa de login falha:', {
           env: currentEnv,
           input: input,
-          timestamp: new Date().toISOString(),
-          userAgent: navigator.userAgent
+          timestamp: new Date().toISOString()
         });
         
         showAlert('❌ Credenciais inválidas. Verifique usuário, senha e ambiente selecionado.', 'error');
         
-        // Resetar botão
+      } catch (error) {
+        // Tratamento de erro do Firebase ou fallback
+        console.error('❌ Erro no login:', error);
+        
+        let errorMsg = '❌ Erro ao conectar. Verifique sua internet.';
+        
+        if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+          errorMsg = '❌ Usuário ou senha incorretos.';
+        } else if (error.code === 'auth/too-many-requests') {
+          errorMsg = '⚠️ Muitas tentativas. Aguarde alguns minutos.';
+        } else if (error.code === 'auth/network-request-failed') {
+          errorMsg = '❌ Sem conexão. Verifique sua internet.';
+        }
+        
+        showAlert(errorMsg, 'error');
+      } finally {
+        // Resetar botão sempre
         loginBtn.disabled = false;
         loginBtn.classList.remove('loading');
         loginBtn.textContent = 'Entrar no Vigorre One™';
@@ -1189,8 +1260,7 @@
         // Focar no campo de senha para nova tentativa
         passInput.focus();
         passInput.select();
-        
-      }, processingTime);
+      }
     }
 
     // ============================================
@@ -1262,7 +1332,6 @@
     // ============================================
     // UTILITÁRIOS - SR ONLY PARA ACESSIBILIDADE
     // ============================================
-    // Adicionar classe sr-only dinamicamente se não existir no CSS
     (function() {
       const style = document.createElement('style');
       style.textContent = `
