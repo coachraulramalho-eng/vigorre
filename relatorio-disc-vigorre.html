@@ -37,7 +37,7 @@
   </script>
 
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box !important; }
     html { scroll-behavior: smooth; }
     body { 
       font-family: 'Inter', sans-serif; 
@@ -75,6 +75,7 @@
       margin-bottom: 30px;
       overflow: hidden;
       break-inside: avoid;
+      page-break-inside: avoid;
     }
     
     .vigorre-card .card-header {
@@ -136,43 +137,54 @@
       color: white;
     }
 
-    /* GRID VIGOR - 5 DIMENSÕES */
+    /* GRID VIGOR - 5 DIMENSÕES (AJUSTADO PARA IMPRESSÃO) */
     .vigor-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 15px;
+      gap: 12px;
       margin: 20px 0;
+      width: 100%;
+      max-width: 100%;
     }
     .vigor-item {
       background: linear-gradient(135deg, #0A1628, #1e3a5f);
       color: white;
-      padding: 20px;
-      border-radius: 10px;
+      padding: 15px 10px;
+      border-radius: 8px;
       text-align: center;
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      min-width: 0;
+      width: 100%;
     }
     .vigor-letter {
-      font-size: 36px;
+      font-size: 28px;
       font-weight: 900;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       display: block;
+      line-height: 1;
     }
     .vigor-title {
-      font-size: 12px;
+      font-size: 10px;
       font-weight: 700;
       text-transform: uppercase;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
+      line-height: 1.2;
     }
     .vigor-desc {
-      font-size: 11px;
-      opacity: 0.9;
-      line-height: 1.4;
+      font-size: 9px;
+      opacity: 0.95;
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
     .vigor-score {
-      margin-top: 10px;
-      font-size: 24px;
+      margin-top: 8px;
+      font-size: 20px;
       font-weight: 800;
       color: #10B981;
+      line-height: 1;
     }
 
     .modal-overlay {
@@ -249,7 +261,9 @@
       border-left: 3px solid #1D4ED8;
     }
 
-    /* PRINT - MARGENS PRECISAS */
+    /* ============================================
+       PRINT OPTIMIZATION - MARGENS PRECISAS (3cm)
+       ============================================ */
     @media print {
       @page {
         size: A4 portrait;
@@ -259,26 +273,28 @@
       body { 
         background: #ffffff !important;
         color: #000000 !important;
-        font-size: 9.5pt;
-        line-height: 1.5;
+        font-size: 9pt;
+        line-height: 1.4;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
       
       .no-print { display: none !important; }
       
+      /* Header fixo - TERMINA a 25mm (2.5cm) do topo */
       .print-header {
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 5mm 15mm !important;
+        padding: 4mm 12mm !important;
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         z-index: 9999;
-        height: 15mm;
-        box-sizing: border-box;
+        height: 25mm; /* 2.5cm - altura até o FINAL do azul */
+        box-sizing: border-box !important;
+        align-items: center;
       }
       
       .print-header .print-header-content {
@@ -286,27 +302,27 @@
         justify-content: space-between;
         align-items: center;
         width: 100%;
-        max-width: 175mm;
+        max-width: 180mm; /* Largura útil A4 com margens laterais */
         margin: 0 auto;
       }
       
-      .print-header .print-logo { display: flex; align-items: center; gap: 5mm; }
+      .print-header .print-logo { display: flex; align-items: center; gap: 4mm; }
       
       .print-header .print-logo-box {
-        width: 10mm;
-        height: 10mm;
+        width: 9mm;
+        height: 9mm;
         background: #ffffff !important;
         color: #0A1628;
-        border-radius: 3mm;
+        border-radius: 2mm;
         display: flex !important;
         align-items: center;
         justify-content: center;
         font-weight: 900;
-        font-size: 9pt;
+        font-size: 8pt;
       }
       
       .print-header h1 {
-        font-size: 10pt;
+        font-size: 9pt;
         font-weight: 800;
         margin: 0;
         color: white !important;
@@ -314,65 +330,151 @@
       }
       
       .print-header p {
-        font-size: 6.5pt;
+        font-size: 6pt;
         margin: 0;
-        opacity: 0.9;
-        color: rgba(255,255,255,0.9) !important;
+        opacity: 0.95;
+        color: rgba(255,255,255,0.95) !important;
       }
       
       .print-header .print-method {
         text-align: right;
-        font-size: 6.5pt;
-        color: rgba(255,255,255,0.9) !important;
+        font-size: 6pt;
+        color: rgba(255,255,255,0.95) !important;
       }
       
       .print-header .print-method strong {
-        font-size: 9pt;
-        letter-spacing: 1px;
+        font-size: 8pt;
+        letter-spacing: 0.5px;
         display: block;
         color: white !important;
       }
       
-      /* CONTEÚDO - MARGEM DE 25mm DO HEADER/FOOTER */
+      /* Footer fixo - COMEÇA a 25mm (2.5cm) da base */
+      .print-footer {
+        display: flex !important;
+        background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
+        color: white !important;
+        padding: 4mm 12mm !important;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        height: 25mm; /* 2.5cm - altura do azul */
+        box-sizing: border-box !important;
+        align-items: center;
+      }
+      
+      .print-footer .print-footer-content {
+        font-size: 6pt;
+        width: 100%;
+        max-width: 180mm;
+        margin: 0 auto;
+        color: white !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+      }
+      
+      .print-footer .footer-logo-box { display: flex; align-items: center; gap: 4mm; }
+      .print-footer .footer-logo {
+        width: 8mm;
+        height: 8mm;
+        background: #ffffff !important;
+        color: #0A1628;
+        border-radius: 2mm;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        font-size: 7pt;
+      }
+      .print-footer .footer-text h4 {
+        font-size: 7pt;
+        font-weight: 700;
+        margin: 0;
+        color: white !important;
+        line-height: 1.2;
+      }
+      .print-footer .footer-text p {
+        font-size: 5.5pt;
+        margin: 0;
+        opacity: 0.95;
+        color: rgba(255,255,255,0.95) !important;
+      }
+      
+      /* CONTEÚDO PRINCIPAL - MARGENS DE 3cm (30mm) DO HEADER/FOOTER */
       main {
-        margin-top: 40mm !important;
-        margin-bottom: 40mm !important;
+        margin-top: 55mm !important;  /* 25mm header + 30mm espaço = 55mm do topo da página */
+        margin-bottom: 55mm !important; /* 30mm espaço + 25mm footer = 55mm da base da página */
         padding: 0 !important;
         width: 100% !important;
-        max-width: 175mm;
+        max-width: 180mm !important; /* 210mm A4 - 15mm margem esquerda - 15mm margem direita */
         margin-left: auto !important;
         margin-right: auto !important;
         display: block !important;
+        box-sizing: border-box !important;
       }
       
+      /* Cards - SEM QUEBRA E COM PADDING AJUSTADO */
       .vigorre-card {
         break-inside: avoid !important;
         page-break-inside: avoid !important;
-        margin-bottom: 10mm !important;
+        margin-bottom: 8mm !important;
         width: 100% !important;
+        box-sizing: border-box !important;
       }
       
       .vigorre-card .card-header {
-        padding: 8mm 12mm !important;
+        padding: 6mm 10mm !important;
         page-break-after: avoid !important;
       }
       
-      .vigorre-card .card-header h2 { font-size: 11pt !important; }
-      .vigorre-card .card-body { padding: 12mm !important; }
+      .vigorre-card .card-header h2 { font-size: 10pt !important; }
+      .vigorre-card .card-body { padding: 10mm !important; }
       
+      /* Grids responsivos para impressão */
       .grid.md\:grid-cols-2 {
         display: grid !important;
         grid-template-columns: 1fr 1fr !important;
-        gap: 10mm !important;
-        margin-bottom: 10mm !important;
-      }
-      .grid.md\:grid-cols-2 > div { min-width: 0 !important; break-inside: avoid !important; }
-      
-      .chart-container {
-        height: 70mm !important;
+        gap: 8mm !important;
         margin-bottom: 8mm !important;
+      }
+      .grid.md\:grid-cols-2 > div { 
+        min-width: 0 !important; 
+        break-inside: avoid !important;
+        box-sizing: border-box !important;
+      }
+      
+      .grid.md\:grid-cols-3 {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 6mm !important;
+      }
+      .grid.md\:grid-cols-3 > div { 
+        min-width: 0 !important; 
+        break-inside: avoid !important;
+        box-sizing: border-box !important;
+      }
+      
+      .grid.md\:grid-cols-4 {
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 5mm !important;
+      }
+      .grid.md\:grid-cols-4 > div { 
+        min-width: 0 !important; 
+        break-inside: avoid !important;
+        box-sizing: border-box !important;
+      }
+      
+      /* Gráficos - ALTURA CONTROLADA PARA CABER */
+      .chart-container {
+        height: 65mm !important;
+        margin-bottom: 6mm !important;
         position: relative !important;
         width: 100% !important;
+        box-sizing: border-box !important;
       }
       canvas {
         max-width: 100% !important;
@@ -381,110 +483,68 @@
         print-color-adjust: exact !important;
       }
       
+      /* Textos abaixo dos gráficos */
       .chart-container + div,
       .chart-container + .bg-slate-50,
       .chart-container + h3 {
-        margin-top: 8mm !important;
+        margin-top: 6mm !important;
         clear: both !important;
       }
       
+      /* Interpretação DISC */
       #discInterpretation {
         display: flex !important;
         flex-direction: column !important;
-        gap: 6mm !important;
+        gap: 5mm !important;
       }
       #discInterpretation > div {
-        margin-bottom: 6mm !important;
+        margin-bottom: 5mm !important;
         page-break-inside: avoid !important;
       }
       
-      .grid.md\:grid-cols-3 {
-        display: grid !important;
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 8mm !important;
-      }
-      .grid.md\:grid-cols-3 > div { min-width: 0 !important; break-inside: avoid !important; }
-      
-      /* GRID VIGOR NA IMPRESSÃO */
+      /* GRID VIGOR AJUSTADO PARA IMPRESSÃO - 5 COLUNAS QUE CABEM */
       .vigor-grid {
         display: grid !important;
         grid-template-columns: repeat(5, 1fr) !important;
-        gap: 8mm !important;
-        margin: 10mm 0 !important;
+        gap: 4mm !important; /* Gap reduzido para caber 5 colunas em 180mm */
+        margin: 8mm 0 !important;
         page-break-inside: avoid !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
       }
       .vigor-item {
         break-inside: avoid !important;
         page-break-inside: avoid !important;
+        padding: 8mm 4mm !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
       }
+      .vigor-letter { font-size: 22px !important; }
+      .vigor-title { font-size: 8pt !important; }
+      .vigor-desc { font-size: 7pt !important; -webkit-line-clamp: 3 !important; }
+      .vigor-score { font-size: 16px !important; }
       
-      .print-footer {
-        display: flex !important;
-        background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
-        color: white !important;
-        padding: 5mm 15mm !important;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        z-index: 9999;
-        height: 15mm;
-        box-sizing: border-box;
-      }
-      
-      .print-footer .print-footer-content {
-        font-size: 6.5pt;
-        width: 100%;
-        max-width: 175mm;
-        margin: 0 auto;
-        color: white !important;
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-      }
-      
-      .print-footer .footer-logo-box { display: flex; align-items: center; gap: 5mm; }
-      .print-footer .footer-logo {
-        width: 9mm;
-        height: 9mm;
-        background: #ffffff !important;
-        color: #0A1628;
-        border-radius: 3mm;
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
-        font-weight: 900;
-        font-size: 8pt;
-      }
-      .print-footer .footer-text h4 {
-        font-size: 8pt;
-        font-weight: 700;
-        margin: 0;
-        color: white !important;
-        line-height: 1.2;
-      }
-      .print-footer .footer-text p {
-        font-size: 6pt;
-        margin: 0;
-        opacity: 0.9;
-        color: rgba(255,255,255,0.9) !important;
-      }
-      
+      /* Marca d'água */
       .print-watermark {
         display: block !important;
         position: fixed;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%) rotate(-30deg);
-        font-size: 80pt;
+        font-size: 70pt;
         color: rgba(15, 23, 42, 0.04) !important;
         font-weight: 900;
         pointer-events: none;
         z-index: 0;
       }
       
-      section, .vigorre-card { page-break-inside: avoid !important; }
+      /* Evitar quebras em elementos importantes */
+      section, .vigorre-card, .vigor-item { page-break-inside: avoid !important; }
       h2, h3, h4 { page-break-after: avoid !important; }
+      
+      /* Barras de progresso e elementos visuais */
+      .aderencia-bar-container { height: 18px !important; }
+      .w-full { box-sizing: border-box !important; }
     }
     
     .print-header { display: none; }
@@ -1282,7 +1342,6 @@
               };
               console.log('✅ Resultados DISC carregados do Supabase');
               
-              // Calcular scores VIGOR baseados no DISC
               calculateVigorScores();
               
               return true;
@@ -1305,7 +1364,6 @@
         AppState.discResults = JSON.parse(discData);
         console.log('✅ Dados DISC carregados do localStorage');
         
-        // Calcular scores VIGOR
         calculateVigorScores();
         
         return true;
@@ -1317,28 +1375,13 @@
       }
     }
 
-    // ============================================
-    // CÁLCULO DOS SCORES VIGOR BASEADO NO DISC
-    // ============================================
     function calculateVigorScores() {
       const p = AppState.discResults.percentages;
-      
-      // Algoritmo de cálculo VIGOR baseado no perfil DISC
-      // V (Visão Estratégica): D + C (foco em resultados + análise)
       AppState.vigorScores.V = Math.round((p.D * 0.6 + p.C * 0.4));
-      
-      // I (Inteligência Humana): I + S (relacionamento + empatia)
       AppState.vigorScores.I = Math.round((p.I * 0.7 + p.S * 0.3));
-      
-      // G (Gestão de Performance): D + I (liderança + influência)
       AppState.vigorScores.G = Math.round((p.D * 0.5 + p.I * 0.5));
-      
-      // O (Organização Estrutural): C + S (processos + estabilidade)
       AppState.vigorScores.O = Math.round((p.C * 0.6 + p.S * 0.4));
-      
-      // R (Resultado Sustentável): S + C (consistência + qualidade)
       AppState.vigorScores.R = Math.round((p.S * 0.5 + p.C * 0.5));
-      
       console.log('✅ Scores VIGOR calculados:', AppState.vigorScores);
     }
 
@@ -1545,14 +1588,12 @@
       const container = safeGetElement('vigorAnalysisContent');
       if (!container) return;
 
-      // Atualizar scores visuais
       document.getElementById('vigorV').textContent = AppState.vigorScores.V + '%';
       document.getElementById('vigorI').textContent = AppState.vigorScores.I + '%';
       document.getElementById('vigorG').textContent = AppState.vigorScores.G + '%';
       document.getElementById('vigorO').textContent = AppState.vigorScores.O + '%';
       document.getElementById('vigorR').textContent = AppState.vigorScores.R + '%';
 
-      // Análise detalhada VIGOR
       const vigorAnalysis = {
         V: {
           title: "Visão Estratégica",
@@ -1876,80 +1917,29 @@
       safeGetElement('envManagement').textContent = dominant === 'D'?'Gestão por objetivos e resultados. Check-ins focados em métricas e remoção de bloqueios.':dominant === 'I'?'Gestão participativa. Feedback frequente, reconhecimento público e co-criação.':dominant === 'S'?'Gestão de suporte. Comunicação clara, previsibilidade e desenvolvimento contínuo.':'Gestão técnica. Padrões definidos, revisão por pares e autonomia especializada.';
     }
     function renderPDI(r, dominant) {
-      // CURSOS RECOMENDADOS DO MERCADO BASEADOS NO PERFIL
       const coursesByProfile = {
         D: {
-          short: [
-            '📚 Curso: Inteligência Emocional para Líderes (Daniel Goleman) - Desenvolver empatia e escuta ativa',
-            '📚 Curso: Comunicação Não-Violenta (CNV) - Marshall Rosenberg - Melhorar relacionamentos interpessoais',
-            '📚 Curso: Delegação Eficaz - Aprender a confiar e distribuir responsabilidades'
-          ],
-          medium: [
-            '📚 Programa: Liderança Servidora - Ken Blanchard - Equilibrar resultados com desenvolvimento de pessoas',
-            '📚 Curso: Gestão de Conflitos e Negociação - Harvard Negotiation Project',
-            '📚 Certificação: Coaching de Equipes de Alta Performance - ICF'
-          ],
-          long: [
-            '📚 MBA em Gestão de Pessoas e Comportamento Organizacional',
-            '📚 Programa: Liderança Adaptativa - Harvard Kennedy School',
-            '📚 Certificação: Master Coach em Desenvolvimento de Lideranças'
-          ]
+          short: ['📚 Curso: Inteligência Emocional para Líderes (Daniel Goleman)','📚 Curso: Comunicação Não-Violenta (CNV) - Marshall Rosenberg','📚 Curso: Delegação Eficaz'],
+          medium: ['📚 Programa: Liderança Servidora - Ken Blanchard','📚 Curso: Gestão de Conflitos e Negociação - Harvard','📚 Certificação: Coaching de Equipes - ICF'],
+          long: ['📚 MBA em Gestão de Pessoas','📚 Programa: Liderança Adaptativa - Harvard','📚 Certificação: Master Coach em Lideranças']
         },
         I: {
-          short: [
-            '📚 Curso: Gestão do Tempo e Produtividade - David Allen (GTD) - Foco e priorização',
-            '📚 Curso: Pensamento Crítico e Análise de Dados - Evitar decisões apenas por intuição',
-            '📚 Curso: Planejamento Estratégico Pessoal - Definir metas claras e mensuráveis'
-          ],
-          medium: [
-            '📚 Programa: Gestão de Projetos (PMP ou Scrum Master) - Estrutura e disciplina',
-            '📚 Curso: Finanças para Não Financeiros - Entender números e indicadores',
-            '📚 Curso: Análise de Dados e Business Intelligence - Tomada de decisão baseada em dados'
-          ],
-          long: [
-            '📚 MBA em Gestão Estratégica de Negócios',
-            '📚 Programa: Executive Leadership - INSEAD ou Stanford',
-            '📚 Certificação: Black Belt em Lean Six Sigma - Excelência operacional'
-          ]
+          short: ['📚 Curso: Gestão do Tempo e Produtividade - GTD','📚 Curso: Pensamento Crítico e Análise de Dados','📚 Curso: Planejamento Estratégico Pessoal'],
+          medium: ['📚 Programa: Gestão de Projetos (PMP/Scrum)','📚 Curso: Finanças para Não Financeiros','📚 Curso: Business Intelligence'],
+          long: ['📚 MBA em Gestão Estratégica','📚 Programa: Executive Leadership - INSEAD','📚 Certificação: Lean Six Sigma Black Belt']
         },
         S: {
-          short: [
-            '📚 Curso: Assertividade e Comunicação Eficaz - Aprender a dizer não e estabelecer limites',
-            '📚 Curso: Gestão da Mudança - John Kotter - Lidar melhor com transformações',
-            '📚 Curso: Tomada de Decisão sob Pressão - Agilidade sem perder qualidade'
-          ],
-          medium: [
-            '📚 Programa: Liderança Ágil (Agile Leadership) - Adaptabilidade e inovação',
-            '📚 Curso: Inovação e Disrupção - Clayton Christensen - Abertura ao novo',
-            '📚 Curso: Gestão de Riscos e Cenários - Antecipação e planejamento'
-          ],
-          long: [
-            '📚 MBA em Inovação e Transformação Digital',
-            '📚 Programa: Strategic Leadership - MIT Sloan',
-            '📚 Certificação: Change Management Professional (CCMP)'
-          ]
+          short: ['📚 Curso: Assertividade e Comunicação Eficaz','📚 Curso: Gestão da Mudança - John Kotter','📚 Curso: Tomada de Decisão sob Pressão'],
+          medium: ['📚 Programa: Liderança Ágil','📚 Curso: Inovação e Disrupção','📚 Curso: Gestão de Riscos'],
+          long: ['📚 MBA em Inovação Digital','📚 Programa: Strategic Leadership - MIT','📚 Certificação: Change Management Professional']
         },
         C: {
-          short: [
-            '📚 Curso: Pensamento Sistêmico e Visão Holística - Peter Senge - Enxergar o todo',
-            '📚 Curso: Agilidade e Métodos Ágeis (Scrum/Kanban) - Velocidade sem perder qualidade',
-            '📚 Curso: Storytelling para Negócios - Comunicar ideias de forma envolvente'
-          ],
-          medium: [
-            '📚 Programa: Liderança Inspiradora - Simon Sinek - Conectar pessoas ao propósito',
-            '📚 Curso: Design Thinking - Inovação centrada no ser humano',
-            '📚 Curso: Gestão de Stakeholders e Influência - Construir redes de relacionamento'
-          ],
-          long: [
-            '📚 MBA em Liderança e Gestão de Pessoas',
-            '📚 Programa: Advanced Management Program - Harvard Business School',
-            '📚 Certificação: Organizational Development Professional'
-          ]
+          short: ['📚 Curso: Pensamento Sistêmico - Peter Senge','📚 Curso: Agilidade e Métodos Ágeis','📚 Curso: Storytelling para Negócios'],
+          medium: ['📚 Programa: Liderança Inspiradora - Simon Sinek','📚 Curso: Design Thinking','📚 Curso: Gestão de Stakeholders'],
+          long: ['📚 MBA em Liderança','📚 Programa: Advanced Management - Harvard','📚 Certificação: Organizational Development']
         }
       };
-
       const courses = coursesByProfile[dominant] || coursesByProfile.C;
-      
       safeGetElement('pdiShort').innerHTML = courses.short.map(i => `<li class="flex items-start gap-2"><span class="text-emerald-500 mt-1">●</span> ${i}</li>`).join('');
       safeGetElement('pdiMedium').innerHTML = courses.medium.map(i => `<li class="flex items-start gap-2"><span class="text-amber-500 mt-1">●</span> ${i}</li>`).join('');
       safeGetElement('pdiLong').innerHTML = courses.long.map(i => `<li class="flex items-start gap-2"><span class="text-purple-500 mt-1">●</span> ${i}</li>`).join('');
