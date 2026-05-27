@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Assessment DISC | Vigorre One™ | People Analytics Enterprise</title>
+  <meta name="description" content="Vigorre One™ - Assessment DISC • People Analytics Enterprise">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Assessment DISC | Vigorre One™ • People Analytics Enterprise</title>
   
-  <!-- ✅ SUPABASE SDK - CARREGAR PRIMEIRO -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  
-  <!-- ✅ CONFIGURAÇÃO SUPABASE - SUAS CHAVES -->
-  <script src="supabase-config.js"></script>
-  
-  <!-- Fonts -->
+  <!-- Fonts Premium -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Preconnect para performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -26,36 +26,52 @@
       theme: {
         extend: {
           colors: {
-            primary: {
-              900: '#0F172A',
-              800: '#1E293B',
-              700: '#334155',
-              600: '#475569',
-              500: '#64748B',
-            },
             brand: {
+              navy: '#0A1628',
               blue: '#1D4ED8',
+              blueDark: '#1E40AF',
               purple: '#7C3AED',
               cyan: '#06B6D4',
               emerald: '#10B981',
               amber: '#F59E0B',
               rose: '#F43F5E',
-              navy: '#0A1628'
+              slate: {
+                50: '#F8FAFC',
+                100: '#F1F5F9',
+                200: '#E2E8F0',
+                300: '#CBD5E1',
+                400: '#94A3B8',
+                500: '#64748B',
+                600: '#475569',
+                700: '#334155',
+                800: '#1E293B',
+                900: '#0F172A'
+              }
             }
           },
           animation: {
             'fade-in': 'fadeIn 0.5s ease-out',
             'slide-up': 'slideUp 0.4s ease-out',
             'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'shimmer': 'shimmer 2s linear infinite',
+            'float': 'float 6s ease-in-out infinite'
           },
           keyframes: {
             fadeIn: {
               '0%': { opacity: '0' },
-              '100%': { opacity: '1' },
+              '100%': { opacity: '1' }
             },
             slideUp: {
               '0%': { opacity: '0', transform: 'translateY(20px)' },
-              '100%': { opacity: '1', transform: 'translateY(0)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' }
+            },
+            shimmer: {
+              '0%': { transform: 'translateX(-100%)' },
+              '100%': { transform: 'translateX(100%)' }
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-10px)' }
             }
           }
         }
@@ -65,36 +81,120 @@
   
   <style>
     /* ============================================
-       RESET E BASE - ENTERPRISE PREMIUM
+       RESET & BASE - ENTERPRISE PREMIUM
        ============================================ */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    *, *::before, *::after { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+    }
+    
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    :root {
+      /* Sombras Premium */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      
+      /* Bordas */
+      --radius: 0.5rem;
+      --radius-md: 0.75rem;
+      --radius-lg: 1rem;
+      --radius-xl: 1.5rem;
+      --radius-2xl: 2rem;
+      
+      /* Transições */
+      --transition-fast: 150ms ease;
+      --transition: 250ms ease;
+      --transition-slow: 350ms ease;
+    }
     
     body { 
-      font-family: 'Inter', sans-serif; 
-      background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%); 
-      color: #F8FAFC; 
-      min-height: 100vh; 
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+      background: linear-gradient(135deg, var(--brand-navy) 0%, var(--brand-slate-800) 50%, var(--brand-slate-900) 100%);
+      color: var(--brand-slate-50); 
+      min-height: 100vh;
       line-height: 1.6;
+      position: relative;
+      overflow-x: hidden;
+    }
+    
+    /* Background animado sutil */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: 
+        radial-gradient(ellipse at 20% 80%, rgba(29, 78, 216, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(124, 58, 237, 0.10) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(6, 182, 212, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      animation: float 20s ease-in-out infinite;
+    }
+    
+    /* Partículas sutis de fundo */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: 
+        radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.08), transparent),
+        radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.06), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.10), transparent),
+        radial-gradient(1px 1px at 160px 120px, rgba(255,255,255,0.05), transparent);
+      background-size: 200px 200px;
+      animation: float 25s linear infinite;
+      pointer-events: none;
+      z-index: 0;
     }
     
     /* ============================================
        GLASSMORPHISM & EFEITOS PREMIUM
        ============================================ */
     .glass {
-      background: rgba(30, 41, 59, 0.7);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      background: rgba(30, 41, 59, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: var(--shadow-lg);
     }
     
     .glass-card {
-      background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 20px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.92), rgba(15, 23, 42, 0.96));
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: var(--radius-2xl);
+      box-shadow: var(--shadow-2xl);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.4), transparent);
+      pointer-events: none;
+    }
+    
+    .glass-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(29, 78, 216, 0.03), transparent 40%, rgba(124, 58, 237, 0.03) 60%, transparent);
+      pointer-events: none;
+      opacity: 0.5;
     }
     
     .gradient-text {
@@ -106,17 +206,24 @@
     
     .gradient-border {
       position: relative;
-      border-radius: 16px;
+      border-radius: var(--radius-lg);
     }
+    
     .gradient-border::before {
       content: '';
       position: absolute;
       inset: -2px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, #1D4ED8, #7C3AED, #06B6D4);
+      border-radius: calc(var(--radius-lg) + 2px);
+      background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple), var(--brand-cyan));
       z-index: -1;
-      opacity: 0.6;
-      filter: blur(8px);
+      opacity: 0.7;
+      filter: blur(10px);
+      animation: pulse 3s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 0.8; }
     }
     
     /* ============================================
@@ -127,105 +234,157 @@
       transform: translateY(30px);
       transition: opacity 0.6s ease, transform 0.6s ease;
     }
+    
     .animate-on-scroll.visible {
       opacity: 1;
       transform: translateY(0);
     }
     
     .hover-lift {
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transition: transform var(--transition), box-shadow var(--transition);
+      will-change: transform, box-shadow;
     }
+    
     .hover-lift:hover {
       transform: translateY(-4px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      box-shadow: var(--shadow-xl);
+    }
+    
+    .hover-lift:active {
+      transform: translateY(-2px);
     }
     
     .pulse-ring {
       position: relative;
     }
+    
     .pulse-ring::after {
       content: '';
       position: absolute;
       inset: -4px;
       border-radius: inherit;
       border: 2px solid transparent;
-      border-top-color: #06B6D4;
-      border-right-color: #7C3AED;
+      border-top-color: var(--brand-cyan);
+      border-right-color: var(--brand-purple);
       animation: spin 2s linear infinite;
       opacity: 0.6;
+      pointer-events: none;
     }
+    
     @keyframes spin {
       to { transform: rotate(360deg); }
+    }
+    
+    .scale-hover {
+      transition: transform var(--transition);
+    }
+    
+    .scale-hover:hover {
+      transform: scale(1.02);
     }
     
     /* ============================================
        COMPONENTES DO TESTE
        ============================================ */
     .question-card {
-      transition: all 0.3s ease;
+      transition: all var(--transition);
       border-left: 4px solid transparent;
     }
+    
     .question-card.active {
-      border-left-color: #06B6D4;
-      background: rgba(6, 182, 212, 0.05);
+      border-left-color: var(--brand-cyan);
+      background: rgba(6, 182, 212, 0.06);
     }
     
     .rank-item {
       cursor: grab;
-      transition: all 0.2s ease;
+      transition: all var(--transition-fast);
       user-select: none;
+      position: relative;
     }
+    
     .rank-item:active {
       cursor: grabbing;
     }
+    
     .rank-item.dragging {
-      opacity: 0.8;
-      transform: scale(1.02);
-      z-index: 10;
+      opacity: 0.85;
+      transform: scale(1.03);
+      z-index: 50;
+      box-shadow: var(--shadow-xl);
+    }
+    
+    .rank-item.placeholder {
+      opacity: 0.4;
+      background: rgba(255, 255, 255, 0.05);
     }
     
     .rank-badge {
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 600;
+      font-weight: 700;
       font-size: 0.875rem;
-      transition: all 0.2s ease;
+      transition: all var(--transition-fast);
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
     }
-    .rank-1 { background: linear-gradient(135deg, #10B981, #059669); color: white; }
-    .rank-2 { background: linear-gradient(135deg, #3B82F6, #2563EB); color: white; }
-    .rank-3 { background: linear-gradient(135deg, #F59E0B, #D97706); color: white; }
-    .rank-4 { background: linear-gradient(135deg, #EF4444, #DC2626); color: white; }
+    
+    .rank-badge::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: inherit;
+      opacity: 0.2;
+    }
+    
+    .rank-1 { 
+      background: linear-gradient(135deg, var(--brand-emerald), #059669); 
+      color: white;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    .rank-2 { 
+      background: linear-gradient(135deg, var(--brand-blue), #2563EB); 
+      color: white;
+      box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3);
+    }
+    .rank-3 { 
+      background: linear-gradient(135deg, var(--brand-amber), #D97706); 
+      color: white;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    }
+    .rank-4 { 
+      background: linear-gradient(135deg, var(--brand-rose), #DC2626); 
+      color: white;
+      box-shadow: 0 4px 12px rgba(244, 63, 94, 0.3);
+    }
     
     .progress-bar {
       height: 6px;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.12);
       border-radius: 3px;
       overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #1D4ED8, #7C3AED, #06B6D4);
-      border-radius: 3px;
-      transition: width 0.4s ease;
       position: relative;
     }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--brand-blue), var(--brand-purple), var(--brand-cyan));
+      border-radius: 3px;
+      transition: width 0.5s ease;
+      position: relative;
+    }
+    
     .progress-fill::after {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
       animation: shimmer 2s infinite;
-    }
-    @keyframes shimmer {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
     }
     
     /* ============================================
@@ -233,231 +392,422 @@
        ============================================ */
     .disc-chart-container {
       position: relative;
-      height: 300px;
-      max-width: 400px;
+      height: 320px;
+      max-width: 420px;
       margin: 0 auto;
     }
     
     .profile-badge {
-      padding: 8px 16px;
+      padding: 8px 18px;
       border-radius: 100px;
-      font-weight: 600;
+      font-weight: 700;
       font-size: 0.875rem;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
+      border: 1px solid;
+      transition: all var(--transition);
     }
-    .profile-d { background: rgba(239, 68, 68, 0.2); color: #FCA5A5; border: 1px solid rgba(239, 68, 68, 0.3); }
-    .profile-i { background: rgba(59, 130, 246, 0.2); color: #93C5FD; border: 1px solid rgba(59, 130, 246, 0.3); }
-    .profile-s { background: rgba(16, 185, 129, 0.2); color: #86EFAC; border: 1px solid rgba(16, 185, 129, 0.3); }
-    .profile-c { background: rgba(124, 58, 237, 0.2); color: #C4B5FD; border: 1px solid rgba(124, 58, 237, 0.3); }
+    
+    .profile-badge:hover {
+      transform: translateY(-1px);
+    }
+    
+    .profile-d { 
+      background: rgba(239, 68, 68, 0.18); 
+      color: #FCA5A5; 
+      border-color: rgba(239, 68, 68, 0.35); 
+    }
+    .profile-i { 
+      background: rgba(59, 130, 246, 0.18); 
+      color: #93C5FD; 
+      border-color: rgba(59, 130, 246, 0.35); 
+    }
+    .profile-s { 
+      background: rgba(16, 185, 129, 0.18); 
+      color: #86EFAC; 
+      border-color: rgba(16, 185, 129, 0.35); 
+    }
+    .profile-c { 
+      background: rgba(124, 58, 237, 0.18); 
+      color: #C4B5FD; 
+      border-color: rgba(124, 58, 237, 0.35); 
+    }
     
     .insight-card {
       border-left: 4px solid;
-      transition: all 0.3s ease;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
     }
+    
+    .insight-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.02), transparent);
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+    
     .insight-card:hover {
       transform: translateX(4px);
-      background: rgba(255, 255, 255, 0.03);
+      background: rgba(255, 255, 255, 0.04);
     }
-    .insight-d { border-left-color: #EF4444; }
-    .insight-i { border-left-color: #3B82F6; }
-    .insight-s { border-left-color: #10B981; }
-    .insight-c { border-left-color: #7C3AED; }
+    
+    .insight-card:hover::before {
+      opacity: 1;
+    }
+    
+    .insight-d { border-left-color: var(--brand-rose); }
+    .insight-i { border-left-color: var(--brand-blue); }
+    .insight-s { border-left-color: var(--brand-emerald); }
+    .insight-c { border-left-color: var(--brand-purple); }
     
     /* ============================================
-       MODAL PREMIUM - PARA RELATÓRIO SIMPLES
+       MODAL PREMIUM - GLASSMORPHISM
        ============================================ */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(15, 23, 42, 0.92);
+      background: rgba(15, 23, 42, 0.94);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 10000;
-      backdrop-filter: blur(12px);
-      animation: fadeIn 0.3s ease;
+      padding: 20px;
+      animation: fadeIn 0.25s ease;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+    
     .modal-content {
       background: white;
-      border-radius: 20px;
-      padding: 45px 40px;
-      max-width: 540px;
-      width: 92%;
+      border-radius: var(--radius-2xl);
+      padding: 2.75rem 2.5rem;
+      max-width: 560px;
+      width: 100%;
       text-align: center;
-      box-shadow: 0 30px 90px rgba(0,0,0,0.45);
-      border: 1px solid #e2e8f0;
+      box-shadow: var(--shadow-2xl);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      position: relative;
       animation: slideUp 0.45s ease;
     }
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(40px); }
-      to { opacity: 1; transform: translateY(0); }
+    
+    .modal-content::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), transparent);
+      pointer-events: none;
     }
+    
     .modal-content h3 {
-      font-size: 1.7rem;
+      font-size: 1.625rem;
       font-weight: 800;
-      color: #0F172A;
-      margin-bottom: 1.4rem;
+      color: var(--brand-slate-800);
+      margin-bottom: 1.25rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
+      gap: 10px;
+      letter-spacing: -0.01em;
     }
+    
     .modal-content p {
-      color: #64748B;
-      margin-bottom: 1.8rem;
+      color: var(--brand-slate-600);
+      margin-bottom: 1.75rem;
       line-height: 1.75;
-      font-size: 1.08rem;
+      font-size: 1.05rem;
     }
+    
     .modal-highlight {
-      background: linear-gradient(135deg, #1D4ED8, #7C3AED);
+      background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       font-weight: 700;
-      font-size: 1.15rem;
+      font-size: 1.125rem;
+      display: block;
       margin: 1rem 0;
     }
+    
     .modal-btn {
-      background: linear-gradient(135deg, #1D4ED8, #7C3AED);
+      background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
       color: white;
-      padding: 15px 40px;
-      border-radius: 12px;
+      padding: 14px 42px;
+      border-radius: var(--radius-lg);
       font-weight: 700;
-      font-size: 1.05rem;
+      font-size: 1rem;
       border: none;
       cursor: pointer;
-      transition: all 0.35s ease;
+      transition: all var(--transition);
       box-shadow: 0 5px 20px rgba(29, 78, 216, 0.45);
-    }
-    .modal-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 32px rgba(29, 78, 216, 0.65);
-    }
-    .modal-footer {
-      margin-top: 2rem;
-      padding-top: 1.8rem;
-      border-top: 1px solid #e2e8f0;
-      font-size: 0.92rem;
-      color: #94a3b8;
-    }
-    
-    /* ============================================
-       TOAST NOTIFICATIONS
-       ============================================ */
-    #toast {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 14px 24px;
-      border-radius: 14px;
-      background: rgba(30, 41, 59, 0.96);
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      box-shadow: 0 12px 45px rgba(0, 0, 0, 0.42);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      z-index: 9999;
-      transform: translateX(420px);
-      transition: transform 0.32s ease;
-      max-width: 380px;
-    }
-    #toast.show {
-      transform: translateX(0);
-    }
-    #toast.success {
-      border-left: 4px solid #10B981;
-    }
-    #toast.error {
-      border-left: 4px solid #EF4444;
-    }
-    #toast .toast-icon {
-      font-size: 1.35rem;
-    }
-    #toast .toast-message {
-      font-size: 0.92rem;
-      color: #F8FAFC;
-      flex: 1;
-    }
-    #toast .toast-close {
-      background: none;
-      border: none;
-      color: #94A3B8;
-      cursor: pointer;
-      font-size: 1.35rem;
-      line-height: 1;
-      padding: 0;
-    }
-    #toast .toast-close:hover {
-      color: #F8FAFC;
-    }
-    
-    /* ============================================
-       RESPONSIVIDADE
-       ============================================ */
-    @media (max-width: 768px) {
-      .rank-item {
-        padding: 12px;
-      }
-      .disc-chart-container {
-        height: 250px;
-      }
-      .modal-content {
-        padding: 35px 28px;
-      }
-    }
-    
-    /* ============================================
-       UTILITÁRIOS
-       ============================================ */
-    .text-gradient {
-      background: linear-gradient(135deg, #60A5FA, #A78BFA, #22D3EE);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    
-    .btn-primary {
-      background: linear-gradient(135deg, #1D4ED8, #7C3AED);
-      transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
     }
+    
+    .modal-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    .modal-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 32px rgba(29, 78, 216, 0.65);
+    }
+    
+    .modal-btn:hover::before {
+      left: 100%;
+    }
+    
+    .modal-footer {
+      margin-top: 2rem;
+      padding-top: 1.75rem;
+      border-top: 1px solid var(--brand-slate-200);
+      font-size: 0.875rem;
+      color: var(--brand-slate-400);
+    }
+    
+    /* ============================================
+       TOAST NOTIFICATIONS PREMIUM
+       ============================================ */
+    .toast {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      background: white;
+      padding: 14px 24px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      color: var(--brand-slate-800);
+      z-index: 10001;
+      border-left: 4px solid var(--brand-emerald);
+      animation: slideIn 0.3s ease;
+      border: 1px solid var(--brand-slate-200);
+      max-width: 420px;
+      font-size: 0.875rem;
+      transition: opacity var(--transition), transform var(--transition);
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateX(120%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    .toast.error {
+      border-left-color: var(--brand-rose);
+    }
+    
+    .toast.warning {
+      border-left-color: var(--brand-amber);
+    }
+    
+    .toast-icon {
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+    
+    .toast-close {
+      background: none;
+      border: none;
+      color: var(--brand-slate-400);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 6px;
+      transition: all var(--transition-fast);
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+    }
+    
+    .toast-close:hover {
+      color: var(--brand-slate-600);
+      background: var(--brand-slate-100);
+    }
+    
+    /* ============================================
+       BOTÕES PREMIUM
+       ============================================ */
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand-blue), var(--brand-blueDark));
+      color: white;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+    
     .btn-primary::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, #7C3AED, #06B6D4);
+      background: linear-gradient(135deg, var(--brand-purple), var(--brand-cyan));
       opacity: 0;
-      transition: opacity 0.3s ease;
+      transition: opacity var(--transition);
     }
+    
     .btn-primary:hover::before {
       opacity: 1;
     }
+    
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 12px 40px rgba(124, 58, 237, 0.4);
+      box-shadow: 0 12px 40px rgba(30, 64, 175, 0.45);
+    }
+    
+    .btn-primary:active {
+      transform: translateY(-1px);
+    }
+    
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
     }
     
     .btn-secondary {
       background: rgba(255,255,255,0.12);
       border: 1px solid rgba(255,255,255,0.25);
       color: white;
-      transition: all 0.3s ease;
+      transition: all var(--transition);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 600;
     }
+    
     .btn-secondary:hover {
       background: rgba(255,255,255,0.2);
       border-color: rgba(255,255,255,0.4);
       transform: translateY(-1px);
+      color: white;
     }
     
+    .btn-secondary:active {
+      transform: translateY(0);
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--brand-slate-300);
+      color: var(--brand-slate-200);
+      transition: all var(--transition);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 600;
+    }
+    
+    .btn-outline:hover {
+      border-color: var(--brand-blue);
+      color: var(--brand-blue);
+      background: rgba(29, 78, 216, 0.08);
+    }
+    
+    .btn-icon {
+      padding: 10px;
+      border-radius: var(--radius);
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-fast);
+    }
+    
+    .btn-icon:hover {
+      background: rgba(255,255,255,0.1);
+      transform: scale(1.05);
+    }
+    
+    /* Loading state para botões */
+    .btn-loading {
+      position: relative;
+      color: transparent !important;
+      pointer-events: none;
+    }
+    
+    .btn-loading::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      top: 50%;
+      left: 50%;
+      margin: -10px 0 0 -10px;
+      border: 2px solid rgba(255,255,255,0.35);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    
+    /* ============================================
+       FORMULÁRIOS E INPUTS
+       ============================================ */
+    .input-premium {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid var(--brand-slate-300);
+      border-radius: var(--radius-lg);
+      font-size: 0.9375rem;
+      font-family: inherit;
+      transition: all var(--transition);
+      background: rgba(255, 255, 255, 0.95);
+      color: var(--brand-slate-800);
+    }
+    
+    .input-premium::placeholder {
+      color: var(--brand-slate-400);
+      font-weight: 400;
+    }
+    
+    .input-premium:focus {
+      outline: none;
+      border-color: var(--brand-blue);
+      box-shadow: 
+        0 0 0 4px rgba(29, 78, 216, 0.15),
+        0 4px 14px rgba(30, 64, 175, 0.1);
+      background: white;
+    }
+    
+    .input-premium:disabled {
+      background: var(--brand-slate-100);
+      cursor: not-allowed;
+      color: var(--brand-slate-400);
+    }
+    
+    /* ============================================
+       SEÇÃO TÍTULOS
+       ============================================ */
     .section-title {
       position: relative;
       padding-bottom: 12px;
+      margin-bottom: 1.5rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--brand-slate-50);
     }
+    
     .section-title::after {
       content: '';
       position: absolute;
@@ -465,9 +815,142 @@
       left: 0;
       width: 60px;
       height: 3px;
-      background: linear-gradient(90deg, #1D4ED8, #7C3AED);
+      background: linear-gradient(90deg, var(--brand-blue), var(--brand-purple));
       border-radius: 2px;
     }
+    
+    /* ============================================
+       RESPONSIVIDADE
+       ============================================ */
+    @media (max-width: 1024px) {
+      .disc-chart-container {
+        height: 280px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .rank-item {
+        padding: 14px 12px;
+      }
+      
+      .disc-chart-container {
+        height: 260px;
+      }
+      
+      .modal-content {
+        padding: 2rem 1.75rem;
+        margin: 10px;
+      }
+      
+      .modal-content h3 {
+        font-size: 1.375rem;
+      }
+      
+      .btn-primary,
+      .btn-secondary {
+        width: 100%;
+      }
+      
+      .form-actions {
+        flex-direction: column;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      body {
+        font-size: 0.875rem;
+      }
+      
+      .glass-card {
+        padding: 1.5rem !important;
+        border-radius: var(--radius-xl) !important;
+      }
+      
+      .rank-badge {
+        width: 32px;
+        height: 32px;
+        font-size: 0.8125rem;
+      }
+    }
+    
+    /* ============================================
+       PRINT OPTIMIZATION
+       ============================================ */
+    @media print {
+      header, .no-print, .toast, .modal-overlay, .btn-primary, .btn-secondary { 
+        display: none !important; 
+      }
+      
+      body { 
+        background: white !important; 
+        color: #000 !important;
+        font-size: 10pt;
+      }
+      
+      .glass, .glass-card { 
+        background: white !important; 
+        border: 1px solid #ccc !important; 
+        box-shadow: none !important; 
+        backdrop-filter: none !important; 
+      }
+      
+      .gradient-text { 
+        -webkit-text-fill-color: var(--brand-blue) !important; 
+        color: var(--brand-blue) !important; 
+      }
+      
+      main {
+        padding-top: 20px !important;
+        max-width: 100%;
+      }
+    }
+    
+    /* ============================================
+       ACESSIBILIDADE - FOCUS VISIBLE
+       ============================================ */
+    .btn-primary:focus-visible,
+    .btn-secondary:focus-visible,
+    .btn-outline:focus-visible,
+    .btn-icon:focus-visible,
+    .modal-btn:focus-visible,
+    .toast-close:focus-visible,
+    .rank-item:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
+      outline: 2px solid var(--brand-blue);
+      outline-offset: 2px;
+    }
+    
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    
+    /* ============================================
+       LOADING SKELETON
+       ============================================ */
+    .loading-skeleton {
+      background: linear-gradient(90deg, var(--brand-slate-200) 25%, var(--brand-slate-100) 50%, var(--brand-slate-200) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: var(--radius);
+    }
+    
+    .loading-skeleton.text {
+      height: 1rem;
+      margin: 0.5rem 0;
+    }
+    
+    .loading-skeleton.text.short { width: 40%; }
+    .loading-skeleton.text.medium { width: 70%; }
+    .loading-skeleton.text.long { width: 90%; }
     
     /* ============================================
        CORREÇÃO DE MARGENS - HEADER/FIXED ELEMENTS
@@ -477,29 +960,59 @@
     }
     
     main {
-      padding-top: 95px !important; /* ✅ Espaço para header fixo de 72px + margem */
+      padding-top: 95px !important;
       padding-bottom: 45px !important;
     }
     
-    /* Para telas menores */
     @media (max-width: 768px) {
       header { height: 68px !important; }
       main { padding-top: 90px !important; }
     }
     
     /* ============================================
-       PRINT OPTIMIZATION
+       UTILITÁRIOS GLOBAIS
        ============================================ */
-    @media print {
-      header, .no-print, #toast, .modal-overlay { display: none !important; }
-      body { background: white !important; color: #000 !important; }
-      .glass, .glass-card { 
-        background: white !important; 
-        border: 1px solid #ccc !important; 
-        box-shadow: none !important; 
-        backdrop-filter: none !important; 
-      }
-      .gradient-text { -webkit-text-fill-color: #1D4ED8 !important; color: #1D4ED8 !important; }
+    .text-gradient {
+      background: linear-gradient(135deg, #60A5FA, #A78BFA, #22D3EE);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .flex-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .flex-between {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+    
+    /* Scrollbar personalizada */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 4px;
+      transition: background var(--transition);
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.4);
     }
   </style>
 </head>
@@ -508,38 +1021,47 @@
   <!-- ============================================
        TOAST NOTIFICATION
        ============================================ -->
-  <div id="toast" class="hidden">
-    <span class="toast-icon" id="toastIcon">✅</span>
+  <div id="toast" class="toast hidden" role="alert" aria-live="polite">
+    <span class="toast-icon" id="toastIcon" aria-hidden="true">✅</span>
     <span class="toast-message" id="toastMessage">Mensagem</span>
-    <button class="toast-close" onclick="hideToast()">×</button>
+    <button class="toast-close" onclick="hideToast()" aria-label="Fechar notificação">
+      <span aria-hidden="true">×</span>
+    </button>
   </div>
   
   <!-- ============================================
        MODAL PARA RELATÓRIO SIMPLES
        ============================================ -->
-  <div id="simpleReportModal" class="modal-overlay" style="display: none;">
+  <div id="simpleReportModal" class="modal-overlay hidden" role="dialog" aria-labelledby="modalTitle" aria-modal="true">
     <div class="modal-content">
-      <h3>🔒 Acesso ao Relatório Completo</h3>
-      <p>Para obter acesso ao relatório completo com análise detalhada, plano de desenvolvimento personalizado e parecer executivo multinacional, entre em contato com nossa equipe de People Analytics.</p>
-      <p class="modal-highlight">Procure a Vigorre para maiores detalhes.</p>
-      <button class="modal-btn" onclick="closeModalAndLogout()">Sair e Voltar</button>
+      <h3 id="modalTitle">
+        <span aria-hidden="true">🔒</span>
+        Acesso ao Relatório Completo
+      </h3>
+      <p>
+        Para obter acesso ao relatório completo com análise detalhada, plano de desenvolvimento personalizado e parecer executivo multinacional, entre em contato com nossa equipe de People Analytics.
+      </p>
+      <span class="modal-highlight">Procure a Vigorre para maiores detalhes.</span>
+      <button class="modal-btn" onclick="closeModalAndLogout()" aria-label="Fechar e sair do sistema">
+        Sair e Voltar
+      </button>
       <div class="modal-footer">
-        <p>© 2024 Vigorre One™ • People Analytics Enterprise</p>
+        <p>© <time datetime="2024">2024</time> Vigorre One™ • People Analytics Enterprise</p>
       </div>
     </div>
   </div>
   
   <!-- ============================================
-       LANDING PAGE / HERO SECTION (OCULTA PARA PARTICIPANTES LOGADOS)
+       LANDING PAGE / HERO SECTION
        ============================================ -->
   <div id="landingPage" class="min-h-screen flex flex-col hidden">
     
     <!-- Header -->
-    <header class="glass border-b border-white/10 sticky top-0 z-50">
+    <header class="glass border-b border-white/10 sticky top-0 z-50" role="banner">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div class="flex items-center justify-between">
+        <div class="flex-between">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center font-bold text-white">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center font-bold text-white shadow-lg" aria-hidden="true">
               V
             </div>
             <div>
@@ -547,7 +1069,7 @@
               <p class="text-xs text-gray-400">People Analytics Enterprise</p>
             </div>
           </div>
-          <nav class="hidden md:flex items-center gap-6">
+          <nav class="hidden md:flex items-center gap-6" role="navigation" aria-label="Menu principal">
             <a href="#" class="text-sm text-gray-300 hover:text-white transition">Metodologia</a>
             <a href="#" class="text-sm text-gray-300 hover:text-white transition">Recursos</a>
             <a href="#" class="text-sm text-gray-300 hover:text-white transition">Empresas</a>
@@ -560,11 +1082,11 @@
     </header>
 
     <!-- Hero -->
-    <main class="flex-1 flex items-center justify-center px-4 py-12">
+    <main class="flex-1 flex items-center justify-center px-4 py-12" role="main">
       <div class="max-w-4xl mx-auto text-center animate-on-scroll">
         
-        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6">
-          <span class="w-2 h-2 rounded-full bg-brand-cyan animate-pulse"></span>
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6" role="status">
+          <span class="w-2 h-2 rounded-full bg-brand-cyan animate-pulse" aria-hidden="true"></span>
           <span class="text-sm text-gray-300">Assessment DISC Corporativo Premium</span>
         </div>
         
@@ -578,7 +1100,7 @@
         </p>
         
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-          <button onclick="startTest()" class="btn-primary px-8 py-4 rounded-xl font-semibold text-white text-lg w-full sm:w-auto">
+          <button onclick="startTest()" class="btn-primary px-8 py-4 rounded-xl font-semibold text-white text-lg w-full sm:w-auto" aria-label="Iniciar avaliação DISC gratuita">
             Iniciar Avaliação Gratuita
           </button>
           <button class="px-8 py-4 rounded-xl font-medium text-gray-300 border border-white/20 hover:border-white/40 transition w-full sm:w-auto">
@@ -587,21 +1109,21 @@
         </div>
         
         <!-- Benefícios -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
-          <div class="glass-card p-4 hover-lift">
-            <div class="text-2xl mb-2">🎯</div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto" role="list">
+          <div class="glass-card p-4 hover-lift" role="listitem">
+            <div class="text-2xl mb-2" aria-hidden="true">🎯</div>
             <h3 class="font-semibold text-sm">Perfil Profissional</h3>
           </div>
-          <div class="glass-card p-4 hover-lift">
-            <div class="text-2xl mb-2">📊</div>
+          <div class="glass-card p-4 hover-lift" role="listitem">
+            <div class="text-2xl mb-2" aria-hidden="true">📊</div>
             <h3 class="font-semibold text-sm">People Analytics</h3>
           </div>
-          <div class="glass-card p-4 hover-lift">
-            <div class="text-2xl mb-2">👥</div>
+          <div class="glass-card p-4 hover-lift" role="listitem">
+            <div class="text-2xl mb-2" aria-hidden="true">👥</div>
             <h3 class="font-semibold text-sm">Gestão de Equipes</h3>
           </div>
-          <div class="glass-card p-4 hover-lift">
-            <div class="text-2xl mb-2">🚀</div>
+          <div class="glass-card p-4 hover-lift" role="listitem">
+            <div class="text-2xl mb-2" aria-hidden="true">🚀</div>
             <h3 class="font-semibold text-sm">Desenvolvimento</h3>
           </div>
         </div>
@@ -610,7 +1132,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="glass border-t border-white/10 py-6">
+    <footer class="glass border-t border-white/10 py-6" role="contentinfo">
       <div class="max-w-7xl mx-auto px-4 text-center text-sm text-gray-400">
         <p>© 2024 Vigorre One™. Metodologia DISC validada internacionalmente.</p>
       </div>
@@ -627,7 +1149,7 @@
       <div class="glass-card p-8 animate-on-scroll">
         
         <div class="text-center mb-8">
-          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center mx-auto mb-4">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center mx-auto mb-4 animate-float" aria-hidden="true">
             <span class="text-2xl">🧠</span>
           </div>
           <h2 class="text-2xl font-bold mb-2">Assessment DISC</h2>
@@ -645,34 +1167,34 @@
         
         <div class="glass p-5 rounded-xl mb-8">
           <h3 class="font-semibold mb-3 flex items-center gap-2">
-            <span class="text-brand-cyan">ⓘ</span>
+            <span class="text-brand-cyan" aria-hidden="true">ⓘ</span>
             Instruções Importantes
           </h3>
-          <ul class="space-y-2 text-sm text-gray-300">
-            <li class="flex items-start gap-2">
-              <span class="text-brand-emerald mt-0.5">✓</span>
+          <ul class="space-y-2 text-sm text-gray-300" role="list">
+            <li class="flex items-start gap-2" role="listitem">
+              <span class="text-brand-emerald mt-0.5" aria-hidden="true">✓</span>
               <span>Não existem respostas certas ou erradas</span>
             </li>
-            <li class="flex items-start gap-2">
-              <span class="text-brand-emerald mt-0.5">✓</span>
+            <li class="flex items-start gap-2" role="listitem">
+              <span class="text-brand-emerald mt-0.5" aria-hidden="true">✓</span>
               <span>Seja totalmente sincero em suas respostas</span>
             </li>
-            <li class="flex items-start gap-2">
-              <span class="text-brand-emerald mt-0.5">✓</span>
+            <li class="flex items-start gap-2" role="listitem">
+              <span class="text-brand-emerald mt-0.5" aria-hidden="true">✓</span>
               <span>Responda conforme seu comportamento natural, não o ideal</span>
             </li>
-            <li class="flex items-start gap-2">
-              <span class="text-brand-emerald mt-0.5">✓</span>
+            <li class="flex items-start gap-2" role="listitem">
+              <span class="text-brand-emerald mt-0.5" aria-hidden="true">✓</span>
               <span>O teste não possui limite de tempo</span>
             </li>
-            <li class="flex items-start gap-2">
-              <span class="text-brand-emerald mt-0.5">✓</span>
+            <li class="flex items-start gap-2" role="listitem">
+              <span class="text-brand-emerald mt-0.5" aria-hidden="true">✓</span>
               <span>Para cada pergunta, ranqueie as 4 características da MAIS para a MENOS aderente</span>
             </li>
           </ul>
         </div>
         
-        <div class="flex gap-3">
+        <div class="flex gap-3" role="group" aria-label="Ações de navegação">
           <button onclick="goBack()" class="flex-1 px-4 py-3 rounded-xl font-medium text-gray-300 border border-white/20 hover:border-white/40 transition">
             Voltar
           </button>
@@ -692,11 +1214,11 @@
   <div id="testPage" class="hidden min-h-screen flex flex-col">
     
     <!-- Header do Teste -->
-    <header class="glass border-b border-white/10 px-4 py-3 sticky top-0 z-40">
-      <div class="max-w-4xl mx-auto flex items-center justify-between">
+    <header class="glass border-b border-white/10 px-4 py-3 sticky top-0 z-40" role="banner">
+      <div class="max-w-4xl mx-auto flex-between">
         <div class="flex items-center gap-3">
-          <button onclick="confirmExit()" class="p-2 rounded-lg hover:bg-white/10 transition">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button onclick="confirmExit()" class="btn-icon" aria-label="Sair do teste">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
             </svg>
           </button>
@@ -705,8 +1227,8 @@
             <p class="text-xs text-gray-400">Pergunta <span id="currentQuestion">1</span> de 25</p>
           </div>
         </div>
-        <div class="w-48">
-          <div class="progress-bar">
+        <div class="w-48" aria-label="Progresso do teste">
+          <div class="progress-bar" role="progressbar" aria-valuenow="4" aria-valuemin="0" aria-valuemax="100">
             <div class="progress-fill" id="progressFill" style="width: 4%"></div>
           </div>
         </div>
@@ -714,15 +1236,15 @@
     </header>
 
     <!-- Área da Pergunta -->
-    <main class="flex-1 flex items-center justify-center px-4 py-8">
+    <main class="flex-1 flex items-center justify-center px-4 py-8" role="main">
       <div class="max-w-3xl mx-auto w-full">
         
         <div id="questionContainer" class="glass-card p-6 md:p-8 animate-on-scroll">
           
           <!-- Contexto da Pergunta -->
           <div class="mb-6">
-            <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-blue/20 text-brand-blue text-xs font-medium mb-3">
-              <span id="questionCategory">Liderança</span>
+            <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-blue/20 text-brand-blue text-xs font-medium mb-3" id="questionCategory">
+              Liderança
             </span>
             <h3 class="text-xl md:text-2xl font-semibold" id="questionText">
               Quando enfrento um desafio importante no trabalho...
@@ -730,23 +1252,23 @@
           </div>
           
           <!-- Instruções de Ranqueamento -->
-          <div class="glass p-4 rounded-xl mb-6">
+          <div class="glass p-4 rounded-xl mb-6" role="note">
             <p class="text-sm text-gray-300">
               <strong class="text-white">Instrução:</strong> Arraste as características abaixo para ordená-las da <span class="text-brand-emerald">MAIS parecida com você</span> (topo) para a <span class="text-brand-rose">MENOS parecida com você</span> (base).
             </p>
           </div>
           
           <!-- Lista de Ranqueamento (Drag & Drop) -->
-          <div id="rankList" class="space-y-3 mb-8">
+          <div id="rankList" class="space-y-3 mb-8" role="list" aria-label="Lista de características para ranquear">
             <!-- Itens serão inseridos via JavaScript -->
           </div>
           
           <!-- Botões de Navegação -->
-          <div class="flex gap-3">
-            <button id="prevBtn" onclick="prevQuestion()" class="flex-1 px-4 py-3 rounded-xl font-medium text-gray-300 border border-white/20 hover:border-white/40 transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+          <div class="flex gap-3" role="group" aria-label="Navegação entre perguntas">
+            <button id="prevBtn" onclick="prevQuestion()" class="flex-1 px-4 py-3 rounded-xl font-medium text-gray-300 border border-white/20 hover:border-white/40 transition disabled:opacity-50 disabled:cursor-not-allowed" disabled aria-label="Pergunta anterior">
               Anterior
             </button>
-            <button id="nextBtn" onclick="nextQuestion()" class="flex-1 btn-primary px-4 py-3 rounded-xl font-semibold text-white">
+            <button id="nextBtn" onclick="nextQuestion()" class="flex-1 btn-primary px-4 py-3 rounded-xl font-semibold text-white" aria-label="Próxima pergunta ou ver resultados">
               Próxima Pergunta
             </button>
           </div>
@@ -764,7 +1286,7 @@
   <div id="loadingResults" class="hidden min-h-screen flex items-center justify-center px-4">
     <div class="text-center animate-on-scroll">
       
-      <div class="relative w-24 h-24 mx-auto mb-6">
+      <div class="relative w-24 h-24 mx-auto mb-6" aria-hidden="true">
         <div class="absolute inset-0 rounded-full border-4 border-white/10"></div>
         <div class="absolute inset-0 rounded-full border-4 border-t-brand-cyan border-r-brand-purple border-b-transparent border-l-transparent animate-spin"></div>
         <div class="absolute inset-4 rounded-full bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center">
@@ -775,7 +1297,7 @@
       <h3 class="text-xl font-semibold mb-2">Analisando seu Perfil</h3>
       <p class="text-gray-400 mb-6">Processando suas respostas com algoritmo DISC...</p>
       
-      <div class="w-64 mx-auto">
+      <div class="w-64 mx-auto" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Processando resultados">
         <div class="progress-bar">
           <div class="progress-fill" id="loadingProgress" style="width: 0%"></div>
         </div>
@@ -790,12 +1312,12 @@
   <div id="resultsPage" class="hidden min-h-screen">
     
     <!-- Header de Resultados -->
-    <header class="glass border-b border-white/10 px-4 py-4 sticky top-0 z-40">
-      <div class="max-w-6xl mx-auto flex items-center justify-between">
+    <header class="glass border-b border-white/10 px-4 py-4 sticky top-0 z-40" role="banner">
+      <div class="max-w-6xl mx-auto flex-between">
         <div class="flex items-center gap-3">
-          <button onclick="resetTest()" class="p-2 rounded-lg hover:bg-white/10 transition">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+          <button onclick="resetTest()" class="btn-icon" aria-label="Refazer teste">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
             </svg>
           </button>
           <div>
@@ -807,7 +1329,7 @@
     </header>
 
     <!-- Conteúdo de Resultados -->
-    <main class="max-w-6xl mx-auto px-4 py-8">
+    <main class="max-w-6xl mx-auto px-4 py-8" role="main">
       
       <!-- Header do Perfil -->
       <div class="glass-card p-6 md:p-8 mb-6 animate-on-scroll">
@@ -815,8 +1337,8 @@
           <div>
             <div class="flex items-center gap-3 mb-2">
               <h1 class="text-2xl md:text-3xl font-bold">Seu Perfil Comportamental</h1>
-              <span id="profileBadge" class="profile-badge profile-d">
-                <span id="profileLetter">D</span>
+              <span id="profileBadge" class="profile-badge profile-d" role="status">
+                <span id="profileLetter" aria-hidden="true">D</span>
                 <span id="profileName">Dominância</span>
               </span>
             </div>
@@ -829,7 +1351,7 @@
               <div class="text-3xl font-bold gradient-text" id="dominantPercent">68%</div>
               <div class="text-xs text-gray-400">Perfil Predominante</div>
             </div>
-            <div class="w-px h-12 bg-white/10"></div>
+            <div class="w-px h-12 bg-white/10" aria-hidden="true"></div>
             <div class="text-center">
               <div class="text-3xl font-bold" id="secondaryPercent">24%</div>
               <div class="text-xs text-gray-400">Perfil Secundário</div>
@@ -845,7 +1367,7 @@
         <div class="glass-card p-6 animate-on-scroll">
           <h3 class="font-semibold mb-4 section-title">Distribuição DISC</h3>
           <div class="disc-chart-container">
-            <canvas id="radarChart"></canvas>
+            <canvas id="radarChart" role="img" aria-label="Gráfico radar mostrando distribuição dos fatores DISC"></canvas>
           </div>
         </div>
         
@@ -853,7 +1375,7 @@
         <div class="glass-card p-6 animate-on-scroll">
           <h3 class="font-semibold mb-4 section-title">Intensidade por Fator</h3>
           <div class="h-64">
-            <canvas id="barChart"></canvas>
+            <canvas id="barChart" role="img" aria-label="Gráfico de barras mostrando intensidade de cada fator DISC"></canvas>
           </div>
         </div>
         
@@ -868,7 +1390,7 @@
           <!-- Comunicação -->
           <div class="insight-card insight-d p-4 rounded-xl">
             <h4 class="font-medium mb-2 flex items-center gap-2">
-              <span class="text-brand-rose">💬</span>
+              <span class="text-brand-rose" aria-hidden="true">💬</span>
               Estilo de Comunicação
             </h4>
             <p class="text-sm text-gray-300" id="communicationInsight">
@@ -879,7 +1401,7 @@
           <!-- Liderança -->
           <div class="insight-card insight-d p-4 rounded-xl">
             <h4 class="font-medium mb-2 flex items-center gap-2">
-              <span class="text-brand-rose">👑</span>
+              <span class="text-brand-rose" aria-hidden="true">👑</span>
               Estilo de Liderança
             </h4>
             <p class="text-sm text-gray-300" id="leadershipInsight">
@@ -890,7 +1412,7 @@
           <!-- Tomada de Decisão -->
           <div class="insight-card insight-c p-4 rounded-xl">
             <h4 class="font-medium mb-2 flex items-center gap-2">
-              <span class="text-brand-purple">🎯</span>
+              <span class="text-brand-purple" aria-hidden="true">🎯</span>
               Tomada de Decisão
             </h4>
             <p class="text-sm text-gray-300" id="decisionInsight">
@@ -901,7 +1423,7 @@
           <!-- Sob Pressão -->
           <div class="insight-card insight-i p-4 rounded-xl">
             <h4 class="font-medium mb-2 flex items-center gap-2">
-              <span class="text-brand-blue">⚡</span>
+              <span class="text-brand-blue" aria-hidden="true">⚡</span>
               Comportamento Sob Pressão
             </h4>
             <p class="text-sm text-gray-300" id="pressureInsight">
@@ -918,7 +1440,7 @@
         <!-- Pontos Fortes -->
         <div class="glass-card p-6 animate-on-scroll">
           <h3 class="font-semibold mb-4 section-title">Pontos Fortes</h3>
-          <ul class="space-y-3" id="strengthsList">
+          <ul class="space-y-3" id="strengthsList" role="list">
             <!-- Inserido via JS -->
           </ul>
         </div>
@@ -926,7 +1448,7 @@
         <!-- Pontos de Atenção -->
         <div class="glass-card p-6 animate-on-scroll">
           <h3 class="font-semibold mb-4 section-title">Pontos de Desenvolvimento</h3>
-          <ul class="space-y-3" id="developmentList">
+          <ul class="space-y-3" id="developmentList" role="list">
             <!-- Inserido via JS -->
           </ul>
         </div>
@@ -936,7 +1458,7 @@
       <!-- Sugestões de Carreira -->
       <div class="glass-card p-6 md:p-8 mb-6 animate-on-scroll">
         <h3 class="font-semibold mb-6 section-title">Áreas e Carreiras Compatíveis</h3>
-        <div class="flex flex-wrap gap-2" id="careerSuggestions">
+        <div class="flex flex-wrap gap-2" id="careerSuggestions" role="list">
           <!-- Inserido via JS -->
         </div>
       </div>
@@ -944,7 +1466,7 @@
       <!-- Insights Inteligentes -->
       <div class="glass-card p-6 md:p-8 animate-on-scroll">
         <h3 class="font-semibold mb-6 section-title">Insights Estratégicos</h3>
-        <div class="grid md:grid-cols-3 gap-4" id="smartInsights">
+        <div class="grid md:grid-cols-3 gap-4" id="smartInsights" role="list">
           <!-- Inserido via JS -->
         </div>
       </div>
@@ -954,14 +1476,14 @@
         <div class="glass-card p-6 text-center animate-on-scroll">
           <h4 class="font-semibold mb-2">📄 Relatório Simples</h4>
           <p class="text-sm text-gray-400 mb-4">Visão geral do seu perfil DISC para download</p>
-          <button onclick="openSimpleReportModal()" class="btn-primary px-6 py-3 rounded-lg font-semibold w-full">
+          <button onclick="openSimpleReportModal()" class="btn-primary px-6 py-3 rounded-lg font-semibold w-full" aria-label="Baixar relatório simples">
             Baixar Relatório Simples
           </button>
         </div>
         <div class="glass-card p-6 text-center animate-on-scroll">
           <h4 class="font-semibold mb-2">🔓 Laudo Vigorre Completo</h4>
           <p class="text-sm text-gray-400 mb-4">Análise integrada com IE + Valores + Fit Cultural</p>
-          <button onclick="window.location.href='relatorio-disc-vigorre.html'" class="btn-secondary px-6 py-3 rounded-lg font-semibold w-full">
+          <button onclick="window.location.href='relatorio-disc-vigorre.html'" class="btn-secondary px-6 py-3 rounded-lg font-semibold w-full" aria-label="Ver relatório completo Vigorre">
             Ver Relatório Completo
           </button>
         </div>
@@ -970,7 +1492,7 @@
     </main>
 
     <!-- Footer de Resultados -->
-    <footer class="glass border-t border-white/10 py-6 mt-8">
+    <footer class="glass border-t border-white/10 py-6 mt-8" role="contentinfo">
       <div class="max-w-6xl mx-auto px-4 text-center text-sm text-gray-400">
         <p class="mb-2">Este relatório foi gerado automaticamente pela plataforma Vigorre One™.</p>
         <p>Metodologia DISC © Vigorre One™. Para uso profissional e desenvolvimento de equipes.</p>
@@ -983,6 +1505,8 @@
        JAVASCRIPT - LÓGICA COMPLETA COM SUPABASE
        ============================================ -->
   <script>
+    'use strict';
+    
     // ============================================
     // ESTADO GLOBAL DA APLICAÇÃO
     // ============================================
@@ -994,7 +1518,11 @@
       questions: [],
       participant: null,
       session: null,
-      shuffledOptions: {}
+      shuffledOptions: {},
+      dragData: {
+        item: null,
+        originalIndex: null
+      }
     };
 
     // ============================================
@@ -1440,11 +1968,15 @@
       loadSession();
       
       // ✅ DETECTAR CLIQUE NO BOTÃO "VOLTAR" DO NAVEGADOR
-      // Se o usuário clicar em voltar, fazemos logoff automaticamente
       window.addEventListener('popstate', function(event) {
         console.log('🔙 Botão voltar detectado - realizando logoff');
         performLogout();
       });
+      
+      // Prevenir cache de página sensível
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.href);
+      }
       
       // Se já tiver sessão, vai direto para instruções
       if (AppState.session && AppState.session.id) {
@@ -1458,12 +1990,48 @@
       
       // Carregar progresso salvo se existir
       loadProgress();
+      
+      // Configurar listeners globais
+      setupGlobalListeners();
     });
+
+    // ============================================
+    // LISTENERS GLOBAIS
+    // ============================================
+    function setupGlobalListeners() {
+      // Fechar modal ao clicar fora
+      document.getElementById('simpleReportModal')?.addEventListener('click', function(e) {
+        if (e.target === this) {
+          closeModalAndLogout();
+        }
+      });
+      
+      // Fechar modal com tecla Escape
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          const modal = document.getElementById('simpleReportModal');
+          if (modal && !modal.classList.contains('hidden')) {
+            closeModalAndLogout();
+          }
+        }
+      });
+      
+      // Prevenir back button após logout
+      window.addEventListener('pageshow', function(event) {
+        if (event.persisted) {
+          const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+          const sessionActive = sessionStorage.getItem('vigorre_session_active') === 'true';
+          
+          if (!currentUser.role || !sessionActive) {
+            window.location.replace('login.html');
+          }
+        }
+      });
+    }
 
     // ============================================
     // FUNÇÃO: CARREGAR SESSÃO DO PARTICIPANTE
     // ============================================
-    // Tenta carregar do Supabase primeiro, fallback para localStorage
     async function loadSession() {
       try {
         console.log('🔍 Tentando carregar sessão...');
@@ -1516,7 +2084,7 @@
           AppState.session = session;
           const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
           AppState.participant = participants.find(p => p.id === session.id);
-          console.log('✅ Sessão carregada do localStorage:', AppState.session.name);
+          console.log('✅ Sessão carregada do localStorage:', AppState.session?.name);
           return true;
         }
         
@@ -1564,17 +2132,23 @@
     function showView(viewId) {
       // Esconder todas as views
       ['landingPage', 'instructionsPage', 'testPage', 'loadingResults', 'resultsPage'].forEach(id => {
-        document.getElementById(id).classList.add('hidden');
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
       });
       
       // Mostrar view solicitada
-      document.getElementById(viewId).classList.remove('hidden');
+      const targetEl = document.getElementById(viewId);
+      if (targetEl) {
+        targetEl.classList.remove('hidden');
+        // Trigger reflow para animações
+        void targetEl.offsetWidth;
+      }
       
       // Atualizar estado
       AppState.currentView = viewId;
       
       // Scroll para topo
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function startTest() {
@@ -1621,35 +2195,57 @@
       const question = AppState.questions[AppState.currentQuestionIndex];
       const container = document.getElementById('questionContainer');
       
+      if (!question || !container) {
+        console.error('❌ Pergunta ou container não encontrado');
+        return;
+      }
+      
       // Atualizar informações da pergunta
-      document.getElementById('currentQuestion').textContent = AppState.currentQuestionIndex + 1;
-      document.getElementById('questionCategory').textContent = question.category;
-      document.getElementById('questionText').textContent = question.text;
+      const currentQEl = document.getElementById('currentQuestion');
+      const categoryEl = document.getElementById('questionCategory');
+      const textEl = document.getElementById('questionText');
+      
+      if (currentQEl) currentQEl.textContent = AppState.currentQuestionIndex + 1;
+      if (categoryEl) categoryEl.textContent = question.category;
+      if (textEl) textEl.textContent = question.text;
       
       // Atualizar barra de progresso
       const progress = ((AppState.currentQuestionIndex + 1) / 25) * 100;
-      document.getElementById('progressFill').style.width = `${progress}%`;
+      const progressFill = document.getElementById('progressFill');
+      if (progressFill) {
+        progressFill.style.width = `${progress}%`;
+        progressFill.parentElement?.setAttribute('aria-valuenow', Math.round(progress));
+      }
       
       // Atualizar botões
-      document.getElementById('prevBtn').disabled = AppState.currentQuestionIndex === 0;
-      document.getElementById('nextBtn').textContent = 
-        AppState.currentQuestionIndex === 24 ? 'Ver Resultados' : 'Próxima Pergunta';
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      
+      if (prevBtn) prevBtn.disabled = AppState.currentQuestionIndex === 0;
+      if (nextBtn) {
+        nextBtn.textContent = AppState.currentQuestionIndex === 24 ? 'Ver Resultados' : 'Próxima Pergunta';
+        nextBtn.setAttribute('aria-label', AppState.currentQuestionIndex === 24 ? 'Ver resultados do teste' : 'Próxima pergunta');
+      }
       
       // Renderizar lista de ranqueamento
       renderRankList(question.options, question.id);
       
       // Animar entrada
-      container.style.opacity = '0';
-      container.style.transform = 'translateY(20px)';
-      setTimeout(() => {
-        container.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-        container.style.opacity = '1';
-        container.style.transform = 'translateY(0)';
-      }, 50);
+      if (container) {
+        container.style.opacity = '0';
+        container.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          container.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+          container.style.opacity = '1';
+          container.style.transform = 'translateY(0)';
+        }, 50);
+      }
     }
 
     function renderRankList(options, questionId) {
       const list = document.getElementById('rankList');
+      if (!list) return;
+      
       list.innerHTML = '';
       
       // ✅ CORREÇÃO: Embaralhar UMA VEZ por pergunta e armazenar
@@ -1663,26 +2259,34 @@
       shuffled.forEach((option, index) => {
         const item = document.createElement('div');
         item.className = 'rank-item glass p-4 rounded-xl flex items-center gap-4';
-        item.draggable = true;
+        item.setAttribute('role', 'listitem');
+        item.setAttribute('draggable', 'true');
+        item.setAttribute('tabindex', '0');
         item.dataset.type = option.type;
         item.dataset.index = index;
+        item.dataset.text = option.text;
         
         item.innerHTML = `
-          <div class="rank-badge rank-${index + 1}" id="badge-${index}">${index + 1}º</div>
+          <div class="rank-badge rank-${index + 1}" id="badge-${index}" aria-label="Posição ${index + 1}">${index + 1}º</div>
           <div class="flex-1">
             <p class="font-medium">${option.text}</p>
           </div>
-          <div class="text-gray-400">⋮</div>
+          <div class="text-gray-400" aria-hidden="true">⋮</div>
         `;
         
+        // Event listeners para drag & drop
         item.addEventListener('dragstart', handleDragStart);
         item.addEventListener('dragover', handleDragOver);
         item.addEventListener('drop', handleDrop);
         item.addEventListener('dragend', handleDragEnd);
         
+        // Suporte para teclado (setas para reordenar)
+        item.addEventListener('keydown', handleRankKeyboard);
+        
         list.appendChild(item);
       });
       
+      // Aplicar ranking salvo se existir
       if (AppState.answers[AppState.currentQuestionIndex]) {
         applySavedRanking(AppState.answers[AppState.currentQuestionIndex]);
       }
@@ -1690,6 +2294,8 @@
 
     function applySavedRanking(savedOrder) {
       const list = document.getElementById('rankList');
+      if (!list) return;
+      
       const items = Array.from(list.children);
       
       savedOrder.forEach((type, newIndex) => {
@@ -1703,58 +2309,124 @@
 
     function updateRankBadge(item, rank) {
       const badge = item.querySelector('.rank-badge');
-      badge.className = `rank-badge rank-${rank}`;
-      badge.textContent = `${rank}º`;
+      if (badge) {
+        badge.className = `rank-badge rank-${rank}`;
+        badge.textContent = `${rank}º`;
+        badge.setAttribute('aria-label', `Posição ${rank}`);
+      }
+    }
+
+    // ============================================
+    // SUPORTE PARA TECLADO NO RANQUEAMENTO
+    // ============================================
+    function handleRankKeyboard(e) {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        const item = e.currentTarget;
+        const list = item.parentNode;
+        const items = Array.from(list.children);
+        const currentIndex = items.indexOf(item);
+        
+        let newIndex;
+        if (e.key === 'ArrowUp' && currentIndex > 0) {
+          newIndex = currentIndex - 1;
+        } else if (e.key === 'ArrowDown' && currentIndex < items.length - 1) {
+          newIndex = currentIndex + 1;
+        } else {
+          return;
+        }
+        
+        // Mover item
+        if (newIndex === 0) {
+          list.insertBefore(item, list.firstChild);
+        } else {
+          list.insertBefore(item, items[newIndex].nextSibling);
+        }
+        
+        updateAllBadges();
+        saveCurrentAnswer();
+      }
     }
 
     // ============================================
     // DRAG AND DROP - RANQUEAMENTO
     // ============================================
-    let draggedItem = null;
-
     function handleDragStart(e) {
-      draggedItem = this;
+      AppState.dragData.item = this;
+      AppState.dragData.originalIndex = Array.from(this.parentNode.children).indexOf(this);
+      
       this.classList.add('dragging');
       e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.setData('text/html', this.innerHTML);
+      e.dataTransfer.setData('text/plain', this.dataset.type);
+      
+      // Efeito visual no drag
+      setTimeout(() => {
+        this.style.opacity = '0.5';
+      }, 0);
     }
 
     function handleDragOver(e) {
       e.preventDefault();
       e.dataTransfer.dropEffect = 'move';
+      
+      // Efeito visual ao passar sobre item
+      if (this !== AppState.dragData.item) {
+        this.style.transform = 'scale(1.02)';
+        this.style.background = 'rgba(255, 255, 255, 0.08)';
+      }
+      
       return false;
     }
 
     function handleDrop(e) {
       e.stopPropagation();
       
-      if (draggedItem !== this && draggedItem && this.parentNode === draggedItem.parentNode) {
+      const target = this;
+      const dragged = AppState.dragData.item;
+      
+      if (dragged && target && dragged !== target && dragged.parentNode === target.parentNode) {
         const list = document.getElementById('rankList');
         const items = Array.from(list.children);
         
-        const draggedIndex = items.indexOf(draggedItem);
-        const targetIndex = items.indexOf(this);
+        const draggedIndex = items.indexOf(dragged);
+        const targetIndex = items.indexOf(target);
         
+        // Mover item na lista
         if (draggedIndex < targetIndex) {
-          this.parentNode.insertBefore(draggedItem, this.nextSibling);
+          target.parentNode.insertBefore(dragged, target.nextSibling);
         } else {
-          this.parentNode.insertBefore(draggedItem, this);
+          target.parentNode.insertBefore(dragged, target);
         }
         
+        // Atualizar badges
         updateAllBadges();
+        
+        // Salvar resposta
         saveCurrentAnswer();
       }
+      
+      // Resetar estilos
+      document.querySelectorAll('.rank-item').forEach(item => {
+        item.style.transform = '';
+        item.style.background = '';
+      });
       
       return false;
     }
 
     function handleDragEnd() {
-      this.classList.remove('dragging');
-      draggedItem = null;
+      if (this) {
+        this.classList.remove('dragging');
+        this.style.opacity = '1';
+      }
+      AppState.dragData.item = null;
+      AppState.dragData.originalIndex = null;
     }
 
     function updateAllBadges() {
       const list = document.getElementById('rankList');
+      if (!list) return;
+      
       const items = Array.from(list.children);
       
       items.forEach((item, index) => {
@@ -1767,15 +2439,22 @@
     // ============================================
     function saveCurrentAnswer() {
       const list = document.getElementById('rankList');
+      if (!list) return;
+      
       const items = Array.from(list.children);
       
       const ranking = [];
-      items.forEach((item, visualIndex) => {
-        ranking.push(item.dataset.type);
+      items.forEach((item) => {
+        if (item.dataset.type) {
+          ranking.push(item.dataset.type);
+        }
       });
       
-      AppState.answers[AppState.currentQuestionIndex] = ranking;
-      saveProgress();
+      // Só salvar se tiver 4 itens
+      if (ranking.length === 4) {
+        AppState.answers[AppState.currentQuestionIndex] = ranking;
+        saveProgress();
+      }
     }
 
     function saveProgress() {
@@ -1783,25 +2462,36 @@
         currentQuestion: AppState.currentQuestionIndex,
         answers: AppState.answers,
         shuffledOptions: AppState.shuffledOptions,
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        sessionId: AppState.session?.id
       };
-      localStorage.setItem('disc_assessment_progress', JSON.stringify(progress));
+      
+      try {
+        localStorage.setItem('disc_assessment_progress', JSON.stringify(progress));
+      } catch (e) {
+        console.warn('⚠️ Não foi possível salvar progresso:', e);
+      }
     }
 
     function loadProgress() {
-      const saved = localStorage.getItem('disc_assessment_progress');
-      if (saved) {
-        try {
+      try {
+        const saved = localStorage.getItem('disc_assessment_progress');
+        if (saved) {
           const progress = JSON.parse(saved);
+          
+          // Validar se progresso é recente (24h) e da mesma sessão
           if (Date.now() - progress.timestamp < 24 * 60 * 60 * 1000) {
-            AppState.currentQuestionIndex = progress.currentQuestion;
-            AppState.answers = progress.answers;
-            AppState.shuffledOptions = progress.shuffledOptions || {};
-            return true;
+            if (!progress.sessionId || progress.sessionId === AppState.session?.id) {
+              AppState.currentQuestionIndex = progress.currentQuestion || 0;
+              AppState.answers = progress.answers || new Array(25).fill(null);
+              AppState.shuffledOptions = progress.shuffledOptions || {};
+              console.log('✅ Progresso carregado:', AppState.currentQuestionIndex + 1, '/ 25');
+              return true;
+            }
           }
-        } catch (e) {
-          console.error('Erro ao carregar progresso:', e);
         }
+      } catch (e) {
+        console.warn('⚠️ Erro ao carregar progresso:', e);
       }
       return false;
     }
@@ -1822,8 +2512,8 @@
       saveCurrentAnswer();
       
       const list = document.getElementById('rankList');
-      if (list.children.length !== 4) {
-        showToast('Por favor, ranqueie todas as 4 características antes de continuar.', 'error');
+      if (list && list.children.length !== 4) {
+        showToast('Por favor, ranqueie todas as 4 características antes de continuar.', 'warning');
         return;
       }
       
@@ -1840,10 +2530,12 @@
     // FINALIZAR TESTE E PROCESSAR RESULTADOS
     // ============================================
     async function finishTest() {
+      console.log('🏁 Finalizando teste...');
+      
       // Calcular resultados
       const results = calculateResults();
       
-      // ✅ SALVAR RESULTADOS NO SUPABASE COM FALLBACK
+      // Salvar resultados no Supabase com fallback
       await saveParticipantResultsSupabase(results);
       
       // Enviar relatório simples por e-mail (simulado)
@@ -1868,7 +2560,7 @@
       try {
         // Preparar dados para salvar no Supabase
         const resultData = {
-          id: VigorreDB.generateId(),
+          id: VigorreDB?.generateId?.() || Date.now().toString(),
           participant_id: AppState.participant.id,
           test_type: 'DISC',
           scores: results.scores,
@@ -2058,14 +2750,16 @@
       // Calcular totais e percentuais
       const total = Object.values(AppState.discScores).reduce((a, b) => a + b, 0);
       
+      const percentages = {
+        D: total > 0 ? Math.round((AppState.discScores.D / total) * 100) : 0,
+        I: total > 0 ? Math.round((AppState.discScores.I / total) * 100) : 0,
+        S: total > 0 ? Math.round((AppState.discScores.S / total) * 100) : 0,
+        C: total > 0 ? Math.round((AppState.discScores.C / total) * 100) : 0
+      };
+      
       return {
         scores: AppState.discScores,
-        percentages: {
-          D: Math.round((AppState.discScores.D / total) * 100),
-          I: Math.round((AppState.discScores.I / total) * 100),
-          S: Math.round((AppState.discScores.S / total) * 100),
-          C: Math.round((AppState.discScores.C / total) * 100)
-        },
+        percentages: percentages,
         total: total
       };
     }
@@ -2082,7 +2776,11 @@
           clearInterval(interval);
           setTimeout(showResults, 500);
         }
-        document.getElementById('loadingProgress').style.width = `${Math.min(progress, 100)}%`;
+        const progressEl = document.getElementById('loadingProgress');
+        if (progressEl) {
+          progressEl.style.width = `${Math.min(progress, 100)}%`;
+          progressEl.parentElement?.setAttribute('aria-valuenow', Math.round(progress));
+        }
       }, 200);
     }
 
@@ -2100,11 +2798,19 @@
       
       // Atualizar header do perfil
       const dominantProfile = DISC_PROFILES[dominant[0]];
-      document.getElementById('profileBadge').className = `profile-badge ${dominantProfile.badge}`;
-      document.getElementById('profileLetter').textContent = dominant[0];
-      document.getElementById('profileName').textContent = dominantProfile.name;
-      document.getElementById('dominantPercent').textContent = `${dominant[1]}%`;
-      document.getElementById('secondaryPercent').textContent = `${secondary[1]}%`;
+      const profileBadge = document.getElementById('profileBadge');
+      const profileLetter = document.getElementById('profileLetter');
+      const profileName = document.getElementById('profileName');
+      const dominantPercent = document.getElementById('dominantPercent');
+      const secondaryPercent = document.getElementById('secondaryPercent');
+      
+      if (profileBadge) {
+        profileBadge.className = `profile-badge ${dominantProfile.badge}`;
+      }
+      if (profileLetter) profileLetter.textContent = dominant[0];
+      if (profileName) profileName.textContent = dominantProfile.name;
+      if (dominantPercent) dominantPercent.textContent = `${dominant[1]}%`;
+      if (secondaryPercent) secondaryPercent.textContent = `${secondary[1]}%`;
       
       // Renderizar gráficos
       renderCharts(results.percentages);
@@ -2120,149 +2826,186 @@
     }
 
     function renderCharts(percentages) {
+      // Destruir charts existentes se houver
+      const radarCanvas = document.getElementById('radarChart');
+      const barCanvas = document.getElementById('barChart');
+      
+      if (radarCanvas?.chart) {
+        radarCanvas.chart.destroy();
+      }
+      if (barCanvas?.chart) {
+        barCanvas.chart.destroy();
+      }
+      
       // Gráfico Radar
-      const radarCtx = document.getElementById('radarChart').getContext('2d');
-      new Chart(radarCtx, {
-        type: 'radar',
-        data: {
-          labels: ['Dominância', 'Influência', 'Estabilidade', 'Conformidade'],
-          datasets: [{
-            label: 'Seu Perfil',
-            data: [percentages.D, percentages.I, percentages.S, percentages.C],
-            backgroundColor: 'rgba(124, 58, 237, 0.2)',
-            borderColor: '#7C3AED',
-            borderWidth: 3,
-            pointBackgroundColor: '#7C3AED',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: '#7C3AED'
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            r: {
-              angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
-              grid: { color: 'rgba(255, 255, 255, 0.1)' },
-              pointLabels: { color: '#F8FAFC', font: { size: 11 } },
-              ticks: { display: false, backdropColor: 'transparent' }
-            }
+      if (radarCanvas) {
+        const radarCtx = radarCanvas.getContext('2d');
+        radarCanvas.chart = new Chart(radarCtx, {
+          type: 'radar',
+          data: {
+            labels: ['Dominância', 'Influência', 'Estabilidade', 'Conformidade'],
+            datasets: [{
+              label: 'Seu Perfil',
+              data: [percentages.D, percentages.I, percentages.S, percentages.C],
+              backgroundColor: 'rgba(124, 58, 237, 0.2)',
+              borderColor: '#7C3AED',
+              borderWidth: 3,
+              pointBackgroundColor: '#7C3AED',
+              pointBorderColor: '#fff',
+              pointHoverBackgroundColor: '#fff',
+              pointHoverBorderColor: '#7C3AED'
+            }]
           },
-          plugins: {
-            legend: { display: false }
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              r: {
+                angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
+                grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                pointLabels: { 
+                  color: '#F8FAFC', 
+                  font: { size: 11, family: 'Inter' } 
+                },
+                ticks: { display: false, backdropColor: 'transparent' }
+              }
+            },
+            plugins: {
+              legend: { display: false }
+            }
           }
-        }
-      });
+        });
+      }
       
       // Gráfico de Barras
-      const barCtx = document.getElementById('barChart').getContext('2d');
-      new Chart(barCtx, {
-        type: 'bar',
-        data: {
-          labels: ['D', 'I', 'S', 'C'],
-          datasets: [{
-            label: 'Intensidade',
-            data: [percentages.D, percentages.I, percentages.S, percentages.C],
-            backgroundColor: [
-              'rgba(239, 68, 68, 0.8)',
-              'rgba(59, 130, 246, 0.8)',
-              'rgba(16, 185, 129, 0.8)',
-              'rgba(124, 58, 237, 0.8)'
-            ],
-            borderColor: [
-              '#EF4444',
-              '#3B82F6',
-              '#10B981',
-              '#7C3AED'
-            ],
-            borderWidth: 2
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true,
-              max: 100,
-              grid: { color: 'rgba(255, 255, 255, 0.1)' },
-              ticks: { color: '#94A3B8' }
-            },
-            x: {
-              grid: { display: false },
-              ticks: { color: '#F8FAFC', font: { weight: 'bold' } }
-            }
+      if (barCanvas) {
+        const barCtx = barCanvas.getContext('2d');
+        barCanvas.chart = new Chart(barCtx, {
+          type: 'bar',
+          data: {
+            labels: ['D', 'I', 'S', 'C'],
+            datasets: [{
+              label: 'Intensidade',
+              data: [percentages.D, percentages.I, percentages.S, percentages.C],
+              backgroundColor: [
+                'rgba(239, 68, 68, 0.8)',
+                'rgba(59, 130, 246, 0.8)',
+                'rgba(16, 185, 129, 0.8)',
+                'rgba(124, 58, 237, 0.8)'
+              ],
+              borderColor: [
+                '#EF4444',
+                '#3B82F6',
+                '#10B981',
+                '#7C3AED'
+              ],
+              borderWidth: 2,
+              borderRadius: 4
+            }]
           },
-          plugins: {
-            legend: { display: false }
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 100,
+                grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                ticks: { color: '#94A3B8', font: { family: 'Inter' } }
+              },
+              x: {
+                grid: { display: false },
+                ticks: { 
+                  color: '#F8FAFC', 
+                  font: { weight: 'bold', family: 'Inter' } 
+                }
+              }
+            },
+            plugins: {
+              legend: { display: false }
+            }
           }
-        }
-      });
+        });
+      }
     }
 
     function renderInsights(dominant, secondary, percentages) {
       const profile = DISC_PROFILES[dominant];
       
+      if (!profile) return;
+      
       // Atualizar insights principais
-      document.getElementById('communicationInsight').textContent = profile.insights.communication;
-      document.getElementById('leadershipInsight').textContent = profile.insights.leadership;
-      document.getElementById('decisionInsight').textContent = profile.insights.decision;
-      document.getElementById('pressureInsight').textContent = profile.insights.pressure;
+      const commInsight = document.getElementById('communicationInsight');
+      const leadInsight = document.getElementById('leadershipInsight');
+      const decInsight = document.getElementById('decisionInsight');
+      const presInsight = document.getElementById('pressureInsight');
+      
+      if (commInsight) commInsight.textContent = profile.insights.communication;
+      if (leadInsight) leadInsight.textContent = profile.insights.leadership;
+      if (decInsight) decInsight.textContent = profile.insights.decision;
+      if (presInsight) presInsight.textContent = profile.insights.pressure;
       
       // Pontos fortes
       const strengthsList = document.getElementById('strengthsList');
-      strengthsList.innerHTML = profile.strengths.map(strength => `
-        <li class="flex items-start gap-2 text-sm text-gray-300">
-          <span class="text-brand-emerald mt-0.5">✓</span>
-          <span>${strength}</span>
-        </li>
-      `).join('');
+      if (strengthsList) {
+        strengthsList.innerHTML = profile.strengths.map(strength => `
+          <li class="flex items-start gap-2 text-sm text-gray-300" role="listitem">
+            <span class="text-brand-emerald mt-0.5" aria-hidden="true">✓</span>
+            <span>${strength}</span>
+          </li>
+        `).join('');
+      }
       
       // Pontos de desenvolvimento
       const devList = document.getElementById('developmentList');
-      devList.innerHTML = profile.development.map(point => `
-        <li class="flex items-start gap-2 text-sm text-gray-300">
-          <span class="text-brand-rose mt-0.5">•</span>
-          <span>${point}</span>
-        </li>
-      `).join('');
+      if (devList) {
+        devList.innerHTML = profile.development.map(point => `
+          <li class="flex items-start gap-2 text-sm text-gray-300" role="listitem">
+            <span class="text-brand-rose mt-0.5" aria-hidden="true">•</span>
+            <span>${point}</span>
+          </li>
+        `).join('');
+      }
       
       // Sugestões de carreira
       const careers = document.getElementById('careerSuggestions');
-      careers.innerHTML = profile.careers.map(career => `
-        <span class="px-3 py-1.5 rounded-full text-xs font-medium glass border border-white/10 hover:border-white/30 transition cursor-default">
-          ${career}
-        </span>
-      `).join('');
+      if (careers) {
+        careers.innerHTML = profile.careers.map(career => `
+          <span class="px-3 py-1.5 rounded-full text-xs font-medium glass border border-white/10 hover:border-white/30 transition cursor-default" role="listitem">
+            ${career}
+          </span>
+        `).join('');
+      }
       
       // Insights inteligentes
       const insights = document.getElementById('smartInsights');
-      const smartInsights = [
-        {
-          icon: '🎯',
-          title: 'Ambiente Ideal',
-          text: 'Ambientes dinâmicos com autonomia para tomar decisões e foco em resultados.'
-        },
-        {
-          icon: '👥',
-          title: 'Estilo de Colaboração',
-          text: 'Trabalha melhor com equipes que valorizam objetividade e eficiência.'
-        },
-        {
-          icon: '🚀',
-          title: 'Potencial de Crescimento',
-          text: 'Desenvolver habilidades de escuta ativa pode ampliar sua influência.'
-        }
-      ];
-      
-      insights.innerHTML = smartInsights.map(insight => `
-        <div class="glass p-4 rounded-xl">
-          <div class="text-2xl mb-2">${insight.icon}</div>
-          <h4 class="font-medium text-sm mb-1">${insight.title}</h4>
-          <p class="text-xs text-gray-400">${insight.text}</p>
-        </div>
-      `).join('');
+      if (insights) {
+        const smartInsights = [
+          {
+            icon: '🎯',
+            title: 'Ambiente Ideal',
+            text: 'Ambientes dinâmicos com autonomia para tomar decisões e foco em resultados.'
+          },
+          {
+            icon: '👥',
+            title: 'Estilo de Colaboração',
+            text: 'Trabalha melhor com equipes que valorizam objetividade e eficiência.'
+          },
+          {
+            icon: '🚀',
+            title: 'Potencial de Crescimento',
+            text: 'Desenvolver habilidades de escuta ativa pode ampliar sua influência.'
+          }
+        ];
+        
+        insights.innerHTML = smartInsights.map(insight => `
+          <div class="glass p-4 rounded-xl" role="listitem">
+            <div class="text-2xl mb-2" aria-hidden="true">${insight.icon}</div>
+            <h4 class="font-medium text-sm mb-1">${insight.title}</h4>
+            <p class="text-xs text-gray-400">${insight.text}</p>
+          </div>
+        `).join('');
+      }
     }
 
     // ============================================
@@ -2272,8 +3015,12 @@
       console.log('🔒 Abrindo modal de relatório completo');
       const modal = document.getElementById('simpleReportModal');
       if (modal) {
-        modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden'; // Evitar scroll no fundo
+        modal.classList.remove('hidden');
+        // Impedir scroll na página de fundo
+        document.body.style.overflow = 'hidden';
+        // Focar no botão do modal para acessibilidade
+        const btn = modal.querySelector('.modal-btn');
+        if (btn) setTimeout(() => btn.focus(), 100);
       }
     }
 
@@ -2281,9 +3028,11 @@
       console.log('🔐 Fechando modal e realizando logoff');
       const modal = document.getElementById('simpleReportModal');
       if (modal) {
-        modal.style.display = 'none';
+        modal.classList.add('hidden');
+        // Restaurar scroll na página
         document.body.style.overflow = '';
       }
+      // Fazer logoff
       performLogout();
     }
 
@@ -2303,17 +3052,16 @@
         }
       }
       
+      // Marcar logout para sincronização entre abas
+      sessionStorage.setItem('vigorre_logged_out', 'true');
+      
+      // Limpar dados locais
       localStorage.removeItem('vigorre_current_user');
+      localStorage.removeItem('vigorre_password_temp');
       sessionStorage.clear();
+      
+      // Redirecionar para login com parâmetros para evitar cache
       window.location.href = 'login.html?loggedout=1&ts=' + Date.now();
-    }
-
-    // ============================================
-    // DOWNLOAD DE RELATÓRIO SIMPLES
-    // ============================================
-    function downloadSimpleReport() {
-      // ✅ CORREÇÃO: Ao clicar em "Baixar Relatório Simples", abrir modal em vez de download direto
-      openSimpleReportModal();
     }
 
     // ============================================
@@ -2327,19 +3075,39 @@
       
       if (!toast) return;
       
-      toast.className = `toast ${type}`;
-      icon.textContent = type === 'success' ? '✅' : '⚠️';
+      // Configurar conteúdo
+      icon.textContent = type === 'success' ? '✅' : type === 'error' ? '❌' : '⚠️';
       msg.textContent = message;
       
+      // Aplicar classe de estilo
+      toast.className = `toast ${type}`;
+      
+      // Mostrar toast
       toast.classList.remove('hidden');
       setTimeout(() => toast.classList.add('show'), 10);
-      setTimeout(() => hideToast(), 4000);
+      
+      // Esconder após tempo
+      if (toast.timeoutId) clearTimeout(toast.timeoutId);
+      toast.timeoutId = setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+          toast.classList.add('hidden');
+          toast.style.opacity = '1';
+          toast.style.transform = 'translateX(0)';
+        }, 300);
+      }, type === 'error' ? 6000 : 4000);
     }
 
     function hideToast() {
       const toast = document.getElementById('toast');
+      if (!toast) return;
+      
       toast.classList.remove('show');
-      setTimeout(() => toast.classList.add('hidden'), 300);
+      setTimeout(() => {
+        toast.classList.add('hidden');
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateX(0)';
+      }, 300);
     }
 
     // ============================================
@@ -2352,6 +3120,20 @@
     });
 
     // ============================================
+    // PREVENÇÃO DE BACK BUTTON APÓS LOGOUT
+    // ============================================
+    window.addEventListener('pageshow', function(event) {
+      if (event.persisted) {
+        const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+        const sessionActive = sessionStorage.getItem('vigorre_session_active') === 'true';
+        
+        if (!currentUser.role || !sessionActive) {
+          window.location.replace('login.html');
+        }
+      }
+    });
+
+    // ============================================
     // DEBUG INICIAL
     // ============================================
     console.log('🔍 Teste DISC - Estado inicial:', {
@@ -2359,13 +3141,26 @@
       participant: AppState.participant?.name || 'não carregado',
       localStorage: {
         user: !!localStorage.getItem('vigorre_current_user'),
-        participants: !!localStorage.getItem('vigorre_participants')
+        participants: !!localStorage.getItem('vigorre_participants'),
+        progress: !!localStorage.getItem('disc_assessment_progress')
       },
       supabase: {
         available: !!window.VigorreDB,
         url: window.VigorreDB?.supabase ? 'conectado' : 'não conectado'
       }
     });
+
+    // ============================================
+    // EXPORTS PARA MÓDULOS (OPCIONAL)
+    // ============================================
+    if (typeof module !== 'undefined' && module.exports) {
+      module.exports = { 
+        showToast, 
+        performLogout, 
+        startAssessment,
+        DISC_PROFILES 
+      };
+    }
   </script>
 </body>
 </html>
