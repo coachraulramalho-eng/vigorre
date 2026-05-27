@@ -14,97 +14,129 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- ✅ FIREBASE SDK - CARREGAR ANTES DO CONFIG -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
-  <!-- Configuração Tailwind -->
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              navy: '#0F172A',
-              blue: '#1D4ED8',
-              blueDark: '#1E40AF',
-              purple: '#7C3AED',
-              cyan: '#06B6D4',
-              emerald: '#10B981',
-              amber: '#F59E0B',
-              rose: '#F43F5E',
-              slate: {
-                50: '#F8FAFC',
-                100: '#F1F5F9',
-                200: '#E2E8F0',
-                300: '#CBD5E1',
-                400: '#94A3B8',
-                500: '#64748B',
-                600: '#475569',
-                700: '#334155',
-                800: '#1E293B',
-                900: '#0F172A'
-              }
-            }
-          },
-          animation: {
-            'fade-in': 'fadeIn 0.5s ease-out',
-            'slide-up': 'slideUp 0.4s ease-out',
-            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-            'shimmer': 'shimmer 2s linear infinite'
-          },
-          keyframes: {
-            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
-            slideUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
-            shimmer: { '0%': { transform: 'translateX(-100%)' }, '100%': { transform: 'translateX(100%)' } }
-          }
-        }
-      }
-    };
-  </script>
+  <!-- ✅ SUA CONFIGURAÇÃO FIREBASE -->
+  <script src="firebase-config.js"></script>
   
   <style>
     /* ============================================
-       RESET & BASE - ENTERPRISE PREMIUM
+       RESET & BASE - ENTERPRISE PREMIUM DARK
        ============================================ */
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+    }
+    
     html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
     
     :root {
-      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-      --radius: 0.5rem; --radius-lg: 1rem; --radius-xl: 1.5rem; --radius-2xl: 2rem;
-      --transition: 250ms ease;
+      /* Cores da Marca Vigorre One™ - DARK PREMIUM */
+      --brand-navy: #0A1628;
+      --brand-navy-dark: #020617;
+      --brand-blue: #1D4ED8;
+      --brand-blue-dark: #1E40AF;
+      --brand-purple: #7C3AED;
+      --brand-cyan: #06B6D4;
+      --brand-emerald: #10B981;
+      --brand-amber: #F59E0B;
+      --brand-rose: #F43F5E;
+      
+      /* Cores Neutras - Dark Mode */
+      --slate-50: #F8FAFC;
+      --slate-100: #F1F5F9;
+      --slate-200: #E2E8F0;
+      --slate-300: #CBD5E1;
+      --slate-400: #94A3B8;
+      --slate-500: #64748B;
+      --slate-600: #475569;
+      --slate-700: #334155;
+      --slate-800: #1E293B;
+      --slate-900: #0F172A;
+      
+      /* Sombras Premium */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+      --shadow-glow: 0 0 40px rgba(29, 78, 216, 0.3);
+      
+      /* Bordas */
+      --radius: 0.5rem;
+      --radius-lg: 1rem;
+      --radius-xl: 1.5rem;
+      --radius-2xl: 2rem;
+      
+      /* Transições */
+      --transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     body { 
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
-      background: linear-gradient(135deg, #f0f9ff 0%, #f8fafc 100%);
-      color: var(--brand-slate-800); min-height: 100vh; line-height: 1.6; position: relative; overflow-x: hidden;
+      background: linear-gradient(135deg, var(--brand-navy) 0%, var(--brand-navy-dark) 50%, var(--slate-900) 100%);
+      color: var(--slate-50); 
+      min-height: 100vh; 
+      line-height: 1.6; 
+      position: relative; 
+      overflow-x: hidden;
+    }
+    
+    /* Background animado premium */
+    body::before {
+      content: ''; 
+      position: fixed; 
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: 
+        radial-gradient(ellipse at 20% 80%, rgba(29, 78, 216, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(124, 58, 237, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(6, 182, 212, 0.08) 0%, transparent 70%);
+      pointer-events: none; 
+      z-index: 0;
+      animation: float 30s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-20px) scale(1.02); }
+    }
+    
+    /* Partículas sutis */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: 
+        radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.15), transparent),
+        radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.1), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.12), transparent),
+        radial-gradient(1px 1px at 160px 120px, rgba(255,255,255,0.08), transparent);
+      background-size: 200px 200px;
+      animation: float 20s linear infinite;
+      pointer-events: none;
+      z-index: 0;
     }
     
     /* ============================================
-       HEADER PREMIUM - CLARO E PROFISSIONAL
+       HEADER PREMIUM - GLASSMORPHISM DARK
        ============================================ */
     header { 
-      background: white; 
-      border-bottom: 1px solid var(--brand-slate-200);
-      box-shadow: var(--shadow);
+      background: rgba(10, 22, 40, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       position: sticky;
       top: 0;
       z-index: 100;
-      height: 72px;
+      padding: 1rem 0;
     }
     
     .header-content {
-      max-width: 1200px;
+      max-width: 1000px;
       margin: 0 auto;
-      padding: 0 24px;
-      height: 100%;
+      padding: 0 1.5rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -116,10 +148,18 @@
       gap: 12px; 
     }
     
-    .logo-img { 
-      height: 40px; 
-      width: auto; 
-      border-radius: 8px;
+    .logo-badge {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: white;
+      box-shadow: 0 4px 14px rgba(29, 78, 216, 0.4);
     }
     
     .logo-text {
@@ -131,12 +171,12 @@
     .logo-text span:first-child {
       font-size: 1.125rem;
       font-weight: 800;
-      color: var(--brand-navy);
+      color: white;
     }
     
     .logo-text span:last-child {
       font-size: 0.75rem;
-      color: var(--brand-slate-500);
+      color: var(--slate-400);
       font-weight: 500;
     }
     
@@ -149,75 +189,124 @@
     .progress-text {
       font-size: 0.875rem;
       font-weight: 600;
-      color: var(--brand-slate-600);
+      color: var(--slate-300);
     }
     
     .progress-bar {
-      width: 200px;
+      width: 180px;
       height: 6px;
-      background: var(--brand-slate-200);
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 3px;
       overflow: hidden;
+      position: relative;
     }
     
     .progress-fill {
       height: 100%;
-      background: linear-gradient(90deg, var(--brand-blue), var(--brand-purple));
+      background: linear-gradient(90deg, var(--brand-blue), var(--brand-purple), var(--brand-cyan));
       border-radius: 3px;
-      transition: width 0.5s ease;
+      transition: width 0.5s var(--transition);
+      position: relative;
+    }
+    
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shimmer 2s infinite;
+    }
+    
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
     }
     
     /* ============================================
-       MAIN CONTENT - LAYOUT LIMPO
+       MAIN CONTENT - CENTRALIZADO PREMIUM
        ============================================ */
     main { 
-      max-width: 800px; 
+      max-width: 700px; 
       margin: 0 auto; 
-      padding: 48px 24px;
-      min-height: calc(100vh - 72px);
+      padding: 3rem 1.5rem;
+      min-height: calc(100vh - 80px);
       display: flex;
       align-items: center;
       justify-content: center;
+      position: relative;
+      z-index: 1;
     }
     
     /* ============================================
-       CARD DE PERGUNTA - DESIGN PREMIUM
+       CARD DE PERGUNTA - GLASSMORPHISM PREMIUM
        ============================================ */
     .question-card {
-      background: white;
+      background: rgba(30, 41, 59, 0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 24px;
-      padding: 3rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      border: 1px solid var(--brand-slate-200);
+      padding: 2.5rem;
       width: 100%;
-      animation: slideUp 0.4s ease;
+      box-shadow: 
+        var(--shadow-xl),
+        0 0 0 1px rgba(255, 255, 255, 0.05),
+        var(--shadow-glow);
+      animation: slideUp 0.5s ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .question-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), transparent);
+      pointer-events: none;
+    }
+    
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
     
     .question-header {
       margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
     
     .question-number {
-      display: inline-block;
-      padding: 6px 16px;
-      background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
-      color: white;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: linear-gradient(135deg, rgba(29, 78, 216, 0.2), rgba(124, 58, 237, 0.2));
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: var(--brand-cyan);
       border-radius: 100px;
       font-size: 0.875rem;
-      font-weight: 600;
+      font-weight: 700;
       margin-bottom: 1.25rem;
     }
     
     .question-text {
-      font-size: 1.5rem;
+      font-size: 1.375rem;
       font-weight: 700;
-      color: var(--brand-slate-800);
+      color: white;
       line-height: 1.4;
       margin-bottom: 0.5rem;
     }
     
     .question-instruction {
-      color: var(--brand-slate-500);
+      color: var(--slate-400);
       font-size: 0.9375rem;
     }
     
@@ -234,9 +323,9 @@
     .option-btn {
       width: 100%;
       padding: 1.25rem 1.5rem;
-      border: 2px solid var(--brand-slate-200);
+      border: 2px solid rgba(255, 255, 255, 0.15);
       border-radius: 16px;
-      background: white;
+      background: rgba(255, 255, 255, 0.03);
       text-align: left;
       cursor: pointer;
       transition: all var(--transition);
@@ -244,37 +333,56 @@
       align-items: center;
       gap: 1rem;
       font-size: 1rem;
-      color: var(--brand-slate-700);
+      color: var(--slate-200);
       font-weight: 500;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .option-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, rgba(29, 78, 216, 0.1), rgba(124, 58, 237, 0.05));
+      opacity: 0;
+      transition: opacity var(--transition);
+      border-radius: 14px;
     }
     
     .option-btn:hover {
       border-color: var(--brand-blue);
-      background: var(--brand-slate-50);
+      background: rgba(29, 78, 216, 0.08);
+      color: white;
       transform: translateX(4px);
     }
     
+    .option-btn:hover::before {
+      opacity: 1;
+    }
+    
     .option-btn.selected {
-      border-color: var(--brand-blue);
-      background: linear-gradient(135deg, rgba(29, 78, 216, 0.05), rgba(124, 58, 237, 0.05));
-      box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.1);
+      border-color: var(--brand-emerald);
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(6, 182, 212, 0.1));
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+      color: white;
     }
     
     .option-radio {
       width: 24px;
       height: 24px;
-      border: 2px solid var(--brand-slate-300);
+      border: 2px solid rgba(255, 255, 255, 0.3);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
       transition: all var(--transition);
+      position: relative;
     }
     
     .option-btn.selected .option-radio {
-      border-color: var(--brand-blue);
-      background: var(--brand-blue);
+      border-color: var(--brand-emerald);
+      background: var(--brand-emerald);
     }
     
     .option-btn.selected .option-radio::after {
@@ -291,13 +399,13 @@
       display: flex;
       gap: 1rem;
       padding-top: 1.5rem;
-      border-top: 1px solid var(--brand-slate-200);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
     
     .btn {
       flex: 1;
       padding: 1rem 2rem;
-      border-radius: 12px;
+      border-radius: 14px;
       font-weight: 700;
       font-size: 1rem;
       cursor: pointer;
@@ -307,56 +415,103 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+      position: relative;
+      overflow: hidden;
     }
     
     .btn-secondary {
-      background: var(--brand-slate-100);
-      color: var(--brand-slate-700);
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--slate-200);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
     
     .btn-secondary:hover:not(:disabled) {
-      background: var(--brand-slate-200);
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.4);
+      color: white;
     }
     
     .btn-primary {
       background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
       color: white;
-      box-shadow: 0 4px 14px rgba(29, 78, 216, 0.3);
+      box-shadow: 0 4px 14px rgba(29, 78, 216, 0.4);
+    }
+    
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s ease;
     }
     
     .btn-primary:hover:not(:disabled) {
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(29, 78, 216, 0.4);
+      box-shadow: 0 8px 25px rgba(29, 78, 216, 0.6);
+    }
+    
+    .btn-primary:hover::before {
+      left: 100%;
     }
     
     .btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
+      transform: none;
+    }
+    
+    /* Loading state */
+    .btn.loading {
+      color: transparent !important;
+      pointer-events: none;
+    }
+    
+    .btn.loading::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
     
     /* ============================================
-       TELA DE RESULTADOS
+       TELA DE RESULTADOS - PREMIUM DARK
        ============================================ */
     .results-container {
-      max-width: 1000px;
+      max-width: 900px;
       margin: 0 auto;
-      padding: 48px 24px;
+      padding: 3rem 1.5rem;
+      position: relative;
+      z-index: 1;
     }
     
     .results-header {
       text-align: center;
       margin-bottom: 3rem;
-      padding: 3rem;
-      background: white;
+      padding: 2.5rem;
+      background: rgba(30, 41, 59, 0.85);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 24px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      box-shadow: var(--shadow-xl);
     }
     
     .results-title {
-      font-size: 2rem;
+      font-size: 1.75rem;
       font-weight: 800;
-      color: var(--brand-slate-800);
+      color: white;
       margin-bottom: 1rem;
+      background: linear-gradient(135deg, #60A5FA, #A78BFA, #22D3EE);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
     
     .profile-badge {
@@ -369,35 +524,189 @@
       border-radius: 100px;
       font-weight: 700;
       font-size: 1.125rem;
-      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
     }
     
     .charts-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-      gap: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 1.5rem;
       margin-bottom: 2rem;
     }
     
     .chart-card {
-      background: white;
+      background: rgba(30, 41, 59, 0.85);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 20px;
       padding: 2rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      box-shadow: var(--shadow-lg);
     }
     
     .chart-title {
-      font-size: 1.25rem;
+      font-size: 1.125rem;
       font-weight: 700;
-      color: var(--brand-slate-800);
+      color: white;
       margin-bottom: 1.5rem;
       padding-bottom: 1rem;
-      border-bottom: 2px solid var(--brand-slate-100);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
     
     .chart-container {
       position: relative;
-      height: 300px;
+      height: 280px;
+    }
+    
+    /* Resumo e recomendações */
+    .summary-card {
+      background: rgba(30, 41, 59, 0.85);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .summary-card h3 {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .summary-card p {
+      color: var(--slate-300);
+      line-height: 1.7;
+      font-size: 0.9375rem;
+    }
+    
+    .recommendations-list {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .recommendations-list li {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      color: var(--slate-300);
+      font-size: 0.9375rem;
+    }
+    
+    .recommendations-list li:last-child {
+      border-bottom: none;
+    }
+    
+    .recommendations-list li::before {
+      content: '✓';
+      color: var(--brand-emerald);
+      font-weight: 700;
+      font-size: 1.125rem;
+      flex-shrink: 0;
+    }
+    
+    /* Botões de relatório */
+    .report-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    
+    .report-card {
+      background: rgba(30, 41, 59, 0.85);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all var(--transition);
+    }
+    
+    .report-card:hover {
+      border-color: var(--brand-blue);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-glow);
+    }
+    
+    .report-card h4 {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 0.75rem;
+    }
+    
+    .report-card p {
+      color: var(--slate-400);
+      font-size: 0.875rem;
+      margin-bottom: 1.25rem;
+    }
+    
+    .btn-report {
+      width: 100%;
+      padding: 0.875rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.9375rem;
+      cursor: pointer;
+      transition: all var(--transition);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .btn-report-primary {
+      background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
+      color: white;
+      box-shadow: 0 4px 14px rgba(29, 78, 216, 0.4);
+    }
+    
+    .btn-report-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(29, 78, 216, 0.6);
+    }
+    
+    .btn-report-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--slate-200);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .btn-report-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.4);
+      color: white;
+    }
+    
+    /* Quote final */
+    .final-quote {
+      text-align: center;
+      padding: 2rem;
+      margin-top: 2rem;
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    
+    .final-quote blockquote {
+      font-size: 1.125rem;
+      font-style: italic;
+      color: var(--slate-300);
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+    
+    .final-quote cite {
+      color: var(--brand-cyan);
+      font-weight: 600;
+      font-style: normal;
     }
     
     /* ============================================
@@ -406,7 +715,7 @@
     .loading-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(10, 22, 40, 0.95);
       backdrop-filter: blur(8px);
       display: flex;
       align-items: center;
@@ -418,95 +727,68 @@
       text-align: center;
     }
     
-    .loading-spinner {
+    .loading-spinner-large {
       width: 64px;
       height: 64px;
-      border: 4px solid var(--brand-slate-200);
-      border-top-color: var(--brand-blue);
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-top-color: var(--brand-cyan);
       border-radius: 50%;
       animation: spin 1s linear infinite;
       margin: 0 auto 1.5rem;
     }
     
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    
     .loading-text {
       font-size: 1.125rem;
       font-weight: 600;
-      color: var(--brand-slate-700);
+      color: var(--slate-300);
     }
     
     /* ============================================
-       RESPONSIVO
-       ============================================ */
-    @media (max-width: 768px) {
-      .header-content {
-        padding: 0 16px;
-      }
-      
-      .progress-bar {
-        width: 120px;
-      }
-      
-      main {
-        padding: 24px 16px;
-      }
-      
-      .question-card {
-        padding: 2rem 1.5rem;
-      }
-      
-      .question-text {
-        font-size: 1.25rem;
-      }
-      
-      .charts-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .navigation-buttons {
-        flex-direction: column;
-      }
-    }
-    
-    /* ============================================
-       MODAL
+       MODAL PREMIUM
        ============================================ */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(15, 23, 42, 0.8);
-      backdrop-filter: blur(8px);
+      background: rgba(10, 22, 40, 0.92);
+      backdrop-filter: blur(16px);
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 10000;
-      padding: 20px;
+      padding: 1.5rem;
+      animation: fadeIn 0.25s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
     
     .modal-content {
-      background: white;
+      background: rgba(30, 41, 59, 0.95);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 24px;
       padding: 2.5rem;
       max-width: 520px;
       width: 100%;
       text-align: center;
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+      box-shadow: var(--shadow-xl);
+      animation: slideUp 0.4s ease;
     }
     
     .modal-title {
       font-size: 1.5rem;
       font-weight: 800;
-      color: var(--brand-slate-800);
+      color: white;
       margin-bottom: 1rem;
     }
     
     .modal-text {
-      color: var(--brand-slate-600);
+      color: var(--slate-300);
       margin-bottom: 1.5rem;
       line-height: 1.7;
+      font-size: 1rem;
     }
     
     .modal-highlight {
@@ -523,7 +805,7 @@
       background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
       color: white;
       padding: 14px 40px;
-      border-radius: 12px;
+      border-radius: 14px;
       font-weight: 700;
       font-size: 1rem;
       border: none;
@@ -538,24 +820,28 @@
     }
     
     /* ============================================
-       TOAST
+       TOAST NOTIFICATIONS
        ============================================ */
     .toast {
       position: fixed;
       top: 24px;
       right: 24px;
-      background: white;
+      background: rgba(30, 41, 59, 0.95);
+      backdrop-filter: blur(16px);
       padding: 14px 24px;
-      border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      border-radius: 14px;
+      box-shadow: var(--shadow-xl);
       display: flex;
       align-items: center;
       gap: 12px;
       font-weight: 600;
-      color: var(--brand-slate-800);
+      color: white;
       z-index: 10001;
       border-left: 4px solid var(--brand-emerald);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       animation: slideIn 0.3s ease;
+      max-width: 400px;
+      font-size: 0.875rem;
     }
     
     @keyframes slideIn {
@@ -564,21 +850,78 @@
     }
     
     .toast.error { border-left-color: var(--brand-rose); }
+    .toast.warning { border-left-color: var(--brand-amber); }
     .toast-icon { font-size: 1.25rem; }
     
-    /* Utilitários */
+    /* ============================================
+       RESPONSIVO
+       ============================================ */
+    @media (max-width: 768px) {
+      .header-content {
+        padding: 0 1rem;
+      }
+      
+      .progress-bar {
+        width: 120px;
+      }
+      
+      main {
+        padding: 2rem 1rem;
+      }
+      
+      .question-card {
+        padding: 2rem 1.5rem;
+        border-radius: 20px;
+      }
+      
+      .question-text {
+        font-size: 1.25rem;
+      }
+      
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .navigation-buttons {
+        flex-direction: column;
+      }
+      
+      .report-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* ============================================
+       ACESSIBILIDADE
+       ============================================ */
+    .btn:focus-visible,
+    .option-btn:focus-visible {
+      outline: 2px solid var(--brand-cyan);
+      outline-offset: 2px;
+    }
+    
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    
     .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-  <!-- ============================================
-       HEADER
-       ============================================ -->
+  <!-- Header Premium -->
   <header>
     <div class="header-content">
       <div class="logo">
-        <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #1D4ED8, #7C3AED); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 1.25rem;">V</div>
+        <div class="logo-badge">V</div>
         <div class="logo-text">
           <span>Vigorre One™</span>
           <span>Assessment DISC</span>
@@ -593,13 +936,14 @@
     </div>
   </header>
 
-  <!-- ============================================
-       MAIN CONTENT - PERGUNTAS
-       ============================================ -->
+  <!-- Main Content - Perguntas -->
   <main id="testContainer">
     <div class="question-card">
       <div class="question-header">
-        <span class="question-number">Questão <span id="currentNumber">1</span></span>
+        <span class="question-number">
+          <span>✦</span>
+          Questão <span id="currentNumber">1</span>
+        </span>
         <h2 class="question-text" id="qText">Carregando pergunta...</h2>
         <p class="question-instruction">Selecione a opção que melhor descreve seu comportamento</p>
       </div>
@@ -619,13 +963,11 @@
     </div>
   </main>
 
-  <!-- ============================================
-       TELA DE RESULTADOS
-       ============================================ -->
-  <div id="resultsView" class="hidden results-container">
+  <!-- Results View (hidden initially) -->
+  <div id="resultsView" class="results-container hidden">
     <div class="results-header">
       <h1 class="results-title">Seu Perfil Comportamental DISC</h1>
-      <p style="color: var(--brand-slate-600); margin-bottom: 1.5rem; font-size: 1.125rem;">Análise Comportamental Vigorre One™</p>
+      <p style="color: var(--slate-400); margin-bottom: 1.5rem; font-size: 1rem;">Análise Comportamental Vigorre One™</p>
       <div class="profile-badge" id="profileBadge">
         <span>📊</span>
         <span id="profileText">Perfil: --</span>
@@ -647,47 +989,48 @@
       </div>
     </div>
     
-    <div class="chart-card" style="margin-bottom: 2rem;">
-      <h3 class="chart-title">📊 Resumo Executivo</h3>
-      <div id="executiveSummary"></div>
+    <div class="summary-card">
+      <h3>📊 Resumo Executivo</h3>
+      <p id="executiveSummary"></p>
     </div>
     
-    <div class="chart-card" style="margin-bottom: 2rem;">
-      <h3 class="chart-title">💡 Plano de Desenvolvimento</h3>
-      <div id="recommendations"></div>
+    <div class="summary-card">
+      <h3>💡 Plano de Desenvolvimento</h3>
+      <ul class="recommendations-list" id="recommendations"></ul>
     </div>
     
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
-      <div class="chart-card" style="text-align: center;">
-        <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 1rem;">📄 Relatório Simples</h3>
-        <p style="color: var(--brand-slate-600); margin-bottom: 1.5rem; font-size: 0.9375rem;">Visão geral do seu perfil DISC</p>
-        <button onclick="openSimpleReportModal()" class="btn btn-primary" style="width: 100%;">
+    <div class="report-actions">
+      <div class="report-card">
+        <h4>📄 Relatório Simples</h4>
+        <p>Visão geral do seu perfil DISC</p>
+        <button onclick="openSimpleReportModal()" class="btn-report btn-report-primary">
           Baixar Relatório
         </button>
       </div>
-      <div class="chart-card" style="text-align: center;">
-        <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 1rem;">🔓 Laudo Vigorre Completo</h3>
-        <p style="color: var(--brand-slate-600); margin-bottom: 1.5rem; font-size: 0.9375rem;">Análise integrada com IE + Valores</p>
-        <button onclick="window.location.href='relatorio-disc-vigorre.html'" class="btn btn-secondary" style="width: 100%;">
+      <div class="report-card">
+        <h4>🔓 Laudo Vigorre Completo</h4>
+        <p>Análise integrada com IE + Valores</p>
+        <button onclick="window.location.href='relatorio-disc-vigorre.html'" class="btn-report btn-report-secondary">
           Ver Relatório Completo
         </button>
       </div>
     </div>
+    
+    <div class="final-quote">
+      <blockquote>"A maturidade comportamental é o maior diferencial competitivo do século XXI."</blockquote>
+      <cite>— Vigorre One™</cite>
+    </div>
   </div>
 
-  <!-- ============================================
-       LOADING OVERLAY
-       ============================================ -->
+  <!-- Loading Overlay -->
   <div id="loadingOverlay" class="loading-overlay hidden">
     <div class="loading-content">
-      <div class="loading-spinner"></div>
+      <div class="loading-spinner-large"></div>
       <p class="loading-text">Calculando seu perfil DISC...</p>
     </div>
   </div>
 
-  <!-- ============================================
-       MODAL
-       ============================================ -->
+  <!-- Modal para Relatório -->
   <div id="simpleReportModal" class="modal-overlay hidden">
     <div class="modal-content">
       <h3 class="modal-title">🔒 Acesso ao Relatório Completo</h3>
@@ -699,19 +1042,29 @@
     </div>
   </div>
 
-  <!-- ============================================
-       TOAST
-       ============================================ -->
+  <!-- Toast Notification -->
   <div id="toast" class="toast hidden">
     <span class="toast-icon" id="toastIcon">✅</span>
     <span id="toastMessage">Ação realizada!</span>
   </div>
 
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
   <script>
+    'use strict';
+    
     // ============================================
     // ESTADO E DADOS
     // ============================================
-    const AppState = { currentQ: 0, answers: [], completed: false, session: null, participant: null };
+    const AppState = { 
+      currentQ: 0, 
+      answers: [], 
+      completed: false, 
+      session: null, 
+      participant: null 
+    };
+    
     let discRadarChartInstance = null;
     let discBarChartInstance = null;
 
@@ -871,10 +1224,30 @@
 
     // Interpretações DISC
     const DISC_INTERPRETATIONS = {
-      D: { name: 'Dominância', high: 'Excelente capacidade de liderança em situações desafiadoras. Toma decisões rápidas e assume responsabilidades.', medium: 'Boa capacidade de decisão, com espaço para desenvolver maior assertividade.', low: 'Pode beneficiar-se de práticas para desenvolver maior confiança em liderança.' },
-      I: { name: 'Influência', high: 'Excelente habilidade de comunicação e persuasão. Motiva e engaja equipes com entusiasmo.', medium: 'Boa capacidade de influência, com oportunidades para desenvolver networking.', low: 'Pode beneficiar-se de práticas para desenvolver confiança em comunicação.' },
-      S: { name: 'Estabilidade', high: 'Excelente capacidade de manter harmonia e apoiar equipes. Constância e confiabilidade.', medium: 'Boa estabilidade, com espaço para desenvolver flexibilidade.', low: 'Pode beneficiar-se de técnicas para gerenciar transições.' },
-      C: { name: 'Conformidade', high: 'Excelência na análise de dados e atenção a detalhes. Planejamento estruturado.', medium: 'Boa capacidade analítica, com oportunidades para desenvolver agilidade.', low: 'Pode beneficiar-se de práticas para equilibrar análise com ação.' }
+      D: { 
+        name: 'Dominância', 
+        high: 'Excelente capacidade de liderança em situações desafiadoras. Toma decisões rápidas e assume responsabilidades.', 
+        medium: 'Boa capacidade de decisão, com espaço para desenvolver maior assertividade.', 
+        low: 'Pode beneficiar-se de práticas para desenvolver maior confiança em liderança.' 
+      },
+      I: { 
+        name: 'Influência', 
+        high: 'Excelente habilidade de comunicação e persuasão. Motiva e engaja equipes com entusiasmo.', 
+        medium: 'Boa capacidade de influência, com oportunidades para desenvolver networking.', 
+        low: 'Pode beneficiar-se de práticas para desenvolver confiança em comunicação.' 
+      },
+      S: { 
+        name: 'Estabilidade', 
+        high: 'Excelente capacidade de manter harmonia e apoiar equipes. Constância e confiabilidade.', 
+        medium: 'Boa estabilidade, com espaço para desenvolver flexibilidade.', 
+        low: 'Pode beneficiar-se de técnicas para gerenciar transições.' 
+      },
+      C: { 
+        name: 'Conformidade', 
+        high: 'Excelência na análise de dados e atenção a detalhes. Planejamento estruturado.', 
+        medium: 'Boa capacidade analítica, com oportunidades para desenvolver agilidade.', 
+        low: 'Pode beneficiar-se de práticas para equilibrar análise com ação.' 
+      }
     };
 
     // ============================================
@@ -883,17 +1256,18 @@
     document.addEventListener('DOMContentLoaded', () => {
       console.log('🔹 Inicializando Teste DISC Vigorre One™...');
       
-      window.addEventListener('popstate', function(event) {
-        performLogout();
-      });
+      // Detectar botão voltar do navegador
+      window.addEventListener('popstate', () => performLogout());
       
-      if (window.history && window.history.replaceState) {
+      // Prevenir cache
+      if (window.history?.replaceState) {
         window.history.replaceState(null, null, window.location.href);
       }
       
+      // Carregar sessão
       loadSession();
       
-      if (AppState.session && AppState.session.id) {
+      if (AppState.session?.id) {
         renderQuestion();
       } else {
         window.location.href = 'login.html';
@@ -901,25 +1275,25 @@
     });
 
     // ============================================
-    // CARREGAR SESSÃO
+    // CARREGAR SESSÃO COM FIREBASE + FALLBACK
     // ============================================
     async function loadSession() {
       try {
-        if (typeof window.VigorreDB !== 'undefined' && VigorreDB && VigorreDB.supabase) {
-          const token = sessionStorage.getItem('vigorre_session_token');
-          if (token) {
-            const { data: sessionData } = await VigorreDB.supabase.from('sessions').select('participant_id, expires_at').eq('token', token).maybeSingle();
-            if (sessionData && new Date(sessionData.expires_at) > new Date()) {
-              const { data: participant } = await VigorreDB.supabase.from('participants').select('*').eq('id', sessionData.participant_id).maybeSingle();
-              if (participant) {
-                AppState.session = { id: participant.id, name: participant.name, email: participant.email, role: 'participant' };
-                AppState.participant = participant;
-                return true;
-              }
+        // Tentar Firebase primeiro
+        if (window.firebaseDB?.db) {
+          const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+          if (currentUser?.id) {
+            const doc = await firebaseDB.db.collection('participants').doc(currentUser.id).get();
+            if (doc.exists) {
+              const data = doc.data();
+              AppState.session = { id: data.id, name: data.name, email: data.email, role: 'participant' };
+              AppState.participant = { id: doc.id, ...data };
+              return true;
             }
           }
         }
         
+        // Fallback localStorage
         const session = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
         if (session?.id) {
           AppState.session = session;
@@ -928,8 +1302,16 @@
           return true;
         }
         return false;
-      } catch (e) { 
+      } catch (e) {
         console.error('Erro ao carregar sessão:', e);
+        // Último fallback
+        const session = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+        if (session?.id) {
+          AppState.session = session;
+          const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+          AppState.participant = participants.find(p => p.id === session.id);
+          return true;
+        }
         return false;
       }
     }
@@ -989,11 +1371,12 @@
     }
 
     // ============================================
-    // FINALIZAR TESTE
+    // FINALIZAR TESTE E SALVAR NO FIREBASE
     // ============================================
     async function finishTest() {
-      console.log('Finalizando teste DISC...');
+      console.log('🔄 Finalizando teste DISC...');
       
+      // Calcular resultados
       const dimensions = { D: 0, I: 0, S: 0, C: 0 };
       DISC_QUESTIONS.forEach((q, idx) => { 
         if (AppState.answers[idx] !== undefined) { 
@@ -1006,28 +1389,98 @@
         percentages[k] = Math.round((dimensions[k] / 100) * 100); 
       });
       
-      const results = { date: new Date().toISOString(), type: 'DISC', dimensions, percentages };
+      const results = { 
+        date: new Date().toISOString(), 
+        type: 'DISC', 
+        dimensions, 
+        percentages,
+        dominant: Object.entries(percentages).sort((a, b) => b[1] - a[1])[0][0]
+      };
       
-      await saveParticipantResultsDISCLocalStorage(results);
+      // Salvar no Firebase com fallback
+      await saveResultsFirebase(results);
       
+      // Mostrar loading e resultados
       document.getElementById('loadingOverlay').classList.remove('hidden');
       setTimeout(() => { showResults(results); }, 1500);
     }
 
-    function saveParticipantResultsDISCLocalStorage(results) {
+    // ✅ FUNÇÃO FIREBASE CORRIGIDA
+    async function saveResultsFirebase(results) {
+      if (!AppState.participant) {
+        // Fallback localStorage
+        saveResultsLocalStorage(results);
+        return;
+      }
+      
+      try {
+        // Preparar dados para Firebase
+        const resultData = {
+          participantId: AppState.participant.id,
+          testType: 'DISC',
+          scores: results.dimensions,
+          percentages: results.percentages,
+          dominant: results.dominant,
+          completedAt: new Date().toISOString(),
+          createdAt: new Date().toISOString()
+        };
+        
+        // ✅ Verificação robusta do Firebase
+        if (window.firebaseDB && firebaseDB.db) {
+          console.log('💾 Salvando no Firebase...');
+          
+          // Salvar resultados
+          await firebaseDB.db.collection('test_results').add(resultData);
+          
+          // Atualizar participante com teste concluído
+          const participantRef = firebaseDB.db.collection('participants').doc(AppState.participant.id);
+          const participantDoc = await participantRef.get();
+          
+          if (participantDoc.exists) {
+            const currentData = participantDoc.data();
+            const completedTests = currentData.completedTests || [];
+            
+            if (!completedTests.includes('DISC')) {
+              await participantRef.update({
+                completedTests: [...completedTests, 'DISC']
+              });
+            }
+          }
+          
+          console.log('✅ Resultados salvos no Firebase!');
+        }
+        
+        // Sempre salvar no localStorage como backup
+        saveResultsLocalStorage(results);
+        
+      } catch (e) {
+        console.warn('⚠️ Firebase falhou, usando localStorage:', e);
+        saveResultsLocalStorage(results);
+      }
+    }
+
+    function saveResultsLocalStorage(results) {
       if (!AppState.participant) return;
+      
       try {
         const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
         const idx = participants.findIndex(p => p.id === AppState.participant.id);
+        
         if (idx > -1) {
           if (!participants[idx].completedTests) participants[idx].completedTests = [];
-          if (!participants[idx].completedTests.includes('DISC')) participants[idx].completedTests.push('DISC');
+          if (!participants[idx].completedTests.includes('DISC')) {
+            participants[idx].completedTests.push('DISC');
+          }
           participants[idx].testResults = participants[idx].testResults || {};
           participants[idx].testResults.DISC = results;
+          
           localStorage.setItem('vigorre_participants', JSON.stringify(participants));
           localStorage.setItem('vigorre_last_disc_result', JSON.stringify(results));
+          console.log('✅ Resultados salvos no localStorage');
         }
-      } catch (e) { console.error('Erro ao salvar:', e); }
+      } catch (e) {
+        console.error('❌ Erro ao salvar no localStorage:', e);
+      }
     }
 
     // ============================================
@@ -1038,47 +1491,41 @@
       document.getElementById('testContainer').classList.add('hidden');
       document.getElementById('resultsView').classList.remove('hidden');
       
+      // Determinar perfil predominante
       const sorted = Object.entries(results.percentages).sort((a, b) => b[1] - a[1]);
       const [dominant] = sorted;
       const dominantProfile = DISC_INTERPRETATIONS[dominant[0]];
       
       document.getElementById('profileText').textContent = `${dominantProfile.name} (${dominant[1]}%)`;
       
-      document.getElementById('executiveSummary').innerHTML = `
-        <p style="font-size: 1.0625rem; line-height: 1.7; color: var(--brand-slate-700);">
-          Seu perfil DISC predominante é <strong style="color: var(--brand-blue);">${dominantProfile.name}</strong> com 
-          <strong>${dominant[1]}%</strong> de intensidade. ${dominantProfile.high}
-        </p>
-      `;
+      // Resumo Executivo
+      document.getElementById('executiveSummary').textContent = 
+        `Seu perfil DISC predominante é ${dominantProfile.name} com ${dominant[1]}% de intensidade. ${dominantProfile.high}`;
       
+      // Recomendações
       document.getElementById('recommendations').innerHTML = `
-        <ul style="list-style: none; padding: 0;">
-          <li style="padding: 0.75rem 0; border-bottom: 1px solid var(--brand-slate-100); display: flex; align-items: start; gap: 0.75rem;">
-            <span style="color: var(--brand-emerald); font-size: 1.25rem;">✓</span>
-            <span style="color: var(--brand-slate-700);">Pratique auto-observação diária para fortalecer consciência comportamental</span>
-          </li>
-          <li style="padding: 0.75rem 0; border-bottom: 1px solid var(--brand-slate-100); display: flex; align-items: start; gap: 0.75rem;">
-            <span style="color: var(--brand-emerald); font-size: 1.25rem;">✓</span>
-            <span style="color: var(--brand-slate-700);">Solicite feedback regular sobre seu impacto nas relações profissionais</span>
-          </li>
-          <li style="padding: 0.75rem 0; display: flex; align-items: start; gap: 0.75rem;">
-            <span style="color: var(--brand-emerald); font-size: 1.25rem;">✓</span>
-            <span style="color: var(--brand-slate-700);">Considere o laudo completo Vigorre para análise integrada</span>
-          </li>
-        </ul>
+        <li>Pratique auto-observação diária para fortalecer consciência comportamental</li>
+        <li>Solicite feedback regular sobre seu impacto nas relações profissionais</li>
+        <li>Considere o laudo completo Vigorre para análise integrada com IE e Valores</li>
       `;
       
+      // Renderizar gráficos com tema dark
       renderCharts(results.percentages);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // ============================================
-    // RENDERIZAR GRÁFICOS
+    // RENDERIZAR GRÁFICOS COM TEMA DARK
     // ============================================
     function renderCharts(percentages) {
-      if (discRadarChartInstance) { discRadarChartInstance.destroy(); }
-      if (discBarChartInstance) { discBarChartInstance.destroy(); }
+      // Configurações de tema dark para Chart.js
+      Chart.defaults.color = '#94A3B8';
+      Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
+      
+      if (discRadarChartInstance) discRadarChartInstance.destroy();
+      if (discBarChartInstance) discBarChartInstance.destroy();
 
+      // Radar Chart
       const radarCtx = document.getElementById('discRadarChart');
       if (radarCtx) {
         discRadarChartInstance = new Chart(radarCtx, {
@@ -1088,10 +1535,12 @@
             datasets: [{ 
               label: 'Seu Perfil', 
               data: [percentages.D, percentages.I, percentages.S, percentages.C], 
-              backgroundColor: 'rgba(29, 78, 216, 0.2)', 
-              borderColor: '#1D4ED8', 
+              backgroundColor: 'rgba(29, 78, 216, 0.25)', 
+              borderColor: '#60A5FA', 
               borderWidth: 2, 
-              pointBackgroundColor: '#1D4ED8' 
+              pointBackgroundColor: '#60A5FA',
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2
             }] 
           },
           options: { 
@@ -1101,10 +1550,10 @@
               r: { 
                 min: 0, 
                 max: 100, 
-                angleLines: { color: 'rgba(0,0,0,0.1)' }, 
-                grid: { color: 'rgba(0,0,0,0.1)' }, 
-                pointLabels: { color: '#334155', font: { size: 11, family: 'Inter' } }, 
-                ticks: { display: false } 
+                angleLines: { color: 'rgba(255,255,255,0.1)' }, 
+                grid: { color: 'rgba(255,255,255,0.1)' }, 
+                pointLabels: { color: '#CBD5E1', font: { size: 11, family: 'Inter', weight: '600' } }, 
+                ticks: { display: false, backdropColor: 'transparent' } 
               } 
             }, 
             plugins: { legend: { display: false } } 
@@ -1112,6 +1561,7 @@
         });
       }
 
+      // Bar Chart
       const barCtx = document.getElementById('discBarChart');
       if (barCtx) {
         discBarChartInstance = new Chart(barCtx, {
@@ -1121,16 +1571,25 @@
             datasets: [{ 
               label: '%', 
               data: [percentages.D, percentages.I, percentages.S, percentages.C], 
-              backgroundColor: ['#EF4444', '#3B82F6', '#10B981', '#7C3AED'], 
-              borderRadius: 8 
+              backgroundColor: ['#F87171', '#60A5FA', '#34D399', '#A78BFA'], 
+              borderRadius: 8,
+              borderSkipped: false
             }] 
           },
           options: { 
             responsive: true, 
             maintainAspectRatio: false, 
             scales: { 
-              y: { beginAtZero: true, max: 100, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#64748B' } }, 
-              x: { grid: { display: false }, ticks: { color: '#334155', font: { weight: 'bold', size: 12 } } } 
+              y: { 
+                beginAtZero: true, 
+                max: 100, 
+                grid: { color: 'rgba(255,255,255,0.08)' }, 
+                ticks: { color: '#94A3B8', font: { family: 'Inter' } } 
+              }, 
+              x: { 
+                grid: { display: false }, 
+                ticks: { color: '#F1F5F9', font: { weight: '700', size: 12, family: 'Inter' } } 
+              } 
             }, 
             plugins: { legend: { display: false } } 
           }
@@ -1159,14 +1618,19 @@
     }
 
     // ============================================
-    // TOAST
+    // TOAST NOTIFICATIONS
     // ============================================
     function showToast(message, type) {
       const toast = document.getElementById('toast');
       document.getElementById('toastIcon').textContent = type === 'success' ? '✅' : '❌';
       document.getElementById('toastMessage').textContent = message;
+      
+      toast.className = `toast ${type === 'error' ? 'error' : type === 'warning' ? 'warning' : ''}`;
       toast.classList.remove('hidden');
-      setTimeout(() => { toast.classList.add('hidden'); }, 3000);
+      
+      setTimeout(() => { 
+        toast.classList.add('hidden'); 
+      }, 3000);
     }
 
     // Fechar modal ao clicar fora
@@ -1179,6 +1643,26 @@
       if (e.key === 'Escape') {
         const modal = document.getElementById('simpleReportModal');
         if (modal && !modal.classList.contains('hidden')) closeModalAndLogout();
+      }
+    });
+
+    // Prevenir back button após logout
+    window.addEventListener('pageshow', function(event) {
+      if (event.persisted) {
+        const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+        const sessionActive = sessionStorage.getItem('vigorre_session_active') === 'true';
+        if (!currentUser.role || currentUser.role !== 'participant' || !sessionActive) {
+          window.location.replace('login.html');
+        }
+      }
+    });
+
+    // Debug inicial
+    console.log('🔍 Teste DISC - Estado:', {
+      session: AppState.session?.name || 'não carregado',
+      firebase: {
+        available: typeof window.firebaseDB !== 'undefined',
+        db: window.firebaseDB?.db ? 'conectado' : 'não conectado'
       }
     });
   </script>
