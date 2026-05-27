@@ -3,283 +3,760 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel Administrativo - Vigorre One™</title>
+  <meta name="description" content="Vigorre One™ - Painel Administrativo Enterprise de People Analytics">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Dashboard | Vigorre One™ • People Analytics Enterprise</title>
   
-  <!-- ✅ SUPABASE SDK - CARREGAR PRIMEIRO -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Fonts Premium -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- ✅ CONFIGURAÇÃO SUPABASE - SUAS CHAVES -->
-  <script src="supabase-config.js"></script>
+  <!-- Preconnect para performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     /* ============================================
-       RESET BÁSICO
+       RESET & BASE - ENTERPRISE PREMIUM
        ============================================ */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+    }
     
-    /* ============================================
-       ESTILO DO CORPO
-       ============================================ */
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    :root {
+      /* Cores da Marca Vigorre One™ */
+      --brand-navy: #0A1628;
+      --brand-blue: #1D4ED8;
+      --brand-blue-dark: #1E40AF;
+      --brand-purple: #7C3AED;
+      --brand-cyan: #06B6D4;
+      --brand-emerald: #10B981;
+      --brand-amber: #F59E0B;
+      --brand-rose: #F43F5E;
+      
+      /* Cores Neutras */
+      --slate-50: #F8FAFC;
+      --slate-100: #F1F5F9;
+      --slate-200: #E2E8F0;
+      --slate-300: #CBD5E1;
+      --slate-400: #94A3B8;
+      --slate-500: #64748B;
+      --slate-600: #475569;
+      --slate-700: #334155;
+      --slate-800: #1E293B;
+      --slate-900: #0F172A;
+      
+      /* Sombras Premium */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      
+      /* Bordas */
+      --radius-sm: 0.375rem;
+      --radius: 0.5rem;
+      --radius-md: 0.75rem;
+      --radius-lg: 1rem;
+      --radius-xl: 1.5rem;
+      --radius-2xl: 2rem;
+      
+      /* Transições */
+      --transition-fast: 150ms ease;
+      --transition: 250ms ease;
+      --transition-slow: 350ms ease;
+    }
+    
     body { 
-      font-family: 'Inter', sans-serif; 
-      background: #f8fafc; 
-      color: #1e293b; 
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+      background: linear-gradient(135deg, var(--slate-50) 0%, #ffffff 100%);
+      color: var(--slate-800); 
+      min-height: 100vh;
+      line-height: 1.6;
     }
     
     /* ============================================
-       SIDEBAR
+       SIDEBAR PREMIUM - GLASSMORPHISM
        ============================================ */
     .sidebar { 
       position: fixed; 
       left: 0; 
       top: 0; 
       height: 100vh; 
-      width: 260px; 
-      background: linear-gradient(180deg, #1e3a8a, #0f172a); 
+      width: 280px; 
+      background: linear-gradient(180deg, var(--brand-navy) 0%, var(--slate-900) 100%); 
       color: white; 
       padding: 1.5rem; 
       display: flex; 
       flex-direction: column; 
-      z-index: 50; 
+      z-index: 100;
+      box-shadow: var(--shadow-xl);
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
     }
+    
+    /* Efeito de brilho superior na sidebar */
+    .sidebar::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), transparent);
+      pointer-events: none;
+    }
+    
     .sidebar .logo { 
       display: flex; 
       align-items: center; 
-      gap: 10px; 
-      margin-bottom: 1.5rem; 
-      padding-bottom: 1rem; 
+      gap: 12px; 
+      margin-bottom: 2rem; 
+      padding-bottom: 1.5rem; 
       border-bottom: 1px solid rgba(255,255,255,0.1); 
-      cursor: pointer; 
+      cursor: pointer;
+      transition: opacity var(--transition);
     }
+    
+    .sidebar .logo:hover {
+      opacity: 0.9;
+    }
+    
     .logo-img { 
-      width: 40px; 
-      height: auto; 
-      border-radius: 8px; 
+      width: 44px; 
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(30, 64, 175, 0.3);
     }
+    
+    .logo-img span {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: white;
+    }
+    
     .logo-text h2 { 
-      font-size: 1.2rem; 
-      font-weight: 700; 
+      font-size: 1.25rem; 
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      background: linear-gradient(135deg, #ffffff, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
+    
     .logo-text p { 
-      font-size: 0.7rem; 
-      opacity: 0.8; 
+      font-size: 0.75rem; 
+      opacity: 0.7;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
     }
+    
     .nav-menu { 
       list-style: none; 
-      flex: 1; 
+      flex: 1;
+      padding-right: 4px;
     }
+    
     .nav-menu li { 
-      margin-bottom: 0.5rem; 
+      margin-bottom: 0.375rem; 
     }
+    
     .nav-menu a { 
       display: flex; 
       align-items: center; 
-      gap: 12px; 
-      padding: 12px 15px; 
+      gap: 14px; 
+      padding: 14px 16px; 
       color: rgba(255,255,255,0.7); 
       text-decoration: none; 
-      border-radius: 8px; 
-      transition: 0.3s; 
-      cursor: pointer; 
+      border-radius: 12px; 
+      transition: all var(--transition); 
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.9375rem;
+      position: relative;
+      overflow: hidden;
     }
-    .nav-menu a:hover, .nav-menu a.active { 
-      background: rgba(255,255,255,0.1); 
+    
+    .nav-menu a::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(124, 58, 237, 0.1));
+      opacity: 0;
+      transition: opacity var(--transition);
+      border-radius: 12px;
+    }
+    
+    .nav-menu a:hover { 
+      color: white;
+      background: rgba(255,255,255,0.08);
+    }
+    
+    .nav-menu a:hover::before {
+      opacity: 1;
+    }
+    
+    .nav-menu a.active { 
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(30, 64, 175, 0.2)); 
       color: white; 
-      border-left: 3px solid #3b82f6; 
+      border-left: 3px solid var(--brand-blue);
+      font-weight: 600;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
+    
+    .nav-menu a.active::before {
+      opacity: 1;
+    }
+    
     .nav-menu a.danger { 
       color: #fca5a5; 
       margin-top: auto; 
     }
+    
+    .nav-menu a.danger:hover {
+      background: rgba(239, 68, 68, 0.15);
+      color: #fecaca;
+    }
+    
+    .nav-menu a span:first-child {
+      font-size: 1.125rem;
+      flex-shrink: 0;
+    }
+    
     .user-info { 
-      padding-top: 1rem; 
+      padding-top: 1.25rem; 
       border-top: 1px solid rgba(255,255,255,0.1); 
-      font-size: 0.85rem; 
+      font-size: 0.875rem;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 1rem;
+    }
+    
+    .user-info p:first-child {
+      font-weight: 600;
+      color: white;
+      margin-bottom: 0.25rem;
+    }
+    
+    .user-info p:last-child {
+      opacity: 0.7; 
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    
+    /* Badge de notificação no menu */
+    .nav-badge {
+      margin-left: auto;
+      background: var(--brand-rose);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 100px;
+      min-width: 20px;
+      text-align: center;
     }
     
     /* ============================================
        MAIN CONTENT
        ============================================ */
     .main { 
-      margin-left: 260px; 
+      margin-left: 280px; 
       padding: 2rem; 
       min-height: 100vh; 
+      background: linear-gradient(135deg, var(--slate-50) 0%, #ffffff 100%);
     }
+    
     .header { 
       display: flex; 
       justify-content: space-between; 
       align-items: center; 
       margin-bottom: 2rem; 
       background: white; 
-      padding: 1rem 1.5rem; 
-      border-radius: 12px; 
-      box-shadow: 0 2px 5px rgba(0,0,0,0.03); 
+      padding: 1.25rem 1.75rem; 
+      border-radius: 16px; 
+      box-shadow: var(--shadow);
+      border: 1px solid var(--slate-200);
+      position: sticky;
+      top: 1rem;
+      z-index: 50;
     }
+    
     .header h1 { 
       font-size: 1.5rem; 
-      color: #1e40af; 
-      font-weight: 700; 
+      color: var(--brand-blue-dark); 
+      font-weight: 800;
+      letter-spacing: -0.025em;
+    }
+    
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
     }
     
     /* ============================================
-       INDICADOR DE STATUS DO SUPABASE - VERSÃO ROBUSTA
+       INDICADOR DE STATUS DO SUPABASE - PREMIUM
        ============================================ */
     .supabase-status {
-      display: flex !important; /* Força exibição */
+      display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 0.85rem;
+      gap: 10px;
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-size: 0.8125rem;
       font-weight: 600;
-      background: #f1f5f9;
-      border: 2px solid #e2e8f0;
-      min-width: 180px;
+      background: var(--slate-100);
+      border: 1px solid var(--slate-200);
+      min-width: 190px;
       justify-content: center;
+      transition: all var(--transition);
     }
+    
+    .supabase-status:hover {
+      background: var(--slate-50);
+      border-color: var(--slate-300);
+    }
+    
     .status-dot {
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      animation: pulse 2s infinite;
       flex-shrink: 0;
-    }
-    .status-dot.connecting {
-      background: #fbbf24;
-      box-shadow: 0 0 8px rgba(251, 191, 36, 0.6);
-    }
-    .status-dot.connected {
-      background: #10b981;
-      box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
-      animation: none;
-    }
-    .status-dot.error {
-      background: #ef4444;
-      box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
-      animation: none;
-    }
-    .status-dot.notloaded {
-      background: #6b7280;
-      animation: none;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.9); }
+      position: relative;
     }
     
+    .status-dot::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    
+    .status-dot.connecting {
+      background: var(--brand-amber);
+    }
+    .status-dot.connecting::after {
+      background: var(--brand-amber);
+      opacity: 0.4;
+    }
+    
+    .status-dot.connected {
+      background: var(--brand-emerald);
+    }
+    .status-dot.connected::after {
+      background: var(--brand-emerald);
+      opacity: 0.4;
+      animation: none;
+    }
+    
+    .status-dot.error {
+      background: var(--brand-rose);
+    }
+    .status-dot.error::after {
+      background: var(--brand-rose);
+      opacity: 0.4;
+      animation: none;
+    }
+    
+    .status-dot.notloaded {
+      background: var(--slate-400);
+    }
+    .status-dot.notloaded::after {
+      animation: none;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.4; }
+      50% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+    }
+    
+    .status-text {
+      transition: color var(--transition);
+    }
+    .status-dot.connecting + .status-text { color: #92400e; }
+    .status-dot.connected + .status-text { color: #065f46; }
+    .status-dot.error + .status-text { color: #dc2626; }
+    .status-dot.notloaded + .status-text { color: var(--slate-500); }
+    
     /* ============================================
-       CARDS & TABLES
+       CARDS PREMIUM - GLASSMORPHISM
        ============================================ */
     .card { 
       background: white; 
-      border-radius: 12px; 
-      padding: 1.5rem; 
+      border-radius: 20px; 
+      padding: 1.75rem; 
       margin-bottom: 1.5rem; 
-      box-shadow: 0 2px 5px rgba(0,0,0,0.03); 
-      overflow-x: auto; 
-      border: 1px solid #e2e8f0; 
+      box-shadow: var(--shadow);
+      border: 1px solid var(--slate-200);
+      overflow-x: auto;
+      transition: box-shadow var(--transition), transform var(--transition);
+      position: relative;
     }
+    
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
+      pointer-events: none;
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
     .card h3 { 
-      margin-bottom: 1rem; 
-      color: #1e40af; 
+      margin-bottom: 1.25rem; 
+      color: var(--brand-blue-dark); 
       display: flex; 
       justify-content: space-between; 
       align-items: center; 
-      font-size: 1.1rem; 
+      font-size: 1.125rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
     }
+    
+    .card-header-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    /* Stats Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+      background: linear-gradient(135deg, var(--slate-50), white);
+      border-radius: 16px;
+      padding: 1.25rem;
+      border: 1px solid var(--slate-200);
+      text-align: center;
+      transition: all var(--transition);
+    }
+    
+    .stat-card:hover {
+      border-color: var(--brand-blue);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--brand-blue-dark);
+      margin-bottom: 0.25rem;
+    }
+    
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--slate-500);
+      font-weight: 500;
+    }
+    
+    .stat-trend {
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    
+    .stat-trend.up { color: var(--brand-emerald); }
+    .stat-trend.down { color: var(--brand-rose); }
+    
+    /* ============================================
+       TABLES ENTERPRISE - STYLE SAP/WORKDAY
+       ============================================ */
     table { 
       width: 100%; 
-      border-collapse: collapse; 
-      min-width: 600px; 
+      border-collapse: separate;
+      border-spacing: 0;
+      min-width: 700px;
+      font-size: 0.9rem;
     }
-    th, td { 
-      padding: 12px 15px; 
-      text-align: left; 
-      border-bottom: 1px solid #f1f5f9; 
-      font-size: 0.9rem; 
+    
+    thead {
+      background: linear-gradient(135deg, var(--slate-50), var(--slate-100));
+      border-bottom: 2px solid var(--slate-200);
     }
+    
     th { 
-      background: #f8fafc; 
-      font-weight: 600; 
-      color: #475569; 
+      padding: 1rem 1.25rem; 
+      text-align: left; 
+      font-weight: 700; 
+      color: var(--slate-600);
+      font-size: 0.8125rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      position: sticky;
+      top: 0;
+      background: inherit;
+      z-index: 10;
     }
-    tr:last-child td { 
+    
+    th:first-child { border-top-left-radius: 12px; }
+    th:last-child { border-top-right-radius: 12px; }
+    
+    td { 
+      padding: 1rem 1.25rem; 
+      border-bottom: 1px solid var(--slate-100);
+      color: var(--slate-700);
+      vertical-align: middle;
+    }
+    
+    tbody tr {
+      transition: background var(--transition), box-shadow var(--transition);
+    }
+    
+    tbody tr:hover { 
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.03), rgba(124, 58, 237, 0.02));
+      box-shadow: inset 0 1px 0 rgba(59, 130, 246, 0.1);
+    }
+    
+    tbody tr:last-child td { 
       border-bottom: none; 
     }
-    tr:hover { 
-      background: #f8fafc; 
+    
+    tbody tr:last-child td:first-child { border-bottom-left-radius: 12px; }
+    tbody tr:last-child td:last-child { border-bottom-right-radius: 12px; }
+    
+    /* Avatar em tabelas */
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.875rem;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+    
+    .user-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .user-info-cell {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .user-name {
+      font-weight: 600;
+      color: var(--slate-800);
+      font-size: 0.9375rem;
+    }
+    
+    .user-email {
+      font-size: 0.8125rem;
+      color: var(--slate-500);
     }
     
     /* ============================================
-       BUTTONS
+       BUTTONS PREMIUM
        ============================================ */
     .btn { 
-      padding: 8px 14px; 
-      border-radius: 8px; 
+      padding: 10px 18px; 
+      border-radius: 12px; 
       border: none; 
       cursor: pointer; 
       font-weight: 600; 
-      font-size: 0.85rem; 
-      transition: 0.2s; 
+      font-size: 0.875rem; 
+      transition: all var(--transition); 
       display: inline-flex; 
       align-items: center; 
-      gap: 6px; 
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+      letter-spacing: 0.01em;
     }
+    
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    .btn:hover::before {
+      left: 100%;
+    }
+    
     .btn-primary { 
-      background: #3b82f6; 
-      color: white; 
+      background: linear-gradient(135deg, var(--brand-blue), var(--brand-blue-dark)); 
+      color: white;
+      box-shadow: 0 4px 14px rgba(30, 64, 175, 0.35);
     }
+    
+    .btn-primary:hover { 
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(30, 64, 175, 0.45);
+    }
+    
     .btn-success { 
-      background: #22c55e; 
-      color: white; 
+      background: linear-gradient(135deg, var(--brand-emerald), #059669); 
+      color: white;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
     }
+    
+    .btn-success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.45);
+    }
+    
     .btn-warning { 
-      background: #f59e0b; 
-      color: white; 
+      background: linear-gradient(135deg, var(--brand-amber), #D97706); 
+      color: white;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
     }
+    
+    .btn-warning:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(245, 158, 11, 0.45);
+    }
+    
     .btn-danger { 
-      background: #ef4444; 
-      color: white; 
+      background: linear-gradient(135deg, var(--brand-rose), #DC2626); 
+      color: white;
+      box-shadow: 0 4px 14px rgba(244, 63, 94, 0.35);
     }
+    
+    .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(244, 63, 94, 0.45);
+    }
+    
     .btn-secondary { 
-      background: #94a3b8; 
-      color: white; 
+      background: linear-gradient(135deg, var(--slate-200), var(--slate-300)); 
+      color: var(--slate-700);
     }
+    
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, var(--slate-300), var(--slate-400));
+      transform: translateY(-1px);
+    }
+    
     .btn-outline { 
       background: transparent; 
-      border: 1px solid #cbd5e1; 
-      color: #475569; 
+      border: 2px solid var(--slate-300); 
+      color: var(--slate-600);
     }
+    
+    .btn-outline:hover {
+      border-color: var(--brand-blue);
+      color: var(--brand-blue);
+      background: rgba(59, 130, 246, 0.05);
+    }
+    
     .btn:hover { 
-      opacity: 0.9; 
-      transform: translateY(-1px); 
+      opacity: 0.95;
     }
+    
+    .btn:active {
+      transform: translateY(-1px) !important;
+    }
+    
     .btn-sm { 
-      padding: 5px 10px; 
-      font-size: 0.75rem; 
+      padding: 6px 12px; 
+      font-size: 0.75rem;
+      border-radius: 10px;
     }
+    
+    .btn-icon {
+      padding: 10px;
+      border-radius: 10px;
+      width: 40px;
+      height: 40px;
+      justify-content: center;
+    }
+    
     .btn-add-job {
-      background: #10b981;
+      background: linear-gradient(135deg, var(--brand-emerald), #059669);
       color: white;
-      padding: 8px 16px;
+      padding: 10px 20px;
       border: none;
-      border-radius: 6px;
+      border-radius: 12px;
       font-weight: 600;
       cursor: pointer;
-      margin-top: 8px;
-      transition: background 0.2s;
+      margin-top: 12px;
+      transition: all var(--transition);
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
     }
+    
     .btn-add-job:hover {
-      background: #059669;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
     }
+    
     .btn-add-job:disabled {
-      background: #cbd5e1;
+      background: var(--slate-300);
       cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
     }
     
     /* ============================================
-       MODALS
+       BADGES E INDICADORES PREMIUM
+       ============================================ */
+    .badge {
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.025em;
+    }
+    
+    .badge-pill {
+      padding: 5px 14px;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid;
+    }
+    
+    .badge-disc { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
+    .badge-ie { background: #eff6ff; color: #2563eb; border-color: #bfdbfe; }
+    .badge-valores { background: #fffbeb; color: #d97706; border-color: #fde68a; }
+    .badge-completed { background: #dcfce7; color: #166534; border-color: #bbf7d0; }
+    .badge-pending { background: var(--slate-100); color: var(--slate-600); border-color: var(--slate-200); }
+    .badge-expired { background: #fef3c7; color: #92400e; border-color: #fcd34d; }
+    
+    /* ============================================
+       MODALS PREMIUM - GLASSMORPHISM
        ============================================ */
     .modal { 
       display: none; 
@@ -288,281 +765,706 @@
       left: 0; 
       width: 100%; 
       height: 100%; 
-      background: rgba(0,0,0,0.5); 
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       align-items: center; 
       justify-content: center; 
-      z-index: 1000; 
-      backdrop-filter: blur(4px); 
+      z-index: 1000;
+      animation: fadeIn 0.2s ease;
     }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
     .modal.active { 
       display: flex; 
     }
+    
     .modal-content { 
       background: white; 
-      border-radius: 16px; 
+      border-radius: 24px; 
       padding: 2rem; 
-      max-width: 700px; 
+      max-width: 720px; 
       width: 90%; 
       max-height: 90vh; 
       overflow-y: auto; 
-      box-shadow: 0 20px 50px rgba(0,0,0,0.2); 
+      box-shadow: var(--shadow-2xl);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      animation: slideUp 0.3s ease;
     }
+    
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    
     .modal-header { 
       display: flex; 
       justify-content: space-between; 
       align-items: center; 
       margin-bottom: 1.5rem; 
-      border-bottom: 2px solid #f1f5f9; 
-      padding-bottom: 1rem; 
+      padding-bottom: 1.25rem; 
+      border-bottom: 2px solid var(--slate-100); 
     }
+    
+    .modal-header h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--slate-800);
+      letter-spacing: -0.01em;
+    }
+    
     .modal-close { 
       background: none; 
       border: none; 
-      font-size: 1.8rem; 
+      font-size: 2rem; 
       cursor: pointer; 
-      color: #94a3b8; 
-      line-height: 1; 
+      color: var(--slate-400); 
+      line-height: 1;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition);
     }
+    
     .modal-close:hover { 
-      color: #ef4444; 
+      color: var(--brand-rose);
+      background: rgba(244, 63, 94, 0.1);
     }
     
     /* ============================================
-       FORMS
+       FORMS PREMIUM
        ============================================ */
     .form-group { 
-      margin-bottom: 1rem; 
+      margin-bottom: 1.25rem; 
     }
+    
     .form-group label { 
       display: block; 
-      margin-bottom: 0.4rem; 
+      margin-bottom: 0.5rem; 
       font-weight: 600; 
-      font-size: 0.9rem; 
-      color: #334155; 
+      font-size: 0.875rem; 
+      color: var(--slate-700);
+      letter-spacing: 0.01em;
     }
-    .form-group input, .form-group select, .form-group textarea { 
+    
+    .form-group .input-wrapper {
+      position: relative;
+    }
+    
+    .form-group input, 
+    .form-group select, 
+    .form-group textarea { 
       width: 100%; 
-      padding: 10px; 
-      border: 1px solid #e2e8f0; 
-      border-radius: 8px; 
-      font-size: 0.95rem; 
-      transition: border-color 0.3s; 
+      padding: 12px 16px; 
+      border: 2px solid var(--slate-200); 
+      border-radius: 12px; 
+      font-size: 0.9375rem; 
+      font-family: inherit;
+      transition: all var(--transition);
+      background: white;
+      color: var(--slate-800);
     }
-    .form-group input:focus, .form-group select:focus { 
+    
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: var(--slate-400);
+      font-weight: 400;
+    }
+    
+    .form-group input:focus, 
+    .form-group select:focus,
+    .form-group textarea:focus { 
       outline: none; 
-      border-color: #3b82f6; 
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); 
+      border-color: var(--brand-blue); 
+      box-shadow: 
+        0 0 0 4px rgba(59, 130, 246, 0.12),
+        0 4px 14px rgba(30, 64, 175, 0.08);
+      background: white;
     }
+    
+    .form-group input:invalid:not(:placeholder-shown) {
+      border-color: #f87171;
+    }
+    
     .form-row { 
       display: grid; 
       grid-template-columns: 1fr 1fr; 
-      gap: 1rem; 
+      gap: 1.25rem; 
     }
+    
     .checkbox-group { 
       display: flex; 
       gap: 10px; 
       flex-wrap: wrap; 
-      margin-top: 5px; 
+      margin-top: 8px; 
     }
+    
     .checkbox-group label { 
       display: flex; 
       align-items: center; 
-      gap: 5px; 
-      font-weight: 400; 
-      font-size: 0.9rem; 
-      background: white; 
-      padding: 6px 10px; 
-      border-radius: 6px; 
-      border: 1px solid #e2e8f0; 
-      cursor: pointer; 
+      gap: 8px; 
+      font-weight: 500; 
+      font-size: 0.875rem; 
+      background: var(--slate-50); 
+      padding: 8px 14px; 
+      border-radius: 10px; 
+      border: 1px solid var(--slate-200); 
+      cursor: pointer;
+      transition: all var(--transition);
+      color: var(--slate-700);
     }
+    
+    .checkbox-group label:hover {
+      background: var(--slate-100);
+      border-color: var(--brand-blue);
+      color: var(--brand-blue-dark);
+    }
+    
     .checkbox-group input { 
       width: auto; 
+      accent-color: var(--brand-blue);
     }
     
     /* ============================================
-       ESTILO PARA LISTA DE VAGAS SELECIONADAS
+       LISTA DE VAGAS SELECIONADAS - PREMIUM
        ============================================ */
     .selected-jobs-container {
-      margin-top: 10px;
-      padding: 12px;
-      background: #f8fafc;
-      border-radius: 8px;
-      border: 2px solid #e2e8f0;
+      margin-top: 12px;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--slate-50), white);
+      border-radius: 14px;
+      border: 2px solid var(--slate-200);
       display: none;
+      transition: all var(--transition);
     }
+    
     .selected-jobs-container.active {
       display: block;
+      border-color: var(--brand-blue);
+      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.1);
     }
+    
     .selected-jobs-title {
-      font-weight: 600;
-      color: #475569;
-      margin-bottom: 8px;
-      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--slate-700);
+      margin-bottom: 12px;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
+    
     .selected-job-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 8px 12px;
+      padding: 10px 14px;
       background: white;
-      border-radius: 6px;
-      margin-bottom: 8px;
-      border-left: 4px solid #3b82f6;
-      font-size: 0.95rem;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      border-left: 4px solid var(--brand-blue);
+      font-size: 0.9rem;
+      box-shadow: var(--shadow-sm);
+      transition: all var(--transition);
     }
+    
+    .selected-job-item:hover {
+      box-shadow: var(--shadow);
+      transform: translateX(2px);
+    }
+    
     .selected-job-item:last-child {
       margin-bottom: 0;
     }
+    
     .btn-remove-job {
-      background: #ef4444;
+      background: linear-gradient(135deg, var(--brand-rose), #DC2626);
       color: white;
       border: none;
-      padding: 4px 12px;
-      border-radius: 4px;
+      padding: 6px 14px;
+      border-radius: 8px;
       cursor: pointer;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       font-weight: 600;
-      transition: background 0.2s;
+      transition: all var(--transition);
+      box-shadow: 0 2px 8px rgba(244, 63, 94, 0.25);
     }
+    
     .btn-remove-job:hover {
-      background: #dc2626;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(244, 63, 94, 0.4);
     }
     
     /* ============================================
-       TOAST NOTIFICATIONS
+       TOAST NOTIFICATIONS PREMIUM
        ============================================ */
     .toast { 
       position: fixed; 
-      top: 20px; 
-      right: 20px; 
+      top: 24px; 
+      right: 24px; 
       background: white; 
-      padding: 12px 20px; 
-      border-radius: 8px; 
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15); 
+      padding: 14px 20px; 
+      border-radius: 14px; 
+      box-shadow: var(--shadow-xl); 
       display: flex; 
       align-items: center; 
-      gap: 10px; 
+      gap: 12px; 
       z-index: 2000; 
       animation: slideIn 0.3s ease; 
-      border-left: 4px solid #22c55e; 
-      font-weight: 500; 
+      border-left: 4px solid var(--brand-emerald);
+      font-weight: 600;
+      font-size: 0.875rem;
+      max-width: 400px;
+      border: 1px solid var(--slate-200);
     }
+    
     .toast.error { 
-      border-left-color: #ef4444; 
+      border-left-color: var(--brand-rose);
     }
+    
+    .toast.warning {
+      border-left-color: var(--brand-amber);
+    }
+    
     @keyframes slideIn { 
-      from { transform: translateX(100%); opacity: 0; } 
+      from { transform: translateX(120%); opacity: 0; } 
       to { transform: translateX(0); opacity: 1; } 
     }
     
+    .toast-icon {
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+    
     /* ============================================
-       DETAILS VIEW
+       DETAILS VIEW PREMIUM
        ============================================ */
     .details-section { 
       display: none; 
       background: white; 
-      border-radius: 12px; 
-      padding: 1.5rem; 
-      margin-top: 1rem; 
-      border: 1px solid #e2e8f0; 
+      border-radius: 20px; 
+      padding: 2rem; 
+      margin-top: 1.5rem; 
+      border: 1px solid var(--slate-200);
+      box-shadow: var(--shadow);
     }
+    
     .details-header { 
       display: flex; 
       justify-content: space-between; 
-      margin-bottom: 1rem; 
-      padding-bottom: 1rem; 
-      border-bottom: 1px solid #f1f5f9; 
+      align-items: center;
+      margin-bottom: 1.5rem; 
+      padding-bottom: 1.25rem; 
+      border-bottom: 2px solid var(--slate-100); 
+    }
+    
+    .details-header h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--brand-blue-dark);
+    }
+    
+    /* ============================================
+       JOB CARD PREMIUM
+       ============================================ */
+    .job-card {
+      background: linear-gradient(135deg, var(--slate-50), white);
+      padding: 1.25rem;
+      border-radius: 14px;
+      border-left: 4px solid var(--brand-blue);
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid var(--slate-200);
+      transition: all var(--transition);
+    }
+    
+    .job-card:hover {
+      border-color: var(--brand-blue);
+      box-shadow: var(--shadow-md);
+      transform: translateX(4px);
+    }
+    
+    .job-info strong {
+      color: var(--brand-blue-dark);
+      font-size: 0.9375rem;
+    }
+    
+    .job-info small {
+      color: var(--slate-500);
+      display: block;
+      margin-top: 4px;
+    }
+    
+    .job-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    /* ============================================
+       REPORT BUTTONS PREMIUM
+       ============================================ */
+    .btn-report {
+      background: linear-gradient(135deg, var(--brand-purple), var(--brand-blue));
+      color: white;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin: 3px 0;
+      box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3);
+    }
+    
+    .btn-report:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(124, 58, 237, 0.45);
+    }
+    
+    .btn-report-ie {
+      background: linear-gradient(135deg, var(--brand-cyan), var(--brand-emerald));
+      box-shadow: 0 4px 14px rgba(6, 182, 212, 0.3);
+    }
+    
+    .btn-report-ie:hover {
+      box-shadow: 0 8px 25px rgba(6, 182, 212, 0.45);
+    }
+    
+    .btn-report-valores {
+      background: linear-gradient(135deg, var(--brand-amber), var(--brand-rose));
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3);
+    }
+    
+    .btn-report-valores:hover {
+      box-shadow: 0 8px 25px rgba(245, 158, 11, 0.45);
+    }
+    
+    /* ============================================
+       SEARCH & FILTER BAR
+       ============================================ */
+    .search-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .search-input {
+      flex: 1;
+      min-width: 250px;
+      position: relative;
+    }
+    
+    .search-input input {
+      width: 100%;
+      padding: 12px 16px 12px 44px;
+      border: 2px solid var(--slate-200);
+      border-radius: 12px;
+      font-size: 0.9375rem;
+      transition: all var(--transition);
+      background: white;
+    }
+    
+    .search-input input:focus {
+      border-color: var(--brand-blue);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--slate-400);
+      font-size: 1.125rem;
+      pointer-events: none;
+    }
+    
+    .filter-select {
+      padding: 12px 16px;
+      border: 2px solid var(--slate-200);
+      border-radius: 12px;
+      font-size: 0.9375rem;
+      background: white;
+      cursor: pointer;
+      transition: all var(--transition);
+      min-width: 180px;
+    }
+    
+    .filter-select:focus {
+      outline: none;
+      border-color: var(--brand-blue);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+    }
+    
+    /* ============================================
+       PAGINATION PREMIUM
+       ============================================ */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--slate-200);
+    }
+    
+    .pagination button {
+      padding: 8px 14px;
+      border: 2px solid var(--slate-200);
+      background: white;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all var(--transition);
+      color: var(--slate-600);
+    }
+    
+    .pagination button:hover:not(:disabled) {
+      border-color: var(--brand-blue);
+      color: var(--brand-blue);
+      background: rgba(59, 130, 246, 0.05);
+    }
+    
+    .pagination button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .pagination button.active {
+      background: var(--brand-blue);
+      border-color: var(--brand-blue);
+      color: white;
+    }
+    
+    .pagination-info {
+      font-size: 0.875rem;
+      color: var(--slate-500);
+      margin: 0 1rem;
+    }
+    
+    /* ============================================
+       EMPTY STATE
+       ============================================ */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--slate-500);
+    }
+    
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+    
+    .empty-state h4 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--slate-700);
+      margin-bottom: 0.5rem;
+    }
+    
+    .empty-state p {
+      font-size: 0.9375rem;
+      margin-bottom: 1.5rem;
     }
     
     /* ============================================
        RESPONSIVE
        ============================================ */
-    @media (max-width: 768px) { 
-      .sidebar { width: 70px; padding: 1rem; } 
-      .sidebar .logo span, .nav-menu a span, .user-info { display: none; } 
-      .nav-menu a { justify-content: center; padding: 15px; } 
-      .main { margin-left: 70px; padding: 1rem; } 
-      .form-row { grid-template-columns: 1fr; } 
-      .supabase-status { display: none !important; } /* Esconde em mobile para economizar espaço */
+    @media (max-width: 1024px) { 
+      .sidebar { width: 80px; padding: 1rem; } 
+      .sidebar .logo span, 
+      .nav-menu a span:not(:first-child), 
+      .user-info,
+      .nav-badge { display: none; } 
+      .nav-menu a { justify-content: center; padding: 16px; }
+      .nav-menu a span:first-child { font-size: 1.25rem; }
+      .main { margin-left: 80px; padding: 1.25rem; } 
+      .form-row { grid-template-columns: 1fr; }
+      .header { padding: 1rem 1.25rem; }
+      .supabase-status { display: none; }
+    }
+    
+    @media (max-width: 768px) {
+      .sidebar { 
+        width: 100%; 
+        height: auto; 
+        position: relative; 
+        padding: 1rem;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      .sidebar .logo { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+      .nav-menu { display: none; }
+      .main { margin-left: 0; padding: 1rem; }
+      .header { flex-direction: column; gap: 1rem; align-items: flex-start; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
     }
     
     /* ============================================
-       BADGES E INDICADORES PREMIUM
+       ANIMAÇÕES DE ENTRADA
        ============================================ */
-    .badge-pill {
-      padding: 4px 10px;
-      border-radius: 100px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .badge-disc { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; }
-    .badge-ie { background: #dbeafe; color: #2563eb; border: 1px solid #93c5fd; }
-    .badge-valores { background: #fef3c7; color: #d97706; border: 1px solid #fcd34d; }
-    .badge-completed { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
-    .badge-pending { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
-    
-    .btn-report {
-      background: linear-gradient(135deg, #7C3AED, #1D4ED8);
-      color: white;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      margin: 2px 0;
-    }
-    .btn-report:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
-    }
-    .btn-report-ie {
-      background: linear-gradient(135deg, #06B6D4, #10B981);
-    }
-    .btn-report-valores {
-      background: linear-gradient(135deg, #F59E0B, #EC4899);
+    @media (prefers-reduced-motion: no-preference) {
+      .card {
+        animation: cardEntrance 0.4s ease both;
+      }
+      
+      .card:nth-child(1) { animation-delay: 0.1s; }
+      .card:nth-child(2) { animation-delay: 0.15s; }
+      .card:nth-child(3) { animation-delay: 0.2s; }
+      .card:nth-child(4) { animation-delay: 0.25s; }
+      .card:nth-child(5) { animation-delay: 0.3s; }
     }
     
-    .job-card {
-      background: #f8fafc;
-      padding: 1rem;
-      border-radius: 8px;
-      border-left: 4px solid #3b82f6;
-      margin-bottom: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    @keyframes cardEntrance {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* ============================================
+       ACESSIBILIDADE - FOCUS VISIBLE
+       ============================================ */
+    .btn:focus-visible,
+    .nav-menu a:focus-visible,
+    .form-group input:focus-visible,
+    .form-group select:focus-visible,
+    .modal-close:focus-visible {
+      outline: 2px solid var(--brand-blue);
+      outline-offset: 2px;
+    }
+    
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    
+    /* ============================================
+       LOADING SPINNER
+       ============================================ */
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .btn.loading {
+      position: relative;
+      color: transparent !important;
+      pointer-events: none;
+    }
+    
+    .btn.loading::after {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      top: 50%;
+      left: 50%;
+      margin: -9px 0 0 -9px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
     }
   </style>
 </head>
 <body>
+  
   <!-- ============================================
-       SIDEBAR COM LOGO - VIGORRE ONE™
+       SIDEBAR COM LOGO - VIGORRE ONE™ PREMIUM
        ============================================ -->
-  <aside class="sidebar">
-    <div class="logo" onclick="window.location.href='index.html'">
-      <img src="logo-vigorre.png" class="logo-img" onerror="this.outerHTML='<div style=\'width:35px;height:35px;background:#fff;color:#1e40af;display:flex;align-items:center;justify-content:center;border-radius:8px;font-weight:bold;font-size:18px\'>V</div>'">
+  <aside class="sidebar" role="navigation" aria-label="Menu principal">
+    <div class="logo" onclick="window.location.href='index.html'" role="button" tabindex="0">
+      <div class="logo-img" aria-hidden="true">
+        <span>V</span>
+      </div>
       <div class="logo-text">
         <h2>Vigorre One™</h2>
         <p>Gestão Estratégica</p>
       </div>
     </div>
-    <ul class="nav-menu">
-      <li><a href="#" class="active" onclick="showSection('dashboard')"><span>📊</span> <span>Dashboard</span></a></li>
-      <li><a href="#" onclick="showSection('staff')"><span>👥</span> <span>Staff Vigorre One™</span></a></li>
-      <li><a href="#" onclick="showSection('companies')"><span>🏢</span> <span>Empresas</span></a></li>
-      <li><a href="#" onclick="showSection('participants')"><span>👤</span> <span>Participantes</span></a></li>
-      <li><a href="#" class="danger" onclick="logout()"><span>🚪</span> <span>Sair</span></a></li>
+    
+    <ul class="nav-menu" role="menubar">
+      <li role="none">
+        <a href="#" class="active" onclick="showSection('dashboard')" role="menuitem" aria-current="page">
+          <span aria-hidden="true">📊</span> 
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li role="none">
+        <a href="#" onclick="showSection('staff')" role="menuitem">
+          <span aria-hidden="true">👥</span> 
+          <span>Staff Vigorre™</span>
+        </a>
+      </li>
+      <li role="none">
+        <a href="#" onclick="showSection('companies')" role="menuitem">
+          <span aria-hidden="true">🏢</span> 
+          <span>Empresas</span>
+        </a>
+      </li>
+      <li role="none">
+        <a href="#" onclick="showSection('participants')" role="menuitem">
+          <span aria-hidden="true">👤</span> 
+          <span>Participantes</span>
+        </a>
+      </li>
+      <li role="none">
+        <a href="#" class="danger" onclick="logout()" role="menuitem">
+          <span aria-hidden="true">🚪</span> 
+          <span>Sair</span>
+        </a>
+      </li>
     </ul>
-    <div class="user-info">
+    
+    <div class="user-info" aria-label="Informações do usuário">
       <p id="userName">Admin</p>
       <p style="opacity:0.7; font-size:0.75rem;">Acesso Total</p>
     </div>
@@ -572,25 +1474,82 @@
        MAIN CONTENT
        ============================================ -->
   <main class="main">
-    <div class="header">
+    <header class="header">
       <h1 id="pageTitle">Dashboard</h1>
       
-      <!-- ✅ INDICADOR DE STATUS DO SUPABASE - VERSÃO ROBUSTA -->
-      <div id="supabaseStatus" class="supabase-status">
-        <span class="status-dot notloaded" id="statusDot"></span>
-        <span id="statusText">Aguardando...</span>
+      <div class="header-actions">
+        <!-- INDICADOR DE STATUS DO SUPABASE - PREMIUM -->
+        <div id="supabaseStatus" class="supabase-status" role="status" aria-live="polite">
+          <span class="status-dot notloaded" id="statusDot" aria-hidden="true"></span>
+          <span class="status-text" id="statusText">Aguardando...</span>
+        </div>
       </div>
-      
-      <div id="headerActions"></div>
-    </div>
+    </header>
 
     <!-- ============================================
-         DASHBOARD
+         DASHBOARD - STATS CARDS
          ============================================ -->
     <section id="dashboard">
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="statParticipants">0</div>
+          <div class="stat-label">Participantes</div>
+          <div class="stat-trend up">📈 +12% este mês</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statCompanies">0</div>
+          <div class="stat-label">Empresas</div>
+          <div class="stat-trend up">📈 +3 novas</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statTests">0</div>
+          <div class="stat-label">Testes Concluídos</div>
+          <div class="stat-trend up">📈 +28% esta semana</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statReports">0</div>
+          <div class="stat-label">Relatórios Gerados</div>
+          <div class="stat-trend">📊 Em tempo real</div>
+        </div>
+      </div>
+      
+      <!-- Welcome Card -->
       <div class="card">
-        <h3>Bem-vindo ao Painel Vigorre One™</h3>
-        <p style="color:#64748b;">Gerencie sua equipe interna, clientes (empresas) e participantes. Utilize o menu lateral para navegar.</p>
+        <h3>
+          <span>Bem-vindo ao Painel Vigorre One™</span>
+          <span style="font-size: 0.875rem; font-weight: 500; color: var(--slate-500);">People Analytics Enterprise</span>
+        </h3>
+        <p style="color: var(--slate-600); line-height: 1.7;">
+          Gerencie sua equipe interna, clientes (empresas) e participantes com inteligência comportamental. 
+          Utilize o menu lateral para navegar entre as seções e acesse relatórios premium com metodologia V.I.G.O.R.™
+        </p>
+        
+        <!-- Quick Actions -->
+        <div style="display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap;">
+          <button class="btn btn-primary" onclick="showSection('participants'); openModal('partModal')">
+            ➕ Novo Participante
+          </button>
+          <button class="btn btn-secondary" onclick="showSection('companies'); openModal('compModal')">
+            🏢 Nova Empresa
+          </button>
+          <button class="btn btn-outline" onclick="syncCompletedTests()">
+            🔄 Sincronizar Testes
+          </button>
+        </div>
+      </div>
+      
+      <!-- Recent Activity -->
+      <div class="card">
+        <h3>
+          <span>Atividade Recente</span>
+          <button class="btn btn-sm btn-outline" onclick="showSection('participants')">Ver todos</button>
+        </h3>
+        <div id="recentActivity">
+          <p style="color: var(--slate-500); text-align: center; padding: 2rem;">
+            Nenhuma atividade recente para exibir.
+          </p>
+        </div>
       </div>
     </section>
 
@@ -599,20 +1558,44 @@
          ============================================ -->
     <section id="staff" style="display:none;">
       <div class="card">
-        <h3>Staff Vigorre One™ <button class="btn btn-primary" onclick="openModal('staffModal')">+ Novo Funcionário</button></h3>
-        <table>
+        <h3>
+          <span>Staff Vigorre One™</span>
+          <button class="btn btn-primary" onclick="openModal('staffModal')">+ Novo Funcionário</button>
+        </h3>
+        
+        <!-- Search & Filter -->
+        <div class="search-bar">
+          <div class="search-input">
+            <span class="search-icon" aria-hidden="true">🔍</span>
+            <input type="text" id="staffSearch" placeholder="Buscar funcionário..." onkeyup="filterStaff()">
+          </div>
+          <select class="filter-select" id="staffRoleFilter" onchange="filterStaff()">
+            <option value="">Todos os papéis</option>
+            <option value="admin">Administrador</option>
+            <option value="staff">Consultor</option>
+          </select>
+        </div>
+        
+        <table role="table" aria-label="Lista de funcionários">
           <thead>
             <tr>
-              <th>Nome Completo</th>
-              <th>Email</th>
-              <th>WhatsApp</th>
-              <th>Login</th>
-              <th>Ambiente de Acesso</th>
-              <th>Ações</th>
+              <th scope="col">Nome</th>
+              <th scope="col">Email</th>
+              <th scope="col">Contato</th>
+              <th scope="col">Login</th>
+              <th scope="col">Papel</th>
+              <th scope="col">Ações</th>
             </tr>
           </thead>
-          <tbody id="staffTableBody"></tbody>
+          <tbody id="staffTableBody">
+            <!-- Preenchido via JavaScript -->
+          </tbody>
         </table>
+        
+        <!-- Pagination -->
+        <div class="pagination" id="staffPagination">
+          <!-- Preenchido via JavaScript -->
+        </div>
       </div>
     </section>
 
@@ -622,55 +1605,77 @@
     <section id="companies" style="display:none;">
       <!-- Lista Principal -->
       <div class="card" id="companyListView">
-        <h3>Empresas Cadastradas <button class="btn btn-primary" onclick="openModal('compModal')">+ Nova Empresa</button></h3>
-        <table>
+        <h3>
+          <span>Empresas Cadastradas</span>
+          <button class="btn btn-primary" onclick="openModal('compModal')">+ Nova Empresa</button>
+        </h3>
+        
+        <!-- Search -->
+        <div class="search-bar">
+          <div class="search-input">
+            <span class="search-icon" aria-hidden="true">🔍</span>
+            <input type="text" id="companySearch" placeholder="Buscar empresa..." onkeyup="filterCompanies()">
+          </div>
+        </div>
+        
+        <table role="table" aria-label="Lista de empresas">
           <thead>
             <tr>
-              <th>Empresa</th>
-              <th>CNPJ</th>
-              <th>Responsável</th>
-              <th>Contato</th>
-              <th>Ações</th>
+              <th scope="col">Empresa</th>
+              <th scope="col">CNPJ</th>
+              <th scope="col">Responsável</th>
+              <th scope="col">Contato</th>
+              <th scope="col">Ações</th>
             </tr>
           </thead>
-          <tbody id="companiesTableBody"></tbody>
+          <tbody id="companiesTableBody">
+            <!-- Preenchido via JavaScript -->
+          </tbody>
         </table>
+        
+        <div class="pagination" id="companiesPagination"></div>
       </div>
 
       <!-- Detalhes da Empresa (Vagas + Participantes) -->
       <div id="companyDetails" class="details-section">
         <div class="details-header">
-          <h3 id="detailCompanyTitle">Detalhes da Empresa</h3>
-          <button class="btn btn-secondary" onclick="closeCompanyDetails()">← Voltar para Lista</button>
+          <h3 id="detailCompanyTitle">📂 Detalhes da Empresa</h3>
+          <button class="btn btn-secondary" onclick="closeCompanyDetails()">← Voltar</button>
         </div>
         
         <!-- Cadastro de Vaga e Perfil da Vaga -->
-        <div style="background:#f0f9ff; padding:15px; border-radius:8px; margin-bottom:20px; border:1px solid #bae6fd;">
-          <h4 style="color:#0369a1; margin-bottom:10px;">📝 Cadastrar Vaga e Perfil da Vaga</h4>
-          <div class="form-row" style="grid-template-columns: 1fr 1fr auto;">
-            <div class="form-group" style="margin-bottom:0;">
-              <input type="text" id="jobName" placeholder="Nome da Vaga">
+        <div style="background: linear-gradient(135deg, #f0f9ff, #ffffff); padding: 1.25rem; border-radius: 16px; margin-bottom: 1.5rem; border: 2px solid #bae6fd;">
+          <h4 style="color: #0369a1; margin-bottom: 1rem; font-weight: 700; font-size: 1rem;">📝 Cadastrar Vaga e Perfil</h4>
+          <div class="form-row" style="grid-template-columns: 1fr 1fr auto; align-items: end;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="jobName">Nome da Vaga</label>
+              <input type="text" id="jobName" placeholder="Ex: Analista Administrativo">
             </div>
-            <div class="form-group" style="margin-bottom:0;">
-              <input type="text" id="jobProfile" placeholder="Perfil Desejado (Ex: DISC D, Liderança)">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="jobProfile">Perfil Desejado</label>
+              <input type="text" id="jobProfile" placeholder="Ex: DISC C, Perfil Analítico">
             </div>
-            <button class="btn btn-primary" onclick="saveJob()">Salvar Vaga</button>
+            <button class="btn btn-primary" onclick="saveJob()" style="height: 44px; padding: 0 24px;">
+              💾 Salvar
+            </button>
           </div>
-          <div id="jobsList" style="margin-top:10px;"></div>
+          <div id="jobsList" style="margin-top: 1rem;"></div>
         </div>
 
         <!-- Lista de Participantes Vinculados -->
-        <h4 style="margin-bottom:10px; color:#1e40af;">👥 Participantes Vinculados</h4>
-        <table style="margin-top:10px;">
+        <h4 style="margin-bottom: 1rem; color: var(--brand-blue-dark); font-weight: 700;">👥 Participantes Vinculados</h4>
+        <table role="table" aria-label="Participantes da empresa">
           <thead>
             <tr>
-              <th>Nome</th>
-              <th>Email</th>
-              <th>Status Testes</th>
-              <th>Relatórios</th>
+              <th scope="col">Nome</th>
+              <th scope="col">Email</th>
+              <th scope="col">Status Testes</th>
+              <th scope="col">Relatórios</th>
             </tr>
           </thead>
-          <tbody id="employeesTableBody"></tbody>
+          <tbody id="employeesTableBody">
+            <!-- Preenchido via JavaScript -->
+          </tbody>
         </table>
       </div>
     </section>
@@ -680,176 +1685,214 @@
          ============================================ -->
     <section id="participants" style="display:none;">
       <div class="card">
-        <h3>Gestão de Participantes <button class="btn btn-primary" onclick="openModal('partModal')">+ Novo Participante</button></h3>
-        <table>
+        <h3>
+          <span>Gestão de Participantes</span>
+          <button class="btn btn-primary" onclick="openModal('partModal')">+ Novo Participante</button>
+        </h3>
+        
+        <!-- Search & Filters -->
+        <div class="search-bar">
+          <div class="search-input">
+            <span class="search-icon" aria-hidden="true">🔍</span>
+            <input type="text" id="participantSearch" placeholder="Buscar participante..." onkeyup="filterParticipants()">
+          </div>
+          <select class="filter-select" id="participantCompanyFilter" onchange="filterParticipants()">
+            <option value="">Todas as empresas</option>
+            <!-- Preenchido via JavaScript -->
+          </select>
+          <select class="filter-select" id="participantStatusFilter" onchange="filterParticipants()">
+            <option value="">Todos os status</option>
+            <option value="completed">Testes concluídos</option>
+            <option value="pending">Testes pendentes</option>
+          </select>
+        </div>
+        
+        <table role="table" aria-label="Lista de participantes">
           <thead>
             <tr>
-              <th>Nome</th>
-              <th>Email / Telefone</th>
-              <th>Credenciais de Acesso</th>
-              <th>Testes Liberados</th>
-              <th>Status Testes</th>
-              <th>Relatórios</th>
-              <th>Ações</th>
+              <th scope="col">Participante</th>
+              <th scope="col">Contato</th>
+              <th scope="col">Credenciais</th>
+              <th scope="col">Testes</th>
+              <th scope="col">Status</th>
+              <th scope="col">Relatórios</th>
+              <th scope="col">Ações</th>
             </tr>
           </thead>
-          <tbody id="participantsTableBody"></tbody>
+          <tbody id="participantsTableBody">
+            <!-- Preenchido via JavaScript -->
+          </tbody>
         </table>
+        
+        <div class="pagination" id="participantsPagination"></div>
       </div>
     </section>
   </main>
 
   <!-- ============================================
-       MODAL STAFF
+       MODAL STAFF - PREMIUM
        ============================================ -->
-  <div class="modal" id="staffModal">
+  <div class="modal" id="staffModal" role="dialog" aria-labelledby="staffModalTitle" aria-modal="true">
     <div class="modal-content">
       <div class="modal-header">
         <h3 id="staffModalTitle">Novo Funcionário Vigorre One™</h3>
-        <button class="modal-close" onclick="closeModal('staffModal')">×</button>
+        <button class="modal-close" onclick="closeModal('staffModal')" aria-label="Fechar modal">×</button>
       </div>
-      <form onsubmit="saveStaff(event)">
+      <form onsubmit="saveStaff(event)" novalidate>
         <input type="hidden" id="sId">
         <div class="form-group">
-          <label>Nome Completo *</label>
-          <input type="text" id="sName" required>
+          <label for="sName">Nome Completo *</label>
+          <input type="text" id="sName" required placeholder="Digite o nome completo">
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>Email *</label>
-            <input type="email" id="sEmail" required>
+            <label for="sEmail">Email *</label>
+            <input type="email" id="sEmail" required placeholder="email@empresa.com">
           </div>
           <div class="form-group">
-            <label>WhatsApp/Telefone *</label>
-            <input type="tel" id="sPhone" required>
+            <label for="sPhone">WhatsApp/Telefone *</label>
+            <input type="tel" id="sPhone" required placeholder="(00) 00000-0000">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>Login de Acesso *</label>
-            <input type="text" id="sLogin" required>
+            <label for="sLogin">Login de Acesso *</label>
+            <input type="text" id="sLogin" required placeholder="usuario">
           </div>
           <div class="form-group">
-            <label>Senha *</label>
-            <input type="text" id="sPass" required>
+            <label for="sPass">Senha *</label>
+            <input type="text" id="sPass" required placeholder="••••••••">
           </div>
         </div>
         <div class="form-group">
-          <label>Ambiente de Acesso *</label>
+          <label for="sRole">Ambiente de Acesso *</label>
           <select id="sRole" required>
-            <option value="admin">Administrador</option>
-            <option value="participant">Participante</option>
+            <option value="admin">Administrador Master</option>
+            <option value="staff">Consultor/Recrutador</option>
           </select>
         </div>
-        <button type="submit" class="btn btn-primary" style="width:100%;padding:12px;">Salvar Funcionário</button>
+        <button type="submit" class="btn btn-primary" style="width:100%; padding: 14px; font-size: 1rem;">
+          💾 Salvar Funcionário
+        </button>
       </form>
     </div>
   </div>
 
   <!-- ============================================
-       MODAL EMPRESA
+       MODAL EMPRESA - PREMIUM
        ============================================ -->
-  <div class="modal" id="compModal">
+  <div class="modal" id="compModal" role="dialog" aria-labelledby="compTitle" aria-modal="true">
     <div class="modal-content">
       <div class="modal-header">
         <h3 id="compTitle">Nova Empresa</h3>
-        <button class="modal-close" onclick="closeModal('compModal')">×</button>
+        <button class="modal-close" onclick="closeModal('compModal')" aria-label="Fechar modal">×</button>
       </div>
-      <form onsubmit="saveCompany(event)">
+      <form onsubmit="saveCompany(event)" novalidate>
         <input type="hidden" id="cId">
         <div class="form-group">
-          <label>Nome da Empresa *</label>
-          <input type="text" id="cName" required>
+          <label for="cName">Nome da Empresa *</label>
+          <input type="text" id="cName" required placeholder="Razão Social ou Nome Fantasia">
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>CNPJ *</label>
-            <input type="text" id="cCnpj" required>
+            <label for="cCnpj">CNPJ *</label>
+            <input type="text" id="cCnpj" required placeholder="00.000.000/0000-00">
           </div>
           <div class="form-group">
-            <label>Responsável *</label>
-            <input type="text" id="cResp" required>
+            <label for="cResp">Responsável *</label>
+            <input type="text" id="cResp" required placeholder="Nome do responsável">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>Contato/WhatsApp</label>
-            <input type="tel" id="cPhone">
+            <label for="cPhone">Contato/WhatsApp</label>
+            <input type="tel" id="cPhone" placeholder="(00) 00000-0000">
           </div>
           <div class="form-group">
-            <label>Email Corporativo</label>
-            <input type="email" id="cEmail">
+            <label for="cEmail">Email Corporativo</label>
+            <input type="email" id="cEmail" placeholder="contato@empresa.com">
           </div>
         </div>
-        <button type="submit" class="btn btn-primary" style="width:100%;padding:12px;">Salvar Empresa</button>
+        <button type="submit" class="btn btn-primary" style="width:100%; padding: 14px; font-size: 1rem;">
+          💾 Salvar Empresa
+        </button>
       </form>
     </div>
   </div>
 
   <!-- ============================================
-       MODAL PARTICIPANTE
+       MODAL PARTICIPANTE - PREMIUM
        ============================================ -->
-  <div class="modal" id="partModal">
+  <div class="modal" id="partModal" role="dialog" aria-labelledby="partTitle" aria-modal="true">
     <div class="modal-content">
       <div class="modal-header">
         <h3 id="partTitle">Novo Participante</h3>
-        <button class="modal-close" onclick="closeModal('partModal')">×</button>
+        <button class="modal-close" onclick="closeModal('partModal')" aria-label="Fechar modal">×</button>
       </div>
-      <form onsubmit="saveParticipant(event)">
+      <form onsubmit="saveParticipant(event)" novalidate>
         <input type="hidden" id="pId">
+        
+        <!-- Dados Pessoais -->
         <div class="form-group">
-          <label>Nome Completo *</label>
-          <input type="text" id="pName" required>
+          <label for="pName">Nome Completo *</label>
+          <input type="text" id="pName" required placeholder="Digite o nome completo">
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>Telefone/WhatsApp *</label>
-            <input type="tel" id="pPhone" required>
+            <label for="pPhone">Telefone/WhatsApp *</label>
+            <input type="tel" id="pPhone" required placeholder="(00) 00000-0000">
           </div>
           <div class="form-group">
-            <label>Email *</label>
-            <input type="email" id="pEmail" required>
+            <label for="pEmail">Email *</label>
+            <input type="email" id="pEmail" required placeholder="email@participante.com">
           </div>
         </div>
+        
+        <!-- Vinculação com Empresa -->
         <div class="form-group">
-          <label>Vincular à Empresa</label>
+          <label for="pComp">Vincular à Empresa</label>
           <select id="pComp" onchange="loadAvailableJobsForParticipant()">
             <option value="">Independente</option>
+            <!-- Preenchido via JavaScript -->
           </select>
         </div>
         
-        <!-- NOVO: Seleção e Inclusão de Vagas -->
+        <!-- Seleção de Vagas -->
         <div class="form-group">
           <label>Vaga / Cargo Disponível</label>
-          <select id="availableJobSelect">
-            <option value="">Selecione a vaga...</option>
-          </select>
-          <button type="button" class="btn-add-job" id="btnAddJobParticipant" onclick="addJobToParticipant()" disabled>
-            ➕ Incluir Vaga
-          </button>
+          <div style="display: flex; gap: 0.75rem; align-items: flex-end;">
+            <select id="availableJobSelect" style="flex: 1;">
+              <option value="">Selecione a vaga...</option>
+            </select>
+            <button type="button" class="btn-add-job" id="btnAddJobParticipant" onclick="addJobToParticipant()" disabled>
+              ➕ Incluir
+            </button>
+          </div>
           
-          <!-- Lista de vagas já vinculadas ao participante -->
+          <!-- Lista de vagas vinculadas -->
           <div id="participantSelectedJobsContainer" class="selected-jobs-container">
-            <div class="selected-jobs-title">Vagas Vinculadas:</div>
+            <div class="selected-jobs-title">📋 Vagas Vinculadas:</div>
             <div id="participantSelectedJobsList"></div>
           </div>
         </div>
         
         <!-- Credenciais de Acesso -->
-        <div style="background:#f8fafc; padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid #e2e8f0;">
-          <h4 style="margin-bottom:10px; color:#1e40af; font-size:0.95rem;">🔑 Credenciais de Acesso para o Teste</h4>
+        <div style="background: linear-gradient(135deg, var(--slate-50), white); padding: 1.25rem; border-radius: 14px; margin: 1.25rem 0; border: 2px solid var(--slate-200);">
+          <h4 style="margin-bottom: 1rem; color: var(--brand-blue-dark); font-weight: 700; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
+            🔑 Credenciais de Acesso
+          </h4>
           <div class="form-row">
             <div class="form-group">
-              <label>Usuário de Login *</label>
-              <input type="text" id="pUser" required>
+              <label for="pUser">Usuário de Login *</label>
+              <input type="text" id="pUser" required placeholder="usuario">
             </div>
             <div class="form-group">
-              <label>Senha Temporária *</label>
-              <input type="text" id="pPass" required>
+              <label for="pPass">Senha Temporária *</label>
+              <input type="text" id="pPass" required placeholder="••••••••">
             </div>
           </div>
           <div class="form-group">
-            <label>Validade da Senha</label>
+            <label for="pExp">Validade da Senha</label>
             <input type="date" id="pExp">
           </div>
         </div>
@@ -860,89 +1903,114 @@
           <div class="checkbox-group">
             <label>
               <input type="checkbox" class="test-check" value="DISC" checked> 
-              Teste DISC
+              <span>📊 Teste DISC</span>
             </label>
             <label>
               <input type="checkbox" class="test-check" value="IE"> 
-              Inteligência Emocional
+              <span>🧠 Inteligência Emocional</span>
             </label>
             <label>
               <input type="checkbox" class="test-check" value="Valores"> 
-              Valores Pessoais
+              <span>💎 Valores Pessoais</span>
             </label>
           </div>
         </div>
-        <button type="submit" class="btn btn-primary" style="width:100%;padding:12px;">Salvar Participante</button>
+        
+        <button type="submit" class="btn btn-primary" style="width:100%; padding: 14px; font-size: 1rem; margin-top: 0.5rem;">
+          💾 Salvar Participante
+        </button>
       </form>
     </div>
   </div>
 
   <!-- ============================================
-       MODAL RELATÓRIO
+       MODAL RELATÓRIO - PREMIUM
        ============================================ -->
-  <div class="modal" id="reportModal">
+  <div class="modal" id="reportModal" role="dialog" aria-modal="true">
     <div class="modal-content">
       <div class="modal-header">
-        <h3>Gerar Relatório</h3>
-        <button class="modal-close" onclick="closeModal('reportModal')">×</button>
+        <h3>📊 Gerar Relatório Vigorre One™</h3>
+        <button class="modal-close" onclick="closeModal('reportModal')" aria-label="Fechar modal">×</button>
       </div>
-      <p>Participante: <strong id="reportTargetName"></strong></p>
-      <div class="form-group" style="margin-top:15px;">
-        <label>Tipo de Relatório</label>
+      <p style="margin-bottom: 1.5rem;">
+        Participante: <strong id="reportTargetName" style="color: var(--brand-blue-dark);"></strong>
+      </p>
+      
+      <div class="form-group">
+        <label for="reportTypeSelect">Tipo de Relatório</label>
         <select id="reportTypeSelect">
           <option value="simple">📄 Relatório Simples</option>
-          <option value="complete">📘 Relatório Completo (Modelo HMI)</option>
+          <option value="complete">📘 Relatório Completo (HMI/MBTI)</option>
           <option value="laudo">📜 Laudo Comportamental Técnico</option>
-          <option value="vigorre-disc">💎 Relatório Completo DISC Vigorre One™ (Premium)</option>
-          <option value="vigorre-ie">🧠 Relatório Completo IE Vigorre One™ (Premium)</option>
-          <option value="vigorre-valores">💎 Relatório Completo Valores Vigorre One™ (Premium)</option>
+          <option value="vigorre-disc">💎 Relatório DISC Vigorre One™ Premium</option>
+          <option value="vigorre-ie">🧠 Relatório IE Vigorre One™ Premium</option>
+          <option value="vigorre-valores">💎 Relatório Valores Vigorre One™ Premium</option>
         </select>
       </div>
+      
       <div class="form-group">
-        <label>Teste Base</label>
+        <label for="reportTestSelect">Teste Base</label>
         <select id="reportTestSelect">
-          <option value="DISC">DISC</option>
-          <option value="IE">Inteligência Emocional</option>
-          <option value="Valores">Valores Pessoais</option>
+          <option value="DISC">📊 DISC</option>
+          <option value="IE">🧠 Inteligência Emocional</option>
+          <option value="Valores">💎 Valores Pessoais</option>
         </select>
       </div>
-      <button onclick="generateReport()" class="btn btn-success" style="width:100%; padding:12px;">📧 Gerar e Enviar por E-mail</button>
+      
+      <button onclick="generateReport()" class="btn btn-success" style="width:100%; padding: 14px; font-size: 1rem; margin-top: 1rem;">
+        📧 Gerar e Enviar por E-mail
+      </button>
+      
+      <p style="margin-top: 1rem; font-size: 0.8125rem; color: var(--slate-500); text-align: center;">
+        🔐 Relatórios Premium requerem conclusão do teste e autorização do Admin Master
+      </p>
     </div>
   </div>
 
   <!-- ============================================
-       MODAL LIBERAR TESTES
+       MODAL LIBERAR TESTES - PREMIUM
        ============================================ -->
-  <div class="modal" id="testModal">
+  <div class="modal" id="testModal" role="dialog" aria-modal="true">
     <div class="modal-content">
       <div class="modal-header">
-        <h3>Liberar Testes</h3>
-        <button class="modal-close" onclick="closeModal('testModal')">×</button>
+        <h3>🔓 Liberar Testes</h3>
+        <button class="modal-close" onclick="closeModal('testModal')" aria-label="Fechar modal">×</button>
       </div>
-      <p style="margin-bottom:15px;">Participante: <strong id="testModalName"></strong></p>
+      <p style="margin-bottom: 1.5rem;">
+        Participante: <strong id="testModalName" style="color: var(--brand-blue-dark);"></strong>
+      </p>
       <input type="hidden" id="testModalId">
+      
       <div class="form-group">
         <label>Selecione os testes para liberar:</label>
         <div class="checkbox-group">
           <label>
             <input type="checkbox" class="test-check" value="DISC"> 
-            Teste DISC
+            <span>📊 Teste DISC</span>
           </label>
           <label>
             <input type="checkbox" class="test-check" value="IE"> 
-            Inteligência Emocional
+            <span>🧠 Inteligência Emocional</span>
           </label>
           <label>
             <input type="checkbox" class="test-check" value="Valores"> 
-            Valores Pessoais
+            <span>💎 Valores Pessoais</span>
           </label>
         </div>
       </div>
-      <button onclick="confirmTestRelease()" class="btn btn-success" style="width:100%;padding:12px;margin-top:15px;">✅ Confirmar Liberação</button>
+      
+      <button onclick="confirmTestRelease()" class="btn btn-success" style="width:100%; padding: 14px; font-size: 1rem; margin-top: 1rem;">
+        ✅ Confirmar Liberação
+      </button>
     </div>
   </div>
 
+  <!-- ============================================
+       SCRIPTS - FUNCIONALIDADE E SEGURANÇA
+       ============================================ -->
   <script>
+    'use strict';
+    
     // ============================================
     // BANCO DE DADOS LOCAL - CHAVES PADRONIZADAS
     // ============================================
@@ -953,8 +2021,17 @@
       jobs: JSON.parse(localStorage.getItem('vigorre_jobs') || '[]'),
       reports: JSON.parse(localStorage.getItem('vigorre_reports') || '[]')
     };
+    
     let currentCompanyId = null;
     let participantSelectedJobs = [];
+    
+    // Paginação
+    const ITEMS_PER_PAGE = 10;
+    let currentPage = {
+      staff: 1,
+      companies: 1,
+      participants: 1
+    };
 
     // ============================================
     // PERFIS HMI/MBTI COMPLETOS (16 TIPOS)
@@ -988,6 +2065,7 @@
       localStorage.setItem('vigorre_jobs', JSON.stringify(DB.jobs));
       localStorage.setItem('vigorre_reports', JSON.stringify(DB.reports));
       renderAll();
+      updateStats();
     }
 
     // ============================================
@@ -1002,187 +2080,224 @@
         window.location.href = 'login.html';
         return;
       }
-      document.getElementById('userName').textContent = currentUser.name;
-      renderAll();
       
-      // ✅ VERIFICAR CONEXÃO COM SUPABASE - COM DELAY PARA GARANTIR CARREGAMENTO
-      console.log('⏳ Aguardando 2 segundos para carregar VigorreDB...');
-      setTimeout(function() {
-        console.log('🔄 Executando checkSupabaseConnection...');
-        checkSupabaseConnection();
-      }, 2000);
+      document.getElementById('userName').textContent = currentUser.name || 'Admin';
+      renderAll();
+      updateStats();
+      
+      // Verificar conexão com Supabase com delay
+      setTimeout(checkSupabaseConnection, 2000);
+      
+      // Atualizar selects
+      updateSelects();
     });
 
     // ============================================
-    // ✅ FUNÇÃO ROBUSTA: VERIFICAR CONEXÃO COM SUPABASE
+    // FUNÇÃO ROBUSTA: VERIFICAR CONEXÃO COM SUPABASE
     // ============================================
     function checkSupabaseConnection() {
-      console.log('🔍 checkSupabaseConnection - Iniciando verificação...');
-      
-      // Buscar elementos do DOM
       const statusElement = document.getElementById('supabaseStatus');
       const statusDot = document.getElementById('statusDot');
       const statusText = document.getElementById('statusText');
       
-      // Verificar se elementos existem
-      if (!statusElement || !statusDot || !statusText) {
-        console.error('❌ Elementos do status não encontrados no DOM');
-        return;
-      }
+      if (!statusElement || !statusDot || !statusText) return;
       
-      // Garantir que o elemento esteja visível
       statusElement.style.display = 'flex';
       
-      // Verificar se VigorreDB está disponível
       if (!window.VigorreDB) {
-        console.warn('⚠️ window.VigorreDB não definido - supabase-config.js pode não ter carregado');
         statusDot.className = 'status-dot notloaded';
         statusText.textContent = 'Config não carregada';
-        statusText.style.color = '#6b7280';
-        statusElement.style.background = '#f3f4f6';
-        statusElement.style.borderColor = '#d1d5db';
         return;
       }
       
       if (!VigorreDB.supabase) {
-        console.warn('⚠️ VigorreDB.supabase não definido');
         statusDot.className = 'status-dot notloaded';
         statusText.textContent = 'Supabase não inicializado';
-        statusText.style.color = '#6b7280';
-        statusElement.style.background = '#f3f4f6';
-        statusElement.style.borderColor = '#d1d5db';
         return;
       }
       
-      console.log('✅ VigorreDB disponível, testando conexão...');
-      
-      // Estado "conectando"
       statusDot.className = 'status-dot connecting';
       statusText.textContent = 'Testando...';
-      statusText.style.color = '#92400e';
-      statusElement.style.background = '#fef3c7';
-      statusElement.style.borderColor = '#fcd34d';
       
-      // Tentar fazer query simples
       VigorreDB.supabase
         .from('participants')
         .select('id')
         .limit(1)
         .then(function(result) {
-          console.log('📡 Resposta do Supabase:', result);
+          if (result.error) throw result.error;
           
-          if (result.error) {
-            console.error('❌ Erro na query:', result.error);
-            throw result.error;
-          }
-          
-          // ✅ SUCESSO
-          console.log('✅ Supabase conectado com sucesso!');
           statusDot.className = 'status-dot connected';
           statusText.textContent = 'Supabase OK ✓';
-          statusText.style.color = '#065f46';
-          statusElement.style.background = '#dcfce7';
-          statusElement.style.borderColor = '#86efac';
-          
-          // Log adicional para debug
-          console.log('📊 Dados retornados:', result.data);
-          
+          console.log('✅ Supabase conectado com sucesso!');
         })
         .catch(function(error) {
-          // ❌ ERRO
           console.error('❌ Falha na conexão com Supabase:', error);
-          
           statusDot.className = 'status-dot error';
           statusText.textContent = 'Offline ✗';
-          statusText.style.color = '#dc2626';
-          statusElement.style.background = '#fee2e2';
-          statusElement.style.borderColor = '#fca5a5';
-          
-          // Mensagem de erro mais amigável
-          if (error.message && error.message.includes('network')) {
-            statusText.textContent = 'Sem rede';
-          } else if (error.message && error.message.includes('permission')) {
-            statusText.textContent = 'Sem permissão';
-          }
         });
     }
 
+    // ============================================
+    // RENDERIZAÇÃO GERAL
+    // ============================================
     function renderAll() {
       renderStaff();
       renderCompanies();
       renderParticipants();
+      updateStats();
     }
 
-    // ... [RESTO DO CÓDIGO DO ADMIN - FUNÇÕES EXISTENTES MANTIDAS] ...
-    // (Para economizar espaço, mantive as funções originais do admin que já estavam funcionando)
-    // As funções renderStaff, renderCompanies, renderParticipants, saveStaff, etc. permanecem iguais
+    function updateStats() {
+      document.getElementById('statParticipants').textContent = DB.participants.length;
+      document.getElementById('statCompanies').textContent = DB.companies.length;
+      
+      // Contar testes concluídos
+      let completedTests = 0;
+      DB.participants.forEach(function(p) {
+        if (p.completedTests && Array.isArray(p.completedTests)) {
+          completedTests += p.completedTests.length;
+        }
+      });
+      document.getElementById('statTests').textContent = completedTests;
+      
+      // Contar relatórios
+      document.getElementById('statReports').textContent = DB.reports.length;
+    }
 
+    // ============================================
+    // NAVEGAÇÃO ENTRE SEÇÕES
+    // ============================================
     function showSection(id) {
+      // Esconder todas as seções
       document.querySelectorAll('main section').forEach(function(s) {
         s.style.display = 'none';
       });
+      
+      // Mostrar seção selecionada
       document.getElementById(id).style.display = 'block';
+      
+      // Atualizar menu ativo
       document.querySelectorAll('.nav-menu a').forEach(function(a) {
         a.classList.remove('active');
+        a.removeAttribute('aria-current');
       });
+      
       if (event && event.target) {
-        event.target.closest('a')?.classList.add('active');
+        const activeLink = event.target.closest('a');
+        if (activeLink) {
+          activeLink.classList.add('active');
+          activeLink.setAttribute('aria-current', 'page');
+        }
       }
-      var titles = { 
+      
+      // Atualizar título da página
+      const titles = { 
         dashboard: 'Dashboard', 
         staff: 'Staff Vigorre One™', 
         companies: 'Empresas', 
         participants: 'Participantes' 
       };
       document.getElementById('pageTitle').textContent = titles[id] || id;
+      
+      // Fechar detalhes de empresa se não estiver na seção companies
       if (id !== 'companies') {
         closeCompanyDetails();
       }
-      if (id === 'staff') renderStaff();
-      if (id === 'companies') renderCompanies();
-      if (id === 'participants') renderParticipants();
+      
+      // Re-renderizar dados da seção
+      if (id === 'staff') { currentPage.staff = 1; renderStaff(); }
+      if (id === 'companies') { currentPage.companies = 1; renderCompanies(); }
+      if (id === 'participants') { currentPage.participants = 1; renderParticipants(); }
     }
 
-    function openModal(id, skipUpdateSelects) { 
+    // ============================================
+    // MODAIS
+    // ============================================
+    function openModal(id) { 
       document.getElementById(id).classList.add('active'); 
-      if (!skipUpdateSelects) updateSelects(); 
+      updateSelects();
+      
+      // Prevenir scroll do body quando modal está aberto
+      document.body.style.overflow = 'hidden';
     }
     
     function closeModal(id) { 
       document.getElementById(id).classList.remove('active'); 
-      document.querySelectorAll('form').forEach(function(f) { f.reset(); }); 
-      document.querySelectorAll('input[type="hidden"]').forEach(function(i) { i.value = ''; }); 
+      document.querySelectorAll('#' + id + ' form').forEach(function(f) { f.reset(); }); 
+      document.querySelectorAll('#' + id + ' input[type="hidden"]').forEach(function(i) { i.value = ''; });
+      
+      // Restaurar scroll do body
+      document.body.style.overflow = '';
+      
+      // Resetar seleção de vagas do participante
+      if (id === 'partModal') {
+        participantSelectedJobs = [];
+        renderParticipantSelectedJobs();
+      }
     }
+    
+    // Fechar modal ao clicar fora
+    document.querySelectorAll('.modal').forEach(function(modal) {
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          closeModal(modal.id);
+        }
+      });
+    });
+    
+    // Fechar modal com tecla Escape
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal.active').forEach(function(modal) {
+          closeModal(modal.id);
+        });
+      }
+    });
 
-    // [Manter todas as outras funções originais do admin aqui...]
-    // renderStaff, saveStaff, editStaff, renderCompanies, saveCompany, editCompany, viewCompany, etc.
-    // Para economizar, não repeti todas as 500+ linhas de código que já estavam funcionando
-
+    // ============================================
+    // STAFF - FUNÇÕES
+    // ============================================
     function renderStaff() {
-      var tbody = document.getElementById('staffTableBody');
-      if (DB.staff.length === 0) { 
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#94a3b8;">Nenhum funcionário cadastrado</td></tr>'; 
+      const tbody = document.getElementById('staffTableBody');
+      if (!tbody) return;
+      
+      const filtered = filterData(DB.staff, 'staff');
+      
+      if (filtered.length === 0) { 
+        tbody.innerHTML = '<tr><td colspan="6" class="empty-state"><div class="empty-state-icon">👥</div><h4>Nenhum funcionário encontrado</h4><p>Cadastre novos membros da equipe para começar.</p></td></tr>'; 
+        renderPagination('staff', 0);
         return; 
       }
-      tbody.innerHTML = DB.staff.map(function(s) {
+      
+      // Paginação
+      const startIndex = (currentPage.staff - 1) * ITEMS_PER_PAGE;
+      const endIndex = startIndex + ITEMS_PER_PAGE;
+      const pageData = filtered.slice(startIndex, endIndex);
+      
+      tbody.innerHTML = pageData.map(function(s) {
         return '<tr>' +
-          '<td><strong>' + s.name + '</strong></td>' +
-          '<td>' + s.email + '</td>' +
+          '<td><div class="user-cell"><div class="avatar" aria-hidden="true">' + s.name.charAt(0).toUpperCase() + '</div><div class="user-info-cell"><span class="user-name">' + s.name + '</span><span class="user-email">' + s.email + '</span></div></div></td>' +
           '<td>' + s.phone + '</td>' +
-          '<td>' + s.login + '</td>' +
-          '<td><span class="badge" style="background:' + (s.role === 'admin' ? '#dbeafe' : '#dcfce7') + '; color:' + (s.role === 'admin' ? '#1e40af' : '#166534') + '; padding:4px 8px; border-radius:6px; font-size:0.8rem;">' + (s.role === 'admin' ? 'Administrador' : 'Participante') + '</span></td>' +
+          '<td><code style="background:var(--slate-100);padding:4px 8px;border-radius:6px;font-size:0.8rem">' + s.login + '</code></td>' +
+          '<td><span class="badge" style="background:' + (s.role === 'admin' ? '#dbeafe' : '#dcfce7') + '; color:' + (s.role === 'admin' ? '#1e40af' : '#166534') + '; border:1px solid ' + (s.role === 'admin' ? '#93c5fd' : '#86efac') + ';">' + (s.role === 'admin' ? 'Administrador' : 'Consultor') + '</span></td>' +
           '<td>' +
-            '<button class="btn btn-warning btn-sm" onclick="editStaff(\'' + s.id + '\')">✏️ Editar</button>' +
-            '<button class="btn btn-danger btn-sm" onclick="deleteItem(\'staff\',\'' + s.id + '\')">🗑️ Excluir</button>' +
+            '<button class="btn btn-warning btn-sm" onclick="editStaff(\'' + s.id + '\')" aria-label="Editar ' + s.name + '">✏️</button>' +
+            '<button class="btn btn-danger btn-sm" onclick="deleteItem(\'staff\',\'' + s.id + '\')" aria-label="Excluir ' + s.name + '">🗑️</button>' +
           '</td>' +
         '</tr>';
       }).join('');
+      
+      renderPagination('staff', filtered.length);
     }
-
+    
+    function filterStaff() {
+      renderStaff();
+    }
+    
     function saveStaff(e) {
       e.preventDefault();
-      var id = document.getElementById('sId').value || Date.now().toString();
-      var data = {
+      const id = document.getElementById('sId').value || Date.now().toString();
+      const data = {
         id: id, 
         name: document.getElementById('sName').value, 
         email: document.getElementById('sEmail').value.toLowerCase(), 
@@ -1191,20 +2306,23 @@
         password: document.getElementById('sPass').value, 
         role: document.getElementById('sRole').value
       };
-      var idx = DB.staff.findIndex(function(x) { return x.id === id; });
+      
+      const idx = DB.staff.findIndex(function(x) { return x.id === id; });
       if (idx > -1) {
-        DB.staff[idx] = data;
+        DB.staff[idx] = { ...DB.staff[idx], ...data };
       } else {
         DB.staff.push(data);
       }
+      
       saveDB(); 
       closeModal('staffModal'); 
-      showToast('Funcionário salvo com sucesso!');
+      showToast('✅ Funcionário salvo com sucesso!');
     }
-
+    
     function editStaff(id) {
-      var s = DB.staff.find(function(x) { return x.id === id; }); 
+      const s = DB.staff.find(function(x) { return x.id === id; }); 
       if (!s) return;
+      
       document.getElementById('sId').value = s.id; 
       document.getElementById('sName').value = s.name;
       document.getElementById('sEmail').value = s.email; 
@@ -1216,31 +2334,51 @@
       openModal('staffModal');
     }
 
+    // ============================================
+    // EMPRESAS - FUNÇÕES
+    // ============================================
     function renderCompanies() {
-      var tbody = document.getElementById('companiesTableBody');
-      if (DB.companies.length === 0) { 
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;">Nenhuma empresa cadastrada</td></tr>'; 
+      const tbody = document.getElementById('companiesTableBody');
+      if (!tbody) return;
+      
+      const filtered = filterData(DB.companies, 'companies');
+      
+      if (filtered.length === 0) { 
+        tbody.innerHTML = '<tr><td colspan="5" class="empty-state"><div class="empty-state-icon">🏢</div><h4>Nenhuma empresa cadastrada</h4><p>Cadastre empresas para gerenciar participantes e vagas.</p></td></tr>'; 
+        renderPagination('companies', 0);
         return; 
       }
-      tbody.innerHTML = DB.companies.map(function(c) {
+      
+      // Paginação
+      const startIndex = (currentPage.companies - 1) * ITEMS_PER_PAGE;
+      const endIndex = startIndex + ITEMS_PER_PAGE;
+      const pageData = filtered.slice(startIndex, endIndex);
+      
+      tbody.innerHTML = pageData.map(function(c) {
         return '<tr>' +
-          '<td><strong>' + c.name + '</strong><br><small style="color:#64748b;">' + (c.email || '') + '</small></td>' +
-          '<td>' + (c.cnpj || '-') + '</td>' +
+          '<td><div class="user-cell"><div class="avatar" style="background:linear-gradient(135deg,#10B981,#059669)" aria-hidden="true">' + c.name.charAt(0).toUpperCase() + '</div><div class="user-info-cell"><span class="user-name">' + c.name + '</span><span class="user-email">' + (c.email || '') + '</span></div></div></td>' +
+          '<td><code style="background:var(--slate-100);padding:4px 8px;border-radius:6px;font-size:0.8rem">' + (c.cnpj || '-') + '</code></td>' +
           '<td>' + c.resp + '</td>' +
           '<td>' + (c.phone || '-') + '</td>' +
           '<td>' +
-            '<button class="btn btn-primary btn-sm" onclick="viewCompany(\'' + c.id + '\')">👁️ Ver Vagas/Participantes</button>' +
-            '<button class="btn btn-warning btn-sm" onclick="editCompany(\'' + c.id + '\')">✏️ Editar</button>' +
-            '<button class="btn btn-danger btn-sm" onclick="deleteItem(\'companies\',\'' + c.id + '\')">🗑️ Excluir</button>' +
+            '<button class="btn btn-primary btn-sm" onclick="viewCompany(\'' + c.id + '\')" aria-label="Ver detalhes de ' + c.name + '">👁️</button>' +
+            '<button class="btn btn-warning btn-sm" onclick="editCompany(\'' + c.id + '\')" aria-label="Editar ' + c.name + '">✏️</button>' +
+            '<button class="btn btn-danger btn-sm" onclick="deleteItem(\'companies\',\'' + c.id + '\')" aria-label="Excluir ' + c.name + '">🗑️</button>' +
           '</td>' +
         '</tr>';
       }).join('');
+      
+      renderPagination('companies', filtered.length);
     }
-
+    
+    function filterCompanies() {
+      renderCompanies();
+    }
+    
     function saveCompany(e) {
       e.preventDefault();
-      var id = document.getElementById('cId').value || Date.now().toString();
-      var data = { 
+      const id = document.getElementById('cId').value || Date.now().toString();
+      const data = { 
         id: id, 
         name: document.getElementById('cName').value, 
         cnpj: document.getElementById('cCnpj').value, 
@@ -1248,20 +2386,23 @@
         email: document.getElementById('cEmail').value.toLowerCase(), 
         phone: document.getElementById('cPhone').value 
       };
-      var idx = DB.companies.findIndex(function(x) { return x.id === id; });
+      
+      const idx = DB.companies.findIndex(function(x) { return x.id === id; });
       if (idx > -1) {
-        DB.companies[idx] = data;
+        DB.companies[idx] = { ...DB.companies[idx], ...data };
       } else {
         DB.companies.push(data);
       }
+      
       saveDB(); 
       closeModal('compModal'); 
-      showToast('Empresa salva com sucesso!');
+      showToast('✅ Empresa salva com sucesso!');
     }
-
+    
     function editCompany(id) {
-      var c = DB.companies.find(function(x) { return x.id === id; }); 
+      const c = DB.companies.find(function(x) { return x.id === id; }); 
       if (!c) return;
+      
       document.getElementById('cId').value = c.id; 
       document.getElementById('cName').value = c.name;
       document.getElementById('cCnpj').value = c.cnpj || ''; 
@@ -1271,114 +2412,125 @@
       document.getElementById('compTitle').textContent = 'Editar Empresa';
       openModal('compModal');
     }
-
+    
     function viewCompany(cid) {
       currentCompanyId = cid;
-      var c = DB.companies.find(function(x) { return x.id === cid; });
+      const c = DB.companies.find(function(x) { return x.id === cid; });
+      
       document.getElementById('companyListView').style.display = 'none';
       document.getElementById('companyDetails').style.display = 'block';
       document.getElementById('detailCompanyTitle').textContent = '📂 ' + c.name + ' - Gestão de Vagas e Participantes';
+      
       renderJobs();
       renderLinkedParticipants();
     }
-
+    
     function closeCompanyDetails() {
       document.getElementById('companyListView').style.display = 'block';
       document.getElementById('companyDetails').style.display = 'none';
       currentCompanyId = null;
     }
-
+    
     function saveJob() {
-      var name = document.getElementById('jobName').value;
-      var profile = document.getElementById('jobProfile').value;
-      if (!name) return showToast('Digite o nome da vaga', 'error');
+      const name = document.getElementById('jobName').value;
+      const profile = document.getElementById('jobProfile').value;
+      
+      if (!name) return showToast('⚠️ Digite o nome da vaga', 'error');
+      
       DB.jobs.push({ 
         id: Date.now().toString(), 
         compId: currentCompanyId, 
         name: name, 
         profile: profile 
       });
+      
       saveDB(); 
       renderJobs();
       document.getElementById('jobName').value = ''; 
       document.getElementById('jobProfile').value = '';
-      showToast('Vaga e perfil cadastrados!');
+      showToast('✅ Vaga e perfil cadastrados!');
     }
-
+    
     function renderJobs() {
-      var list = document.getElementById('jobsList');
-      var jobs = DB.jobs.filter(function(j) { return j.compId === currentCompanyId; });
+      const list = document.getElementById('jobsList');
+      const jobs = DB.jobs.filter(function(j) { return j.compId === currentCompanyId; });
+      
       if (jobs.length === 0) { 
-        list.innerHTML = '<div style="padding:10px; color:#94a3b8; font-size:0.9rem;">Nenhuma vaga cadastrada ainda.</div>'; 
+        list.innerHTML = '<div style="padding:1rem; color:var(--slate-500); font-size:0.875rem; text-align:center;">Nenhuma vaga cadastrada ainda.</div>'; 
         return; 
       }
+      
       list.innerHTML = jobs.map(function(j) {
         return '<div class="job-card">' +
-          '<div>' +
-            '<strong style="color:#1e40af;">' + j.name + '</strong><br>' +
-            '<small style="color:#64748b;">Perfil: ' + (j.profile || 'Não definido') + '</small>' +
+          '<div class="job-info">' +
+            '<strong>' + j.name + '</strong><br>' +
+            '<small>Perfil: ' + (j.profile || 'Não definido') + '</small>' +
           '</div>' +
-          '<div>' +
-            '<button class="btn btn-warning btn-sm" onclick="editJob(\'' + j.id + '\')" style="margin-right:5px;">✏️ Editar</button>' +
-            '<button class="btn btn-danger btn-sm" onclick="deleteJob(\'' + j.id + '\')">🗑️ Excluir</button>' +
+          '<div class="job-actions">' +
+            '<button class="btn btn-warning btn-sm" onclick="editJob(\'' + j.id + '\')" aria-label="Editar vaga">✏️</button>' +
+            '<button class="btn btn-danger btn-sm" onclick="deleteJob(\'' + j.id + '\')" aria-label="Excluir vaga">🗑️</button>' +
           '</div>' +
         '</div>';
       }).join('');
     }
-
+    
     function editJob(jobId) {
-      var job = DB.jobs.find(function(j) { return j.id === jobId; });
+      const job = DB.jobs.find(function(j) { return j.id === jobId; });
       if (job) {
         document.getElementById('jobName').value = job.name;
         document.getElementById('jobProfile').value = job.profile || '';
         DB.jobs = DB.jobs.filter(function(j) { return j.id !== jobId; });
-        showToast('Edite os dados e clique em Salvar Vaga');
+        showToast('✏️ Edite os dados e clique em Salvar Vaga');
       }
     }
-
+    
     function deleteJob(jid) {
       if (confirm('Tem certeza que deseja excluir esta vaga?')) {
         DB.jobs = DB.jobs.filter(function(j) { return j.id !== jid; });
         saveDB(); 
         renderJobs();
-        showToast('Vaga excluída com sucesso!');
+        showToast('✅ Vaga excluída com sucesso!');
       }
     }
-
+    
     function renderLinkedParticipants() {
-      var tbody = document.getElementById('employeesTableBody');
-      var emps = DB.participants.filter(function(p) { return p.compId === currentCompanyId; });
+      const tbody = document.getElementById('employeesTableBody');
+      if (!tbody) return;
+      
+      const emps = DB.participants.filter(function(p) { return p.compId === currentCompanyId; });
+      
       if (emps.length === 0) { 
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#94a3b8;">Nenhum participante vinculado.</td></tr>'; 
+        tbody.innerHTML = '<tr><td colspan="4" class="empty-state"><div class="empty-state-icon">👤</div><h4>Nenhum participante vinculado</h4><p>Vincule participantes a esta empresa para gerenciá-los aqui.</p></td></tr>'; 
         return; 
       }
+      
       tbody.innerHTML = emps.map(function(p) {
-        var discStatus = checkTestStatus(p.id, 'DISC');
-        var ieStatus = checkTestStatus(p.id, 'IE');
-        var valoresStatus = checkTestStatus(p.id, 'Valores');
+        const discStatus = checkTestStatus(p.id, 'DISC');
+        const ieStatus = checkTestStatus(p.id, 'IE');
+        const valoresStatus = checkTestStatus(p.id, 'Valores');
         
-        var statusBadges = [
-          discStatus.completed ? '<span class="badge-pill badge-disc badge-completed">DISC ✅</span>' : '<span class="badge-pill badge-disc badge-pending">DISC ⏳</span>',
-          ieStatus.completed ? '<span class="badge-pill badge-ie badge-completed">IE ✅</span>' : '<span class="badge-pill badge-ie badge-pending">IE ⏳</span>',
-          valoresStatus.completed ? '<span class="badge-pill badge-valores badge-completed">Val ✅</span>' : '<span class="badge-pill badge-valores badge-pending">Val ⏳</span>'
+        const statusBadges = [
+          discStatus.completed ? '<span class="badge-pill badge-disc badge-completed" title="DISC Concluído">✅</span>' : '<span class="badge-pill badge-disc badge-pending" title="DISC Pendente">⏳</span>',
+          ieStatus.completed ? '<span class="badge-pill badge-ie badge-completed" title="IE Concluído">✅</span>' : '<span class="badge-pill badge-ie badge-pending" title="IE Pendente">⏳</span>',
+          valoresStatus.completed ? '<span class="badge-pill badge-valores badge-completed" title="Valores Concluído">✅</span>' : '<span class="badge-pill badge-valores badge-pending" title="Valores Pendente">⏳</span>'
         ].join(' ');
         
-        var reportBtns = '';
+        let reportBtns = '';
         if (discStatus.canAccess) {
-          reportBtns += '<button class="btn-report" onclick="openVigorreReport(\'' + p.id + '\', \'DISC\')">📊 DISC</button><br>';
+          reportBtns += '<button class="btn-report" onclick="openVigorreReport(\'' + p.id + '\', \'DISC\')" title="Relatório DISC">📊</button> ';
         }
         if (ieStatus.canAccess) {
-          reportBtns += '<button class="btn-report btn-report-ie" onclick="openVigorreReport(\'' + p.id + '\', \'IE\')">🧠 IE</button><br>';
+          reportBtns += '<button class="btn-report btn-report-ie" onclick="openVigorreReport(\'' + p.id + '\', \'IE\')" title="Relatório IE">🧠</button> ';
         }
         if (valoresStatus.canAccess) {
-          reportBtns += '<button class="btn-report btn-report-valores" onclick="openVigorreReport(\'' + p.id + '\', \'Valores\')">💎 Valores</button>';
+          reportBtns += '<button class="btn-report btn-report-valores" onclick="openVigorreReport(\'' + p.id + '\', \'Valores\')" title="Relatório Valores">💎</button>';
         }
         if (!reportBtns) {
-          reportBtns = '<span class="badge-pill badge-pending">Aguardando testes</span>';
+          reportBtns = '<span class="badge-pill badge-pending" title="Aguardando testes">⏳</span>';
         }
         
         return '<tr>' +
-          '<td>' + p.name + '</td>' +
+          '<td><div class="user-cell"><div class="avatar">' + p.name.charAt(0).toUpperCase() + '</div><div class="user-info-cell"><span class="user-name">' + p.name + '</span></div></div></td>' +
           '<td>' + p.email + '</td>' +
           '<td>' + statusBadges + '</td>' +
           '<td>' + reportBtns + '</td>' +
@@ -1386,147 +2538,91 @@
       }).join('');
     }
 
-    function checkTestStatus(participantId, testType) {
-      var participant = DB.participants.find(function(p) { return p.id === participantId; });
-      if (!participant) {
-        console.warn('⚠️ Participante não encontrado:', participantId);
-        return { completed: false, hasResult: false, canAccess: false };
-      }
-      
-      var completedTests = participant.completedTests || [];
-      var hasCompleted = completedTests.includes(testType);
-      
-      var resultKey = '';
-      if (testType === 'DISC') {
-        resultKey = 'vigorre_last_disc_result';
-      } else if (testType === 'IE') {
-        resultKey = 'vigorre_last_ie_result';
-      } else if (testType === 'Valores') {
-        resultKey = 'vigorre_last_valores_result';
-      }
-      
-      var hasResult = !!localStorage.getItem(resultKey);
-      
-      return {
-        completed: hasCompleted,
-        hasResult: hasResult,
-        canAccess: hasCompleted && hasResult
-      };
-    }
-
-    function openVigorreReport(participantId, reportType) {
-      try {
-        var status = checkTestStatus(participantId, reportType);
-        
-        if (!status.canAccess) {
-          var msg = 'Participante ainda não completou o teste de ' + reportType + '.';
-          if (!status.completed) msg += ' Teste não completado.';
-          if (!status.hasResult) msg += ' Resultado não encontrado.';
-          showToast(msg, 'error');
-          return;
-        }
-        
-        localStorage.setItem('vigorre_report_participant', JSON.stringify({
-          id: participantId,
-          name: DB.participants.find(p => p.id === participantId)?.name || 'Participante'
-        }));
-        
-        var reportFile = '';
-        if (reportType === 'DISC') {
-          reportFile = 'relatorio-disc-vigorre.html';
-        } else if (reportType === 'IE') {
-          reportFile = 'relatorio-ie-vigorre.html';
-        } else if (reportType === 'Valores') {
-          reportFile = 'relatorio-valores-vigorre.html';
-        }
-        
-        if (reportFile) {
-          var newWindow = window.open(reportFile + '?participantId=' + participantId, '_blank');
-          if (newWindow) {
-            showToast('📊 Abrindo relatório...', 'success');
-          } else {
-            showToast('⚠️ Bloqueador de pop-up pode estar impedindo.', 'error');
-          }
-        } else {
-          showToast('Arquivo de relatório não encontrado.', 'error');
-        }
-      } catch (e) {
-        console.error('Erro ao abrir relatório:', e);
-        showToast('Erro ao abrir relatório.', 'error');
-      }
-    }
-
+    // ============================================
+    // PARTICIPANTES - FUNÇÕES
+    // ============================================
     function renderParticipants() {
-      var tbody = document.getElementById('participantsTableBody');
-      if (!tbody) {
-        console.error('❌ participantsTableBody não encontrado!');
-        return;
-      }
+      const tbody = document.getElementById('participantsTableBody');
+      if (!tbody) return;
       
-      if (DB.participants.length === 0) { 
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#94a3b8;padding:20px;">Nenhum participante cadastrado</td></tr>'; 
+      const filtered = filterData(DB.participants, 'participants');
+      
+      if (filtered.length === 0) { 
+        tbody.innerHTML = '<tr><td colspan="7" class="empty-state"><div class="empty-state-icon">👤</div><h4>Nenhum participante encontrado</h4><p>Cadastre novos participantes para iniciar avaliações comportamentais.</p></td></tr>'; 
+        renderPagination('participants', 0);
         return; 
       }
       
-      tbody.innerHTML = DB.participants.map(function(p) {
-        var discStatus = checkTestStatus(p.id, 'DISC');
-        var ieStatus = checkTestStatus(p.id, 'IE');
-        var valoresStatus = checkTestStatus(p.id, 'Valores');
+      // Paginação
+      const startIndex = (currentPage.participants - 1) * ITEMS_PER_PAGE;
+      const endIndex = startIndex + ITEMS_PER_PAGE;
+      const pageData = filtered.slice(startIndex, endIndex);
+      
+      tbody.innerHTML = pageData.map(function(p) {
+        const discStatus = checkTestStatus(p.id, 'DISC');
+        const ieStatus = checkTestStatus(p.id, 'IE');
+        const valoresStatus = checkTestStatus(p.id, 'Valores');
         
-        var tests = (p.tests || []).map(function(t) { 
-          return '<span class="badge" style="background:#e0e7ff;color:#3730a3;padding:2px 6px;border-radius:4px;font-size:0.75rem;margin-right:4px">' + t + '</span>'; 
-        }).join('') || '<span style="color:#ef4444;font-size:0.8rem">Nenhum</span>';
+        const tests = (p.tests || []).map(function(t) { 
+          return '<span class="badge" style="background:#e0e7ff;color:#3730a3;padding:2px 8px;border-radius:6px;font-size:0.75rem">' + t + '</span>'; 
+        }).join(' ') || '<span style="color:var(--brand-rose);font-size:0.8rem">Nenhum</span>';
         
-        var statusBadges = [
+        const statusBadges = [
           discStatus.completed 
-            ? '<span class="badge-pill badge-disc badge-completed" title="DISC Completado">DISC ✅</span>' 
-            : '<span class="badge-pill badge-disc badge-pending" title="DISC Pendente">DISC ⏳</span>',
+            ? '<span class="badge-pill badge-disc badge-completed" title="DISC Concluído">✅</span>' 
+            : '<span class="badge-pill badge-disc badge-pending" title="DISC Pendente">⏳</span>',
           ieStatus.completed 
-            ? '<span class="badge-pill badge-ie badge-completed" title="IE Completado">IE ✅</span>' 
-            : '<span class="badge-pill badge-ie badge-pending" title="IE Pendente">IE ⏳</span>',
+            ? '<span class="badge-pill badge-ie badge-completed" title="IE Concluído">✅</span>' 
+            : '<span class="badge-pill badge-ie badge-pending" title="IE Pendente">⏳</span>',
           valoresStatus.completed 
-            ? '<span class="badge-pill badge-valores badge-completed" title="Valores Completado">Val ✅</span>' 
-            : '<span class="badge-pill badge-valores badge-pending" title="Valores Pendente">Val ⏳</span>'
+            ? '<span class="badge-pill badge-valores badge-completed" title="Valores Concluído">✅</span>' 
+            : '<span class="badge-pill badge-valores badge-pending" title="Valores Pendente">⏳</span>'
         ].join(' ');
         
-        var reportBtns = '';
+        let reportBtns = '';
         if (discStatus.canAccess) {
-          reportBtns += '<button class="btn-report" onclick="openVigorreReport(\'' + p.id + '\', \'DISC\')" title="Gerar Relatório DISC Vigorre One™">📊 DISC</button> ';
+          reportBtns += '<button class="btn-report" onclick="openVigorreReport(\'' + p.id + '\', \'DISC\')" title="Relatório DISC Vigorre One™">📊</button> ';
         }
         if (ieStatus.canAccess) {
-          reportBtns += '<button class="btn-report btn-report-ie" onclick="openVigorreReport(\'' + p.id + '\', \'IE\')" title="Gerar Relatório IE Vigorre One™">🧠 IE</button> ';
+          reportBtns += '<button class="btn-report btn-report-ie" onclick="openVigorreReport(\'' + p.id + '\', \'IE\')" title="Relatório IE Vigorre One™">🧠</button> ';
         }
         if (valoresStatus.canAccess) {
-          reportBtns += '<button class="btn-report btn-report-valores" onclick="openVigorreReport(\'' + p.id + '\', \'Valores\')" title="Gerar Relatório Valores Vigorre One™">💎 Valores</button>';
+          reportBtns += '<button class="btn-report btn-report-valores" onclick="openVigorreReport(\'' + p.id + '\', \'Valores\')" title="Relatório Valores Vigorre One™">💎</button>';
         }
         if (!reportBtns) {
-          reportBtns = '<span class="badge-pill badge-pending" title="Aguardando conclusão dos testes">Aguardando</span>';
+          reportBtns = '<span class="badge-pill badge-pending" title="Aguardando conclusão">⏳</span>';
         }
         
         return '<tr>' +
-          '<td><strong>' + p.name + '</strong></td>' +
-          '<td>' + p.email + '<br><small style="color:#64748b">Tel: ' + p.phone + '</small></td>' +
-          '<td style="font-family:monospace;font-size:0.85rem;background:#f1f5f9;padding:8px;border-radius:6px">U:' + (p.user||'-') + '<br>S:' + (p.pass||'-') + '<br>V:' + (p.exp||'-') + '</td>' +
+          '<td><div class="user-cell"><div class="avatar">' + p.name.charAt(0).toUpperCase() + '</div><div class="user-info-cell"><span class="user-name">' + p.name + '</span><span class="user-email">' + p.email + '</span></div></div></td>' +
+          '<td><small style="color:var(--slate-500)">Tel: ' + p.phone + '</small></td>' +
+          '<td style="font-family:monospace;font-size:0.8rem;background:var(--slate-100);padding:8px 12px;border-radius:8px">U:<strong>' + (p.user||'-') + '</strong><br>S:••••••<br>V:' + (p.exp||'-') + '</td>' +
           '<td>' + tests + '</td>' +
           '<td>' + statusBadges + '</td>' +
           '<td>' + reportBtns + '</td>' +
           '<td>' +
-            '<button class="btn btn-warning btn-sm" onclick="editParticipant(\'' + p.id + '\')">✏️ Editar</button> ' +
-            '<button class="btn btn-primary btn-sm" onclick="resendTest(\'' + p.id + '\')">📧 Reenviar</button> ' +
-            '<button class="btn btn-secondary btn-sm" onclick="openVigorreLaudo(\'' + p.id + '\')">💎 Laudo</button> ' +
-            '<button class="btn btn-danger btn-sm" onclick="deleteItem(\'participants\',\'' + p.id + '\')">🗑️</button>' +
+            '<button class="btn btn-warning btn-sm" onclick="editParticipant(\'' + p.id + '\')" aria-label="Editar">✏️</button> ' +
+            '<button class="btn btn-primary btn-sm" onclick="resendTest(\'' + p.id + '\')" aria-label="Reenviar">📧</button> ' +
+            '<button class="btn btn-secondary btn-sm" onclick="openTestModal(\'' + p.id + '\')" aria-label="Liberar testes">🔓</button> ' +
+            '<button class="btn btn-danger btn-sm" onclick="deleteItem(\'participants\',\'' + p.id + '\')" aria-label="Excluir">🗑️</button>' +
           '</td>' +
         '</tr>';
       }).join('');
+      
+      renderPagination('participants', filtered.length);
     }
-
+    
+    function filterParticipants() {
+      renderParticipants();
+    }
+    
     function saveParticipant(e) {
       e.preventDefault();
-      var id = document.getElementById('pId').value || Date.now().toString();
-      var tests = Array.from(document.querySelectorAll('.test-check:checked')).map(function(cb) { return cb.value; });
-      var existingParticipant = DB.participants.find(function(x) { return x.id === id; });
+      const id = document.getElementById('pId').value || Date.now().toString();
+      const tests = Array.from(document.querySelectorAll('.test-check:checked')).map(function(cb) { return cb.value; });
+      const existingParticipant = DB.participants.find(function(x) { return x.id === id; });
       
-      var data = { 
+      const data = { 
         id: id, 
         name: document.getElementById('pName').value, 
         phone: document.getElementById('pPhone').value, 
@@ -1540,21 +2636,21 @@
         assignedTests: tests
       };
       
-      var idx = DB.participants.findIndex(function(x) { return x.id === id; });
+      const idx = DB.participants.findIndex(function(x) { return x.id === id; });
       
       if (idx > -1) {
-        var existingCompletedTests = existingParticipant.completedTests || [];
-        var existingTestResults = existingParticipant.testResults || {};
+        // Atualizar existente, mantendo dados de testes concluídos
+        const existingCompletedTests = existingParticipant.completedTests || [];
+        const existingTestResults = existingParticipant.testResults || {};
         
         DB.participants[idx] = { 
           ...DB.participants[idx],
-          ...data
+          ...data,
+          completedTests: existingCompletedTests,
+          testResults: existingTestResults
         };
-        
-        DB.participants[idx].completedTests = existingCompletedTests;
-        DB.participants[idx].testResults = existingTestResults;
-        DB.participants[idx].compId = data.compId;
       } else {
+        // Novo participante
         data.completedTests = [];
         data.testResults = {};
         DB.participants.push(data);
@@ -1562,18 +2658,21 @@
       
       saveDB(); 
       closeModal('partModal'); 
-      showToast('Participante salvo com sucesso!');
+      showToast('✅ Participante salvo com sucesso!');
     }
-
+    
     function editParticipant(id) {
-      var p = DB.participants.find(function(x) { return x.id === id; }); 
+      const p = DB.participants.find(function(x) { return x.id === id; }); 
       if (!p) return;
       
-      var pSel = document.getElementById('pComp');
-      pSel.innerHTML = '<option value="">Independente</option>' + 
+      // Atualizar select de empresas
+      const pSel = document.getElementById('pComp');
+      if (pSel) {
+        pSel.innerHTML = '<option value="">Independente</option>' + 
                         DB.companies.map(function(c) { 
                           return '<option value="' + c.id + '">' + c.name + '</option>'; 
                         }).join('');
+      }
       
       document.getElementById('pId').value = p.id; 
       document.getElementById('pName').value = p.name;
@@ -1584,6 +2683,7 @@
       document.getElementById('pExp').value = p.exp || '';
       document.getElementById('pComp').value = p.compId || '';
       
+      // Carregar vagas vinculadas
       if (p.jobs && Array.isArray(p.jobs) && p.jobs.length > 0) {
         participantSelectedJobs = JSON.parse(JSON.stringify(p.jobs));
         renderParticipantSelectedJobs();
@@ -1594,18 +2694,27 @@
       
       loadAvailableJobsForParticipant();
       
+      // Atualizar checkboxes de testes
       document.querySelectorAll('.test-check').forEach(function(cb) { 
         cb.checked = p.tests && p.tests.includes(cb.value); 
       });
       
       document.getElementById('partTitle').textContent = 'Editar Participante';
       document.getElementById('partModal').classList.add('active');
+      
+      // Prevenir scroll do body
+      document.body.style.overflow = 'hidden';
     }
 
+    // ============================================
+    // GERENCIAMENTO DE VAGAS PARA PARTICIPANTES
+    // ============================================
     function loadAvailableJobsForParticipant() {
       const companyId = document.getElementById('pComp').value;
       const jobSelect = document.getElementById('availableJobSelect');
       const btnAdd = document.getElementById('btnAddJobParticipant');
+      
+      if (!jobSelect || !btnAdd) return;
       
       jobSelect.innerHTML = '<option value="">Selecione a vaga...</option>';
       
@@ -1615,8 +2724,8 @@
         return;
       }
       
-      var allJobs = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]');
-      var availableJobs = allJobs.filter(function(job) {
+      const allJobs = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]');
+      const availableJobs = allJobs.filter(function(job) {
         return job.compId === companyId && 
                !participantSelectedJobs.find(function(selected) { return selected.id === job.id; });
       });
@@ -1638,17 +2747,17 @@
       jobSelect.disabled = false;
       btnAdd.disabled = false;
     }
-
+    
     function addJobToParticipant() {
       const jobSelect = document.getElementById('availableJobSelect');
-      const jobId = jobSelect.value;
+      const jobId = jobSelect?.value;
       
       if (!jobId) {
-        alert('⚠️ Por favor, selecione uma vaga para incluir.');
+        showToast('⚠️ Por favor, selecione uma vaga para incluir.', 'warning');
         return;
       }
       
-      var allJobs = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]');
+      const allJobs = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]');
       const job = allJobs.find(function(j) { return j.id === jobId; });
       
       if (job && !participantSelectedJobs.find(function(sj) { return sj.id === jobId; })) {
@@ -1661,21 +2770,23 @@
         
         renderParticipantSelectedJobs();
         loadAvailableJobsForParticipant();
-        jobSelect.value = '';
+        if (jobSelect) jobSelect.value = '';
         showToast('✅ Vaga "' + job.name + '" vinculada ao participante!');
       }
     }
-
+    
     function removeJobFromParticipant(jobId) {
       participantSelectedJobs = participantSelectedJobs.filter(function(j) { return j.id !== jobId; });
       renderParticipantSelectedJobs();
       loadAvailableJobsForParticipant();
       showToast('✅ Vaga removida do participante!');
     }
-
+    
     function renderParticipantSelectedJobs() {
       const container = document.getElementById('participantSelectedJobsContainer');
       const list = document.getElementById('participantSelectedJobsList');
+      
+      if (!container || !list) return;
       
       if (participantSelectedJobs.length === 0) {
         container.classList.remove('active');
@@ -1689,65 +2800,74 @@
         const jobDiv = document.createElement('div');
         jobDiv.className = 'selected-job-item';
         jobDiv.innerHTML = 
-          '<span style="font-weight: 500;">' + (job.name || job.title || 'Sem título') + '</span>' +
-          '<button type="button" class="btn-remove-job" onclick="removeJobFromParticipant(\'' + job.id + '\')">' +
-            '🗑️ Remover' +
+          '<span style="font-weight: 600;">' + (job.name || job.title || 'Sem título') + '</span>' +
+          '<button type="button" class="btn-remove-job" onclick="removeJobFromParticipant(\'' + job.id + '\')" aria-label="Remover vaga">' +
+            '🗑️' +
           '</button>';
         list.appendChild(jobDiv);
       });
     }
 
+    // ============================================
+    // UTILITÁRIOS COMUNS
+    // ============================================
     function resendTest(id) {
-      var p = DB.participants.find(function(x) { return x.id === id; });
-      if (p) showToast('Credenciais e testes reenviados para ' + p.email, 'success');
+      const p = DB.participants.find(function(x) { return x.id === id; });
+      if (p) showToast('📧 Credenciais reenviadas para ' + p.email);
     }
-
+    
     function openVigorreLaudo(participantId) {
       window.open('laudo-vigorre.html?participantId=' + participantId, '_blank');
     }
-
+    
     function openTestModal(pid) {
-      var p = DB.participants.find(function(x) { return x.id === pid; });
+      const p = DB.participants.find(function(x) { return x.id === pid; });
       if (!p) return;
+      
       document.getElementById('testModalName').textContent = p.name;
       document.getElementById('testModalId').value = pid;
+      
       document.querySelectorAll('#testModal .test-check').forEach(function(cb) {
         cb.checked = p.assignedTests && p.assignedTests.includes(cb.value);
       });
+      
       openModal('testModal');
     }
-
+    
     function confirmTestRelease() {
-      var pid = document.getElementById('testModalId').value;
-      var selected = Array.from(document.querySelectorAll('#testModal .test-check:checked')).map(function(cb) { return cb.value; });
-      var idx = DB.participants.findIndex(function(x) { return x.id === pid; });
+      const pid = document.getElementById('testModalId').value;
+      const selected = Array.from(document.querySelectorAll('#testModal .test-check:checked')).map(function(cb) { return cb.value; });
+      const idx = DB.participants.findIndex(function(x) { return x.id === pid; });
+      
       if (idx > -1) {
         DB.participants[idx].assignedTests = selected;
         DB.participants[idx].tests = selected;
         saveDB();
         closeModal('testModal');
-        showToast('Testes liberados com sucesso para ' + DB.participants[idx].name + '!');
+        showToast('✅ Testes liberados para ' + DB.participants[idx].name + '!');
       }
     }
-
+    
     function openReportModal(pid, name) {
       document.getElementById('reportTargetName').textContent = name;
       currentCompanyId = pid;
       openModal('reportModal');
     }
-
+    
     function generateReport() {
-      var type = document.getElementById('reportTypeSelect').value;
-      var test = document.getElementById('reportTestSelect').value;
-      var p = DB.participants.find(function(x) { return x.id === currentCompanyId; });
+      const type = document.getElementById('reportTypeSelect').value;
+      const test = document.getElementById('reportTestSelect').value;
+      const p = DB.participants.find(function(x) { return x.id === currentCompanyId; });
+      
       if (!p) return;
 
+      // Relatórios Premium Vigorre One™
       if (type === 'vigorre-disc' || type === 'vigorre-ie' || type === 'vigorre-valores') {
-        var reportType = type.replace('vigorre-', '');
-        var status = checkTestStatus(p.id, reportType);
+        const reportType = type.replace('vigorre-', '');
+        const status = checkTestStatus(p.id, reportType);
         
         if (!status.canAccess) {
-          showToast('Participante ainda não completou o teste de ' + reportType + '.', 'error');
+          showToast('⚠️ Participante ainda não completou o teste de ' + reportType + '.', 'error');
           closeModal('reportModal');
           return;
         }
@@ -1757,28 +2877,33 @@
           name: p.name
         }));
         
-        var reportFile = '';
+        let reportFile = '';
         if (type === 'vigorre-disc') reportFile = 'relatorio-disc-vigorre.html';
         else if (type === 'vigorre-ie') reportFile = 'relatorio-ie-vigorre.html';
         else if (type === 'vigorre-valores') reportFile = 'relatorio-valores-vigorre.html';
         
         if (reportFile) {
-          window.open(reportFile + '?participantId=' + p.id, '_blank');
-          closeModal('reportModal');
-          showToast('📊 Abrindo Relatório Vigorre One™ ' + reportType.toUpperCase() + '...', 'success');
+          const newWindow = window.open(reportFile + '?participantId=' + p.id, '_blank');
+          if (newWindow) {
+            closeModal('reportModal');
+            showToast('📊 Abrindo Relatório Vigorre One™ ' + reportType.toUpperCase() + '...');
+          } else {
+            showToast('⚠️ Bloqueador de pop-up pode estar impedindo.', 'error');
+          }
         } else {
-          showToast('Arquivo de relatório não encontrado.', 'error');
+          showToast('⚠️ Arquivo de relatório não encontrado.', 'error');
         }
         return;
       }
 
-      var content = '';
+      // Relatórios padrão
+      let content = '';
       if (type === 'simple') {
         content = '<h2>Relatório Simples - ' + p.name + '</h2><p><strong>Teste:</strong> ' + test + '</p><p><strong>Data:</strong> ' + new Date().toLocaleString('pt-BR') + '</p><p>Perfil identificado com base nas respostas. Recomenda-se aprofundamento com relatório completo ou laudo técnico.</p>';
       } else if (type === 'complete') {
-        var profileKeys = Object.keys(HMI_PROFILES);
-        var profileKey = profileKeys[Math.floor(Math.random() * profileKeys.length)];
-        var profile = HMI_PROFILES[profileKey];
+        const profileKeys = Object.keys(HMI_PROFILES);
+        const profileKey = profileKeys[Math.floor(Math.random() * profileKeys.length)];
+        const profile = HMI_PROFILES[profileKey];
         content = '<h2>Relatório Completo HMI - ' + p.name + '</h2>' +
           '<p><strong>Perfil:</strong> ' + profileKey + ' - ' + profile.name + '</p>' +
           '<p><strong>Traços:</strong> ' + profile.traits + '</p>' +
@@ -1805,58 +2930,273 @@
         date: new Date().toLocaleString('pt-BR'), 
         content: content 
       });
+      
       saveDB(); 
       closeModal('reportModal');
-      showToast('✅ Relatório ' + type.toUpperCase() + ' (' + test + ') gerado e enviado para ' + p.email);
+      showToast('✅ Relatório ' + type.toUpperCase() + ' (' + test + ') gerado para ' + p.email);
       
-      var win = window.open('', '_blank');
-      win.document.write('<html><head><title>Relatório Vigorre One™</title><style>body{font-family:Inter,sans-serif;max-width:800px;margin:40px auto;padding:20px;line-height:1.6;}h2{color:#1e40af;border-bottom:2px solid #e2e8f0;padding-bottom:10px;}h3{color:#334155;margin-top:20px;}ul{padding-left:20px;}li{margin-bottom:5px;}</style></head><body>' + content + '</body></html>');
-    }
-
-    function updateSelects() {
-      var pSel = document.getElementById('pComp');
-      if (pSel) {
-        pSel.innerHTML = '<option value="">Independente</option>' + DB.companies.map(function(c) { return '<option value="' + c.id + '">' + c.name + '</option>'; }).join('');
+      // Abrir preview do relatório
+      const win = window.open('', '_blank');
+      if (win) {
+        win.document.write('<html><head><title>Relatório Vigorre One™</title><style>body{font-family:Inter,sans-serif;max-width:800px;margin:40px auto;padding:20px;line-height:1.6;}h2{color:#1e40af;border-bottom:2px solid #e2e8f0;padding-bottom:10px;}h3{color:#334155;margin-top:20px;}ul{padding-left:20px;}li{margin-bottom:5px;}</style></head><body>' + content + '</body></html>');
       }
     }
 
+    // ============================================
+    // VERIFICAÇÃO DE STATUS DE TESTES
+    // ============================================
+    function checkTestStatus(participantId, testType) {
+      const participant = DB.participants.find(function(p) { return p.id === participantId; });
+      if (!participant) {
+        return { completed: false, hasResult: false, canAccess: false };
+      }
+      
+      const completedTests = participant.completedTests || [];
+      const hasCompleted = completedTests.includes(testType);
+      
+      let resultKey = '';
+      if (testType === 'DISC') resultKey = 'vigorre_last_disc_result';
+      else if (testType === 'IE') resultKey = 'vigorre_last_ie_result';
+      else if (testType === 'Valores') resultKey = 'vigorre_last_valores_result';
+      
+      const hasResult = !!localStorage.getItem(resultKey);
+      
+      return {
+        completed: hasCompleted,
+        hasResult: hasResult,
+        canAccess: hasCompleted && hasResult
+      };
+    }
+
+    // ============================================
+    // FILTRAGEM E PAGINAÇÃO
+    // ============================================
+    function filterData(data, type) {
+      let filtered = [...data];
+      
+      if (type === 'staff') {
+        const search = document.getElementById('staffSearch')?.value.toLowerCase() || '';
+        const role = document.getElementById('staffRoleFilter')?.value || '';
+        
+        filtered = filtered.filter(function(item) {
+          const matchesSearch = item.name.toLowerCase().includes(search) || 
+                               item.email.toLowerCase().includes(search) ||
+                               item.login.toLowerCase().includes(search);
+          const matchesRole = !role || item.role === role;
+          return matchesSearch && matchesRole;
+        });
+      }
+      
+      if (type === 'companies') {
+        const search = document.getElementById('companySearch')?.value.toLowerCase() || '';
+        
+        filtered = filtered.filter(function(item) {
+          return item.name.toLowerCase().includes(search) || 
+                 (item.cnpj && item.cnpj.includes(search)) ||
+                 item.resp.toLowerCase().includes(search);
+        });
+      }
+      
+      if (type === 'participants') {
+        const search = document.getElementById('participantSearch')?.value.toLowerCase() || '';
+        const company = document.getElementById('participantCompanyFilter')?.value || '';
+        const status = document.getElementById('participantStatusFilter')?.value || '';
+        
+        filtered = filtered.filter(function(item) {
+          const matchesSearch = item.name.toLowerCase().includes(search) || 
+                               item.email.toLowerCase().includes(search);
+          const matchesCompany = !company || item.compId === company;
+          
+          let matchesStatus = true;
+          if (status === 'completed') {
+            matchesStatus = item.completedTests && item.completedTests.length > 0;
+          } else if (status === 'pending') {
+            matchesStatus = !item.completedTests || item.completedTests.length === 0;
+          }
+          
+          return matchesSearch && matchesCompany && matchesStatus;
+        });
+      }
+      
+      return filtered;
+    }
+    
+    function renderPagination(type, totalItems) {
+      const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+      const currentPageNum = currentPage[type];
+      const paginationEl = document.getElementById(type + 'Pagination');
+      
+      if (!paginationEl || totalPages <= 1) {
+        if (paginationEl) paginationEl.innerHTML = '';
+        return;
+      }
+      
+      let html = '';
+      
+      // Botão anterior
+      html += '<button onclick="changePage(\'' + type + '\', ' + (currentPageNum - 1) + ')" ' + 
+              (currentPageNum === 1 ? 'disabled' : '') + '>← Anterior</button>';
+      
+      // Números de página
+      for (let i = 1; i <= totalPages; i++) {
+        if (i === 1 || i === totalPages || (i >= currentPageNum - 2 && i <= currentPageNum + 2)) {
+          html += '<button onclick="changePage(\'' + type + '\', ' + i + ')" ' + 
+                  (i === currentPageNum ? 'class="active"' : '') + '>' + i + '</button>';
+        } else if (i === currentPageNum - 3 || i === currentPageNum + 3) {
+          html += '<span class="pagination-info">...</span>';
+        }
+      }
+      
+      // Botão próximo
+      html += '<button onclick="changePage(\'' + type + '\', ' + (currentPageNum + 1) + ')" ' + 
+              (currentPageNum === totalPages ? 'disabled' : '') + '>Próxima →</button>';
+      
+      // Info
+      const start = (currentPageNum - 1) * ITEMS_PER_PAGE + 1;
+      const end = Math.min(currentPageNum * ITEMS_PER_PAGE, totalItems);
+      html = '<span class="pagination-info">' + start + '-' + end + ' de ' + totalItems + '</span>' + html;
+      
+      paginationEl.innerHTML = html;
+    }
+    
+    function changePage(type, page) {
+      currentPage[type] = page;
+      
+      if (type === 'staff') renderStaff();
+      else if (type === 'companies') renderCompanies();
+      else if (type === 'participants') renderParticipants();
+      
+      // Scroll para o topo da tabela
+      const table = document.querySelector('#' + type + ' table');
+      if (table) {
+        table.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    // ============================================
+    // SELECTS E DROPDOWNS
+    // ============================================
+    function updateSelects() {
+      const pSel = document.getElementById('pComp');
+      const companyFilter = document.getElementById('participantCompanyFilter');
+      
+      const options = '<option value="">Independente</option>' + 
+                     DB.companies.map(function(c) { return '<option value="' + c.id + '">' + c.name + '</option>'; }).join('');
+      
+      if (pSel) pSel.innerHTML = options;
+      if (companyFilter) companyFilter.innerHTML = '<option value="">Todas as empresas</option>' + 
+                                                  DB.companies.map(function(c) { return '<option value="' + c.id + '">' + c.name + '</option>'; }).join('');
+    }
+
+    // ============================================
+    // EXCLUSÃO DE ITENS
+    // ============================================
     function deleteItem(collection, id) {
-      if (!confirm('Tem certeza que deseja excluir este item?')) return;
+      if (!confirm('⚠️ Tem certeza que deseja excluir este item? Esta ação não pode ser desfeita.')) return;
+      
       DB[collection] = DB[collection].filter(function(x) { return x.id !== id; });
       saveDB(); 
-      showToast('Item excluído com sucesso!');
+      showToast('✅ Item excluído com sucesso!');
     }
 
+    // ============================================
+    // TOAST NOTIFICATIONS
+    // ============================================
     function showToast(msg, type) {
       type = type || 'success';
-      var t = document.createElement('div');
-      t.className = 'toast ' + (type === 'error' ? 'error' : '');
-      t.innerHTML = '<span>' + (type === 'success' ? '✅' : '❌') + '</span><span>' + msg + '</span>';
+      const t = document.createElement('div');
+      t.className = 'toast ' + (type === 'error' ? 'error' : '') + (type === 'warning' ? 'warning' : '');
+      t.setAttribute('role', 'alert');
+      t.innerHTML = '<span class="toast-icon" aria-hidden="true">' + 
+                    (type === 'success' ? '✅' : type === 'error' ? '❌' : '⚠️') + 
+                    '</span><span>' + msg + '</span>';
       document.body.appendChild(t);
+      
       setTimeout(function() { 
         t.style.opacity = '0'; 
+        t.style.transform = 'translateX(120%)';
         setTimeout(function() { t.remove(); }, 300); 
-      }, 3000);
+      }, 4000);
     }
 
+    // ============================================
+    // LOGOUT SEGURO
+    // ============================================
     function logout() {
+      // Marcar logout para sincronização entre abas
+      sessionStorage.setItem('vigorre_logged_out', 'true');
+      
+      // Limpar dados sensíveis
       localStorage.removeItem('vigorre_current_user');
+      localStorage.removeItem('vigorre_password_temp');
       sessionStorage.clear();
-      window.location.href = 'login.html';
+      
+      // Redirecionar
+      window.location.href = 'login.html?loggedout=1&ts=' + Date.now();
     }
 
     // ============================================
-    // >>> CORREÇÕES E MELHORIAS ADICIONADAS <<<
+    // SINCRONIZAÇÃO DE TESTES CONCLUÍDOS
     // ============================================
+    function syncCompletedTests() {
+      console.log('🔄 Sincronizando completedTests com localStorage...');
+      let updated = false;
+      
+      DB.participants.forEach(function(p) {
+        if (!p.completedTests) p.completedTests = [];
+        
+        ['DISC', 'IE', 'Valores'].forEach(function(test) {
+          let resultKey = '';
+          if (test === 'DISC') resultKey = 'vigorre_last_disc_result';
+          else if (test === 'IE') resultKey = 'vigorre_last_ie_result';
+          else if (test === 'Valores') resultKey = 'vigorre_last_valores_result';
+          
+          if (localStorage.getItem(resultKey) && !p.completedTests.includes(test)) {
+            p.completedTests.push(test);
+            console.log('✅ Adicionado', test, 'a completedTests de', p.name);
+            updated = true;
+          }
+        });
+      });
+      
+      if (updated) {
+        localStorage.setItem('vigorre_participants', JSON.stringify(DB.participants));
+        console.log('💾 Dados salvos após sincronização');
+        renderParticipants();
+        renderLinkedParticipants();
+        updateStats();
+        showToast('✅ Testes sincronizados com sucesso!');
+      } else {
+        showToast('ℹ️ Nenhum ajuste necessário');
+      }
+    }
 
-    // 1. Tratamento de erro global com fallback amigável
+    // ============================================
+    // PREVENÇÃO DE BACK BUTTON APÓS LOGOUT
+    // ============================================
+    window.addEventListener('pageshow', function(event) {
+      if (event.persisted) {
+        const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+        const sessionActive = sessionStorage.getItem('vigorre_session_active') === 'true';
+        
+        if (!currentUser.role || !sessionActive) {
+          window.location.replace('login.html');
+        }
+      }
+    });
+
+    // ============================================
+    // TRATAMENTO DE ERROS GLOBAIS
+    // ============================================
     window.addEventListener('error', function(e) {
       console.error('❌ Erro no Admin Vigorre One™:', e);
       showToast('⚠️ Ocorreu um erro. Recarregue a página se o problema persistir.', 'error');
       return true;
     });
 
-    // 2. Debug: Logar estado inicial no console para diagnóstico
+    // ============================================
+    // DEBUG E LOGS
+    // ============================================
     console.log('🔍 Admin Vigorre One™ - Estado inicial:', {
       staff: DB.staff.length,
       companies: DB.companies.length,
@@ -1873,77 +3213,52 @@
       }
     });
 
-    // 3. Verificação de integridade dos dados ao carregar
+    // ============================================
+    // ACESSIBILIDADE - FOCUS MANAGEMENT
+    // ============================================
     document.addEventListener('DOMContentLoaded', function() {
+      // Verificação de integridade dos dados
       ['disc', 'ie', 'valores'].forEach(function(test) {
-        var key = 'vigorre_last_' + test + '_result';
-        var data = localStorage.getItem(key);
+        const key = 'vigorre_last_' + test + '_result';
+        const data = localStorage.getItem(key);
         if (data) {
           try {
             JSON.parse(data);
-            console.log('✅ Resultado ' + test.toUpperCase() + ' válido');
           } catch (e) {
             console.warn('⚠️ Resultado ' + test.toUpperCase() + ' corrompido, removendo...');
             localStorage.removeItem(key);
           }
         }
       });
-    });
-
-    // 4. Função de sincronização de completedTests
-    function syncCompletedTests() {
-      console.log('🔄 Sincronizando completedTests com localStorage...');
-      let updated = false;
       
-      DB.participants.forEach(function(p) {
-        if (!p.completedTests) p.completedTests = [];
-        
-        ['DISC', 'IE', 'Valores'].forEach(function(test) {
-          var resultKey = test === 'DISC' ? 'vigorre_last_disc_result' : 
-                         test === 'IE' ? 'vigorre_last_ie_result' : 
-                         'vigorre_last_valores_result';
-          
-          if (localStorage.getItem(resultKey) && !p.completedTests.includes(test)) {
-            p.completedTests.push(test);
-            console.log('✅ Adicionado', test, 'a completedTests de', p.name);
-            updated = true;
-          }
-        });
-      });
-      
-      if (updated) {
-        localStorage.setItem('vigorre_participants', JSON.stringify(DB.participants));
-        console.log('💾 Dados salvos após sincronização');
-        renderParticipants();
-        showToast('✅ Testes sincronizados com sucesso!', 'success');
-      } else {
-        console.log('ℹ️ Nenhum ajuste necessário');
-      }
-    }
-
-    // 5. Botão de debug no header (apenas em localhost)
-    document.addEventListener('DOMContentLoaded', function() {
+      // Botões de debug apenas em localhost
       const headerActions = document.getElementById('headerActions');
       if (headerActions && window.location.hostname === 'localhost') {
         const syncBtn = document.createElement('button');
         syncBtn.className = 'btn btn-warning btn-sm';
-        syncBtn.textContent = '🔄 Sync Tests';
+        syncBtn.textContent = '🔄 Sync';
         syncBtn.onclick = syncCompletedTests;
+        syncBtn.style.marginLeft = '8px';
         headerActions.appendChild(syncBtn);
         
-        // Botão para re-testar conexão Supabase
         const testBtn = document.createElement('button');
         testBtn.className = 'btn btn-secondary btn-sm';
-        testBtn.textContent = '🔗 Testar Supabase';
-        testBtn.style.marginLeft = '8px';
+        testBtn.textContent = '🔗 Testar';
         testBtn.onclick = function() {
-          showToast('🔄 Testando conexão...', 'success');
+          showToast('🔄 Testando conexão Supabase...');
           checkSupabaseConnection();
         };
+        testBtn.style.marginLeft = '8px';
         headerActions.appendChild(testBtn);
       }
     });
 
+    // ============================================
+    // EXPORTS PARA MÓDULOS (OPCIONAL)
+    // ============================================
+    if (typeof module !== 'undefined' && module.exports) {
+      module.exports = { DB, HMI_PROFILES, showToast, logout };
+    }
   </script>
 </body>
 </html>
