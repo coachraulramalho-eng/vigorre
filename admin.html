@@ -1134,6 +1134,8 @@
       gap: 6px;
       margin: 3px 0;
       box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3);
+      /* ✅ TOOLTIP ADICIONADO */
+      position: relative;
     }
     
     .btn-report:hover {
@@ -2104,7 +2106,8 @@
       
       statusElement.style.display = 'flex';
       
-      if (!window.VigorreDB) {
+      // ✅ CORREÇÃO: Verificação robusta do VigorreDB
+      if (typeof window.VigorreDB === 'undefined' || !VigorreDB) {
         statusDot.className = 'status-dot notloaded';
         statusText.textContent = 'Config não carregada';
         return;
@@ -2515,15 +2518,16 @@
           valoresStatus.completed ? '<span class="badge-pill badge-valores badge-completed" title="Valores Concluído">✅</span>' : '<span class="badge-pill badge-valores badge-pending" title="Valores Pendente">⏳</span>'
         ].join(' ');
         
+        // ✅ TOOLTIPS ADICIONADOS NOS BOTÕES DE RELATÓRIO
         let reportBtns = '';
         if (discStatus.canAccess) {
-          reportBtns += '<button class="btn-report" onclick="openVigorreReport(\'' + p.id + '\', \'DISC\')" title="Relatório DISC">📊</button> ';
+          reportBtns += '<button class="btn-report" onclick="openVigorreReport(\'' + p.id + '\', \'DISC\')" title="Relatório DISC Vigorre One™">📊</button> ';
         }
         if (ieStatus.canAccess) {
-          reportBtns += '<button class="btn-report btn-report-ie" onclick="openVigorreReport(\'' + p.id + '\', \'IE\')" title="Relatório IE">🧠</button> ';
+          reportBtns += '<button class="btn-report btn-report-ie" onclick="openVigorreReport(\'' + p.id + '\', \'IE\')" title="Relatório IE Vigorre One™">🧠</button> ';
         }
         if (valoresStatus.canAccess) {
-          reportBtns += '<button class="btn-report btn-report-valores" onclick="openVigorreReport(\'' + p.id + '\', \'Valores\')" title="Relatório Valores">💎</button>';
+          reportBtns += '<button class="btn-report btn-report-valores" onclick="openVigorreReport(\'' + p.id + '\', \'Valores\')" title="Relatório Valores Vigorre One™">💎</button>';
         }
         if (!reportBtns) {
           reportBtns = '<span class="badge-pill badge-pending" title="Aguardando testes">⏳</span>';
@@ -2563,6 +2567,7 @@
         const ieStatus = checkTestStatus(p.id, 'IE');
         const valoresStatus = checkTestStatus(p.id, 'Valores');
         
+        // ✅ CORREÇÃO: Garantir que cada teste apareça apenas UMA vez
         const tests = (p.tests || []).map(function(t) { 
           return '<span class="badge" style="background:#e0e7ff;color:#3730a3;padding:2px 8px;border-radius:6px;font-size:0.75rem">' + t + '</span>'; 
         }).join(' ') || '<span style="color:var(--brand-rose);font-size:0.8rem">Nenhum</span>';
@@ -2579,6 +2584,7 @@
             : '<span class="badge-pill badge-valores badge-pending" title="Valores Pendente">⏳</span>'
         ].join(' ');
         
+        // ✅ TOOLTIPS ADICIONADOS NOS BOTÕES DE RELATÓRIO
         let reportBtns = '';
         if (discStatus.canAccess) {
           reportBtns += '<button class="btn-report" onclick="openVigorreReport(\'' + p.id + '\', \'DISC\')" title="Relatório DISC Vigorre One™">📊</button> ';
@@ -3208,8 +3214,8 @@
         valores: !!localStorage.getItem('vigorre_last_valores_result')
       },
       supabase: {
-        available: !!window.VigorreDB,
-        url: window.VigorreDB?.supabase ? 'conectado' : 'não conectado'
+        available: typeof window.VigorreDB !== 'undefined',
+        url: (typeof VigorreDB !== 'undefined' && VigorreDB?.supabase) ? 'conectado' : 'não conectado'
       }
     });
 
@@ -3254,10 +3260,60 @@
     });
 
     // ============================================
+    // ✅ FUNÇÃO openVigorreReport ADICIONADA (CORREÇÃO PRINCIPAL)
+    // ============================================
+    function openVigorreReport(participantId, reportType) {
+      try {
+        // Buscar participante no localStorage (fallback)
+        const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+        const participant = participants.find(function(p) { return p.id === participantId; });
+        
+        if (!participant) {
+          showToast('Participante não encontrado', 'error');
+          return;
+        }
+        
+        // Verificar se teste foi completado
+        const completedTests = participant.completedTests || [];
+        if (!completedTests.includes(reportType)) {
+          showToast('Participante ainda não completou o teste de ' + reportType, 'warning');
+          return;
+        }
+        
+        // Salvar dados do participante para o relatório
+        localStorage.setItem('vigorre_report_participant', JSON.stringify({
+          id: participant.id,
+          name: participant.name
+        }));
+        
+        // Definir arquivo do relatório baseado no tipo
+        let reportFile = '';
+        if (reportType === 'DISC') reportFile = 'relatorio-disc-vigorre.html';
+        else if (reportType === 'IE') reportFile = 'relatorio-ie-vigorre.html';
+        else if (reportType === 'Valores') reportFile = 'relatorio-valores-vigorre.html';
+        
+        if (reportFile) {
+          // Abrir relatório em nova aba com parâmetros
+          const newWindow = window.open(reportFile + '?participantId=' + participantId + '&ts=' + Date.now(), '_blank');
+          if (newWindow) {
+            showToast('📊 Abrindo relatório Vigorre One™...', 'success');
+          } else {
+            showToast('⚠️ Bloqueador de pop-up pode estar impedindo.', 'warning');
+          }
+        } else {
+          showToast('Arquivo de relatório não encontrado.', 'error');
+        }
+      } catch (e) {
+        console.error('Erro ao abrir relatório:', e);
+        showToast('Erro ao abrir relatório', 'error');
+      }
+    }
+
+    // ============================================
     // EXPORTS PARA MÓDULOS (OPCIONAL)
     // ============================================
     if (typeof module !== 'undefined' && module.exports) {
-      module.exports = { DB, HMI_PROFILES, showToast, logout };
+      module.exports = { DB, HMI_PROFILES, showToast, logout, openVigorreReport };
     }
   </script>
 </body>
