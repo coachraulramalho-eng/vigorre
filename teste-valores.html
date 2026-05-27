@@ -3,557 +3,1068 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Teste de Valores Pessoais | Vigorre One™ | People Analytics Enterprise</title>
+  <meta name="description" content="Vigorre One™ - Teste de Valores Pessoais • People Analytics Enterprise">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Teste de Valores Pessoais | Vigorre One™ • People Analytics Enterprise</title>
   
-  <!-- ✅ SUPABASE SDK - CARREGAR PRIMEIRO -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Fonts Premium -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- ✅ CONFIGURAÇÃO SUPABASE - SUAS CHAVES -->
-  <script src="supabase-config.js"></script>
+  <!-- Preconnect para performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   
-  <!-- Tailwind CSS & Chart.js -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- ✅ FIREBASE SDK - CARREGAR ANTES DO CONFIG -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- ✅ SUA CONFIGURAÇÃO FIREBASE -->
+  <script src="firebase-config.js"></script>
   
-  <!-- Tailwind Config -->
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { sans: ['Inter', 'sans-serif'] },
-          colors: {
-            brand: {
-              dark: '#0F172A',
-              purple: '#7C3AED',
-              blue: '#1D4ED8',
-              cyan: '#06B6D4',
-              emerald: '#10B981',
-              amber: '#F59E0B',
-              rose: '#F43F5E',
-              navy: '#0A1628'
-            }
-          }
-        }
-      }
-    };
-  </script>
-
   <style>
     /* ============================================
-       BASE & RESET - ENTERPRISE PREMIUM
+       RESET & BASE - ENTERPRISE PREMIUM DARK
        ============================================ */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body { 
-      font-family: 'Inter', sans-serif; 
-      background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%); 
-      color: #F8FAFC; 
-      min-height: 100vh; 
-      line-height: 1.6;
+    *, *::before, *::after { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
     }
-
-    /* ============================================
-       GLASSMORPHISM & PREMIUM EFFECTS
-       ============================================ */
-    .glass { 
-      background: rgba(30, 41, 59, 0.7); 
-      backdrop-filter: blur(12px); 
-      -webkit-backdrop-filter: blur(12px); 
-      border: 1px solid rgba(255, 255, 255, 0.1); 
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); 
-    }
-    .glass-card { 
-      background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95)); 
-      backdrop-filter: blur(20px); 
-      border: 1px solid rgba(255, 255, 255, 0.08); 
-      border-radius: 20px; 
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4); 
-    }
-    .gradient-text { 
-      background: linear-gradient(135deg, #60A5FA, #A78BFA, #22D3EE); 
-      -webkit-background-clip: text; 
-      -webkit-text-fill-color: transparent; 
-      background-clip: text; 
-    }
-
-    /* ============================================
-       BUTTONS & INTERACTIONS
-       ============================================ */
-    .btn-primary { 
-      background: linear-gradient(135deg, #1D4ED8, #7C3AED); 
-      transition: all 0.3s ease; position: relative; overflow: hidden; 
-    }
-    .btn-primary::before {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(135deg, #7C3AED, #06B6D4);
-      opacity: 0; transition: opacity 0.3s ease;
-    }
-    .btn-primary:hover::before { opacity: 1; }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(124, 58, 237, 0.4); }
     
-    .btn-secondary {
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.25);
-      color: white;
-      transition: all 0.3s ease;
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    
+    :root {
+      /* Cores da Marca Vigorre One™ - DARK PREMIUM */
+      --brand-navy: #0A1628;
+      --brand-navy-dark: #020617;
+      --brand-blue: #1D4ED8;
+      --brand-blue-dark: #1E40AF;
+      --brand-purple: #7C3AED;
+      --brand-cyan: #06B6D4;
+      --brand-emerald: #10B981;
+      --brand-amber: #F59E0B;
+      --brand-rose: #F43F5E;
+      
+      /* Cores Neutras - Dark Mode */
+      --slate-50: #F8FAFC;
+      --slate-100: #F1F5F9;
+      --slate-200: #E2E8F0;
+      --slate-300: #CBD5E1;
+      --slate-400: #94A3B8;
+      --slate-500: #64748B;
+      --slate-600: #475569;
+      --slate-700: #334155;
+      --slate-800: #1E293B;
+      --slate-900: #0F172A;
+      
+      /* Sombras Premium */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+      --shadow-glow: 0 0 40px rgba(245, 158, 11, 0.3);
+      
+      /* Bordas */
+      --radius: 0.5rem;
+      --radius-lg: 1rem;
+      --radius-xl: 1.5rem;
+      --radius-2xl: 2rem;
+      
+      /* Transições */
+      --transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .btn-secondary:hover { 
-      background: rgba(255,255,255,0.2); 
-      border-color: rgba(255,255,255,0.4);
-      transform: translateY(-1px); 
+    
+    body { 
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+      background: linear-gradient(135deg, var(--brand-navy) 0%, var(--brand-navy-dark) 50%, var(--slate-900) 100%);
+      color: var(--slate-50); 
+      min-height: 100vh; 
+      line-height: 1.6; 
+      position: relative; 
+      overflow-x: hidden;
     }
-
+    
+    /* Background animado premium */
+    body::before {
+      content: ''; 
+      position: fixed; 
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: 
+        radial-gradient(ellipse at 20% 80%, rgba(245, 158, 11, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(124, 58, 237, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(6, 182, 212, 0.08) 0%, transparent 70%);
+      pointer-events: none; 
+      z-index: 0;
+      animation: float 30s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-20px) scale(1.02); }
+    }
+    
+    /* Partículas sutis */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: 
+        radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.15), transparent),
+        radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.1), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.12), transparent),
+        radial-gradient(1px 1px at 160px 120px, rgba(255,255,255,0.08), transparent);
+      background-size: 200px 200px;
+      animation: float 20s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    
     /* ============================================
-       PROGRESS & CHARTS
+       HEADER PREMIUM - GLASSMORPHISM DARK
        ============================================ */
-    .progress-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
-    .progress-fill { 
-      height: 100%; background: linear-gradient(90deg, #1D4ED8, #7C3AED, #06B6D4); 
-      transition: width 0.4s ease; position: relative; 
+    header { 
+      background: rgba(10, 22, 40, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 1rem 0;
     }
+    
+    .header-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .logo { 
+      display: flex; 
+      align-items: center; 
+      gap: 12px; 
+    }
+    
+    .logo-badge {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--brand-amber), var(--brand-rose));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: white;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+    }
+    
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+    
+    .logo-text span:first-child {
+      font-size: 1.125rem;
+      font-weight: 800;
+      color: white;
+    }
+    
+    .logo-text span:last-child {
+      font-size: 0.75rem;
+      color: var(--slate-400);
+      font-weight: 500;
+    }
+    
+    .progress-section {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .progress-text {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--slate-300);
+    }
+    
+    .progress-bar {
+      width: 180px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--brand-amber), var(--brand-rose), var(--brand-purple));
+      border-radius: 3px;
+      transition: width 0.5s var(--transition);
+      position: relative;
+    }
+    
     .progress-fill::after {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
       animation: shimmer 2s infinite;
     }
-    @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-
+    
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    
     /* ============================================
-       CORREÇÃO CRÍTICA: CONTAINERS DE GRÁFICOS COM ALTURA FIXA
+       MAIN CONTENT - CENTRALIZADO PREMIUM
        ============================================ */
+    main { 
+      max-width: 700px; 
+      margin: 0 auto; 
+      padding: 3rem 1.5rem;
+      min-height: calc(100vh - 80px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* ============================================
+       CARD DE PERGUNTA - GLASSMORPHISM PREMIUM
+       ============================================ */
+    .question-card {
+      background: rgba(30, 41, 59, 0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 24px;
+      padding: 2.5rem;
+      width: 100%;
+      box-shadow: 
+        var(--shadow-xl),
+        0 0 0 1px rgba(255, 255, 255, 0.05),
+        var(--shadow-glow);
+      animation: slideUp 0.5s ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .question-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.5), transparent);
+      pointer-events: none;
+    }
+    
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    
+    .question-header {
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .question-number {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(244, 63, 94, 0.2));
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: var(--brand-amber);
+      border-radius: 100px;
+      font-size: 0.875rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+    }
+    
+    .question-text {
+      font-size: 1.375rem;
+      font-weight: 700;
+      color: white;
+      line-height: 1.4;
+      margin-bottom: 0.5rem;
+    }
+    
+    .question-instruction {
+      color: var(--slate-400);
+      font-size: 0.9375rem;
+    }
+    
+    /* ============================================
+       OPÇÕES DE RESPOSTA - RADIO BUTTONS PREMIUM
+       ============================================ */
+    .options-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .option-btn {
+      width: 100%;
+      padding: 1.25rem 1.5rem;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      text-align: left;
+      cursor: pointer;
+      transition: all var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 1rem;
+      color: var(--slate-200);
+      font-weight: 500;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .option-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(244, 63, 94, 0.05));
+      opacity: 0;
+      transition: opacity var(--transition);
+      border-radius: 14px;
+    }
+    
+    .option-btn:hover {
+      border-color: var(--brand-amber);
+      background: rgba(245, 158, 11, 0.08);
+      color: white;
+      transform: translateX(4px);
+    }
+    
+    .option-btn:hover::before {
+      opacity: 1;
+    }
+    
+    .option-btn.selected {
+      border-color: var(--brand-amber);
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(244, 63, 94, 0.1));
+      box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.15);
+      color: white;
+    }
+    
+    .option-radio {
+      width: 24px;
+      height: 24px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all var(--transition);
+      position: relative;
+    }
+    
+    .option-btn.selected .option-radio {
+      border-color: var(--brand-amber);
+      background: var(--brand-amber);
+    }
+    
+    .option-btn.selected .option-radio::after {
+      content: '✓';
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    
+    /* ============================================
+       BOTÕES DE NAVEGAÇÃO
+       ============================================ */
+    .navigation-buttons {
+      display: flex;
+      gap: 1rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .btn {
+      flex: 1;
+      padding: 1rem 2rem;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all var(--transition);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--slate-200);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .btn-secondary:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.4);
+      color: white;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand-amber), var(--brand-rose));
+      color: white;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+    }
+    
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(245, 158, 11, 0.6);
+    }
+    
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+    
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    /* Loading state */
+    .btn.loading {
+      color: transparent !important;
+      pointer-events: none;
+    }
+    
+    .btn.loading::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* ============================================
+       TELA DE RESULTADOS - PREMIUM DARK
+       ============================================ */
+    .results-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .results-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding: 2.5rem;
+      background: rgba(30, 41, 59, 0.85);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 24px;
+      box-shadow: var(--shadow-xl);
+    }
+    
+    .results-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #F59E0B, #F43F5E, #7C3AED);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .profile-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, var(--brand-amber), var(--brand-rose));
+      color: white;
+      border-radius: 100px;
+      font-weight: 700;
+      font-size: 1.125rem;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+    }
+    
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .chart-card {
+      background: rgba(30, 41, 59, 0.85);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .chart-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
     .chart-container {
       position: relative;
-      height: 400px !important;
-      max-height: 400px !important;
+      height: 280px;
+    }
+    
+    /* Resumo e recomendações */
+    .summary-card {
+      background: rgba(30, 41, 59, 0.85);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .summary-card h3 {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .summary-card p {
+      color: var(--slate-300);
+      line-height: 1.7;
+      font-size: 0.9375rem;
+    }
+    
+    .recommendations-list {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .recommendations-list li {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      color: var(--slate-300);
+      font-size: 0.9375rem;
+    }
+    
+    .recommendations-list li:last-child {
+      border-bottom: none;
+    }
+    
+    .recommendations-list li::before {
+      content: '✓';
+      color: var(--brand-amber);
+      font-weight: 700;
+      font-size: 1.125rem;
+      flex-shrink: 0;
+    }
+    
+    /* Botões de relatório */
+    .report-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    
+    .report-card {
+      background: rgba(30, 41, 59, 0.85);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all var(--transition);
+    }
+    
+    .report-card:hover {
+      border-color: var(--brand-amber);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-glow);
+    }
+    
+    .report-card h4 {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 0.75rem;
+    }
+    
+    .report-card p {
+      color: var(--slate-400);
+      font-size: 0.875rem;
+      margin-bottom: 1.25rem;
+    }
+    
+    .btn-report {
       width: 100%;
+      padding: 0.875rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.9375rem;
+      cursor: pointer;
+      transition: all var(--transition);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
-    .chart-container canvas {
-      max-height: 400px !important;
+    
+    .btn-report-primary {
+      background: linear-gradient(135deg, var(--brand-amber), var(--brand-rose));
+      color: white;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
     }
-
+    
+    .btn-report-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(245, 158, 11, 0.6);
+    }
+    
+    .btn-report-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--slate-200);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .btn-report-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.4);
+      color: white;
+    }
+    
+    /* Quote final */
+    .final-quote {
+      text-align: center;
+      padding: 2rem;
+      margin-top: 2rem;
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    
+    .final-quote blockquote {
+      font-size: 1.125rem;
+      font-style: italic;
+      color: var(--slate-300);
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+    
+    .final-quote cite {
+      color: var(--brand-amber);
+      font-weight: 600;
+      font-style: normal;
+    }
+    
     /* ============================================
-       TEST INTERFACE
+       LOADING OVERLAY
        ============================================ */
-    .option-btn { 
-      width: 100%; padding: 16px 20px; border-radius: 12px; 
-      border: 2px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); 
-      color: #F8FAFC; text-align: left; cursor: pointer; transition: all 0.2s ease; 
-      display: flex; align-items: center; gap: 12px; font-size: 1rem;
+    .loading-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(10, 22, 40, 0.95);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
     }
-    .option-btn:hover { border-color: #1D4ED8; background: rgba(29, 78, 216, 0.1); }
-    .option-btn.selected { border-color: #F59E0B; background: rgba(245, 158, 11, 0.15); }
-    .option-btn .check-icon { width: 20px; height: 20px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .option-btn.selected .check-icon { background: #F59E0B; border-color: #F59E0B; }
-
+    
+    .loading-content {
+      text-align: center;
+    }
+    
+    .loading-spinner-large {
+      width: 64px;
+      height: 64px;
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-top-color: var(--brand-amber);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1.5rem;
+    }
+    
+    .loading-text {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--slate-300);
+    }
+    
     /* ============================================
-       MODAL PREMIUM - PARA RELATÓRIO SIMPLES
+       MODAL PREMIUM
        ============================================ */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(15, 23, 42, 0.92);
+      background: rgba(10, 22, 40, 0.92);
+      backdrop-filter: blur(16px);
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 10000;
-      backdrop-filter: blur(12px);
-      animation: fadeIn 0.3s ease;
+      padding: 1.5rem;
+      animation: fadeIn 0.25s ease;
     }
+    
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
+    
     .modal-content {
-      background: white;
-      border-radius: 20px;
-      padding: 45px 40px;
-      max-width: 540px;
-      width: 92%;
+      background: rgba(30, 41, 59, 0.95);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 24px;
+      padding: 2.5rem;
+      max-width: 520px;
+      width: 100%;
       text-align: center;
-      box-shadow: 0 30px 90px rgba(0,0,0,0.45);
-      border: 1px solid #e2e8f0;
-      animation: slideUp 0.45s ease;
+      box-shadow: var(--shadow-xl);
+      animation: slideUp 0.4s ease;
     }
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(40px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .modal-content h3 {
-      font-size: 1.7rem;
+    
+    .modal-title {
+      font-size: 1.5rem;
       font-weight: 800;
-      color: #0F172A;
-      margin-bottom: 1.4rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
+      color: white;
+      margin-bottom: 1rem;
     }
-    .modal-content p {
-      color: #64748B;
-      margin-bottom: 1.8rem;
-      line-height: 1.75;
-      font-size: 1.08rem;
+    
+    .modal-text {
+      color: var(--slate-300);
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+      font-size: 1rem;
     }
+    
     .modal-highlight {
-      background: linear-gradient(135deg, #1D4ED8, #7C3AED);
+      background: linear-gradient(135deg, var(--brand-amber), var(--brand-rose));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       font-weight: 700;
-      font-size: 1.15rem;
+      font-size: 1.125rem;
+      display: block;
       margin: 1rem 0;
     }
+    
     .modal-btn {
-      background: linear-gradient(135deg, #1D4ED8, #7C3AED);
+      background: linear-gradient(135deg, var(--brand-amber), var(--brand-rose));
       color: white;
-      padding: 15px 40px;
-      border-radius: 12px;
+      padding: 14px 40px;
+      border-radius: 14px;
       font-weight: 700;
-      font-size: 1.05rem;
+      font-size: 1rem;
       border: none;
       cursor: pointer;
-      transition: all 0.35s ease;
-      box-shadow: 0 5px 20px rgba(29, 78, 216, 0.45);
+      transition: all var(--transition);
+      box-shadow: 0 4px 16px rgba(245, 158, 11, 0.4);
     }
+    
     .modal-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 32px rgba(29, 78, 216, 0.65);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(245, 158, 11, 0.6);
     }
-    .modal-footer {
-      margin-top: 2rem;
-      padding-top: 1.8rem;
-      border-top: 1px solid #e2e8f0;
-      font-size: 0.92rem;
-      color: #94a3b8;
-    }
-
+    
     /* ============================================
        TOAST NOTIFICATIONS
        ============================================ */
-    #toast {
+    .toast {
       position: fixed;
-      top: 20px;
-      right: 20px;
+      top: 24px;
+      right: 24px;
+      background: rgba(30, 41, 59, 0.95);
+      backdrop-filter: blur(16px);
       padding: 14px 24px;
       border-radius: 14px;
-      background: rgba(30, 41, 59, 0.96);
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      box-shadow: 0 12px 45px rgba(0, 0, 0, 0.42);
+      box-shadow: var(--shadow-xl);
       display: flex;
       align-items: center;
       gap: 12px;
-      z-index: 9999;
-      transform: translateX(420px);
-      transition: transform 0.32s ease;
-      max-width: 380px;
-    }
-    #toast.show {
-      transform: translateX(0);
-    }
-    #toast.success {
-      border-left: 4px solid #10B981;
-    }
-    #toast.error {
-      border-left: 4px solid #EF4444;
-    }
-    #toast .toast-icon {
-      font-size: 1.35rem;
-    }
-    #toast .toast-message {
-      font-size: 0.92rem;
-      color: #F8FAFC;
-      flex: 1;
-    }
-    #toast .toast-close {
-      background: none;
-      border: none;
-      color: #94A3B8;
-      cursor: pointer;
-      font-size: 1.35rem;
-      line-height: 1;
-      padding: 0;
-    }
-    #toast .toast-close:hover {
-      color: #F8FAFC;
-    }
-
-    /* ============================================
-       PRINT OPTIMIZATION - PREMIUM VIGORRE ONE™
-       ============================================ */
-    @media print {
-      body { 
-        background: white !important; 
-        color: #111 !important;
-        font-size: 11pt;
-      }
-      .no-print { display: none !important; }
-      .glass, .glass-card { 
-        background: white !important; 
-        border: 1px solid #ccc !important; 
-        box-shadow: none !important; 
-        backdrop-filter: none !important; 
-      }
-      .gradient-text { 
-        -webkit-text-fill-color: #1D4ED8 !important; 
-        color: #1D4ED8 !important;
-      }
-      .results-view { 
-        max-width: 100% !important; 
-        padding: 20px !important; 
-      }
-      /* Logo Vigorre no cabeçalho de impressão */
-      .print-header {
-        display: block !important;
-        text-align: center;
-        padding: 20px 0;
-        border-bottom: 3px solid #1D4ED8;
-        margin-bottom: 20px;
-      }
-      .print-header .logo-v {
-        font-size: 24pt;
-        font-weight: bold;
-        color: #1D4ED8;
-        display: inline-block;
-        width: 50px;
-        height: 50px;
-        background: linear-gradient(135deg, #1D4ED8, #7C3AED);
-        color: white;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 10px;
-      }
-      .print-header h1 {
-        font-size: 18pt;
-        color: #111;
-        margin: 0;
-      }
-      .print-header p {
-        font-size: 10pt;
-        color: #666;
-        margin: 5px 0 0;
-      }
-      /* Marca d'água Vigorre */
-      .print-watermark {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) rotate(-45deg);
-        font-size: 80pt;
-        color: rgba(29, 78, 216, 0.05);
-        font-weight: bold;
-        pointer-events: none;
-        z-index: -1;
-        white-space: nowrap;
-      }
-      /* Rodapé de impressão */
-      .print-footer {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        text-align: center;
-        font-size: 8pt;
-        color: #999;
-        padding: 10px;
-        border-top: 1px solid #eee;
-      }
+      font-weight: 600;
+      color: white;
+      z-index: 10001;
+      border-left: 4px solid var(--brand-amber);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      animation: slideIn 0.3s ease;
+      max-width: 400px;
+      font-size: 0.875rem;
     }
     
-    /* Header de impressão (oculto na tela) */
-    .print-header { display: none; }
-    .print-watermark { display: none; }
-    .print-footer { display: none; }
-
-    /* ============================================
-       ANIMATIONS
-       ============================================ */
-    .fade-in { animation: fadeIn 0.5s ease-out; }
-    .slide-up { animation: slideUp 0.4s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #0F172A; }
-    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #475569; }
-
-    /* ============================================
-       CORREÇÃO DE MARGENS - HEADER/FIXED ELEMENTS
-       ============================================ */
-    header {
-      height: 72px !important;
+    @keyframes slideIn {
+      from { transform: translateX(120%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
     }
     
-    main {
-      padding-top: 95px !important; /* ✅ Espaço para header fixo de 72px + margem */
-      padding-bottom: 45px !important;
-    }
+    .toast.error { border-left-color: var(--brand-rose); }
+    .toast.warning { border-left-color: var(--brand-amber); }
+    .toast-icon { font-size: 1.25rem; }
     
-    /* Para telas menores */
+    /* ============================================
+       RESPONSIVO
+       ============================================ */
     @media (max-width: 768px) {
-      header { height: 68px !important; }
-      main { padding-top: 90px !important; }
+      .header-content {
+        padding: 0 1rem;
+      }
+      
+      .progress-bar {
+        width: 120px;
+      }
+      
+      main {
+        padding: 2rem 1rem;
+      }
+      
+      .question-card {
+        padding: 2rem 1.5rem;
+        border-radius: 20px;
+      }
+      
+      .question-text {
+        font-size: 1.25rem;
+      }
+      
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .navigation-buttons {
+        flex-direction: column;
+      }
+      
+      .report-actions {
+        grid-template-columns: 1fr;
+      }
     }
+    
+    /* ============================================
+       ACESSIBILIDADE
+       ============================================ */
+    .btn:focus-visible,
+    .option-btn:focus-visible {
+      outline: 2px solid var(--brand-amber);
+      outline-offset: 2px;
+    }
+    
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    
+    .hidden { display: none !important; }
   </style>
 </head>
-<body class="antialiased">
+<body>
 
-  <!-- ============================================
-       MODAL PARA RELATÓRIO SIMPLES
-       ============================================ -->
-  <div id="simpleReportModal" class="modal-overlay" style="display: none;">
-    <div class="modal-content">
-      <h3>🔒 Acesso ao Relatório Completo</h3>
-      <p>Para obter acesso ao relatório completo com análise detalhada, plano de desenvolvimento personalizado e parecer executivo multinacional, entre em contato com nossa equipe de People Analytics.</p>
-      <p class="modal-highlight">Procure a Vigorre para maiores detalhes.</p>
-      <button class="modal-btn" onclick="closeModalAndLogout()">Sair e Voltar</button>
-      <div class="modal-footer">
-        <p>© 2024 Vigorre One™ • People Analytics Enterprise</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============================================
-       HEADER DE IMPRESSÃO (SÓ APARECE NO PRINT)
-       ============================================ -->
-  <div class="print-header">
-    <div class="logo-v">V</div>
-    <h1>Vigorre One™</h1>
-    <p>Valores Pessoais • Relatório Profissional</p>
-  </div>
-  
-  <!-- Marca d'água para impressão -->
-  <div class="print-watermark">VIGORRE ONE</div>
-
-  <!-- ============================================
-       HEADER / CONTROLS (NO PRINT)
-       ============================================ -->
-  <header class="glass border-b border-white/10 sticky top-0 z-50 no-print">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <!-- ✅ LOGO VIGORRE COM FALLBACK -->
-        <img src="logo-vigorre.png" alt="Vigorre One™" class="w-10 h-10 rounded-xl" onerror="this.outerHTML='<div class=\'w-10 h-10 rounded-xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center font-bold text-white\'>V</div>'">
-        <div>
-          <h1 class="font-bold text-lg">Vigorre One™</h1>
-          <p class="text-xs text-gray-400">Valores Pessoais • People Analytics Enterprise</p>
+  <!-- Header Premium -->
+  <header>
+    <div class="header-content">
+      <div class="logo">
+        <div class="logo-badge">V</div>
+        <div class="logo-text">
+          <span>Vigorre One™</span>
+          <span>Valores Pessoais</span>
         </div>
       </div>
-      <div class="flex items-center gap-4">
-        <span class="text-sm text-gray-300" id="progressText">Pergunta 1 de 30</span>
-        <div class="w-32 md:w-48"><div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 3.33%"></div></div></div>
+      <div class="progress-section">
+        <span class="progress-text" id="progressText">Pergunta 1 de 30</span>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill" style="width: 3.33%"></div>
+        </div>
       </div>
     </div>
   </header>
 
-  <!-- ============================================
-       TEST CONTAINER
-       ============================================ -->
-  <main class="max-w-3xl mx-auto px-4 py-8 results-view" id="testContainer">
-    <div class="glass-card p-6 md:p-8 slide-up">
-      <div class="mb-6">
-        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-amber/20 text-brand-amber text-xs font-medium mb-3" id="qTheme">Realização</span>
-        <h2 class="text-xl md:text-2xl font-semibold leading-relaxed" id="qText">Carregando situação...</h2>
+  <!-- Main Content - Perguntas -->
+  <main id="testContainer">
+    <div class="question-card">
+      <div class="question-header">
+        <span class="question-number">
+          <span>✦</span>
+          Questão <span id="currentNumber">1</span>
+        </span>
+        <h2 class="question-text" id="qText">Carregando pergunta...</h2>
+        <p class="question-instruction">Selecione a opção que melhor descreve seu comportamento</p>
       </div>
-      <div class="space-y-3 mb-8" id="optionsContainer"></div>
-      <div class="flex gap-3 no-print">
-        <button id="prevBtn" onclick="prevQuestion()" class="flex-1 px-4 py-3 rounded-xl font-medium text-gray-300 btn-secondary disabled:opacity-50 disabled:cursor-not-allowed" disabled>Anterior</button>
-        <button id="nextBtn" onclick="nextQuestion()" class="flex-1 btn-primary px-4 py-3 rounded-xl font-semibold text-white">Próxima Pergunta</button>
+      
+      <div class="options-container" id="optionsContainer" role="radiogroup">
+        <!-- Opções serão inseridas via JavaScript -->
+      </div>
+      
+      <div class="navigation-buttons">
+        <button id="prevBtn" onclick="prevQuestion()" class="btn btn-secondary" disabled>
+          ← Anterior
+        </button>
+        <button id="nextBtn" onclick="nextQuestion()" class="btn btn-primary">
+          Próxima Pergunta →
+        </button>
       </div>
     </div>
   </main>
 
-  <!-- ============================================
-       RESULTS VIEW
-       ============================================ -->
-  <div id="resultsView" class="hidden max-w-5xl mx-auto px-4 py-8 results-view">
-    <div class="glass-card p-6 md:p-8 mb-8 text-center slide-up">
-      <h1 class="text-3xl font-bold mb-2">Seus Valores Pessoais</h1>
-      <p class="text-gray-400 mb-4" id="participantName">Análise Motivacional Vigorre One™</p>
-      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-amber/20 text-brand-amber border border-brand-amber/30" id="profileBadge">Valor Predominante</div>
-    </div>
-
-    <div class="grid md:grid-cols-2 gap-6 mb-8">
-      <div class="glass-card p-6 slide-up">
-        <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">Radar de Valores</h3>
-        <div class="chart-container"><canvas id="valuesRadarChart"></canvas></div>
-      </div>
-      <div class="glass-card p-6 slide-up">
-        <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">Intensidade por Valor</h3>
-        <div class="chart-container"><canvas id="valuesBarChart"></canvas></div>
-      </div>
-    </div>
-
-    <div class="glass-card p-6 md:p-8 mb-8 slide-up">
-      <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">📊 Resumo Motivacional</h3>
-      <div id="executiveSummary"></div>
-    </div>
-
-    <div class="glass-card p-6 md:p-8 mb-8 slide-up">
-      <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">🧠 Interpretação dos Valores</h3>
-      <div id="detailedAnalysis"></div>
-    </div>
-
-    <div class="glass-card p-6 md:p-8 mb-8 slide-up">
-      <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">💡 Alinhamento e Desenvolvimento</h3>
-      <div id="recommendations"></div>
-    </div>
-
-    <!-- CTAs - ✅ BOTÃO RELATÓRIO SIMPLES COM MODAL -->
-    <div class="grid md:grid-cols-2 gap-4 no-print mb-8">
-      <div class="glass-card p-6 text-center slide-up">
-        <h4 class="font-semibold mb-2">📄 Relatório Simples</h4>
-        <p class="text-sm text-gray-400 mb-4">Visão geral dos seus valores predominantes</p>
-        <button onclick="openSimpleReportModal()" class="btn-primary px-6 py-3 rounded-lg font-semibold w-full">Baixar Relatório Simples</button>
-      </div>
-      <div class="glass-card p-6 text-center slide-up">
-        <h4 class="font-semibold mb-2">🔓 Desbloquear Análise Completa</h4>
-        <p class="text-sm text-gray-400 mb-4">Laudo detalhado + fit cultural + plano de desenvolvimento</p>
-        <button onclick="window.location.href='relatorio-valores-vigorre.html'" class="btn-secondary px-6 py-3 rounded-lg font-semibold w-full">Ver Relatório Completo</button>
+  <!-- Results View (hidden initially) -->
+  <div id="resultsView" class="results-container hidden">
+    <div class="results-header">
+      <h1 class="results-title">Seus Valores Pessoais</h1>
+      <p style="color: var(--slate-400); margin-bottom: 1.5rem; font-size: 1rem;">Análise Motivacional Vigorre One™</p>
+      <div class="profile-badge" id="profileBadge">
+        <span>💎</span>
+        <span id="profileText">Valor: --</span>
       </div>
     </div>
     
-    <!-- Rodapé de impressão -->
-    <div class="print-footer">
-      © 2024 Vigorre One™ • Relatório gerado em <span id="printDate"></span> • www.vigorre.com.br
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3 class="chart-title">Radar de Valores</h3>
+        <div class="chart-container">
+          <canvas id="valuesRadarChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3 class="chart-title">Intensidade por Valor</h3>
+        <div class="chart-container">
+          <canvas id="valuesBarChart"></canvas>
+        </div>
+      </div>
+    </div>
+    
+    <div class="summary-card">
+      <h3>📊 Resumo Motivacional</h3>
+      <p id="executiveSummary"></p>
+    </div>
+    
+    <div class="summary-card">
+      <h3>💡 Alinhamento e Desenvolvimento</h3>
+      <ul class="recommendations-list" id="recommendations"></ul>
+    </div>
+    
+    <div class="report-actions">
+      <div class="report-card">
+        <h4>📄 Relatório Simples</h4>
+        <p>Visão geral dos seus valores predominantes</p>
+        <button onclick="openSimpleReportModal()" class="btn-report btn-report-primary">
+          Baixar Relatório
+        </button>
+      </div>
+      <div class="report-card">
+        <h4>🔓 Laudo Vigorre Completo</h4>
+        <p>Análise integrada com DISC + IE</p>
+        <button onclick="window.location.href='relatorio-valores-vigorre.html'" class="btn-report btn-report-secondary">
+          Ver Relatório Completo
+        </button>
+      </div>
+    </div>
+    
+    <div class="final-quote">
+      <blockquote>"Seus valores definem seu caminho. Sua performance define seu destino."</blockquote>
+      <cite>— Vigorre One™</cite>
     </div>
   </div>
 
   <!-- Loading Overlay -->
-  <div id="loadingOverlay" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden">
-    <div class="text-center">
-      <div class="relative w-20 h-20 mx-auto mb-4">
-        <div class="absolute inset-0 rounded-full border-4 border-white/10"></div>
-        <div class="absolute inset-0 rounded-full border-4 border-t-brand-cyan border-r-brand-purple border-b-transparent border-l-transparent animate-spin"></div>
-      </div>
-      <p class="text-gray-300">Analisando seus valores...</p>
+  <div id="loadingOverlay" class="loading-overlay hidden">
+    <div class="loading-content">
+      <div class="loading-spinner-large"></div>
+      <p class="loading-text">Analisando seus valores...</p>
+    </div>
+  </div>
+
+  <!-- Modal para Relatório -->
+  <div id="simpleReportModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <h3 class="modal-title">🔒 Acesso ao Relatório Completo</h3>
+      <p class="modal-text">
+        Para obter acesso ao relatório completo com análise detalhada, plano de desenvolvimento personalizado e parecer executivo multinacional, entre em contato com nossa equipe de People Analytics.
+      </p>
+      <span class="modal-highlight">Procure a Vigorre para maiores detalhes.</span>
+      <button class="modal-btn" onclick="closeModalAndLogout()">Sair e Voltar</button>
     </div>
   </div>
 
   <!-- Toast Notification -->
-  <div id="toast" class="fixed top-4 right-4 glass px-4 py-3 rounded-lg z-50 flex items-center gap-2 hidden">
-    <span id="toastIcon">✅</span><span id="toastMessage">Ação realizada!</span>
+  <div id="toast" class="toast hidden">
+    <span class="toast-icon" id="toastIcon">✅</span>
+    <span id="toastMessage">Ação realizada!</span>
   </div>
 
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
   <script>
+    'use strict';
+    
     // ============================================
     // ESTADO E DADOS
     // ============================================
-    const AppState = {
-      currentQ: 0,
-      answers: [],
-      completed: false,
-      session: null,
-      participant: null
+    const AppState = { 
+      currentQ: 0, 
+      answers: [], 
+      completed: false, 
+      session: null, 
+      participant: null 
     };
-
-    // ============================================
-    // VARIÁVEIS GLOBAIS PARA GRÁFICOS (CORREÇÃO CRÍTICA)
-    // ============================================
+    
     let valuesRadarChartInstance = null;
     let valuesBarChartInstance = null;
 
@@ -756,121 +1267,79 @@
     // ============================================
     // INICIALIZAÇÃO
     // ============================================
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', () => {
       console.log('🔹 Inicializando Teste Valores Vigorre One™...');
       
-      // ✅ DETECTAR CLIQUE NO BOTÃO "VOLTAR" DO NAVEGADOR PARA FAZER LOGOFF
-      window.addEventListener('popstate', function(event) {
-        console.log('🔙 Botão voltar detectado - realizando logoff');
-        performLogout();
-      });
+      // Detectar botão voltar do navegador
+      window.addEventListener('popstate', () => performLogout());
       
-      // Carregar sessão do participante
+      // Prevenir cache
+      if (window.history?.replaceState) {
+        window.history.replaceState(null, null, window.location.href);
+      }
+      
+      // Carregar sessão
       loadSession();
       
-      // ✅ CORREÇÃO: Se já estiver logado, vai direto para o teste
-      if (AppState.session && AppState.session.id) {
-        console.log('✅ Usuário logado, carregando teste...');
+      if (AppState.session?.id) {
         renderQuestion();
       } else {
-        // Se não estiver logado, redireciona para login
-        console.log('⚠️ Usuário não autenticado - redirecionando para login');
         window.location.href = 'login.html';
       }
     });
 
     // ============================================
-    // CARREGAR SESSÃO DO PARTICIPANTE - COM SUPABASE E FALLBACK
+    // CARREGAR SESSÃO COM FIREBASE + FALLBACK
     // ============================================
     async function loadSession() {
       try {
-        console.log('🔍 Tentando carregar sessão...');
-        
-        // PRIMEIRO: Tentar carregar do Supabase (online)
-        if (window.VigorreDB && VigorreDB.supabase) {
-          console.log('🌐 Tentando carregar do Supabase...');
-          
-          const token = sessionStorage.getItem('vigorre_session_token');
-          
-          if (token) {
-            // Buscar sessão ativa no Supabase
-            const { data: sessionData, error: sessionError } = await VigorreDB.supabase
-              .from('sessions')
-              .select('participant_id, expires_at')
-              .eq('token', token)
-              .maybeSingle();
-            
-            if (sessionData && !sessionError) {
-              // Verificar se sessão não expirou
-              if (new Date(sessionData.expires_at) > new Date()) {
-                // Sessão válida - buscar dados do participante
-                const { data: participant, error: pError } = await VigorreDB.supabase
-                  .from('participants')
-                  .select('*')
-                  .eq('id', sessionData.participant_id)
-                  .maybeSingle();
-                
-                if (participant && !pError) {
-                  AppState.session = {
-                    id: participant.id,
-                    name: participant.name,
-                    email: participant.email,
-                    role: 'participant'
-                  };
-                  AppState.participant = participant;
-                  console.log('✅ Sessão carregada do Supabase:', participant.name);
-                  return true;
-                }
-              }
+        // Tentar Firebase primeiro
+        if (window.firebaseDB?.db) {
+          const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+          if (currentUser?.id) {
+            const doc = await firebaseDB.db.collection('participants').doc(currentUser.id).get();
+            if (doc.exists) {
+              const data = doc.data();
+              AppState.session = { id: data.id, name: data.name, email: data.email, role: 'participant' };
+              AppState.participant = { id: doc.id, ...data };
+              return true;
             }
           }
         }
         
-        // SEGUNDO: Fallback para localStorage (offline ou sem Supabase)
-        console.log('📱 Usando fallback localStorage...');
+        // Fallback localStorage
         const session = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
-        
         if (session?.id) {
           AppState.session = session;
           const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
           AppState.participant = participants.find(p => p.id === session.id);
-          console.log('✅ Sessão carregada do localStorage:', AppState.session.name);
           return true;
         }
-        
-        console.log('❌ Nenhuma sessão encontrada');
         return false;
-        
-      } catch (e) { 
-        console.error('❌ Erro ao carregar sessão:', e); 
-        // Em caso de erro, tentar localStorage como último recurso
-        try {
-          const session = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
-          if (session?.id) {
-            AppState.session = session;
-            const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-            AppState.participant = participants.find(p => p.id === session.id);
-            return true;
-          }
-        } catch (e2) {
-          console.error('❌ Erro no fallback:', e2);
+      } catch (e) {
+        console.error('Erro ao carregar sessão:', e);
+        // Último fallback
+        const session = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+        if (session?.id) {
+          AppState.session = session;
+          const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+          AppState.participant = participants.find(p => p.id === session.id);
+          return true;
         }
         return false;
       }
     }
 
+    // ============================================
+    // RENDERIZAR PERGUNTA
+    // ============================================
     function renderQuestion() {
-      console.log('Renderizando pergunta:', AppState.currentQ);
       const q = VALUES_QUESTIONS[AppState.currentQ];
-      if (!q) {
-        console.error('Pergunta não encontrada no índice:', AppState.currentQ);
-        return;
-      }
       
-      document.getElementById('progressText').textContent = 'Pergunta ' + (AppState.currentQ + 1) + ' de ' + VALUES_QUESTIONS.length;
-      document.getElementById('progressFill').style.width = (((AppState.currentQ + 1) / VALUES_QUESTIONS.length) * 100) + '%';
+      document.getElementById('progressText').textContent = `Pergunta ${AppState.currentQ + 1} de ${VALUES_QUESTIONS.length}`;
+      document.getElementById('progressFill').style.width = `${((AppState.currentQ + 1) / VALUES_QUESTIONS.length) * 100}%`;
+      document.getElementById('currentNumber').textContent = AppState.currentQ + 1;
       document.getElementById('qText').textContent = q.text;
-      document.getElementById('qTheme').textContent = q.theme;
       
       document.getElementById('prevBtn').disabled = AppState.currentQ === 0;
       document.getElementById('nextBtn').textContent = AppState.currentQ === VALUES_QUESTIONS.length - 1 ? 'Finalizar Teste' : 'Próxima Pergunta';
@@ -878,11 +1347,16 @@
       const container = document.getElementById('optionsContainer');
       container.innerHTML = '';
       
-      q.options.forEach(function(opt, idx) {
+      q.options.forEach((opt, idx) => {
         const btn = document.createElement('button');
-        btn.className = 'option-btn' + (AppState.answers[AppState.currentQ] === idx ? ' selected' : '');
-        btn.innerHTML = '<span class="check-icon">' + (AppState.answers[AppState.currentQ] === idx ? '✓' : '') + '</span><span>' + opt.text + '</span>';
-        btn.onclick = function() { 
+        btn.className = `option-btn ${AppState.answers[AppState.currentQ] === idx ? 'selected' : ''}`;
+        btn.setAttribute('role', 'radio');
+        btn.setAttribute('aria-checked', AppState.answers[AppState.currentQ] === idx);
+        btn.innerHTML = `
+          <div class="option-radio"></div>
+          <span>${opt.text}</span>
+        `;
+        btn.onclick = () => { 
           AppState.answers[AppState.currentQ] = idx; 
           renderQuestion(); 
         };
@@ -890,489 +1364,323 @@
       });
     }
 
-    function prevQuestion() {
+    function prevQuestion() { 
       if (AppState.currentQ > 0) { 
         AppState.currentQ--; 
         renderQuestion(); 
-      }
+      } 
     }
-
+    
     function nextQuestion() {
-      if (AppState.answers[AppState.currentQ] === undefined) {
-        showToast('Por favor, selecione uma opção antes de continuar.', 'error');
-        return;
+      if (AppState.answers[AppState.currentQ] === undefined) { 
+        showToast('Por favor, selecione uma opção', 'error'); 
+        return; 
       }
-      if (AppState.currentQ < VALUES_QUESTIONS.length - 1) {
+      if (AppState.currentQ < VALUES_QUESTIONS.length - 1) { 
         AppState.currentQ++; 
-        renderQuestion();
-      } else {
-        finishTest();
+        renderQuestion(); 
+      } else { 
+        finishTest(); 
       }
     }
 
     // ============================================
-    // FUNÇÃO CORRIGIDA: finishTest com salvamento CONSISTENTE + SUPABASE
+    // FINALIZAR TESTE E SALVAR NO FIREBASE
     // ============================================
     async function finishTest() {
       console.log('🔄 Finalizando teste de Valores...');
       
-      // ============================================
       // Calcular resultados
-      // ============================================
       const values = { realizacao: 0, proposito: 0, seguranca: 0, autonomia: 0, reconhecimento: 0, relacionamento: 0, inovacao: 0, equilibrio: 0 };
       
-      VALUES_QUESTIONS.forEach(function(q, idx) {
-        if (AppState.answers[idx] !== undefined) {
+      VALUES_QUESTIONS.forEach((q, idx) => { 
+        if (AppState.answers[idx] !== undefined) { 
           const selected = q.options[AppState.answers[idx]];
-          values[selected.type] += selected.value;
-        }
+          values[selected.type] += selected.value; 
+        } 
       });
-
-      const total = Object.keys(values).reduce(function(sum, key) { return sum + values[key]; }, 0) || 1;
-      const percentages = {};
-      Object.keys(values).forEach(function(k) { 
+      
+      const total = Object.keys(values).reduce((sum, key) => sum + values[key], 0) || 1;
+      const percentages = {}; 
+      Object.keys(values).forEach(k => { 
         percentages[k] = Math.round((values[k] / total) * 100); 
       });
-
-      const sortedEntries = Object.entries(percentages).sort(function(a, b) { return b[1] - a[1]; });
+      
       const results = { 
         date: new Date().toISOString(), 
         type: 'Valores', 
-        values: values, 
-        percentages: percentages, 
-        dominant: sortedEntries[0][0] 
+        values, 
+        percentages,
+        dominant: Object.entries(percentages).sort((a, b) => b[1] - a[1])[0][0]
       };
       
-      // ============================================
-      // ✅ SALVAR RESULTADOS NO SUPABASE COM FALLBACK
-      // ============================================
-      await saveParticipantResultsValoresSupabase(results);
-
-      // Enviar relatório simples por e-mail (simulação)
-      sendSimpleReportEmail(results);
-
-      // ============================================
-      // Mostrar loading
-      // ============================================
+      // Salvar no Firebase com fallback
+      await saveResultsFirebase(results);
+      
+      // Mostrar loading e resultados
       document.getElementById('loadingOverlay').classList.remove('hidden');
-
-      // Aguardar e mostrar resultados
-      setTimeout(function() { 
-        showResults(results); 
-      }, 1500);
+      setTimeout(() => { showResults(results); }, 1500);
     }
 
-    // ============================================
-    // ✅ FUNÇÃO: SALVAR RESULTADOS VALORES NO SUPABASE COM FALLBACK
-    // ============================================
-    async function saveParticipantResultsValoresSupabase(results) {
-      console.log('💾 Salvando resultados do teste Valores...');
-      
+    // ✅ FUNÇÃO FIREBASE CORRIGIDA
+    async function saveResultsFirebase(results) {
       if (!AppState.participant) {
-        console.warn('⚠️ Participante não encontrado, salvando apenas no localStorage');
-        saveParticipantResultsValoresLocalStorage(results);
+        // Fallback localStorage
+        saveResultsLocalStorage(results);
         return;
       }
       
       try {
-        // Preparar dados para salvar no Supabase
+        // Preparar dados para Firebase
         const resultData = {
-          id: VigorreDB.generateId(),
-          participant_id: AppState.participant.id,
-          test_type: 'Valores',
+          participantId: AppState.participant.id,
+          testType: 'Valores',
           scores: results.values,
           percentages: results.percentages,
           dominant: results.dominant,
-          secondary: Object.entries(results.percentages).sort((a, b) => b[1] - a[1])[1]?.[0],
-          completed_at: new Date().toISOString()
+          completedAt: new Date().toISOString(),
+          createdAt: new Date().toISOString()
         };
         
-        console.log('📋 Dados para salvar no Supabase:', resultData);
-        
-        // PRIMEIRO: Tentar salvar no Supabase
-        if (window.VigorreDB && VigorreDB.supabase) {
-          console.log('🌐 Tentando salvar no Supabase...');
+        // ✅ Verificação robusta do Firebase
+        if (window.firebaseDB && firebaseDB.db) {
+          console.log('💾 Salvando no Firebase...');
           
-          const { error } = await VigorreDB.supabase
-            .from('test_results')
-            .upsert(resultData);
+          // Salvar resultados
+          await firebaseDB.db.collection('test_results').add(resultData);
           
-          if (error) {
-            throw error;
+          // Atualizar participante com teste concluído
+          const participantRef = firebaseDB.db.collection('participants').doc(AppState.participant.id);
+          const participantDoc = await participantRef.get();
+          
+          if (participantDoc.exists) {
+            const currentData = participantDoc.data();
+            const completedTests = currentData.completedTests || [];
+            
+            if (!completedTests.includes('Valores')) {
+              await participantRef.update({
+                completedTests: [...completedTests, 'Valores']
+              });
+            }
           }
           
-          console.log('✅ Resultados Valores salvos no Supabase com sucesso!');
-          
-          // Atualizar participante no Supabase para marcar teste como completado
-          await updateParticipantCompletedTestsValores('Valores');
+          console.log('✅ Resultados salvos no Firebase!');
         }
         
+        // Sempre salvar no localStorage como backup
+        saveResultsLocalStorage(results);
+        
       } catch (e) {
-        // SEGUNDO: Fallback para localStorage se Supabase falhar
-        console.warn('⚠️ Falha ao salvar no Supabase, usando localStorage:', e);
-        saveParticipantResultsValoresLocalStorage(results);
+        console.warn('⚠️ Firebase falhou, usando localStorage:', e);
+        saveResultsLocalStorage(results);
       }
     }
 
-    // ============================================
-    // ✅ FUNÇÃO: ATUALIZAR TESTES COMPLETADOS DO PARTICIPANTE NO SUPABASE (VALORES)
-    // ============================================
-    async function updateParticipantCompletedTestsValores(testType) {
-      try {
-        if (!AppState.participant || !window.VigorreDB) return;
-        
-        // Buscar participante atual do Supabase
-        const { data: participant, error: fetchError } = await VigorreDB.supabase
-          .from('participants')
-          .select('completed_tests')
-          .eq('id', AppState.participant.id)
-          .maybeSingle();
-        
-        if (fetchError) throw fetchError;
-        
-        // Adicionar teste à lista de completados
-        const completedTests = participant?.completed_tests || [];
-        if (!completedTests.includes(testType)) {
-          completedTests.push(testType);
-          
-          // Atualizar no Supabase
-          const { error: updateError } = await VigorreDB.supabase
-            .from('participants')
-            .update({ completed_tests: completedTests })
-            .eq('id', AppState.participant.id);
-          
-          if (updateError) throw updateError;
-          
-          console.log(`✅ Teste ${testType} marcado como completado no Supabase`);
-        }
-        
-      } catch (e) {
-        console.warn('⚠️ Falha ao atualizar completed_tests no Supabase:', e);
-      }
-    }
-
-    // ============================================
-    // ✅ FUNÇÃO: SALVAR RESULTADOS VALORES NO LOCALSTORAGE (FALLBACK)
-    // ============================================
-    function saveParticipantResultsValoresLocalStorage(results) {
+    function saveResultsLocalStorage(results) {
       if (!AppState.participant) return;
       
       try {
         const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-        const idx = participants.findIndex(function(p) { return p.id === AppState.participant.id; });
+        const idx = participants.findIndex(p => p.id === AppState.participant.id);
         
         if (idx > -1) {
-          // Garantir que completedTests exista
-          if (!participants[idx].completedTests) {
-            participants[idx].completedTests = [];
-          }
-          
-          // ✅ CORREÇÃO: Adicionar 'Valores' (com V maiúsculo) aos testes completados
-          if (participants[idx].completedTests.indexOf('Valores') === -1) {
+          if (!participants[idx].completedTests) participants[idx].completedTests = [];
+          if (!participants[idx].completedTests.includes('Valores')) {
             participants[idx].completedTests.push('Valores');
-            console.log('✅ Valores adicionado a completedTests de', participants[idx].name);
           }
-          
-          // Salvar resultados do teste
           participants[idx].testResults = participants[idx].testResults || {};
-          participants[idx].testResults.Valores = {
-            date: results.date,
-            values: results.values,
-            percentages: results.percentages,
-            dominant: results.dominant
-          };
+          participants[idx].testResults.Valores = results;
           
-          // Salvar no localStorage
           localStorage.setItem('vigorre_participants', JSON.stringify(participants));
-          
-          // ✅ CORREÇÃO: Salvar resultado com chave CONSISTENTE em português (mesma do admin)
-          // ❌ ANTES: 'vigorre_last_values_result' (inglês)
-          // ✅ AGORA: 'vigorre_last_valores_result' (português)
           localStorage.setItem('vigorre_last_valores_result', JSON.stringify(results));
-          console.log('✅ Resultado Valores salvo em vigorre_last_valores_result');
-          
-          // Atualizar participant no AppState
-          AppState.participant = participants[idx];
-          
-          console.log('✅ Resultados Valores salvos no localStorage');
+          console.log('✅ Resultados salvos no localStorage');
         }
       } catch (e) {
-        console.error('❌ Erro ao salvar resultados Valores no localStorage:', e);
+        console.error('❌ Erro ao salvar no localStorage:', e);
       }
     }
 
     // ============================================
-    // ENVIAR RELATÓRIO SIMPLES POR E-MAIL (SIMULAÇÃO)
+    // EXIBIR RESULTADOS
     // ============================================
-    function sendSimpleReportEmail(results) {
-      // Em produção, aqui chamaria a API: /api/send-simple-report
-      console.log('📧 Enviando relatório Valores para:', AppState.session?.email);
-      
-      // Simular delay de envio
-      setTimeout(function() { 
-        // Salvar histórico de relatório enviado
-        saveReportHistoryValores('Valores', 'simple');
-        
-        // Mostrar toast de confirmação
-        showToast('✅ Relatório simples enviado para seu e-mail!', 'success'); 
-      }, 1000);
-    }
-
-    // ============================================
-    // SALVAR HISTÓRICO DE RELATÓRIOS
-    // ============================================
-    function saveReportHistoryValores(testType, reportType) {
-      try {
-        const reports = JSON.parse(localStorage.getItem('vigorre_reports') || '[]');
-        
-        reports.push({ 
-          id: Date.now().toString(), 
-          participantId: AppState.session?.id || 'anonymous', 
-          participantName: AppState.participant?.name || 'Participante', 
-          participantEmail: AppState.session?.email || '', 
-          type: reportType, 
-          testType: testType, 
-          date: new Date().toLocaleDateString('pt-BR'), 
-          status: 'completed', 
-          emailSent: true, 
-          emailDate: new Date().toLocaleString('pt-BR') 
-        });
-        
-        localStorage.setItem('vigorre_reports', JSON.stringify(reports));
-      } catch (e) {
-        console.error('Erro ao salvar histórico:', e);
-      }
-    }
-
     function showResults(results) {
       document.getElementById('loadingOverlay').classList.add('hidden');
       document.getElementById('testContainer').classList.add('hidden');
-      document.querySelector('header').classList.add('hidden');
       document.getElementById('resultsView').classList.remove('hidden');
-
-      if (AppState.session?.name) {
-        document.getElementById('participantName').textContent = AppState.session.name;
-      }
-      const dominant = VALUES_INTERPRETATIONS[results.dominant];
-      document.getElementById('profileBadge').textContent = 'Valor: ' + dominant.name + ' (' + results.percentages[results.dominant] + '%)';
-
-      document.getElementById('executiveSummary').innerHTML = '<p class="text-gray-300 mb-4">Seu valor predominante é <strong style="color: #F59E0B">' + dominant.name + '</strong>, indicando uma forte orientação para ' + dominant.desc.toLowerCase() + ' Você possui ' + results.percentages[results.dominant] + '% de inclinação para este valor.</p><div class="grid md:grid-cols-2 gap-4"><div class="glass p-4 rounded-lg"><h4 class="font-semibold mb-2 flex items-center gap-2"><span class="text-brand-emerald">✓</span> Ambiente Ideal</h4><ul class="space-y-1 text-sm text-gray-300"><li>• ' + (dominant.name === 'Realização' ? 'Metas desafiadoras e crescimento contínuo' : dominant.name === 'Propósito' ? 'Missão clara e impacto social' : dominant.name === 'Autonomia' ? 'Liberdade de decisão e flexibilidade' : dominant.name === 'Relacionamento' ? 'Cultura colaborativa e empática' : 'Ambiente estável e previsível') + '</li><li>• ' + (dominant.name === 'Inovação' ? 'Espaço para criatividade e experimentação' : dominant.name === 'Equilíbrio' ? 'Bem-estar e qualidade de vida' : 'Reconhecimento pelo trabalho realizado') + '</li></ul></div><div class="glass p-4 rounded-lg"><h4 class="font-semibold mb-2 flex items-center gap-2"><span class="text-brand-amber">⚡</span> Fatores de Desmotivação</h4><ul class="space-y-1 text-sm text-gray-300"><li>• ' + (dominant.name === 'Realização' ? 'Estagnação e falta de desafios' : dominant.name === 'Autonomia' ? 'Microgerenciamento e burocracia' : dominant.name === 'Relacionamento' ? 'Ambientes tóxicos e desarmônicos' : 'Incerteza e instabilidade') + '</li><li>• ' + (dominant.name === 'Propósito' ? 'Trabalho sem significado' : 'Falta de reconhecimento') + '</li></ul></div></div>';
-
-      const analysisHtml = [];
-      const entries = Object.entries(results.percentages).slice(0, 4);
-      for (let i = 0; i < entries.length; i++) {
-        const key = entries[i][0];
-        const value = entries[i][1];
-        const interp = VALUES_INTERPRETATIONS[key];
-        const level = value >= 30 ? 'high' : value >= 20 ? 'medium' : 'low';
-        const desc = level === 'high' ? interp.high : level === 'medium' ? interp.medium : interp.low;
-        const badgeClass = value >= 30 ? 'bg-brand-amber/20 text-brand-amber' : value >= 20 ? 'bg-brand-blue/20 text-brand-blue' : 'bg-gray-500/20 text-gray-400';
-        analysisHtml.push('<div class="glass p-4 rounded-lg mb-4"><div class="flex justify-between items-center mb-2"><h4 class="font-semibold">' + interp.name + '</h4><span class="px-2 py-1 rounded-full text-xs ' + badgeClass + '">' + value + '%</span></div><p class="text-sm text-gray-300">' + interp.desc + '</p><p class="text-xs text-gray-400 mt-1">' + desc + '</p></div>');
-      }
-      document.getElementById('detailedAnalysis').innerHTML = analysisHtml.join('');
-
-      document.getElementById('recommendations').innerHTML = '<ul class="space-y-2 text-sm text-gray-300"><li class="flex gap-2"><span class="text-brand-emerald">➤</span> Alinhe seu trabalho atual com seu valor predominante (' + dominant.name + ').</li><li class="flex gap-2"><span class="text-brand-emerald">➤</span> Busque ambientes que respeitem seu perfil motivacional.</li><li class="flex gap-2"><span class="text-brand-emerald">➤</span> Considere o laudo completo Vigorre para análise integrada com DISC e IE.</li><li class="flex gap-2"><span class="text-brand-emerald">➤</span> Desenvolva seu valor secundário para maior flexibilidade profissional.</li></ul>';
-
+      
+      // Determinar valor predominante
+      const sorted = Object.entries(results.percentages).sort((a, b) => b[1] - a[1]);
+      const [dominant] = sorted;
+      const dominantProfile = VALUES_INTERPRETATIONS[dominant[0]];
+      
+      document.getElementById('profileText').textContent = `${dominantProfile.name} (${dominant[1]}%)`;
+      
+      // Resumo Executivo
+      document.getElementById('executiveSummary').textContent = 
+        `Seu valor predominante é ${dominantProfile.name} com ${dominant[1]}% de intensidade. ${dominantProfile.high} ${dominantProfile.desc}`;
+      
+      // Recomendações
+      document.getElementById('recommendations').innerHTML = `
+        <li>Alinhe seu trabalho atual com seu valor predominante (${dominantProfile.name})</li>
+        <li>Busque ambientes que respeitem seu perfil motivacional</li>
+        <li>Considere o laudo completo Vigorre para análise integrada com DISC e IE</li>
+        <li>Desenvolva seu valor secundário para maior flexibilidade profissional</li>
+      `;
+      
+      // Renderizar gráficos com tema dark
       renderCharts(results.percentages);
-      
-      // ✅ Definir data de impressão
-      document.getElementById('printDate').textContent = new Date().toLocaleDateString('pt-BR');
-      
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // ============================================
+    // RENDERIZAR GRÁFICOS COM TEMA DARK
+    // ============================================
     function renderCharts(percentages) {
-      // CORREÇÃO: Destruir instâncias anteriores antes de criar novas
-      if (valuesRadarChartInstance) { 
-        valuesRadarChartInstance.destroy(); 
-        valuesRadarChartInstance = null; 
-      }
-      if (valuesBarChartInstance) { 
-        valuesBarChartInstance.destroy(); 
-        valuesBarChartInstance = null; 
-      }
+      // Configurações de tema dark para Chart.js
+      Chart.defaults.color = '#94A3B8';
+      Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
+      
+      if (valuesRadarChartInstance) valuesRadarChartInstance.destroy();
+      if (valuesBarChartInstance) valuesBarChartInstance.destroy();
 
+      // Radar Chart
       const radarCtx = document.getElementById('valuesRadarChart');
       if (radarCtx) {
         valuesRadarChartInstance = new Chart(radarCtx, {
           type: 'radar',
-          data: {
-            labels: ['Realização', 'Propósito', 'Estabilidade', 'Autonomia', 'Reconhecimento', 'Relacionamento', 'Inovação', 'Equilíbrio'],
-            datasets: [{
-              label: 'Seu Perfil',
-              data: [
-                percentages.realizacao, 
-                percentages.proposito, 
-                percentages.seguranca, 
-                percentages.autonomia, 
-                percentages.reconhecimento, 
-                percentages.relacionamento, 
-                percentages.inovacao, 
-                percentages.equilibrio
-              ],
-              backgroundColor: 'rgba(245, 158, 11, 0.2)',
-              borderColor: '#F59E0B',
-              borderWidth: 2,
-              pointBackgroundColor: '#F59E0B'
-            }]
+          data: { 
+            labels: ['Realização', 'Propósito', 'Estabilidade', 'Autonomia', 'Reconhecimento', 'Relacionamento', 'Inovação', 'Equilíbrio'], 
+            datasets: [{ 
+              label: 'Seu Perfil', 
+              data: [percentages.realizacao, percentages.proposito, percentages.seguranca, percentages.autonomia, percentages.reconhecimento, percentages.relacionamento, percentages.inovacao, percentages.equilibrio], 
+              backgroundColor: 'rgba(245, 158, 11, 0.25)', 
+              borderColor: '#F59E0B', 
+              borderWidth: 2, 
+              pointBackgroundColor: '#F59E0B',
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2
+            }] 
           },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-              r: {
-                min: 0,
-                max: 100,
-                angleLines: { color: 'rgba(255,255,255,0.1)' },
-                grid: { color: 'rgba(255,255,255,0.1)' },
-                pointLabels: { color: '#94A3B8', font: { size: 10 } },
-                ticks: { display: false, backdropColor: 'transparent' }
-              }
-            },
-            plugins: { legend: { display: false } }
+          options: { 
+            responsive: true, 
+            maintainAspectRatio: false, 
+            scales: { 
+              r: { 
+                min: 0, 
+                max: 100, 
+                angleLines: { color: 'rgba(255,255,255,0.1)' }, 
+                grid: { color: 'rgba(255,255,255,0.1)' }, 
+                pointLabels: { color: '#CBD5E1', font: { size: 10, family: 'Inter', weight: '600' } }, 
+                ticks: { display: false, backdropColor: 'transparent' } 
+              } 
+            }, 
+            plugins: { legend: { display: false } } 
           }
         });
       }
 
+      // Bar Chart
       const barCtx = document.getElementById('valuesBarChart');
       if (barCtx) {
         valuesBarChartInstance = new Chart(barCtx, {
           type: 'bar',
-          data: {
-            labels: ['RE', 'PR', 'ES', 'AU', 'RC', 'RL', 'IN', 'EQ'],
-            datasets: [{
-              label: '%',
-              data: [
-                percentages.realizacao, 
-                percentages.proposito, 
-                percentages.seguranca, 
-                percentages.autonomia, 
-                percentages.reconhecimento, 
-                percentages.relacionamento, 
-                percentages.inovacao, 
-                percentages.equilibrio
-              ],
-              backgroundColor: ['#1D4ED8', '#7C3AED', '#64748B', '#06B6D4', '#F59E0B', '#10B981', '#EC4899', '#3B82F6'],
-              borderRadius: 6
-            }]
+          data: { 
+            labels: ['RE', 'PR', 'ES', 'AU', 'RC', 'RL', 'IN', 'EQ'], 
+            datasets: [{ 
+              label: '%', 
+              data: [percentages.realizacao, percentages.proposito, percentages.seguranca, percentages.autonomia, percentages.reconhecimento, percentages.relacionamento, percentages.inovacao, percentages.equilibrio], 
+              backgroundColor: ['#1D4ED8', '#7C3AED', '#64748B', '#06B6D4', '#F59E0B', '#10B981', '#EC4899', '#3B82F6'], 
+              borderRadius: 8,
+              borderSkipped: false
+            }] 
           },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-              y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#94A3B8' } },
-              x: { grid: { display: false }, ticks: { color: '#F8FAFC', font: { weight: 'bold', size: 10 } } }
-            },
-            plugins: { legend: { display: false } }
+          options: { 
+            responsive: true, 
+            maintainAspectRatio: false, 
+            scales: { 
+              y: { 
+                beginAtZero: true, 
+                max: 100, 
+                grid: { color: 'rgba(255,255,255,0.08)' }, 
+                ticks: { color: '#94A3B8', font: { family: 'Inter' } } 
+              }, 
+              x: { 
+                grid: { display: false }, 
+                ticks: { color: '#F1F5F9', font: { weight: '700', size: 12, family: 'Inter' } } 
+              } 
+            }, 
+            plugins: { legend: { display: false } } 
           }
         });
       }
     }
 
     // ============================================
-    // ✅ FUNÇÕES DO MODAL E LOGOFF
+    // MODAL E LOGOUT
     // ============================================
     function openSimpleReportModal() {
-      console.log('🔒 Abrindo modal de relatório completo Valores');
-      const modal = document.getElementById('simpleReportModal');
-      if (modal) {
-        modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden'; // Evitar scroll no fundo
-      }
+      document.getElementById('simpleReportModal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
     }
 
     function closeModalAndLogout() {
-      console.log('🔐 Fechando modal e realizando logoff');
-      const modal = document.getElementById('simpleReportModal');
-      if (modal) {
-        modal.style.display = 'none';
-        document.body.style.overflow = '';
-      }
+      document.getElementById('simpleReportModal').classList.add('hidden');
+      document.body.style.overflow = '';
       performLogout();
     }
 
-    // ============================================
-    // FUNÇÃO: FAZER LOGOFF DO SISTEMA
-    // ============================================
-    async function performLogout() {
-      console.log('🔐 Realizando logoff completo...');
-      
-      // Tentar remover sessão do Supabase se disponível
-      if (window.VigorreDB && VigorreDB.supabase) {
-        const token = sessionStorage.getItem('vigorre_session_token');
-        if (token) {
-          try {
-            await VigorreDB.supabase
-              .from('sessions')
-              .delete()
-              .eq('token', token);
-            console.log('✅ Sessão removida do Supabase');
-          } catch (e) {
-            console.warn('⚠️ Não foi possível remover sessão do Supabase:', e);
-          }
-        }
-      }
-      
-      // Limpar dados locais
+    function performLogout() {
       localStorage.removeItem('vigorre_current_user');
       sessionStorage.clear();
-      
-      // Redirecionar para login com parâmetros para evitar cache
-      window.location.href = 'login.html?loggedout=1&ts=' + Date.now();
+      window.location.href = 'login.html';
     }
 
-    function downloadSimpleReport() {
-      // ✅ CORREÇÃO: Ao clicar em "Baixar Relatório Simples", abrir modal em vez de download direto
-      openSimpleReportModal();
-    }
-
+    // ============================================
+    // TOAST NOTIFICATIONS
+    // ============================================
     function showToast(message, type) {
-      type = type || 'success';
       const toast = document.getElementById('toast');
-      const icon = document.getElementById('toastIcon');
-      const msg = document.getElementById('toastMessage');
+      document.getElementById('toastIcon').textContent = type === 'success' ? '✅' : '❌';
+      document.getElementById('toastMessage').textContent = message;
       
-      if (!toast) return;
-      
-      icon.textContent = type === 'success' ? '✅' : '⚠️';
-      msg.textContent = message;
-      
-      toast.className = `toast ${type}`;
+      toast.className = `toast ${type === 'error' ? 'error' : type === 'warning' ? 'warning' : ''}`;
       toast.classList.remove('hidden');
-      setTimeout(function() { 
-        toast.classList.add('show'); 
-      }, 10);
-      setTimeout(function() { 
-        toast.classList.remove('show'); 
-        setTimeout(function() { 
-          toast.classList.add('hidden'); 
-        }, 300); 
-      }, 4000);
+      
+      setTimeout(() => { 
+        toast.classList.add('hidden'); 
+      }, 3000);
     }
 
-    // ============================================
-    // TRATAMENTO DE ERROS GLOBAIS
-    // ============================================
-    window.addEventListener('error', function(e) {
-      console.error('❌ Erro no Teste Valores Vigorre One™:', e);
-      showToast('⚠️ Ocorreu um erro. Recarregue a página se o problema persistir.', 'error');
-      return true; // Previne erro no console do navegador
+    // Fechar modal ao clicar fora
+    document.getElementById('simpleReportModal')?.addEventListener('click', function(e) {
+      if (e.target === this) closeModalAndLogout();
     });
 
-    // ============================================
-    // DEBUG INICIAL
-    // ============================================
-    console.log('🔍 Teste Valores - Estado inicial:', {
+    // Fechar com Escape
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('simpleReportModal');
+        if (modal && !modal.classList.contains('hidden')) closeModalAndLogout();
+      }
+    });
+
+    // Prevenir back button após logout
+    window.addEventListener('pageshow', function(event) {
+      if (event.persisted) {
+        const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+        const sessionActive = sessionStorage.getItem('vigorre_session_active') === 'true';
+        if (!currentUser.role || currentUser.role !== 'participant' || !sessionActive) {
+          window.location.replace('login.html');
+        }
+      }
+    });
+
+    // Debug inicial
+    console.log('🔍 Teste Valores - Estado:', {
       session: AppState.session?.name || 'não carregado',
-      participant: AppState.participant?.name || 'não carregado',
-      localStorage: {
-        user: !!localStorage.getItem('vigorre_current_user'),
-        participants: !!localStorage.getItem('vigorre_participants'),
-        valores: !!localStorage.getItem('vigorre_last_valores_result')
-      },
-      supabase: {
-        available: !!window.VigorreDB,
-        url: window.VigorreDB?.supabase ? 'conectado' : 'não conectado'
+      firebase: {
+        available: typeof window.firebaseDB !== 'undefined',
+        db: window.firebaseDB?.db ? 'conectado' : 'não conectado'
       }
     });
   </script>
