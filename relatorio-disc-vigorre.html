@@ -141,15 +141,15 @@
     .vigor-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 12px;
-      margin: 20px 0;
+      gap: 10px;
+      margin: 15px 0;
       width: 100%;
       max-width: 100%;
     }
     .vigor-item {
       background: linear-gradient(135deg, #0A1628, #1e3a5f);
       color: white;
-      padding: 15px 10px;
+      padding: 12px 8px;
       border-radius: 8px;
       text-align: center;
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -157,31 +157,31 @@
       width: 100%;
     }
     .vigor-letter {
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 900;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       display: block;
       line-height: 1;
     }
     .vigor-title {
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 700;
       text-transform: uppercase;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
       line-height: 1.2;
     }
     .vigor-desc {
-      font-size: 9px;
+      font-size: 8px;
       opacity: 0.95;
-      line-height: 1.3;
+      line-height: 1.25;
       display: -webkit-box;
-      -webkit-line-clamp: 4;
+      -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
     .vigor-score {
-      margin-top: 8px;
-      font-size: 20px;
+      margin-top: 6px;
+      font-size: 18px;
       font-weight: 800;
       color: #10B981;
       line-height: 1;
@@ -262,7 +262,8 @@
     }
 
     /* ============================================
-       PRINT OPTIMIZATION - MARGENS PRECISAS (3cm)
+       PRINT OPTIMIZATION - MARGENS PRECISAS
+       Header: 2.5cm (25mm) | Espaço: 3cm (30mm) | Footer: 2.5cm (25mm)
        ============================================ */
     @media print {
       @page {
@@ -281,18 +282,18 @@
       
       .no-print { display: none !important; }
       
-      /* Header fixo - TERMINA a 25mm (2.5cm) do topo */
+      /* HEADER - ALTURA EXATA 25mm (2.5cm) */
       .print-header {
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 4mm 12mm !important;
+        padding: 3mm 10mm !important;
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         z-index: 9999;
-        height: 25mm; /* 2.5cm - altura até o FINAL do azul */
+        height: 25mm !important; /* EXATO: 2.5cm */
         box-sizing: border-box !important;
         align-items: center;
       }
@@ -302,82 +303,13 @@
         justify-content: space-between;
         align-items: center;
         width: 100%;
-        max-width: 180mm; /* Largura útil A4 com margens laterais */
+        max-width: 185mm; /* Largura útil com margens laterais de 12.5mm */
         margin: 0 auto;
       }
       
-      .print-header .print-logo { display: flex; align-items: center; gap: 4mm; }
+      .print-header .print-logo { display: flex; align-items: center; gap: 3mm; }
       
       .print-header .print-logo-box {
-        width: 9mm;
-        height: 9mm;
-        background: #ffffff !important;
-        color: #0A1628;
-        border-radius: 2mm;
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
-        font-weight: 900;
-        font-size: 8pt;
-      }
-      
-      .print-header h1 {
-        font-size: 9pt;
-        font-weight: 800;
-        margin: 0;
-        color: white !important;
-        line-height: 1.2;
-      }
-      
-      .print-header p {
-        font-size: 6pt;
-        margin: 0;
-        opacity: 0.95;
-        color: rgba(255,255,255,0.95) !important;
-      }
-      
-      .print-header .print-method {
-        text-align: right;
-        font-size: 6pt;
-        color: rgba(255,255,255,0.95) !important;
-      }
-      
-      .print-header .print-method strong {
-        font-size: 8pt;
-        letter-spacing: 0.5px;
-        display: block;
-        color: white !important;
-      }
-      
-      /* Footer fixo - COMEÇA a 25mm (2.5cm) da base */
-      .print-footer {
-        display: flex !important;
-        background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
-        color: white !important;
-        padding: 4mm 12mm !important;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        z-index: 9999;
-        height: 25mm; /* 2.5cm - altura do azul */
-        box-sizing: border-box !important;
-        align-items: center;
-      }
-      
-      .print-footer .print-footer-content {
-        font-size: 6pt;
-        width: 100%;
-        max-width: 180mm;
-        margin: 0 auto;
-        color: white !important;
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-      }
-      
-      .print-footer .footer-logo-box { display: flex; align-items: center; gap: 4mm; }
-      .print-footer .footer-logo {
         width: 8mm;
         height: 8mm;
         background: #ffffff !important;
@@ -389,56 +321,129 @@
         font-weight: 900;
         font-size: 7pt;
       }
-      .print-footer .footer-text h4 {
-        font-size: 7pt;
-        font-weight: 700;
+      
+      .print-header h1 {
+        font-size: 8.5pt;
+        font-weight: 800;
         margin: 0;
         color: white !important;
         line-height: 1.2;
       }
-      .print-footer .footer-text p {
+      
+      .print-header p {
         font-size: 5.5pt;
         margin: 0;
         opacity: 0.95;
         color: rgba(255,255,255,0.95) !important;
       }
       
-      /* CONTEÚDO PRINCIPAL - MARGENS DE 3cm (30mm) DO HEADER/FOOTER */
+      .print-header .print-method {
+        text-align: right;
+        font-size: 5.5pt;
+        color: rgba(255,255,255,0.95) !important;
+      }
+      
+      .print-header .print-method strong {
+        font-size: 7.5pt;
+        letter-spacing: 0.5px;
+        display: block;
+        color: white !important;
+      }
+      
+      /* FOOTER - ALTURA EXATA 25mm (2.5cm) */
+      .print-footer {
+        display: flex !important;
+        background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
+        color: white !important;
+        padding: 3mm 10mm !important;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        height: 25mm !important; /* EXATO: 2.5cm */
+        box-sizing: border-box !important;
+        align-items: center;
+      }
+      
+      .print-footer .print-footer-content {
+        font-size: 5.5pt;
+        width: 100%;
+        max-width: 185mm;
+        margin: 0 auto;
+        color: white !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+      }
+      
+      .print-footer .footer-logo-box { display: flex; align-items: center; gap: 3mm; }
+      .print-footer .footer-logo {
+        width: 7mm;
+        height: 7mm;
+        background: #ffffff !important;
+        color: #0A1628;
+        border-radius: 2mm;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        font-size: 6.5pt;
+      }
+      .print-footer .footer-text h4 {
+        font-size: 6.5pt;
+        font-weight: 700;
+        margin: 0;
+        color: white !important;
+        line-height: 1.2;
+      }
+      .print-footer .footer-text p {
+        font-size: 5pt;
+        margin: 0;
+        opacity: 0.95;
+        color: rgba(255,255,255,0.95) !important;
+      }
+      
+      /* CONTEÚDO - MARGENS PRECISAS: 3cm (30mm) do header/footer */
       main {
-        margin-top: 55mm !important;  /* 25mm header + 30mm espaço = 55mm do topo da página */
-        margin-bottom: 55mm !important; /* 30mm espaço + 25mm footer = 55mm da base da página */
+        /* Header termina em 25mm + 30mm espaço = conteúdo inicia em 55mm */
+        margin-top: 55mm !important;
+        /* Footer começa em 297mm - 25mm = 272mm, menos 30mm espaço = conteúdo termina em 242mm */
+        margin-bottom: 55mm !important;
         padding: 0 !important;
         width: 100% !important;
-        max-width: 180mm !important; /* 210mm A4 - 15mm margem esquerda - 15mm margem direita */
+        max-width: 185mm !important; /* 210mm A4 - 12.5mm margem esquerda - 12.5mm margem direita */
         margin-left: auto !important;
         margin-right: auto !important;
         display: block !important;
         box-sizing: border-box !important;
+        position: relative;
+        z-index: 1;
       }
       
       /* Cards - SEM QUEBRA E COM PADDING AJUSTADO */
       .vigorre-card {
         break-inside: avoid !important;
         page-break-inside: avoid !important;
-        margin-bottom: 8mm !important;
+        margin-bottom: 7mm !important;
         width: 100% !important;
         box-sizing: border-box !important;
       }
       
       .vigorre-card .card-header {
-        padding: 6mm 10mm !important;
+        padding: 5mm 9mm !important;
         page-break-after: avoid !important;
       }
       
-      .vigorre-card .card-header h2 { font-size: 10pt !important; }
-      .vigorre-card .card-body { padding: 10mm !important; }
+      .vigorre-card .card-header h2 { font-size: 9.5pt !important; }
+      .vigorre-card .card-body { padding: 9mm !important; }
       
       /* Grids responsivos para impressão */
       .grid.md\:grid-cols-2 {
         display: grid !important;
         grid-template-columns: 1fr 1fr !important;
-        gap: 8mm !important;
-        margin-bottom: 8mm !important;
+        gap: 7mm !important;
+        margin-bottom: 7mm !important;
       }
       .grid.md\:grid-cols-2 > div { 
         min-width: 0 !important; 
@@ -449,7 +454,7 @@
       .grid.md\:grid-cols-3 {
         display: grid !important;
         grid-template-columns: repeat(3, 1fr) !important;
-        gap: 6mm !important;
+        gap: 5mm !important;
       }
       .grid.md\:grid-cols-3 > div { 
         min-width: 0 !important; 
@@ -460,7 +465,7 @@
       .grid.md\:grid-cols-4 {
         display: grid !important;
         grid-template-columns: repeat(4, 1fr) !important;
-        gap: 5mm !important;
+        gap: 4mm !important;
       }
       .grid.md\:grid-cols-4 > div { 
         min-width: 0 !important; 
@@ -470,8 +475,8 @@
       
       /* Gráficos - ALTURA CONTROLADA PARA CABER */
       .chart-container {
-        height: 65mm !important;
-        margin-bottom: 6mm !important;
+        height: 60mm !important;
+        margin-bottom: 5mm !important;
         position: relative !important;
         width: 100% !important;
         box-sizing: border-box !important;
@@ -487,7 +492,7 @@
       .chart-container + div,
       .chart-container + .bg-slate-50,
       .chart-container + h3 {
-        margin-top: 6mm !important;
+        margin-top: 5mm !important;
         clear: both !important;
       }
       
@@ -495,19 +500,19 @@
       #discInterpretation {
         display: flex !important;
         flex-direction: column !important;
-        gap: 5mm !important;
+        gap: 4mm !important;
       }
       #discInterpretation > div {
-        margin-bottom: 5mm !important;
+        margin-bottom: 4mm !important;
         page-break-inside: avoid !important;
       }
       
-      /* GRID VIGOR AJUSTADO PARA IMPRESSÃO - 5 COLUNAS QUE CABEM */
+      /* GRID VIGOR AJUSTADO PARA IMPRESSÃO - 5 COLUNAS QUE CABEM EM 185mm */
       .vigor-grid {
         display: grid !important;
         grid-template-columns: repeat(5, 1fr) !important;
-        gap: 4mm !important; /* Gap reduzido para caber 5 colunas em 180mm */
-        margin: 8mm 0 !important;
+        gap: 3mm !important; /* Gap mínimo para caber 5 colunas em 185mm */
+        margin: 6mm 0 !important;
         page-break-inside: avoid !important;
         width: 100% !important;
         box-sizing: border-box !important;
@@ -515,14 +520,14 @@
       .vigor-item {
         break-inside: avoid !important;
         page-break-inside: avoid !important;
-        padding: 8mm 4mm !important;
+        padding: 6mm 3mm !important;
         box-sizing: border-box !important;
         width: 100% !important;
       }
-      .vigor-letter { font-size: 22px !important; }
-      .vigor-title { font-size: 8pt !important; }
-      .vigor-desc { font-size: 7pt !important; -webkit-line-clamp: 3 !important; }
-      .vigor-score { font-size: 16px !important; }
+      .vigor-letter { font-size: 20px !important; }
+      .vigor-title { font-size: 7.5pt !important; }
+      .vigor-desc { font-size: 6.5pt !important; -webkit-line-clamp: 3 !important; }
+      .vigor-score { font-size: 15px !important; }
       
       /* Marca d'água */
       .print-watermark {
@@ -531,7 +536,7 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%) rotate(-30deg);
-        font-size: 70pt;
+        font-size: 65pt;
         color: rgba(15, 23, 42, 0.04) !important;
         font-weight: 900;
         pointer-events: none;
@@ -543,7 +548,7 @@
       h2, h3, h4 { page-break-after: avoid !important; }
       
       /* Barras de progresso e elementos visuais */
-      .aderencia-bar-container { height: 18px !important; }
+      .aderencia-bar-container { height: 16px !important; }
       .w-full { box-sizing: border-box !important; }
     }
     
