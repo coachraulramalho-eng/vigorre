@@ -295,7 +295,7 @@
     }
 
     /* ============================================
-       PRINT OPTIMIZATION - MARGENS PRECISAS (CORREÇÃO FINAL)
+       PRINT OPTIMIZATION - CORREÇÃO DEFINITIVA
        Header: 2.5cm (25mm) | Espaço: 3cm (30mm) | Footer: 2.5cm (25mm)
        ============================================ */
     @media print {
@@ -309,7 +309,7 @@
         color: #000000 !important;
         font-size: 9pt;
         line-height: 1.4;
-        width: 210mm !important; /* Largura total A4 */
+        width: 210mm !important;
         margin: 0 auto !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
@@ -322,13 +322,13 @@
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 0 !important; /* Remove padding externo que altera altura */
+        padding: 0 !important;
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         z-index: 9999;
-        height: 25mm !important; /* EXATO: 2.5cm */
+        height: 25mm !important;
         box-sizing: border-box !important;
         align-items: center;
         justify-content: center;
@@ -339,16 +339,14 @@
         justify-content: space-between;
         align-items: center;
         width: 100%;
-        max-width: 185mm; /* Largura útil com margens laterais */
-        padding: 0 12.5mm !important; /* Padding interno para conteúdo */
+        max-width: 185mm;
+        padding: 0 12.5mm !important;
         box-sizing: border-box !important;
       }
       
       .print-header .print-logo { display: flex; align-items: center; gap: 3mm; }
-      
       .print-header .print-logo-box {
-        width: 8mm;
-        height: 8mm;
+        width: 8mm; height: 8mm;
         background: #ffffff !important;
         color: #0A1628;
         border-radius: 2mm;
@@ -358,33 +356,21 @@
         font-weight: 900;
         font-size: 7pt;
       }
-      
       .print-header h1 {
-        font-size: 8.5pt;
-        font-weight: 800;
-        margin: 0;
-        color: white !important;
-        line-height: 1.2;
+        font-size: 8.5pt; font-weight: 800; margin: 0;
+        color: white !important; line-height: 1.2;
       }
-      
       .print-header p {
-        font-size: 5.5pt;
-        margin: 0;
-        opacity: 0.95;
+        font-size: 5.5pt; margin: 0; opacity: 0.95;
         color: rgba(255,255,255,0.95) !important;
       }
-      
       .print-header .print-method {
-        text-align: right;
-        font-size: 5.5pt;
+        text-align: right; font-size: 5.5pt;
         color: rgba(255,255,255,0.95) !important;
       }
-      
       .print-header .print-method strong {
-        font-size: 7.5pt;
-        letter-spacing: 0.5px;
-        display: block;
-        color: white !important;
+        font-size: 7.5pt; letter-spacing: 0.5px;
+        display: block; color: white !important;
       }
       
       /* FOOTER - ALTURA EXATA 25mm (2.5cm) */
@@ -392,13 +378,13 @@
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 0 !important; /* Remove padding externo que altera altura */
+        padding: 0 !important;
         position: fixed;
         bottom: 0;
         left: 0;
         right: 0;
         z-index: 9999;
-        height: 25mm !important; /* EXATO: 2.5cm */
+        height: 25mm !important;
         box-sizing: border-box !important;
         align-items: center;
         justify-content: center;
@@ -408,7 +394,7 @@
         font-size: 5.5pt;
         width: 100%;
         max-width: 185mm;
-        padding: 0 12.5mm !important; /* Padding interno para conteúdo */
+        padding: 0 12.5mm !important;
         color: white !important;
         display: flex !important;
         justify-content: space-between !important;
@@ -418,8 +404,7 @@
       
       .print-footer .footer-logo-box { display: flex; align-items: center; gap: 3mm; }
       .print-footer .footer-logo {
-        width: 7mm;
-        height: 7mm;
+        width: 7mm; height: 7mm;
         background: #ffffff !important;
         color: #0A1628;
         border-radius: 2mm;
@@ -430,35 +415,27 @@
         font-size: 6.5pt;
       }
       .print-footer .footer-text h4 {
-        font-size: 6.5pt;
-        font-weight: 700;
-        margin: 0;
-        color: white !important;
-        line-height: 1.2;
+        font-size: 6.5pt; font-weight: 700; margin: 0;
+        color: white !important; line-height: 1.2;
       }
       .print-footer .footer-text p {
-        font-size: 5pt;
-        margin: 0;
-        opacity: 0.95;
+        font-size: 5pt; margin: 0; opacity: 0.95;
         color: rgba(255,255,255,0.95) !important;
       }
       
       /* CONTEÚDO - MARGENS PRECISAS: 3cm (30mm) do header/footer */
       main {
-        /* Header termina em 25mm + 30mm espaço = conteúdo inicia em 55mm */
         margin-top: 55mm !important;
-        /* Footer começa em 297mm - 25mm = 272mm, menos 30mm espaço = conteúdo termina em 242mm */
         margin-bottom: 55mm !important;
         padding: 0 !important; /* Remove padding inline que interfere */
         width: 100% !important;
-        max-width: 185mm !important; /* 210mm A4 - 12.5mm margem esquerda - 12.5mm margem direita */
+        max-width: 185mm !important;
         margin-left: auto !important;
         margin-right: auto !important;
         display: block !important;
         box-sizing: border-box !important;
         position: relative;
-        z-index: 1;
-        /* Margens laterais explícitas */
+        z-index: 1; /* Garante que conteúdo fique acima do watermark */
         padding-left: 12.5mm !important;
         padding-right: 12.5mm !important;
       }
@@ -549,11 +526,11 @@
         page-break-inside: avoid !important;
       }
       
-      /* GRID VIGOR AJUSTADO PARA IMPRESSÃO - 5 COLUNAS QUE CABEM EM 185mm */
+      /* GRID VIGOR AJUSTADO PARA IMPRESSÃO */
       .vigor-grid {
         display: grid !important;
         grid-template-columns: repeat(5, 1fr) !important;
-        gap: 3mm !important; /* Gap mínimo para caber 5 colunas em 185mm */
+        gap: 3mm !important;
         margin: 6mm 0 !important;
         page-break-inside: avoid !important;
         width: 100% !important;
@@ -582,7 +559,7 @@
         color: rgba(15, 23, 42, 0.04) !important;
         font-weight: 900;
         pointer-events: none;
-        z-index: 0;
+        z-index: 0; /* Fica ABAIXO do conteúdo */
       }
       
       /* Evitar quebras em elementos importantes */
@@ -688,7 +665,6 @@
           <p class="text-xs text-gray-400 uppercase font-bold tracking-wider mb-1">Empresa</p>
           <div class="flex items-center gap-2">
             <p class="font-bold text-lg text-brand-navy" id="coverCompany">Independente</p>
-            <!-- ✅ BOTÃO VINCULAR EMPRESA -->
             <button onclick="openCompanyModal()" class="no-print text-xs bg-brand-blue/10 text-brand-blue px-2 py-1 rounded hover:bg-brand-blue/20 transition">
               Vincular
             </button>
@@ -1286,8 +1262,31 @@
       // Garantir que os dados estejam carregados antes de gerar o relatório
       if (AppState.discResults) {
         generateReport();
+      } else {
+        // Mostrar mensagem de erro visual se não houver dados
+        showNoDataMessage();
       }
     });
+
+    // ============================================
+    // ✅ MOSTRAR MENSAGEM DE ERRO VISUAL
+    // ============================================
+    function showNoDataMessage() {
+      const perfilDetalhado = safeGetElement('perfilDetalhado');
+      if (perfilDetalhado) {
+        perfilDetalhado.innerHTML = `
+          <div class="text-center py-8">
+            <div class="text-amber-500 text-4xl mb-4">⚠️</div>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">Dados não encontrados</h3>
+            <p class="text-gray-600 mb-4">Não foi possível carregar os resultados do teste DISC.</p>
+            <button onclick="window.location.href='teste-disc.html'" 
+                    class="bg-brand-blue text-white px-6 py-2 rounded-lg font-medium hover:bg-brand-blue/90 transition">
+              Realizar Teste DISC
+            </button>
+          </div>
+        `;
+      }
+    }
 
     // ============================================
     // ✅ FUNÇÃO: CARREGAR SESSÃO - SUPABASE + FALLBACK
