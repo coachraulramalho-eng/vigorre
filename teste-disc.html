@@ -8,7 +8,7 @@
   <title>Assessment DISC | Vigorre One™ • People Analytics Enterprise</title>
   
   <!-- Fonts Premium -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
   <!-- Preconnect para performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,7 +27,7 @@
         extend: {
           colors: {
             brand: {
-              navy: '#0A1628',
+              navy: '#0F172A',
               blue: '#1D4ED8',
               blueDark: '#1E40AF',
               purple: '#7C3AED',
@@ -53,14 +53,12 @@
             'fade-in': 'fadeIn 0.5s ease-out',
             'slide-up': 'slideUp 0.4s ease-out',
             'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-            'shimmer': 'shimmer 2s linear infinite',
-            'float': 'float 6s ease-in-out infinite'
+            'shimmer': 'shimmer 2s linear infinite'
           },
           keyframes: {
             fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
             slideUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
-            shimmer: { '0%': { transform: 'translateX(-100%)' }, '100%': { transform: 'translateX(100%)' } },
-            float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } }
+            shimmer: { '0%': { transform: 'translateX(-100%)' }, '100%': { transform: 'translateX(100%)' } }
           }
         }
       }
@@ -79,343 +77,634 @@
       --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
       --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
       --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-      --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
       --radius: 0.5rem; --radius-lg: 1rem; --radius-xl: 1.5rem; --radius-2xl: 2rem;
       --transition: 250ms ease;
     }
     
     body { 
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
-      background: linear-gradient(135deg, var(--brand-navy) 0%, var(--brand-slate-800) 50%, var(--brand-slate-900) 100%);
-      color: var(--brand-slate-50); min-height: 100vh; line-height: 1.6; position: relative; overflow-x: hidden;
-    }
-    
-    body::before {
-      content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(ellipse at 20% 80%, rgba(29, 78, 216, 0.12) 0%, transparent 50%),
-                  radial-gradient(ellipse at 80% 20%, rgba(124, 58, 237, 0.10) 0%, transparent 50%);
-      pointer-events: none; z-index: 0; animation: float 20s ease-in-out infinite;
+      background: linear-gradient(135deg, #f0f9ff 0%, #f8fafc 100%);
+      color: var(--brand-slate-800); min-height: 100vh; line-height: 1.6; position: relative; overflow-x: hidden;
     }
     
     /* ============================================
-       GLASSMORPHISM & EFEITOS PREMIUM
+       HEADER PREMIUM - CLARO E PROFISSIONAL
        ============================================ */
-    .glass {
-      background: rgba(30, 41, 59, 0.75);
-      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow: var(--shadow-lg);
+    header { 
+      background: white; 
+      border-bottom: 1px solid var(--brand-slate-200);
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: 72px;
     }
     
-    .glass-card {
-      background: linear-gradient(145deg, rgba(30, 41, 59, 0.92), rgba(15, 23, 42, 0.96));
-      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(255, 255, 255, 0.10);
-      border-radius: var(--radius-2xl);
-      box-shadow: var(--shadow-2xl);
-      position: relative; overflow: hidden;
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
     
-    .glass-card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.4), transparent);
-      pointer-events: none;
+    .logo { 
+      display: flex; 
+      align-items: center; 
+      gap: 12px; 
     }
     
-    .gradient-text {
-      background: linear-gradient(135deg, #60A5FA, #A78BFA, #22D3EE);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    .logo-img { 
+      height: 40px; 
+      width: auto; 
+      border-radius: 8px;
+    }
+    
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+    
+    .logo-text span:first-child {
+      font-size: 1.125rem;
+      font-weight: 800;
+      color: var(--brand-navy);
+    }
+    
+    .logo-text span:last-child {
+      font-size: 0.75rem;
+      color: var(--brand-slate-500);
+      font-weight: 500;
+    }
+    
+    .progress-section {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .progress-text {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--brand-slate-600);
+    }
+    
+    .progress-bar {
+      width: 200px;
+      height: 6px;
+      background: var(--brand-slate-200);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--brand-blue), var(--brand-purple));
+      border-radius: 3px;
+      transition: width 0.5s ease;
     }
     
     /* ============================================
-       BOTÕES PREMIUM
+       MAIN CONTENT - LAYOUT LIMPO
        ============================================ */
-    .btn-primary {
-      background: linear-gradient(135deg, var(--brand-blue), var(--brand-blueDark));
-      color: white; transition: all var(--transition); position: relative; overflow: hidden;
-      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      font-weight: 700; letter-spacing: 0.01em;
+    main { 
+      max-width: 800px; 
+      margin: 0 auto; 
+      padding: 48px 24px;
+      min-height: calc(100vh - 72px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .btn-primary::before {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(135deg, var(--brand-purple), var(--brand-cyan));
-      opacity: 0; transition: opacity var(--transition);
-    }
-    .btn-primary:hover::before { opacity: 1; }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(30, 64, 175, 0.45); }
-    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
     
-    .btn-secondary {
-      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25);
-      color: white; transition: all var(--transition); font-weight: 600;
+    /* ============================================
+       CARD DE PERGUNTA - DESIGN PREMIUM
+       ============================================ */
+    .question-card {
+      background: white;
+      border-radius: 24px;
+      padding: 3rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border: 1px solid var(--brand-slate-200);
+      width: 100%;
+      animation: slideUp 0.4s ease;
     }
-    .btn-secondary:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.4); transform: translateY(-1px); }
+    
+    .question-header {
+      margin-bottom: 2rem;
+    }
+    
+    .question-number {
+      display: inline-block;
+      padding: 6px 16px;
+      background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
+      color: white;
+      border-radius: 100px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+    }
+    
+    .question-text {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--brand-slate-800);
+      line-height: 1.4;
+      margin-bottom: 0.5rem;
+    }
+    
+    .question-instruction {
+      color: var(--brand-slate-500);
+      font-size: 0.9375rem;
+    }
+    
+    /* ============================================
+       OPÇÕES DE RESPOSTA - RADIO BUTTONS PREMIUM
+       ============================================ */
+    .options-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
     
     .option-btn {
-      width: 100%; padding: 16px 20px; border-radius: var(--radius-lg);
-      border: 2px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05);
-      color: var(--brand-slate-50); text-align: left; cursor: pointer;
-      transition: all var(--transition); display: flex; align-items: center; gap: 12px;
-      font-size: 1rem; position: relative; overflow: hidden;
+      width: 100%;
+      padding: 1.25rem 1.5rem;
+      border: 2px solid var(--brand-slate-200);
+      border-radius: 16px;
+      background: white;
+      text-align: left;
+      cursor: pointer;
+      transition: all var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 1rem;
+      color: var(--brand-slate-700);
+      font-weight: 500;
     }
-    .option-btn:hover { border-color: var(--brand-blue); background: rgba(37, 99, 235, 0.12); }
-    .option-btn.selected { border-color: var(--brand-emerald); background: rgba(16, 185, 129, 0.15); }
-    .option-btn .check-icon {
-      width: 20px; height: 20px; border-radius: 50%;
-      border: 2px solid rgba(255,255,255,0.3);
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    
+    .option-btn:hover {
+      border-color: var(--brand-blue);
+      background: var(--brand-slate-50);
+      transform: translateX(4px);
+    }
+    
+    .option-btn.selected {
+      border-color: var(--brand-blue);
+      background: linear-gradient(135deg, rgba(29, 78, 216, 0.05), rgba(124, 58, 237, 0.05));
+      box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.1);
+    }
+    
+    .option-radio {
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--brand-slate-300);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
       transition: all var(--transition);
     }
-    .option-btn.selected .check-icon { background: var(--brand-emerald); border-color: var(--brand-emerald); }
+    
+    .option-btn.selected .option-radio {
+      border-color: var(--brand-blue);
+      background: var(--brand-blue);
+    }
+    
+    .option-btn.selected .option-radio::after {
+      content: '✓';
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+    }
     
     /* ============================================
-       PROGRESS BAR & CHARTS
+       BOTÕES DE NAVEGAÇÃO
        ============================================ */
-    .progress-bar {
-      height: 6px; background: rgba(255, 255, 255, 0.12);
-      border-radius: 3px; overflow: hidden; position: relative;
-    }
-    .progress-fill {
-      height: 100%; background: linear-gradient(90deg, var(--brand-blue), var(--brand-purple), var(--brand-cyan));
-      border-radius: 3px; transition: width 0.5s ease; position: relative;
-    }
-    .progress-fill::after {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
-      animation: shimmer 2s infinite;
+    .navigation-buttons {
+      display: flex;
+      gap: 1rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--brand-slate-200);
     }
     
-    .chart-container { position: relative; height: 300px !important; width: 100%; }
+    .btn {
+      flex: 1;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all var(--transition);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .btn-secondary {
+      background: var(--brand-slate-100);
+      color: var(--brand-slate-700);
+    }
+    
+    .btn-secondary:hover:not(:disabled) {
+      background: var(--brand-slate-200);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
+      color: white;
+      box-shadow: 0 4px 14px rgba(29, 78, 216, 0.3);
+    }
+    
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(29, 78, 216, 0.4);
+    }
+    
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
     
     /* ============================================
-       MODAL PREMIUM
+       TELA DE RESULTADOS
+       ============================================ */
+    .results-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+    
+    .results-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding: 3rem;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+    
+    .results-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--brand-slate-800);
+      margin-bottom: 1rem;
+    }
+    
+    .profile-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, var(--brand-emerald), #059669);
+      color: white;
+      border-radius: 100px;
+      font-weight: 700;
+      font-size: 1.125rem;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+    }
+    
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .chart-card {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+    
+    .chart-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--brand-slate-800);
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--brand-slate-100);
+    }
+    
+    .chart-container {
+      position: relative;
+      height: 300px;
+    }
+    
+    /* ============================================
+       LOADING OVERLAY
+       ============================================ */
+    .loading-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    
+    .loading-content {
+      text-align: center;
+    }
+    
+    .loading-spinner {
+      width: 64px;
+      height: 64px;
+      border: 4px solid var(--brand-slate-200);
+      border-top-color: var(--brand-blue);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1.5rem;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .loading-text {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--brand-slate-700);
+    }
+    
+    /* ============================================
+       RESPONSIVO
+       ============================================ */
+    @media (max-width: 768px) {
+      .header-content {
+        padding: 0 16px;
+      }
+      
+      .progress-bar {
+        width: 120px;
+      }
+      
+      main {
+        padding: 24px 16px;
+      }
+      
+      .question-card {
+        padding: 2rem 1.5rem;
+      }
+      
+      .question-text {
+        font-size: 1.25rem;
+      }
+      
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .navigation-buttons {
+        flex-direction: column;
+      }
+    }
+    
+    /* ============================================
+       MODAL
        ============================================ */
     .modal-overlay {
-      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(15, 23, 42, 0.94); backdrop-filter: blur(16px);
-      display: flex; align-items: center; justify-content: center;
-      z-index: 10000; padding: 20px; animation: fadeIn 0.25s ease;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      padding: 20px;
     }
+    
     .modal-content {
-      background: white; border-radius: var(--radius-2xl);
-      padding: 2.75rem 2.5rem; max-width: 560px; width: 100%;
-      text-align: center; box-shadow: var(--shadow-2xl);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      animation: slideUp 0.45s ease;
+      background: white;
+      border-radius: 24px;
+      padding: 2.5rem;
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
     }
-    .modal-content h3 {
-      font-size: 1.625rem; font-weight: 800; color: var(--brand-slate-800);
-      margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: center; gap: 10px;
+    
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--brand-slate-800);
+      margin-bottom: 1rem;
     }
-    .modal-content p { color: var(--brand-slate-600); margin-bottom: 1.75rem; line-height: 1.75; font-size: 1.05rem; }
+    
+    .modal-text {
+      color: var(--brand-slate-600);
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+    }
+    
     .modal-highlight {
       background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      font-weight: 700; font-size: 1.125rem; display: block; margin: 1rem 0;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 700;
+      font-size: 1.125rem;
+      display: block;
+      margin: 1rem 0;
     }
+    
     .modal-btn {
       background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
-      color: white; padding: 14px 42px; border-radius: var(--radius-lg);
-      font-weight: 700; font-size: 1rem; border: none; cursor: pointer;
-      transition: all var(--transition); box-shadow: 0 5px 20px rgba(29, 78, 216, 0.45);
-      position: relative; overflow: hidden;
+      color: white;
+      padding: 14px 40px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition);
+      box-shadow: 0 4px 16px rgba(29, 78, 216, 0.4);
     }
-    .modal-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(29, 78, 216, 0.65); }
-    .modal-footer {
-      margin-top: 2rem; padding-top: 1.75rem; border-top: 1px solid var(--brand-slate-200);
-      font-size: 0.875rem; color: var(--brand-slate-400);
+    
+    .modal-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(29, 78, 216, 0.6);
     }
     
     /* ============================================
-       TOAST NOTIFICATIONS
+       TOAST
        ============================================ */
     .toast {
-      position: fixed; top: 24px; right: 24px; background: white;
-      padding: 14px 24px; border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-xl); display: flex; align-items: center; gap: 12px;
-      font-weight: 600; color: var(--brand-slate-800); z-index: 10001;
-      border-left: 4px solid var(--brand-emerald); animation: slideIn 0.3s ease;
-      border: 1px solid var(--brand-slate-200); max-width: 420px; font-size: 0.875rem;
-      transition: opacity var(--transition), transform var(--transition);
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      background: white;
+      padding: 14px 24px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      color: var(--brand-slate-800);
+      z-index: 10001;
+      border-left: 4px solid var(--brand-emerald);
+      animation: slideIn 0.3s ease;
     }
-    @keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    
+    @keyframes slideIn {
+      from { transform: translateX(120%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
     .toast.error { border-left-color: var(--brand-rose); }
-    .toast.warning { border-left-color: var(--brand-amber); }
-    .toast-icon { font-size: 1.25rem; flex-shrink: 0; }
-    .toast-close {
-      background: none; border: none; color: var(--brand-slate-400);
-      cursor: pointer; padding: 4px; border-radius: 6px;
-      transition: all var(--transition); font-size: 1.25rem;
-      display: flex; align-items: center; justify-content: center;
-      width: 28px; height: 28px;
-    }
-    .toast-close:hover { color: var(--brand-slate-600); background: var(--brand-slate-100); }
+    .toast-icon { font-size: 1.25rem; }
     
-    /* ============================================
-       PRINT OPTIMIZATION
-       ============================================ */
-    @media print {
-      body { background: white !important; color: #000 !important; font-size: 10pt; }
-      .no-print, header, .toast, .modal-overlay { display: none !important; }
-      .glass, .glass-card { background: white !important; border: 1px solid #ccc !important; box-shadow: none !important; backdrop-filter: none !important; }
-      .gradient-text { -webkit-text-fill-color: var(--brand-blue) !important; color: var(--brand-blue) !important; }
-      main { padding-top: 20px !important; max-width: 100%; }
-    }
-    
-    /* ============================================
-       ACESSIBILIDADE & UTILITÁRIOS
-       ============================================ */
-    .btn-primary:focus-visible, .btn-secondary:focus-visible, .option-btn:focus-visible, .modal-btn:focus-visible {
-      outline: 2px solid var(--brand-blue); outline-offset: 2px;
-    }
-    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    /* Utilitários */
     .hidden { display: none !important; }
-    
-    /* ============================================
-       CORREÇÃO DE MARGENS
-       ============================================ */
-    header { height: 72px !important; }
-    main { padding-top: 95px !important; padding-bottom: 45px !important; }
-    @media (max-width: 768px) { header { height: 68px !important; } main { padding-top: 90px !important; } }
   </style>
 </head>
-<body class="antialiased">
+<body>
 
   <!-- ============================================
-       TOAST NOTIFICATION
+       HEADER
        ============================================ -->
-  <div id="toast" class="toast hidden" role="alert" aria-live="polite">
-    <span class="toast-icon" id="toastIcon" aria-hidden="true">✅</span>
-    <span class="toast-message" id="toastMessage">Mensagem</span>
-    <button class="toast-close" onclick="hideToast()" aria-label="Fechar notificação"><span aria-hidden="true">×</span></button>
-  </div>
-  
-  <!-- ============================================
-       MODAL PARA RELATÓRIO SIMPLES
-       ============================================ -->
-  <div id="simpleReportModal" class="modal-overlay hidden" role="dialog" aria-labelledby="modalTitle" aria-modal="true">
-    <div class="modal-content">
-      <h3 id="modalTitle"><span aria-hidden="true">🔒</span> Acesso ao Relatório Completo</h3>
-      <p>Para obter acesso ao relatório completo com análise detalhada, plano de desenvolvimento personalizado e parecer executivo multinacional, entre em contato com nossa equipe de People Analytics.</p>
-      <span class="modal-highlight">Procure a Vigorre para maiores detalhes.</span>
-      <button class="modal-btn" onclick="closeModalAndLogout()" aria-label="Fechar e sair do sistema">Sair e Voltar</button>
-      <div class="modal-footer"><p>© <time datetime="2024">2024</time> Vigorre One™ • People Analytics Enterprise</p></div>
-    </div>
-  </div>
-
-  <!-- ============================================
-       HEADER / CONTROLS
-       ============================================ -->
-  <header class="glass border-b border-white/10 sticky top-0 z-50 no-print" role="banner">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <img src="logo-vigorre.png" alt="Vigorre One™" class="w-10 h-10 rounded-xl" onerror="this.outerHTML='<div class=\'w-10 h-10 rounded-xl bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center font-bold text-white\' aria-hidden=\'true\'>V</div>'">
-        <div>
-          <h1 class="font-bold text-lg">Vigorre One™</h1>
-          <p class="text-xs text-gray-400">Assessment DISC • People Analytics Enterprise</p>
+  <header>
+    <div class="header-content">
+      <div class="logo">
+        <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #1D4ED8, #7C3AED); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 1.25rem;">V</div>
+        <div class="logo-text">
+          <span>Vigorre One™</span>
+          <span>Assessment DISC</span>
         </div>
       </div>
-      <div class="flex items-center gap-4">
-        <span class="text-sm text-gray-300" id="progressText">Pergunta 1 de 25</span>
-        <div class="w-32 md:w-48" aria-label="Progresso do teste">
-          <div class="progress-bar" role="progressbar" aria-valuenow="4" aria-valuemin="0" aria-valuemax="100">
-            <div class="progress-fill" id="progressFill" style="width: 4%"></div>
-          </div>
+      <div class="progress-section">
+        <span class="progress-text" id="progressText">Pergunta 1 de 25</span>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill" style="width: 4%"></div>
         </div>
       </div>
     </div>
   </header>
 
   <!-- ============================================
-       TEST CONTAINER
+       MAIN CONTENT - PERGUNTAS
        ============================================ -->
-  <main class="max-w-3xl mx-auto px-4 py-8 results-view" id="testContainer" role="main">
-    <article class="glass-card p-6 md:p-8 slide-up">
-      <div class="mb-6">
-        <h2 class="text-xl md:text-2xl font-semibold leading-relaxed" id="qText">Carregando situação...</h2>
+  <main id="testContainer">
+    <div class="question-card">
+      <div class="question-header">
+        <span class="question-number">Questão <span id="currentNumber">1</span></span>
+        <h2 class="question-text" id="qText">Carregando pergunta...</h2>
+        <p class="question-instruction">Selecione a opção que melhor descreve seu comportamento</p>
       </div>
-      <div class="space-y-3 mb-8" id="optionsContainer" role="radiogroup" aria-label="Opções de resposta"></div>
-      <div class="flex gap-3 no-print" role="group" aria-label="Navegação entre perguntas">
-        <button id="prevBtn" onclick="prevQuestion()" class="flex-1 px-4 py-3 rounded-xl font-medium text-gray-300 btn-secondary disabled:opacity-50 disabled:cursor-not-allowed" disabled aria-label="Pergunta anterior">Anterior</button>
-        <button id="nextBtn" onclick="nextQuestion()" class="flex-1 btn-primary px-4 py-3 rounded-xl font-semibold text-white" aria-label="Próxima pergunta ou finalizar teste">Próxima Pergunta</button>
+      
+      <div class="options-container" id="optionsContainer" role="radiogroup">
+        <!-- Opções serão inseridas via JavaScript -->
       </div>
-    </article>
+      
+      <div class="navigation-buttons">
+        <button id="prevBtn" onclick="prevQuestion()" class="btn btn-secondary" disabled>
+          ← Anterior
+        </button>
+        <button id="nextBtn" onclick="nextQuestion()" class="btn btn-primary">
+          Próxima Pergunta →
+        </button>
+      </div>
+    </div>
   </main>
 
   <!-- ============================================
-       RESULTS VIEW
+       TELA DE RESULTADOS
        ============================================ -->
-  <div id="resultsView" class="hidden max-w-5xl mx-auto px-4 py-8 results-view" role="main">
-    <!-- Header -->
-    <div class="glass-card p-6 md:p-8 mb-8 text-center slide-up">
-      <h1 class="text-3xl font-bold mb-2">Seu Perfil Comportamental DISC</h1>
-      <p class="text-gray-400 mb-4" id="participantName">Análise Comportamental Vigorre One™</p>
-      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-emerald/20 text-brand-emerald border border-brand-emerald/30" id="profileBadge" role="status">Perfil: --</div>
-    </div>
-
-    <!-- Gráficos -->
-    <div class="grid md:grid-cols-2 gap-6 mb-8">
-      <div class="glass-card p-6 slide-up">
-        <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">Radar DISC</h3>
-        <div class="chart-container"><canvas id="discRadarChart" role="img" aria-label="Gráfico radar dos fatores DISC"></canvas></div>
+  <div id="resultsView" class="hidden results-container">
+    <div class="results-header">
+      <h1 class="results-title">Seu Perfil Comportamental DISC</h1>
+      <p style="color: var(--brand-slate-600); margin-bottom: 1.5rem; font-size: 1.125rem;">Análise Comportamental Vigorre One™</p>
+      <div class="profile-badge" id="profileBadge">
+        <span>📊</span>
+        <span id="profileText">Perfil: --</span>
       </div>
-      <div class="glass-card p-6 slide-up">
-        <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">Intensidade por Fator</h3>
-        <div class="chart-container"><canvas id="discBarChart" role="img" aria-label="Gráfico de barras da intensidade DISC"></canvas></div>
-      </div>
-    </div>
-
-    <!-- Resumo Executivo -->
-    <div class="glass-card p-6 md:p-8 mb-8 slide-up">
-      <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">📊 Resumo Executivo</h3>
-      <div id="executiveSummary"></div>
-    </div>
-
-    <!-- Análise Detalhada -->
-    <div class="glass-card p-6 md:p-8 mb-8 slide-up">
-      <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">🧠 Análise das Dimensões DISC</h3>
-      <div id="detailedAnalysis"></div>
-    </div>
-
-    <!-- Recomendações -->
-    <div class="glass-card p-6 md:p-8 mb-8 slide-up">
-      <h3 class="font-semibold mb-4 border-b border-white/10 pb-2">💡 Plano de Desenvolvimento</h3>
-      <div id="recommendations"></div>
-    </div>
-
-    <!-- CTAs - ✅ BOTÃO RELATÓRIO SIMPLES COM MODAL + TOOLTIPS -->
-    <div class="grid md:grid-cols-2 gap-4 no-print mb-8">
-      <div class="glass-card p-6 text-center slide-up">
-        <h4 class="font-semibold mb-2">📄 Relatório Simples</h4>
-        <p class="text-sm text-gray-400 mb-4">Visão geral do seu perfil DISC</p>
-        <button onclick="openSimpleReportModal()" class="btn-primary px-6 py-3 rounded-lg font-semibold w-full" title="Baixar relatório simples em PDF" aria-label="Baixar relatório simples">Baixar Relatório Simples</button>
-      </div>
-      <div class="glass-card p-6 text-center slide-up">
-        <h4 class="font-semibold mb-2">🔓 Laudo Vigorre Completo</h4>
-        <p class="text-sm text-gray-400 mb-4">Análise integrada com IE + Valores + Fit Cultural</p>
-        <button onclick="window.location.href='relatorio-disc-vigorre.html'" class="btn-secondary px-6 py-3 rounded-lg font-semibold w-full" title="Ver relatório completo Vigorre One™" aria-label="Ver relatório completo">Ver Relatório Completo</button>
-      </div>
-    </div>
-
-    <!-- Frase Final -->
-    <div class="glass-card p-8 text-center slide-up mb-8">
-      <blockquote class="text-lg italic text-gray-300 mb-4">"<span>A maturidade comportamental é o maior diferencial competitivo do século XXI.</span>"</blockquote>
-      <p class="text-sm text-gray-400">— Vigorre One™</p>
     </div>
     
-    <!-- Rodapé de impressão -->
-    <div class="print-footer">© 2024 Vigorre One™ • Relatório gerado em <span id="printDate"></span> • www.vigorre.com.br</div>
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3 class="chart-title">Radar DISC</h3>
+        <div class="chart-container">
+          <canvas id="discRadarChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3 class="chart-title">Intensidade por Fator</h3>
+        <div class="chart-container">
+          <canvas id="discBarChart"></canvas>
+        </div>
+      </div>
+    </div>
+    
+    <div class="chart-card" style="margin-bottom: 2rem;">
+      <h3 class="chart-title">📊 Resumo Executivo</h3>
+      <div id="executiveSummary"></div>
+    </div>
+    
+    <div class="chart-card" style="margin-bottom: 2rem;">
+      <h3 class="chart-title">💡 Plano de Desenvolvimento</h3>
+      <div id="recommendations"></div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+      <div class="chart-card" style="text-align: center;">
+        <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 1rem;">📄 Relatório Simples</h3>
+        <p style="color: var(--brand-slate-600); margin-bottom: 1.5rem; font-size: 0.9375rem;">Visão geral do seu perfil DISC</p>
+        <button onclick="openSimpleReportModal()" class="btn btn-primary" style="width: 100%;">
+          Baixar Relatório
+        </button>
+      </div>
+      <div class="chart-card" style="text-align: center;">
+        <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 1rem;">🔓 Laudo Vigorre Completo</h3>
+        <p style="color: var(--brand-slate-600); margin-bottom: 1.5rem; font-size: 0.9375rem;">Análise integrada com IE + Valores</p>
+        <button onclick="window.location.href='relatorio-disc-vigorre.html'" class="btn btn-secondary" style="width: 100%;">
+          Ver Relatório Completo
+        </button>
+      </div>
+    </div>
   </div>
 
-  <!-- Loading Overlay -->
-  <div id="loadingOverlay" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden">
-    <div class="text-center">
-      <div class="relative w-20 h-20 mx-auto mb-4" aria-hidden="true">
-        <div class="absolute inset-0 rounded-full border-4 border-white/10"></div>
-        <div class="absolute inset-0 rounded-full border-4 border-t-brand-cyan border-r-brand-purple border-b-transparent border-l-transparent animate-spin"></div>
-      </div>
-      <p class="text-gray-300">Calculando seu perfil DISC...</p>
+  <!-- ============================================
+       LOADING OVERLAY
+       ============================================ -->
+  <div id="loadingOverlay" class="loading-overlay hidden">
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Calculando seu perfil DISC...</p>
     </div>
+  </div>
+
+  <!-- ============================================
+       MODAL
+       ============================================ -->
+  <div id="simpleReportModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <h3 class="modal-title">🔒 Acesso ao Relatório Completo</h3>
+      <p class="modal-text">
+        Para obter acesso ao relatório completo com análise detalhada, plano de desenvolvimento personalizado e parecer executivo multinacional, entre em contato com nossa equipe de People Analytics.
+      </p>
+      <span class="modal-highlight">Procure a Vigorre para maiores detalhes.</span>
+      <button class="modal-btn" onclick="closeModalAndLogout()">Sair e Voltar</button>
+    </div>
+  </div>
+
+  <!-- ============================================
+       TOAST
+       ============================================ -->
+  <div id="toast" class="toast hidden">
+    <span class="toast-icon" id="toastIcon">✅</span>
+    <span id="toastMessage">Ação realizada!</span>
   </div>
 
   <script>
@@ -423,7 +712,8 @@
     // ESTADO E DADOS
     // ============================================
     const AppState = { currentQ: 0, answers: [], completed: false, session: null, participant: null };
-    let discRadarChartInstance = null; let discBarChartInstance = null;
+    let discRadarChartInstance = null;
+    let discBarChartInstance = null;
 
     // Banco de Perguntas DISC (25 perguntas)
     const DISC_QUESTIONS = [
@@ -581,10 +871,10 @@
 
     // Interpretações DISC
     const DISC_INTERPRETATIONS = {
-      D: { name: 'Dominância', high: 'Excelente capacidade de liderança em situações desafiadoras. Toma decisões rápidas e assume responsabilidades.', medium: 'Boa capacidade de decisão, com espaço para desenvolver maior assertividade em contextos de pressão.', low: 'Pode beneficiar-se de práticas para desenvolver maior confiança em tomada de decisão e liderança.' },
-      I: { name: 'Influência', high: 'Excelente habilidade de comunicação e persuasão. Motiva e engaja equipes com entusiasmo genuíno.', medium: 'Boa capacidade de influência, com oportunidades para desenvolver networking estratégico.', low: 'Pode beneficiar-se de práticas para desenvolver maior confiança em comunicação e apresentação.' },
-      S: { name: 'Estabilidade', high: 'Excelente capacidade de manter harmonia e apoiar equipes. Constância e confiabilidade em entregas.', medium: 'Boa estabilidade, com espaço para desenvolver maior flexibilidade em mudanças.', low: 'Pode beneficiar-se de técnicas para gerenciar melhor transições e incertezas.' },
-      C: { name: 'Conformidade', high: 'Excelência na análise de dados e atenção a detalhes. Planejamento estruturado e antecipação de riscos.', medium: 'Boa capacidade analítica, com oportunidades para desenvolver maior agilidade decisória.', low: 'Pode beneficiar-se de práticas para equilibrar análise com ação em contextos dinâmicos.' }
+      D: { name: 'Dominância', high: 'Excelente capacidade de liderança em situações desafiadoras. Toma decisões rápidas e assume responsabilidades.', medium: 'Boa capacidade de decisão, com espaço para desenvolver maior assertividade.', low: 'Pode beneficiar-se de práticas para desenvolver maior confiança em liderança.' },
+      I: { name: 'Influência', high: 'Excelente habilidade de comunicação e persuasão. Motiva e engaja equipes com entusiasmo.', medium: 'Boa capacidade de influência, com oportunidades para desenvolver networking.', low: 'Pode beneficiar-se de práticas para desenvolver confiança em comunicação.' },
+      S: { name: 'Estabilidade', high: 'Excelente capacidade de manter harmonia e apoiar equipes. Constância e confiabilidade.', medium: 'Boa estabilidade, com espaço para desenvolver flexibilidade.', low: 'Pode beneficiar-se de técnicas para gerenciar transições.' },
+      C: { name: 'Conformidade', high: 'Excelência na análise de dados e atenção a detalhes. Planejamento estruturado.', medium: 'Boa capacidade analítica, com oportunidades para desenvolver agilidade.', low: 'Pode beneficiar-se de práticas para equilibrar análise com ação.' }
     };
 
     // ============================================
@@ -593,196 +883,135 @@
     document.addEventListener('DOMContentLoaded', () => {
       console.log('🔹 Inicializando Teste DISC Vigorre One™...');
       
-      // ✅ DETECTAR CLIQUE NO BOTÃO "VOLTAR" DO NAVEGADOR PARA FAZER LOGOFF
       window.addEventListener('popstate', function(event) {
-        console.log('🔙 Botão voltar detectado - realizando logoff');
         performLogout();
       });
       
-      // Prevenir cache de página sensível
       if (window.history && window.history.replaceState) {
         window.history.replaceState(null, null, window.location.href);
       }
       
-      // Carregar sessão do participante
       loadSession();
       
-      // Se já estiver logado, vai direto para o teste
       if (AppState.session && AppState.session.id) {
-        console.log('✅ Usuário logado, carregando teste...');
         renderQuestion();
       } else {
-        console.log('⚠️ Usuário não autenticado - redirecionando para login');
         window.location.href = 'login.html';
       }
-      
-      // Configurar listeners globais
-      setupGlobalListeners();
     });
 
-    function setupGlobalListeners() {
-      document.getElementById('simpleReportModal')?.addEventListener('click', function(e) { if (e.target === this) closeModalAndLogout(); });
-      document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { const modal = document.getElementById('simpleReportModal'); if (modal && !modal.classList.contains('hidden')) closeModalAndLogout(); } });
-      window.addEventListener('pageshow', function(event) { if (event.persisted) { const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}'); const sessionActive = sessionStorage.getItem('vigorre_session_active') === 'true'; if (!currentUser.role || !sessionActive) window.location.replace('login.html'); } });
-    }
-
     // ============================================
-    // CARREGAR SESSÃO DO PARTICIPANTE - COM SUPABASE E FALLBACK
+    // CARREGAR SESSÃO
     // ============================================
     async function loadSession() {
       try {
-        console.log('🔍 Tentando carregar sessão...');
-        
-        // ✅ CORREÇÃO: Verificação robusta do VigorreDB
         if (typeof window.VigorreDB !== 'undefined' && VigorreDB && VigorreDB.supabase) {
-          console.log('🌐 Tentando carregar do Supabase...');
           const token = sessionStorage.getItem('vigorre_session_token');
           if (token) {
-            const { data: sessionData, error: sessionError } = await VigorreDB.supabase.from('sessions').select('participant_id, expires_at').eq('token', token).maybeSingle();
-            if (sessionData && !sessionError && new Date(sessionData.expires_at) > new Date()) {
-              const { data: participant, error: pError } = await VigorreDB.supabase.from('participants').select('*').eq('id', sessionData.participant_id).maybeSingle();
-              if (participant && !pError) {
+            const { data: sessionData } = await VigorreDB.supabase.from('sessions').select('participant_id, expires_at').eq('token', token).maybeSingle();
+            if (sessionData && new Date(sessionData.expires_at) > new Date()) {
+              const { data: participant } = await VigorreDB.supabase.from('participants').select('*').eq('id', sessionData.participant_id).maybeSingle();
+              if (participant) {
                 AppState.session = { id: participant.id, name: participant.name, email: participant.email, role: 'participant' };
                 AppState.participant = participant;
-                console.log('✅ Sessão carregada do Supabase:', participant.name);
                 return true;
               }
             }
           }
         }
         
-        // Fallback para localStorage
-        console.log('📱 Usando fallback localStorage...');
         const session = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
         if (session?.id) {
           AppState.session = session;
           const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
           AppState.participant = participants.find(p => p.id === session.id);
-          console.log('✅ Sessão carregada do localStorage:', AppState.session?.name);
           return true;
         }
-        console.log('❌ Nenhuma sessão encontrada');
         return false;
       } catch (e) { 
-        console.error('❌ Erro ao carregar sessão:', e);
-        try {
-          const session = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
-          if (session?.id) { AppState.session = session; const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]'); AppState.participant = participants.find(p => p.id === session.id); return true; }
-        } catch (e2) { console.error('❌ Erro no fallback:', e2); }
+        console.error('Erro ao carregar sessão:', e);
         return false;
       }
     }
 
+    // ============================================
+    // RENDERIZAR PERGUNTA
+    // ============================================
     function renderQuestion() {
       const q = DISC_QUESTIONS[AppState.currentQ];
+      
       document.getElementById('progressText').textContent = `Pergunta ${AppState.currentQ + 1} de ${DISC_QUESTIONS.length}`;
       document.getElementById('progressFill').style.width = `${((AppState.currentQ + 1) / DISC_QUESTIONS.length) * 100}%`;
-      document.getElementById('progressFill').parentElement?.setAttribute('aria-valuenow', Math.round(((AppState.currentQ + 1) / DISC_QUESTIONS.length) * 100));
+      document.getElementById('currentNumber').textContent = AppState.currentQ + 1;
       document.getElementById('qText').textContent = q.text;
       
       document.getElementById('prevBtn').disabled = AppState.currentQ === 0;
       document.getElementById('nextBtn').textContent = AppState.currentQ === DISC_QUESTIONS.length - 1 ? 'Finalizar Teste' : 'Próxima Pergunta';
-      document.getElementById('nextBtn').setAttribute('aria-label', AppState.currentQ === DISC_QUESTIONS.length - 1 ? 'Finalizar teste' : 'Próxima pergunta');
       
       const container = document.getElementById('optionsContainer');
       container.innerHTML = '';
-      container.setAttribute('aria-label', `Opções para: ${q.text}`);
       
       q.options.forEach((opt, idx) => {
         const btn = document.createElement('button');
         btn.className = `option-btn ${AppState.answers[AppState.currentQ] === idx ? 'selected' : ''}`;
         btn.setAttribute('role', 'radio');
         btn.setAttribute('aria-checked', AppState.answers[AppState.currentQ] === idx);
-        btn.setAttribute('tabindex', '0');
-        btn.innerHTML = `<span class="check-icon" aria-hidden="true">${AppState.answers[AppState.currentQ] === idx ? '✓' : ''}</span><span>${opt.text}</span>`;
-        btn.onclick = () => { AppState.answers[AppState.currentQ] = idx; renderQuestion(); };
-        btn.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); } };
+        btn.innerHTML = `
+          <div class="option-radio"></div>
+          <span>${opt.text}</span>
+        `;
+        btn.onclick = () => { 
+          AppState.answers[AppState.currentQ] = idx; 
+          renderQuestion(); 
+        };
         container.appendChild(btn);
       });
-
-      const card = document.querySelector('.glass-card');
-      if (card) { card.style.opacity = '0'; card.style.transform = 'translateY(10px)'; setTimeout(() => { card.style.transition = 'all 0.3s ease'; card.style.opacity = '1'; card.style.transform = 'translateY(0)'; }, 50); }
     }
 
-    function prevQuestion() { if (AppState.currentQ > 0) { AppState.currentQ--; renderQuestion(); } }
+    function prevQuestion() { 
+      if (AppState.currentQ > 0) { 
+        AppState.currentQ--; 
+        renderQuestion(); 
+      } 
+    }
+    
     function nextQuestion() {
-      if (AppState.answers[AppState.currentQ] === undefined) { showToast('Por favor, selecione uma opção antes de continuar.', 'warning'); return; }
-      if (AppState.currentQ < DISC_QUESTIONS.length - 1) { AppState.currentQ++; renderQuestion(); } else { finishTest(); }
-    }
-
-    // ============================================
-    // FINALIZAR TESTE E PROCESSAR RESULTADOS
-    // ============================================
-    async function finishTest() {
-      console.log('🔄 Finalizando teste DISC...');
-      
-      // Calcular resultados
-      const dimensions = { D: 0, I: 0, S: 0, C: 0 };
-      DISC_QUESTIONS.forEach((q, idx) => { if (AppState.answers[idx] !== undefined) { dimensions[q.options[AppState.answers[idx]].type] += q.options[AppState.answers[idx]].value; } });
-      
-      const percentages = {}; Object.keys(dimensions).forEach(k => { percentages[k] = Math.round((dimensions[k] / 100) * 100); });
-      const avgDISC = Math.round(Object.values(percentages).reduce((a, b) => a + b, 0) / 4);
-      
-      const results = { date: new Date().toISOString(), type: 'DISC', dimensions, percentages, avgDISC };
-      
-      // Salvar resultados no Supabase com fallback
-      await saveParticipantResultsDISCSupabase(results);
-      
-      // Enviar relatório simples por e-mail (simulação)
-      sendSimpleReportEmail(results);
-      
-      // Mostrar loading
-      document.getElementById('loadingOverlay').classList.remove('hidden');
-      setTimeout(() => { showResults(results); }, 1500);
-    }
-
-    // ============================================
-    // ✅ FUNÇÃO: SALVAR RESULTADOS DISC NO SUPABASE COM FALLBACK
-    // ============================================
-    async function saveParticipantResultsDISCSupabase(results) {
-      console.log('💾 Salvando resultados do teste DISC...');
-      if (!AppState.participant) { console.warn('⚠️ Participante não encontrado, salvando apenas no localStorage'); saveParticipantResultsDISCLocalStorage(results); return; }
-      
-      try {
-        const resultData = {
-          id: (typeof VigorreDB !== 'undefined' && VigorreDB?.generateId) ? VigorreDB.generateId() : Date.now().toString(),
-          participant_id: AppState.participant.id,
-          test_type: 'DISC',
-          scores: results.dimensions,
-          percentages: results.percentages,
-          dominant: Object.entries(results.percentages).sort((a, b) => b[1] - a[1])[0][0],
-          secondary: Object.entries(results.percentages).sort((a, b) => b[1] - a[1])[1]?.[0],
-          completed_at: new Date().toISOString()
-        };
-        console.log('📋 Dados para salvar no Supabase:', resultData);
-        
-        // ✅ CORREÇÃO: Verificação robusta do VigorreDB
-        if (typeof window.VigorreDB !== 'undefined' && VigorreDB && VigorreDB.supabase) {
-          console.log('🌐 Tentando salvar no Supabase...');
-          const { error } = await VigorreDB.supabase.from('test_results').upsert(resultData);
-          if (error) throw error;
-          console.log('✅ Resultados DISC salvos no Supabase com sucesso!');
-          await updateParticipantCompletedTestsDISC('DISC');
-        }
-      } catch (e) {
-        console.warn('⚠️ Falha ao salvar no Supabase, usando localStorage:', e);
-        saveParticipantResultsDISCLocalStorage(results);
+      if (AppState.answers[AppState.currentQ] === undefined) { 
+        showToast('Por favor, selecione uma opção', 'error'); 
+        return; 
+      }
+      if (AppState.currentQ < DISC_QUESTIONS.length - 1) { 
+        AppState.currentQ++; 
+        renderQuestion(); 
+      } else { 
+        finishTest(); 
       }
     }
 
-    async function updateParticipantCompletedTestsDISC(testType) {
-      try {
-        if (!AppState.participant || typeof window.VigorreDB === 'undefined' || !VigorreDB) return;
-        const { data: participant, error: fetchError } = await VigorreDB.supabase.from('participants').select('completed_tests').eq('id', AppState.participant.id).maybeSingle();
-        if (fetchError) throw fetchError;
-        const completedTests = participant?.completed_tests || [];
-        if (!completedTests.includes(testType)) {
-          completedTests.push(testType);
-          const { error: updateError } = await VigorreDB.supabase.from('participants').update({ completed_tests: completedTests }).eq('id', AppState.participant.id);
-          if (updateError) throw updateError;
-          console.log(`✅ Teste ${testType} marcado como completado no Supabase`);
-        }
-      } catch (e) { console.warn('⚠️ Falha ao atualizar completed_tests no Supabase:', e); }
+    // ============================================
+    // FINALIZAR TESTE
+    // ============================================
+    async function finishTest() {
+      console.log('Finalizando teste DISC...');
+      
+      const dimensions = { D: 0, I: 0, S: 0, C: 0 };
+      DISC_QUESTIONS.forEach((q, idx) => { 
+        if (AppState.answers[idx] !== undefined) { 
+          dimensions[q.options[AppState.answers[idx]].type] += q.options[AppState.answers[idx]].value; 
+        } 
+      });
+      
+      const percentages = {}; 
+      Object.keys(dimensions).forEach(k => { 
+        percentages[k] = Math.round((dimensions[k] / 100) * 100); 
+      });
+      
+      const results = { date: new Date().toISOString(), type: 'DISC', dimensions, percentages };
+      
+      await saveParticipantResultsDISCLocalStorage(results);
+      
+      document.getElementById('loadingOverlay').classList.remove('hidden');
+      setTimeout(() => { showResults(results); }, 1500);
     }
 
     function saveParticipantResultsDISCLocalStorage(results) {
@@ -794,58 +1023,52 @@
           if (!participants[idx].completedTests) participants[idx].completedTests = [];
           if (!participants[idx].completedTests.includes('DISC')) participants[idx].completedTests.push('DISC');
           participants[idx].testResults = participants[idx].testResults || {};
-          participants[idx].testResults.DISC = { date: results.date, dimensions: results.dimensions, percentages: results.percentages, avgDISC: results.avgDISC };
+          participants[idx].testResults.DISC = results;
           localStorage.setItem('vigorre_participants', JSON.stringify(participants));
           localStorage.setItem('vigorre_last_disc_result', JSON.stringify(results));
-          AppState.participant = participants[idx];
-          console.log('✅ Resultados DISC salvos no localStorage');
         }
-      } catch (e) { console.error('❌ Erro ao salvar resultados DISC no localStorage:', e); }
-    }
-
-    function sendSimpleReportEmail(results) {
-      console.log('📧 Enviando relatório DISC para:', AppState.session?.email);
-      setTimeout(() => { saveReportHistoryDISC('DISC', 'simple'); showToast('✅ Relatório simples enviado para seu e-mail!', 'success'); }, 1000);
-    }
-
-    function saveReportHistoryDISC(testType, reportType) {
-      try {
-        const reports = JSON.parse(localStorage.getItem('vigorre_reports') || '[]');
-        reports.push({ id: Date.now().toString(), participantId: AppState.session?.id || 'anonymous', participantName: AppState.participant?.name || 'Participante', participantEmail: AppState.session?.email || '', type: reportType, testType: testType, date: new Date().toLocaleDateString('pt-BR'), status: 'completed', emailSent: true, emailDate: new Date().toLocaleString('pt-BR') });
-        localStorage.setItem('vigorre_reports', JSON.stringify(reports));
-      } catch (e) { console.error('Erro ao salvar histórico:', e); }
+      } catch (e) { console.error('Erro ao salvar:', e); }
     }
 
     // ============================================
-    // EXIBIÇÃO DE RESULTADOS
+    // EXIBIR RESULTADOS
     // ============================================
     function showResults(results) {
       document.getElementById('loadingOverlay').classList.add('hidden');
       document.getElementById('testContainer').classList.add('hidden');
-      document.querySelector('header')?.classList.add('hidden');
       document.getElementById('resultsView').classList.remove('hidden');
-
-      if (AppState.session?.name) document.getElementById('participantName').textContent = AppState.session.name;
       
-      // Determinar perfil predominante
       const sorted = Object.entries(results.percentages).sort((a, b) => b[1] - a[1]);
-      const [dominant, secondary] = sorted;
+      const [dominant] = sorted;
       const dominantProfile = DISC_INTERPRETATIONS[dominant[0]];
       
-      document.getElementById('profileBadge').textContent = `Perfil: ${dominantProfile.name} (${dominant[1]}%)`;
+      document.getElementById('profileText').textContent = `${dominantProfile.name} (${dominant[1]}%)`;
       
-      // Resumo Executivo
-      document.getElementById('executiveSummary').innerHTML = `<p class="text-gray-300 mb-4">Seu perfil DISC predominante é <strong style="color: ${dominant[1] >= 70 ? '#10B981' : dominant[1] >= 50 ? '#F59E0B' : '#F43F5E'}">${dominantProfile.name}</strong> com <strong>${dominant[1]}%</strong> de intensidade. ${dominantProfile.high}</p><div class="grid md:grid-cols-4 gap-4">${Object.entries(results.percentages).map(([key, value]) => { const interp = DISC_INTERPRETATIONS[key]; return `<div class="glass p-4 rounded-lg"><h4 class="font-semibold mb-1">${interp.name}</h4><div class="w-full bg-white/10 rounded-full h-2 mb-2"><div class="bg-brand-emerald h-2 rounded-full" style="width: ${value}%"></div></div><p class="text-xs text-gray-400">${value}%</p></div>`; }).join('')}</div>`;
-
-      // Análise Detalhada
-      document.getElementById('detailedAnalysis').innerHTML = Object.entries(results.percentages).map(([key, value]) => { const interp = DISC_INTERPRETATIONS[key]; const level = value >= 70 ? 'high' : value >= 50 ? 'medium' : 'low'; const desc = level === 'high' ? interp.high : level === 'medium' ? interp.medium : interp.low; return `<div class="glass p-4 rounded-lg mb-4"><div class="flex justify-between items-center mb-2"><h4 class="font-semibold">${interp.name}</h4><span class="px-2 py-1 rounded-full text-xs ${value >= 70 ? 'bg-brand-emerald/20 text-brand-emerald' : value >= 50 ? 'bg-brand-amber/20 text-brand-amber' : 'bg-brand-rose/20 text-brand-rose'}">${value}%</span></div><p class="text-sm text-gray-300">${desc}</p></div>`; }).join('');
-
-      // Recomendações
-      document.getElementById('recommendations').innerHTML = `<ul class="space-y-2 text-sm text-gray-300"><li class="flex gap-2"><span class="text-brand-emerald">➤</span> Pratique auto-observação diária para fortalecer consciência comportamental.</li><li class="flex gap-2"><span class="text-brand-emerald">➤</span> Solicite feedback regular sobre seu impacto nas relações profissionais.</li><li class="flex gap-2"><span class="text-brand-emerald">➤</span> Considere o laudo completo Vigorre para análise integrada com IE e Valores Pessoais.</li></ul>`;
-
-      // Renderizar gráficos
+      document.getElementById('executiveSummary').innerHTML = `
+        <p style="font-size: 1.0625rem; line-height: 1.7; color: var(--brand-slate-700);">
+          Seu perfil DISC predominante é <strong style="color: var(--brand-blue);">${dominantProfile.name}</strong> com 
+          <strong>${dominant[1]}%</strong> de intensidade. ${dominantProfile.high}
+        </p>
+      `;
+      
+      document.getElementById('recommendations').innerHTML = `
+        <ul style="list-style: none; padding: 0;">
+          <li style="padding: 0.75rem 0; border-bottom: 1px solid var(--brand-slate-100); display: flex; align-items: start; gap: 0.75rem;">
+            <span style="color: var(--brand-emerald); font-size: 1.25rem;">✓</span>
+            <span style="color: var(--brand-slate-700);">Pratique auto-observação diária para fortalecer consciência comportamental</span>
+          </li>
+          <li style="padding: 0.75rem 0; border-bottom: 1px solid var(--brand-slate-100); display: flex; align-items: start; gap: 0.75rem;">
+            <span style="color: var(--brand-emerald); font-size: 1.25rem;">✓</span>
+            <span style="color: var(--brand-slate-700);">Solicite feedback regular sobre seu impacto nas relações profissionais</span>
+          </li>
+          <li style="padding: 0.75rem 0; display: flex; align-items: start; gap: 0.75rem;">
+            <span style="color: var(--brand-emerald); font-size: 1.25rem;">✓</span>
+            <span style="color: var(--brand-slate-700);">Considere o laudo completo Vigorre para análise integrada</span>
+          </li>
+        </ul>
+      `;
+      
       renderCharts(results.percentages);
-      document.getElementById('printDate').textContent = new Date().toLocaleDateString('pt-BR');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -853,135 +1076,111 @@
     // RENDERIZAR GRÁFICOS
     // ============================================
     function renderCharts(percentages) {
-      if (discRadarChartInstance) { discRadarChartInstance.destroy(); discRadarChartInstance = null; }
-      if (discBarChartInstance) { discBarChartInstance.destroy(); discBarChartInstance = null; }
+      if (discRadarChartInstance) { discRadarChartInstance.destroy(); }
+      if (discBarChartInstance) { discBarChartInstance.destroy(); }
 
       const radarCtx = document.getElementById('discRadarChart');
       if (radarCtx) {
-        discRadarChartInstance = new Chart(radarCtx.getContext('2d'), {
+        discRadarChartInstance = new Chart(radarCtx, {
           type: 'radar',
-          data: { labels: ['Dominância', 'Influência', 'Estabilidade', 'Conformidade'], datasets: [{ label: 'Seu Perfil', data: [percentages.D, percentages.I, percentages.S, percentages.C], backgroundColor: 'rgba(124, 58, 237, 0.2)', borderColor: '#7C3AED', borderWidth: 2, pointBackgroundColor: '#7C3AED' }] },
-          options: { responsive: true, maintainAspectRatio: false, scales: { r: { min: 0, max: 100, angleLines: { color: 'rgba(255,255,255,0.1)' }, grid: { color: 'rgba(255,255,255,0.1)' }, pointLabels: { color: '#94A3B8', font: { size: 10, family: 'Inter' } }, ticks: { display: false, backdropColor: 'transparent' } } }, plugins: { legend: { display: false } } }
+          data: { 
+            labels: ['Dominância', 'Influência', 'Estabilidade', 'Conformidade'], 
+            datasets: [{ 
+              label: 'Seu Perfil', 
+              data: [percentages.D, percentages.I, percentages.S, percentages.C], 
+              backgroundColor: 'rgba(29, 78, 216, 0.2)', 
+              borderColor: '#1D4ED8', 
+              borderWidth: 2, 
+              pointBackgroundColor: '#1D4ED8' 
+            }] 
+          },
+          options: { 
+            responsive: true, 
+            maintainAspectRatio: false, 
+            scales: { 
+              r: { 
+                min: 0, 
+                max: 100, 
+                angleLines: { color: 'rgba(0,0,0,0.1)' }, 
+                grid: { color: 'rgba(0,0,0,0.1)' }, 
+                pointLabels: { color: '#334155', font: { size: 11, family: 'Inter' } }, 
+                ticks: { display: false } 
+              } 
+            }, 
+            plugins: { legend: { display: false } } 
+          }
         });
       }
 
       const barCtx = document.getElementById('discBarChart');
       if (barCtx) {
-        discBarChartInstance = new Chart(barCtx.getContext('2d'), {
+        discBarChartInstance = new Chart(barCtx, {
           type: 'bar',
-          data: { labels: ['D', 'I', 'S', 'C'], datasets: [{ label: '%', data: [percentages.D, percentages.I, percentages.S, percentages.C], backgroundColor: ['#EF4444', '#3B82F6', '#10B981', '#7C3AED'], borderRadius: 6 }] },
-          options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#94A3B8', font: { family: 'Inter' } } }, x: { grid: { display: false }, ticks: { color: '#F8FAFC', font: { weight: 'bold', size: 10, family: 'Inter' } } } }, plugins: { legend: { display: false } } }
+          data: { 
+            labels: ['D', 'I', 'S', 'C'], 
+            datasets: [{ 
+              label: '%', 
+              data: [percentages.D, percentages.I, percentages.S, percentages.C], 
+              backgroundColor: ['#EF4444', '#3B82F6', '#10B981', '#7C3AED'], 
+              borderRadius: 8 
+            }] 
+          },
+          options: { 
+            responsive: true, 
+            maintainAspectRatio: false, 
+            scales: { 
+              y: { beginAtZero: true, max: 100, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#64748B' } }, 
+              x: { grid: { display: false }, ticks: { color: '#334155', font: { weight: 'bold', size: 12 } } } 
+            }, 
+            plugins: { legend: { display: false } } 
+          }
         });
       }
     }
 
     // ============================================
-    // ✅ FUNÇÕES DO MODAL E LOGOFF + openVigorreReport
+    // MODAL E LOGOUT
     // ============================================
     function openSimpleReportModal() {
-      console.log('🔒 Abrindo modal de relatório completo DISC');
-      const modal = document.getElementById('simpleReportModal');
-      if (modal) { modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; const btn = modal.querySelector('.modal-btn'); if (btn) setTimeout(() => btn.focus(), 100); }
+      document.getElementById('simpleReportModal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
     }
 
     function closeModalAndLogout() {
-      console.log('🔐 Fechando modal e realizando logoff');
-      const modal = document.getElementById('simpleReportModal');
-      if (modal) { modal.classList.add('hidden'); document.body.style.overflow = ''; }
+      document.getElementById('simpleReportModal').classList.add('hidden');
+      document.body.style.overflow = '';
       performLogout();
     }
 
-    // ✅ CORREÇÃO: Função openVigorreReport ADICIONADA (estava faltando)
-    function openVigorreReport(participantId, reportType) {
-      try {
-        // Buscar participante no localStorage (fallback)
-        const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-        const participant = participants.find(p => p.id === participantId);
-        
-        if (!participant) {
-          showToast('Participante não encontrado', 'error');
-          return;
-        }
-        
-        // Verificar se teste foi completado
-        const completedTests = participant.completedTests || [];
-        if (!completedTests.includes(reportType)) {
-          showToast(`Participante ainda não completou o teste de ${reportType}`, 'warning');
-          return;
-        }
-        
-        // Salvar dados do participante para o relatório
-        localStorage.setItem('vigorre_report_participant', JSON.stringify({
-          id: participant.id,
-          name: participant.name
-        }));
-        
-        // Definir arquivo do relatório baseado no tipo
-        let reportFile = '';
-        if (reportType === 'DISC') reportFile = 'relatorio-disc-vigorre.html';
-        else if (reportType === 'IE') reportFile = 'relatorio-ie-vigorre.html';
-        else if (reportType === 'Valores') reportFile = 'relatorio-valores-vigorre.html';
-        
-        if (reportFile) {
-          // Abrir relatório em nova aba com parâmetros
-          const newWindow = window.open(reportFile + '?participantId=' + participantId + '&ts=' + Date.now(), '_blank');
-          if (newWindow) {
-            showToast('📊 Abrindo relatório Vigorre One™...', 'success');
-          } else {
-            showToast('⚠️ Bloqueador de pop-up pode estar impedindo.', 'warning');
-          }
-        } else {
-          showToast('Arquivo de relatório não encontrado.', 'error');
-        }
-      } catch (e) {
-        console.error('Erro ao abrir relatório:', e);
-        showToast('Erro ao abrir relatório', 'error');
-      }
+    function performLogout() {
+      localStorage.removeItem('vigorre_current_user');
+      sessionStorage.clear();
+      window.location.href = 'login.html';
     }
-
-    async function performLogout() {
-      console.log('🔐 Realizando logoff completo...');
-      if (typeof window.VigorreDB !== 'undefined' && VigorreDB && VigorreDB.supabase) {
-        const token = sessionStorage.getItem('vigorre_session_token');
-        if (token) { try { await VigorreDB.supabase.from('sessions').delete().eq('token', token); console.log('✅ Sessão removida do Supabase'); } catch (e) { console.warn('⚠️ Não foi possível remover sessão do Supabase:', e); } }
-      }
-      sessionStorage.setItem('vigorre_logged_out', 'true');
-      localStorage.removeItem('vigorre_current_user'); localStorage.removeItem('vigorre_password_temp'); sessionStorage.clear();
-      window.location.href = 'login.html?loggedout=1&ts=' + Date.now();
-    }
-
-    function downloadSimpleReport() { openSimpleReportModal(); }
 
     // ============================================
-    // TOAST NOTIFICATIONS
+    // TOAST
     // ============================================
     function showToast(message, type) {
-      type = type || 'success';
-      const toast = document.getElementById('toast'), icon = document.getElementById('toastIcon'), msg = document.getElementById('toastMessage');
-      if (!toast) return;
-      icon.textContent = type === 'success' ? '✅' : type === 'error' ? '❌' : '⚠️'; msg.textContent = message;
-      toast.className = `toast ${type}`; toast.classList.remove('hidden');
-      setTimeout(() => toast.classList.add('show'), 10);
-      if (toast.timeoutId) clearTimeout(toast.timeoutId);
-      toast.timeoutId = setTimeout(() => { toast.classList.remove('show'); setTimeout(() => { toast.classList.add('hidden'); toast.style.opacity = '1'; toast.style.transform = 'translateX(0)'; }, 300); }, type === 'error' ? 6000 : 4000);
+      const toast = document.getElementById('toast');
+      document.getElementById('toastIcon').textContent = type === 'success' ? '✅' : '❌';
+      document.getElementById('toastMessage').textContent = message;
+      toast.classList.remove('hidden');
+      setTimeout(() => { toast.classList.add('hidden'); }, 3000);
     }
 
-    function hideToast() { const toast = document.getElementById('toast'); if (!toast) return; toast.classList.remove('show'); setTimeout(() => { toast.classList.add('hidden'); toast.style.opacity = '1'; toast.style.transform = 'translateX(0)'; }, 300); }
+    // Fechar modal ao clicar fora
+    document.getElementById('simpleReportModal')?.addEventListener('click', function(e) {
+      if (e.target === this) closeModalAndLogout();
+    });
 
-    // ============================================
-    // TRATAMENTO DE ERROS GLOBAIS
-    // ============================================
-    window.addEventListener('error', function(e) { console.error('❌ Erro no Teste DISC Vigorre One™:', e); showToast('⚠️ Ocorreu um erro. Recarregue a página se o problema persistir.', 'error'); return true; });
-
-    // ============================================
-    // DEBUG INICIAL
-    // ============================================
-    console.log('🔍 Teste DISC - Estado inicial:', { session: AppState.session?.name || 'não carregado', participant: AppState.participant?.name || 'não carregado', localStorage: { user: !!localStorage.getItem('vigorre_current_user'), participants: !!localStorage.getItem('vigorre_participants'), disc: !!localStorage.getItem('vigorre_last_disc_result') }, supabase: { available: typeof window.VigorreDB !== 'undefined', url: (typeof VigorreDB !== 'undefined' && VigorreDB?.supabase) ? 'conectado' : 'não conectado' } });
-
-    // ============================================
-    // EXPORTS PARA MÓDULOS (OPCIONAL)
-    // ============================================
-    if (typeof module !== 'undefined' && module.exports) { module.exports = { showToast, performLogout, openVigorreReport, DISC_INTERPRETATIONS }; }
+    // Fechar com Escape
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('simpleReportModal');
+        if (modal && !modal.classList.contains('hidden')) closeModalAndLogout();
+      }
+    });
   </script>
 </body>
 </html>
