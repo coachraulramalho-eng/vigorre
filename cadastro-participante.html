@@ -3,332 +3,1068 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cadastro de Participante - Vigorre One™</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <meta name="description" content="Vigorre One™ - Cadastro de Participante • People Analytics Enterprise">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Cadastro de Participante | Vigorre One™ • People Analytics Enterprise</title>
+  
+  <!-- Fonts Premium -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Preconnect para performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
   <style>
     /* ============================================
-       RESET BÁSICO
+       RESET & BASE - ENTERPRISE PREMIUM
        ============================================ */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+    }
     
-    /* ============================================
-       ESTILO DO CORPO
-       ============================================ */
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    :root {
+      /* Cores da Marca Vigorre One™ */
+      --brand-navy: #0A1628;
+      --brand-blue: #1D4ED8;
+      --brand-blue-dark: #1E40AF;
+      --brand-purple: #7C3AED;
+      --brand-cyan: #06B6D4;
+      --brand-emerald: #10B981;
+      --brand-amber: #F59E0B;
+      --brand-rose: #F43F5E;
+      
+      /* Cores Neutras */
+      --slate-50: #F8FAFC;
+      --slate-100: #F1F5F9;
+      --slate-200: #E2E8F0;
+      --slate-300: #CBD5E1;
+      --slate-400: #94A3B8;
+      --slate-500: #64748B;
+      --slate-600: #475569;
+      --slate-700: #334155;
+      --slate-800: #1E293B;
+      --slate-900: #0F172A;
+      
+      /* Sombras Premium */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      
+      /* Bordas */
+      --radius: 0.5rem;
+      --radius-md: 0.75rem;
+      --radius-lg: 1rem;
+      --radius-xl: 1.5rem;
+      --radius-2xl: 2rem;
+      
+      /* Transições */
+      --transition: 250ms ease;
+      --transition-slow: 350ms ease;
+    }
+    
     body { 
-      font-family: 'Inter', sans-serif; 
-      background: #f8fafc; 
-      color: #1e293b; 
-      min-height: 100vh; 
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+      background: linear-gradient(135deg, var(--slate-50) 0%, #ffffff 100%);
+      color: var(--slate-800); 
+      min-height: 100vh;
+      line-height: 1.6;
+      position: relative;
+      overflow-x: hidden;
+    }
+    
+    /* Background animado sutil */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: 
+        radial-gradient(ellipse at 20% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(124, 58, 237, 0.06) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
     }
     
     /* ============================================
-       CABEÇALHO
+       HEADER PREMIUM - GLASSMORPHISM
        ============================================ */
     header { 
-      background: linear-gradient(135deg, #1e3a8a, #0f172a); 
+      background: linear-gradient(135deg, var(--brand-navy) 0%, var(--slate-900) 100%); 
       color: white; 
-      padding: 15px 20px; 
+      padding: 0 24px; 
       display: flex; 
       justify-content: space-between; 
-      align-items: center; 
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: var(--shadow-xl);
+      height: 72px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
+    
+    /* Efeito de brilho superior */
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), transparent);
+      pointer-events: none;
+    }
+    
     .logo { 
       display: flex; 
       align-items: center; 
-      gap: 10px; 
-      font-weight: 700; 
+      gap: 14px; 
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity var(--transition);
     }
-    .logo-img {
-      height: 40px;
-      width: auto;
-      border-radius: 8px;
+    
+    .logo:hover {
+      opacity: 0.9;
     }
-    .logo-icon { 
-      width: 35px; 
-      height: 35px; 
-      background: white; 
-      border-radius: 8px; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      color: #1e3a8a; 
-      font-weight: bold; 
+    
+    .logo-img { 
+      height: 48px; 
+      width: auto; 
+      border-radius: 12px; 
+      background: white;
+      padding: 6px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+      transition: transform var(--transition);
     }
+    
+    .logo-img:hover {
+      transform: scale(1.05);
+    }
+    
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+    
+    .logo-text span:first-child {
+      font-size: 1.125rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .logo-text span:last-child {
+      font-size: 0.75rem;
+      opacity: 0.7;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    
     .btn-logout { 
-      background: rgba(255,255,255,0.2); 
-      border: none; 
+      background: rgba(255,255,255,0.12); 
+      border: 1px solid rgba(255,255,255,0.25); 
       color: white; 
-      padding: 8px 16px; 
-      border-radius: 6px; 
+      padding: 10px 22px; 
+      border-radius: 12px; 
       cursor: pointer; 
-      font-weight: 600; 
+      font-weight: 600;
+      font-size: 0.875rem;
+      transition: all var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
     }
+    
+    .btn-logout::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+      transition: left 0.5s ease;
+    }
+    
     .btn-logout:hover { 
-      background: rgba(255,255,255,0.3); 
+      background: rgba(255,255,255,0.2);
+      border-color: rgba(255,255,255,0.4);
+      transform: translateY(-1px);
+    }
+    
+    .btn-logout:hover::before {
+      left: 100%;
+    }
+    
+    .btn-logout:active {
+      transform: translateY(0);
     }
     
     /* ============================================
-       CONTEÚDO PRINCIPAL
+       MAIN CONTENT - ESPAÇAMENTO CORRETO
        ============================================ */
     main { 
       max-width: 900px; 
       margin: 0 auto; 
-      padding: 40px 20px; 
+      padding: 24px;
+      padding-top: 96px; /* Espaço para header fixo */
+      padding-bottom: 48px;
+      position: relative;
+      z-index: 1;
     }
     
     /* ============================================
-       CARDS
+       CARDS PREMIUM - GLASSMORPHISM
        ============================================ */
     .card { 
-      background: white; 
-      border-radius: 16px; 
-      padding: 2rem; 
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
-      margin-bottom: 2rem; 
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 24px; 
+      padding: 2.5rem; 
+      box-shadow: 
+        var(--shadow-lg),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow var(--transition), transform var(--transition);
+      animation: cardEntrance 0.4s ease both;
     }
+    
+    @keyframes cardEntrance {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
+      pointer-events: none;
+    }
+    
+    .card:hover {
+      box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.15),
+        0 0 0 1px rgba(59, 130, 246, 0.2);
+      transform: translateY(-2px);
+    }
+    
     .card h2 { 
-      color: #1e40af; 
+      color: var(--brand-blue-dark); 
       margin-bottom: 1.5rem; 
-      font-size: 1.4rem; 
+      font-size: 1.375rem; 
       display: flex; 
       align-items: center; 
-      gap: 10px; 
+      gap: 12px;
+      font-weight: 800;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--slate-100);
+      letter-spacing: -0.01em;
     }
     
     /* ============================================
-       FORMULÁRIO
+       FORMULÁRIO PREMIUM
        ============================================ */
     .form-grid { 
       display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
       gap: 1.5rem; 
     }
+    
     .form-group { 
       display: flex; 
       flex-direction: column; 
+      position: relative;
     }
+    
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+    
     .form-group label { 
-      font-size: 0.9rem; 
-      color: #475569; 
-      margin-bottom: 6px; 
-      font-weight: 600; 
+      font-size: 0.875rem; 
+      color: var(--slate-700); 
+      margin-bottom: 0.5rem; 
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
+    
+    .form-group label .required {
+      color: var(--brand-rose);
+      font-weight: 700;
+    }
+    
+    .form-group .input-wrapper {
+      position: relative;
+    }
+    
     .form-group input,
     .form-group select { 
-      padding: 10px 14px; 
-      border: 2px solid #e2e8f0; 
-      border-radius: 8px; 
-      font-size: 1rem; 
-      transition: all 0.3s; 
+      width: 100%; 
+      padding: 14px 16px; 
+      border: 2px solid var(--slate-200); 
+      border-radius: 14px; 
+      font-size: 0.9375rem; 
+      font-family: inherit;
+      transition: all var(--transition);
+      background: white;
+      color: var(--slate-800);
     }
+    
+    .form-group input::placeholder,
+    .form-group select::placeholder {
+      color: var(--slate-400);
+      font-weight: 400;
+    }
+    
     .form-group input:focus,
     .form-group select:focus { 
       outline: none; 
-      border-color: #3b82f6; 
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); 
+      border-color: var(--brand-blue); 
+      box-shadow: 
+        0 0 0 4px rgba(59, 130, 246, 0.12),
+        0 4px 14px rgba(30, 64, 175, 0.08);
+      background: white;
     }
+    
     .form-group input:disabled,
     .form-group select:disabled { 
-      background: #f1f5f9; 
-      cursor: not-allowed; 
+      background: var(--slate-100); 
+      cursor: not-allowed;
+      color: var(--slate-400);
+    }
+    
+    .form-group input:invalid:not(:placeholder-shown) {
+      border-color: #f87171;
+    }
+    
+    .form-group input:invalid:not(:placeholder-shown):focus {
+      box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.12);
+    }
+    
+    /* Ícone no input */
+    .input-icon {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--slate-400);
+      font-size: 1.125rem;
+      pointer-events: none;
+      transition: color var(--transition);
+    }
+    
+    .form-group input:focus + .input-icon,
+    .form-group input:not(:placeholder-shown) + .input-icon {
+      color: var(--brand-blue);
+    }
+    
+    /* Toggle password */
+    .toggle-pass {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--slate-400);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 6px;
+      transition: all var(--transition);
+      font-size: 1.125rem;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .toggle-pass:hover {
+      color: var(--brand-blue);
+      background: rgba(59, 130, 246, 0.1);
     }
     
     /* ============================================
-       ESTILO PARA LISTA DE VAGAS SELECIONADAS
+       SELEÇÃO DE VAGAS - PREMIUM
        ============================================ */
-    .selected-jobs-container {
-      margin-top: 10px;
-      padding: 12px;
-      background: #f8fafc;
-      border-radius: 8px;
-      border: 2px solid #e2e8f0;
+    .job-selection-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .job-select-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+    }
+    
+    .job-select-row select {
+      flex: 1;
+    }
+    
+    .btn-add-job {
+      background: linear-gradient(135deg, var(--brand-emerald), #059669);
+      color: white;
+      padding: 14px 20px;
+      border: none;
+      border-radius: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.875rem;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+      white-space: nowrap;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn-add-job::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    .btn-add-job:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.45);
+    }
+    
+    .btn-add-job:hover:not(:disabled)::before {
+      left: 100%;
+    }
+    
+    .btn-add-job:disabled {
+      background: var(--slate-300);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    
+    .btn-add-job:disabled::before {
       display: none;
     }
+    
+    /* Lista de vagas selecionadas */
+    .selected-jobs-container {
+      margin-top: 12px;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--slate-50), white);
+      border-radius: 16px;
+      border: 2px solid var(--slate-200);
+      display: none;
+      transition: all var(--transition);
+    }
+    
     .selected-jobs-container.active {
       display: block;
+      border-color: var(--brand-blue);
+      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.1);
     }
+    
     .selected-jobs-title {
-      font-weight: 600;
-      color: #475569;
-      margin-bottom: 8px;
-      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--slate-700);
+      margin-bottom: 12px;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
+    
     .selected-job-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 8px 12px;
+      padding: 12px 16px;
       background: white;
-      border-radius: 6px;
-      margin-bottom: 8px;
-      border-left: 4px solid #3b82f6;
-      font-size: 0.95rem;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      border-left: 4px solid var(--brand-blue);
+      font-size: 0.9rem;
+      box-shadow: var(--shadow-sm);
+      transition: all var(--transition);
+      animation: slideIn 0.2s ease;
     }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    .selected-job-item:hover {
+      box-shadow: var(--shadow);
+      transform: translateX(4px);
+    }
+    
     .selected-job-item:last-child {
       margin-bottom: 0;
     }
+    
     .btn-remove-job {
-      background: #ef4444;
+      background: linear-gradient(135deg, var(--brand-rose), #DC2626);
       color: white;
       border: none;
-      padding: 4px 12px;
-      border-radius: 4px;
+      padding: 6px 14px;
+      border-radius: 10px;
       cursor: pointer;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       font-weight: 600;
-      transition: background 0.2s;
+      transition: all var(--transition);
+      box-shadow: 0 2px 8px rgba(244, 63, 94, 0.25);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
+    
     .btn-remove-job:hover {
-      background: #dc2626;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(244, 63, 94, 0.4);
+    }
+    
+    .btn-remove-job:active {
+      transform: translateY(0);
     }
     
     /* ============================================
-       BOTÕES
+       BOTÕES DE AÇÃO PREMIUM
        ============================================ */
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 2px solid var(--slate-100);
+      flex-wrap: wrap;
+    }
+    
     .btn-save { 
-      background: linear-gradient(135deg, #3b82f6, #1e40af); 
+      background: linear-gradient(135deg, var(--brand-blue), var(--brand-blue-dark)); 
       color: white; 
-      padding: 14px 28px; 
+      padding: 14px 32px; 
       border: none; 
-      border-radius: 8px; 
+      border-radius: 14px; 
       font-weight: 700; 
       font-size: 1rem; 
       cursor: pointer; 
-      transition: all 0.3s; 
-      margin-top: 1rem; 
-    }
-    .btn-save:hover { 
-      transform: translateY(-2px); 
-      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4); 
-    }
-    .btn-cancel { 
-      background: #e2e8f0; 
-      color: #475569; 
-      padding: 14px 28px; 
-      border: none; 
-      border-radius: 8px; 
-      font-weight: 700; 
-      font-size: 1rem; 
-      cursor: pointer; 
-      transition: all 0.3s; 
-      margin-top: 1rem; 
-      margin-left: 10px; 
-    }
-    .btn-cancel:hover { 
-      background: #cbd5e1; 
-    }
-    .btn-add-job {
-      background: #10b981;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 10px;
-      transition: background 0.2s;
+      transition: all var(--transition);
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(30, 64, 175, 0.35);
+      position: relative;
+      overflow: hidden;
+      letter-spacing: 0.01em;
     }
-    .btn-add-job:hover {
-      background: #059669;
+    
+    .btn-save::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s ease;
     }
-    .btn-add-job:disabled {
-      background: #cbd5e1;
+    
+    .btn-save:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 8px 25px rgba(30, 64, 175, 0.5);
+    }
+    
+    .btn-save:hover::before {
+      left: 100%;
+    }
+    
+    .btn-save:active {
+      transform: translateY(-1px);
+    }
+    
+    .btn-save:disabled {
+      background: var(--slate-300);
       cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
     }
+    
+    .btn-save:disabled::before {
+      display: none;
+    }
+    
+    .btn-cancel { 
+      background: linear-gradient(135deg, var(--slate-200), var(--slate-300)); 
+      color: var(--slate-700); 
+      padding: 14px 32px; 
+      border: none; 
+      border-radius: 14px; 
+      font-weight: 700; 
+      font-size: 1rem; 
+      cursor: pointer; 
+      transition: all var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .btn-cancel:hover { 
+      background: linear-gradient(135deg, var(--slate-300), var(--slate-400));
+      transform: translateY(-1px);
+      color: var(--slate-800);
+    }
+    
+    .btn-cancel:active {
+      transform: translateY(0);
+    }
+    
+    /* Loading state */
+    .btn-save.loading {
+      position: relative;
+      color: transparent !important;
+      pointer-events: none;
+    }
+    
+    .btn-save.loading::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      top: 50%;
+      left: 50%;
+      margin: -10px 0 0 -10px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* ============================================
+       TOAST NOTIFICATION PREMIUM
+       ============================================ */
+    .toast {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      background: white;
+      padding: 14px 24px;
+      border-radius: 14px;
+      box-shadow: var(--shadow-xl);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      color: var(--slate-800);
+      z-index: 10001;
+      border-left: 4px solid var(--brand-emerald);
+      animation: slideIn 0.3s ease;
+      border: 1px solid var(--slate-200);
+      max-width: 400px;
+      font-size: 0.875rem;
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateX(120%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    .toast.error {
+      border-left-color: var(--brand-rose);
+    }
+    
+    .toast.warning {
+      border-left-color: var(--brand-amber);
+    }
+    
+    .toast-icon {
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+    
+    /* ============================================
+       HELP TEXT & HINTS
+       ============================================ */
+    .form-hint {
+      font-size: 0.75rem;
+      color: var(--slate-500);
+      margin-top: 0.375rem;
+      line-height: 1.4;
+    }
+    
+    .form-hint strong {
+      color: var(--slate-600);
+      font-weight: 600;
+    }
+    
+    /* ============================================
+       EMPTY STATE
+       ============================================ */
+    .empty-state {
+      text-align: center;
+      padding: 2rem;
+      color: var(--slate-500);
+      background: var(--slate-50);
+      border-radius: 12px;
+      border: 2px dashed var(--slate-300);
+      font-size: 0.875rem;
+    }
+    
+    .empty-state-icon {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+      display: block;
+      opacity: 0.6;
+    }
+    
+    /* ============================================
+       RESPONSIVE DESIGN
+       ============================================ */
+    @media (max-width: 768px) {
+      header { 
+        padding: 0 16px; 
+        height: auto;
+        min-height: 72px;
+      }
+      
+      .logo-img { 
+        height: 42px; 
+      }
+      
+      .logo-text span:first-child {
+        font-size: 1rem;
+      }
+      
+      .logo-text span:last-child {
+        display: none;
+      }
+      
+      main { 
+        padding-top: 104px; 
+        padding: 16px;
+      }
+      
+      .card { 
+        padding: 1.75rem; 
+        border-radius: 20px;
+      }
+      
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .job-select-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .btn-add-job {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .form-actions {
+        flex-direction: column;
+      }
+      
+      .btn-save,
+      .btn-cancel {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .card {
+        padding: 1.5rem;
+      }
+      
+      .form-group input,
+      .form-group select {
+        padding: 12px 14px;
+        font-size: 0.875rem;
+      }
+    }
+    
+    /* ============================================
+       PRINT OPTIMIZATION
+       ============================================ */
+    @media print {
+      header, .no-print, .btn-save, .btn-cancel, .btn-add-job, .btn-remove-job { 
+        display: none !important; 
+      }
+      body { 
+        background: white !important; 
+        color: #000 !important;
+        font-size: 10pt;
+      }
+      .card { 
+        box-shadow: none !important; 
+        border: 1px solid #ccc !important;
+        break-inside: avoid;
+      }
+      main {
+        padding-top: 20px !important;
+        max-width: 100%;
+      }
+    }
+    
+    /* ============================================
+       ACESSIBILIDADE - FOCUS VISIBLE
+       ============================================ */
+    .btn-save:focus-visible,
+    .btn-cancel:focus-visible,
+    .btn-add-job:focus-visible,
+    .btn-remove-job:focus-visible,
+    .form-group input:focus-visible,
+    .form-group select:focus-visible,
+    .btn-logout:focus-visible {
+      outline: 2px solid var(--brand-blue);
+      outline-offset: 2px;
+    }
+    
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    
+    /* ============================================
+       LOADING SKELETON
+       ============================================ */
+    .loading-skeleton {
+      background: linear-gradient(90deg, var(--slate-100) 25%, var(--slate-50) 50%, var(--slate-100) 75%);
+      background-size: 200% 100%;
+      animation: loading 1.5s infinite;
+      border-radius: 8px;
+    }
+    
+    @keyframes loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    
+    .loading-text {
+      height: 1rem;
+      margin: 0.5rem 0;
+      border-radius: 4px;
+    }
+    
+    .loading-text.short { width: 40%; }
+    .loading-text.medium { width: 70%; }
+    .loading-text.long { width: 90%; }
   </style>
 </head>
 <body>
+
   <!-- ============================================
-       CABEÇALHO COM LOGO E BOTÃO DE SAÍDA - VIGORRE ONE™
+       HEADER PREMIUM
        ============================================ -->
-  <header>
-    <div class="logo">
-      <img src="logo-vigorre.png" alt="Vigorre One™" class="logo-img" onerror="this.outerHTML='<div class=\'logo-icon\'>V</div>'">
-      <span>Vigorre One™ - Cadastro de Participante (Admin)</span>
+  <header role="banner">
+    <div class="logo" onclick="window.location.href='admin.html'" role="button" tabindex="0" aria-label="Voltar para painel administrativo">
+      <img src="logo-vigorre.png" alt="Vigorre One™" class="logo-img" onerror="this.outerHTML='<div style=\'width:40px;height:40px;background:linear-gradient(135deg,#1D4ED8,#7C3AED);color:white;display:flex;align-items:center;justify-content:center;border-radius:10px;font-weight:800;font-size:20px;box-shadow:0 4px 14px rgba(29,78,216,0.3)\' aria-hidden=\'true\'>V</div>'">
+      <div class="logo-text">
+        <span>Vigorre One™</span>
+        <span>Cadastro de Participante</span>
+      </div>
     </div>
-    <button class="btn-logout" onclick="logout()">Sair do Sistema</button>
+    <button class="btn-logout" onclick="logout()" aria-label="Sair do sistema">
+      <span aria-hidden="true">🔐</span>
+      <span>Sair</span>
+    </button>
   </header>
 
   <!-- ============================================
-       CONTEÚDO PRINCIPAL
+       MAIN CONTENT
        ============================================ -->
-  <main>
-    <!-- Card de Cadastro -->
-    <div class="card">
-      <h2>👤 Dados do Participante - Vigorre One™</h2>
-      <form id="participantForm">
+  <main role="main">
+    <article class="card">
+      <header>
+        <h2>
+          <span aria-hidden="true">👤</span>
+          Dados do Participante
+        </h2>
+      </header>
+      
+      <form id="participantForm" novalidate>
         <div class="form-grid">
           <!-- Nome Completo -->
-          <div class="form-group" style="grid-column: 1 / -1;">
-            <label for="name">Nome Completo *</label>
-            <input type="text" id="name" required placeholder="Digite o nome completo">
+          <div class="form-group full-width">
+            <label for="name">
+              Nome Completo <span class="required" aria-hidden="true">*</span>
+              <span class="sr-only">(campo obrigatório)</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="text" id="name" name="name" required placeholder="Digite o nome completo" autocomplete="name">
+              <span class="input-icon" aria-hidden="true">👤</span>
+            </div>
           </div>
 
           <!-- E-mail -->
           <div class="form-group">
-            <label for="email">E-mail *</label>
-            <input type="email" id="email" required placeholder="exemplo@email.com">
+            <label for="email">
+              E-mail <span class="required" aria-hidden="true">*</span>
+              <span class="sr-only">(campo obrigatório)</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="email" id="email" name="email" required placeholder="exemplo@email.com" autocomplete="email">
+              <span class="input-icon" aria-hidden="true">📧</span>
+            </div>
+            <small class="form-hint">Utilizado para login e comunicação com o participante</small>
           </div>
 
           <!-- Telefone -->
           <div class="form-group">
             <label for="phone">Telefone / WhatsApp</label>
-            <input type="tel" id="phone" placeholder="(00) 00000-0000">
+            <div class="input-wrapper">
+              <input type="tel" id="phone" name="phone" placeholder="(00) 00000-0000" autocomplete="tel" pattern="^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$">
+              <span class="input-icon" aria-hidden="true">📱</span>
+            </div>
+            <small class="form-hint">Formato: (00) 00000-0000</small>
           </div>
 
           <!-- Empresa -->
           <div class="form-group">
-            <label for="companyId">Empresa *</label>
-            <select id="companyId" required onchange="loadAvailableJobs()">
+            <label for="companyId">
+              Empresa <span class="required" aria-hidden="true">*</span>
+              <span class="sr-only">(campo obrigatório)</span>
+            </label>
+            <select id="companyId" name="companyId" required onchange="loadAvailableJobs()">
               <option value="">Selecione a empresa...</option>
             </select>
+            <small class="form-hint">Vincule o participante a uma empresa para gerenciar vagas e relatórios</small>
           </div>
 
           <!-- Vaga/Cargo - Seleção e Inclusão -->
-          <div class="form-group">
-            <label for="availableJobSelect">Vaga / Cargo Disponível</label>
-            <select id="availableJobSelect">
-              <option value="">Selecione a vaga...</option>
-            </select>
-            <button type="button" class="btn-add-job" id="btnAddJob" onclick="addJobToParticipant()" disabled>
-              ➕ Incluir Vaga
-            </button>
-            
-            <!-- Lista de vagas já vinculadas ao participante -->
-            <div id="selectedJobsContainer" class="selected-jobs-container">
-              <div class="selected-jobs-title">Vagas Vinculadas:</div>
-              <div id="selectedJobsList">
-                <!-- Vagas serão adicionadas aqui dinamicamente -->
+          <div class="form-group full-width">
+            <label>Vaga / Cargo Disponível</label>
+            <div class="job-selection-wrapper">
+              <div class="job-select-row">
+                <select id="availableJobSelect" aria-label="Selecionar vaga disponível">
+                  <option value="">Selecione a vaga...</option>
+                </select>
+                <button type="button" class="btn-add-job" id="btnAddJob" onclick="addJobToParticipant()" disabled aria-label="Adicionar vaga selecionada">
+                  <span aria-hidden="true">➕</span>
+                  Incluir Vaga
+                </button>
+              </div>
+              
+              <!-- Lista de vagas já vinculadas ao participante -->
+              <div id="selectedJobsContainer" class="selected-jobs-container" role="list" aria-label="Vagas vinculadas ao participante">
+                <div class="selected-jobs-title">
+                  <span aria-hidden="true">📋</span>
+                  Vagas Vinculadas:
+                </div>
+                <div id="selectedJobsList">
+                  <!-- Vagas serão adicionadas aqui dinamicamente -->
+                </div>
               </div>
             </div>
+            <small class="form-hint">Adicione uma ou mais vagas para vincular ao participante. O participante poderá realizar testes específicos para cada vaga.</small>
           </div>
 
-          <!-- Usuário -->
+          <!-- Usuário de Acesso -->
           <div class="form-group">
-            <label for="user">Usuário de Acesso *</label>
-            <input type="text" id="user" required placeholder="Nome de usuário">
+            <label for="user">
+              Usuário de Acesso <span class="required" aria-hidden="true">*</span>
+              <span class="sr-only">(campo obrigatório)</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="text" id="user" name="user" required placeholder="nome.usuario" autocomplete="username" pattern="^[a-zA-Z0-9._-]+$">
+              <span class="input-icon" aria-hidden="true">🔑</span>
+            </div>
+            <small class="form-hint">Apenas letras, números, pontos, hífens e underlines</small>
           </div>
 
-          <!-- Senha -->
+          <!-- Senha de Acesso -->
           <div class="form-group">
-            <label for="password">Senha de Acesso *</label>
-            <input type="password" id="password" required placeholder="********">
+            <label for="password">
+              Senha de Acesso <span class="required" aria-hidden="true">*</span>
+              <span class="sr-only">(campo obrigatório)</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="password" id="password" name="password" required placeholder="••••••••" autocomplete="new-password" minlength="6">
+              <button type="button" class="toggle-pass" onclick="togglePassword('password')" aria-label="Alternar visibilidade da senha" aria-pressed="false">
+                👁️
+              </button>
+            </div>
+            <small class="form-hint">Mínimo de 6 caracteres. Recomende alteração no primeiro acesso</small>
           </div>
         </div>
 
         <!-- Botões de Ação -->
-        <div style="margin-top: 2rem;">
-          <button type="submit" class="btn-save">💾 Salvar Participante</button>
-          <button type="button" class="btn-cancel" onclick="cancel()">❌ Cancelar</button>
+        <div class="form-actions">
+          <button type="submit" class="btn-save" id="btnSave">
+            <span aria-hidden="true">💾</span>
+            Salvar Participante
+          </button>
+          <button type="button" class="btn-cancel" onclick="cancel()">
+            <span aria-hidden="true">❌</span>
+            Cancelar
+          </button>
         </div>
       </form>
-    </div>
+    </article>
   </main>
 
+  <!-- ============================================
+       TOAST NOTIFICATION
+       ============================================ -->
+  <div id="toast" class="toast" style="display: none;" role="alert" aria-live="polite">
+    <span class="toast-icon" id="toastIcon" aria-hidden="true">✅</span>
+    <span id="toastMessage">Ação realizada!</span>
+  </div>
+
+  <!-- ============================================
+       SCRIPTS - FUNCIONALIDADE E SEGURANÇA
+       ============================================ -->
   <script>
+    'use strict';
+    
     // ============================================
     // VARIÁVEIS GLOBAIS
     // ============================================
@@ -341,28 +1077,70 @@
     // VERIFICAÇÃO DE AUTENTICAÇÃO - ADMIN/STAFF APENAS
     // ============================================
     document.addEventListener('DOMContentLoaded', function() {
+      console.log('🔹 Inicializando Cadastro de Participante Vigorre One™...');
+      
       const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
       
       // Se não for admin ou staff, redirecionar para login
       if (!currentUser.role || (currentUser.role !== 'admin' && currentUser.role !== 'staff')) {
-        alert('⚠️ Acesso restrito: Apenas administradores podem cadastrar participantes.');
-        window.location.href = 'login.html';
+        console.warn('⚠️ Acesso não autorizado - redirecionando para login');
+        showToast('⚠️ Acesso restrito: Apenas administradores podem cadastrar participantes.', 'error');
+        setTimeout(function() {
+          window.location.href = 'login.html';
+        }, 2000);
         return;
       }
       
+      // Prevenir cache de página sensível
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.href);
+      }
+      
       loadCompanies();
+      
       if (participantId) {
         loadParticipantData();
+        console.log('✏️ Modo edição - ID:', participantId);
+      } else {
+        console.log('➕ Modo cadastro - novo participante');
       }
     });
+
+    // ============================================
+    // FUNÇÃO: ALTERNAR VISIBILIDADE DA SENHA
+    // ============================================
+    function togglePassword(inputId) {
+      const input = document.getElementById(inputId);
+      const toggleBtn = document.querySelector(`.toggle-pass[onclick="togglePassword('${inputId}')"]`);
+      
+      if (!input || !toggleBtn) return;
+      
+      const isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+      
+      // Atualizar ícone e aria-label
+      toggleBtn.textContent = isPassword ? '🙈' : '👁️';
+      toggleBtn.setAttribute('aria-pressed', String(isPassword));
+      toggleBtn.setAttribute('aria-label', isPassword ? 'Ocultar senha' : 'Mostrar senha');
+      
+      // Manter foco no input
+      input.focus();
+    }
 
     // ============================================
     // CARREGAR EMPRESAS NO SELECT
     // ============================================
     function loadCompanies() {
+      console.log('🏢 Carregando lista de empresas...');
+      
       // Busca empresas do localStorage
       companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
       const companySelect = document.getElementById('companyId');
+      
+      if (!companySelect) {
+        console.error('❌ Elemento companyId não encontrado');
+        return;
+      }
       
       // Limpa opções existentes (mantém a primeira opção padrão)
       companySelect.innerHTML = '<option value="">Selecione a empresa...</option>';
@@ -375,12 +1153,15 @@
         companySelect.appendChild(option);
       });
 
+      console.log('✅ ' + companies.length + ' empresas carregadas');
+
       // Se estiver editando um participante existente, seleciona a empresa atual
       if (participantId) {
         const allParticipants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
         const participant = allParticipants.find(function(p) { return p.id === participantId; });
         if (participant && participant.companyId) {
           companySelect.value = participant.companyId;
+          console.log('✅ Empresa selecionada:', participant.companyId);
           // Carrega as vagas disponíveis para esta empresa
           loadAvailableJobs();
           
@@ -388,6 +1169,7 @@
           if (participant.jobs && Array.isArray(participant.jobs) && participant.jobs.length > 0) {
             selectedJobs = JSON.parse(JSON.stringify(participant.jobs)); // Clone do array
             renderSelectedJobsList();
+            console.log('✅ ' + selectedJobs.length + ' vagas vinculadas carregadas');
           }
         }
       }
@@ -397,9 +1179,16 @@
     // CARREGAR VAGAS DISPONÍVEIS NO SELECT
     // ============================================
     function loadAvailableJobs() {
+      console.log('💼 Carregando vagas disponíveis...');
+      
       const companyId = document.getElementById('companyId').value;
       const jobSelect = document.getElementById('availableJobSelect');
       const btnAddJob = document.getElementById('btnAddJob');
+      
+      if (!jobSelect || !btnAddJob) {
+        console.error('❌ Elementos de seleção de vagas não encontrados');
+        return;
+      }
       
       // Limpa opções de vagas
       jobSelect.innerHTML = '<option value="">Selecione a vaga...</option>';
@@ -408,6 +1197,8 @@
       if (!companyId) {
         jobSelect.disabled = true;
         btnAddJob.disabled = true;
+        jobSelect.innerHTML = '<option value="">Selecione uma empresa primeiro</option>';
+        console.log('ℹ️ Aguardando seleção de empresa');
         return;
       }
       
@@ -420,6 +1211,12 @@
                !selectedJobs.find(function(selected) { return selected.id === job.id; });
       });
       
+      console.log('📊 Vagas encontradas:', {
+        total: allJobs.length,
+        daEmpresa: allJobs.filter(function(j) { return j.companyId === companyId; }).length,
+        disponiveis: availableJobs.length
+      });
+      
       // Se não houver vagas disponíveis, mostra mensagem e desabilita
       if (availableJobs.length === 0) {
         const option = document.createElement('option');
@@ -429,6 +1226,7 @@
         jobSelect.appendChild(option);
         jobSelect.disabled = true;
         btnAddJob.disabled = true;
+        console.log('ℹ️ Nenhuma vaga disponível para esta empresa');
         return;
       }
       
@@ -443,18 +1241,22 @@
       // Habilita o select e o botão de adicionar
       jobSelect.disabled = false;
       btnAddJob.disabled = false;
+      console.log('✅ ' + availableJobs.length + ' vagas disponíveis carregadas');
     }
 
     // ============================================
     // ADICIONAR VAGA AO PARTICIPANTE
     // ============================================
     function addJobToParticipant() {
+      console.log('➕ Adicionando vaga ao participante...');
+      
       const jobSelect = document.getElementById('availableJobSelect');
-      const jobId = jobSelect.value;
+      const jobId = jobSelect?.value;
       
       // Validação: verifica se uma vaga foi selecionada
       if (!jobId) {
-        alert('⚠️ Por favor, selecione uma vaga para incluir.');
+        showToast('⚠️ Por favor, selecione uma vaga para incluir.', 'warning');
+        console.warn('⚠️ Tentativa de adicionar vaga sem seleção');
         return;
       }
       
@@ -468,8 +1270,11 @@
           id: job.id,
           title: job.title || job.name || 'Sem título',
           companyId: job.companyId,
-          description: job.description || ''
+          description: job.description || '',
+          profile: job.profile || ''
         });
+        
+        console.log('✅ Vaga adicionada:', job.title || job.name);
         
         // Renderiza a lista atualizada de vagas selecionadas
         renderSelectedJobsList();
@@ -478,7 +1283,13 @@
         loadAvailableJobs();
         
         // Limpa a seleção do dropdown
-        jobSelect.value = '';
+        if (jobSelect) jobSelect.value = '';
+        
+        showToast('✅ Vaga "' + (job.title || job.name) + '" vinculada ao participante!');
+      } else if (selectedJobs.find(function(sj) { return sj.id === jobId; })) {
+        showToast('⚠️ Esta vaga já foi adicionada.', 'warning');
+      } else {
+        showToast('❌ Vaga não encontrada.', 'error');
       }
     }
 
@@ -486,6 +1297,11 @@
     // REMOVER VAGA DO PARTICIPANTE
     // ============================================
     function removeJobFromParticipant(jobId) {
+      console.log('🗑️ Removendo vaga do participante:', jobId);
+      
+      const job = selectedJobs.find(function(j) { return j.id === jobId; });
+      const jobName = job ? (job.title || job.name) : 'Vaga';
+      
       // Filtra o array para remover a vaga com o ID especificado
       selectedJobs = selectedJobs.filter(function(j) { return j.id !== jobId; });
       
@@ -494,6 +1310,8 @@
       
       // Recarrega as vagas disponíveis (para mostrar a que foi removida)
       loadAvailableJobs();
+      
+      showToast('✅ Vaga "' + jobName + '" removida do participante!');
     }
 
     // ============================================
@@ -502,6 +1320,11 @@
     function renderSelectedJobsList() {
       const container = document.getElementById('selectedJobsContainer');
       const list = document.getElementById('selectedJobsList');
+      
+      if (!container || !list) {
+        console.error('❌ Elementos da lista de vagas não encontrados');
+        return;
+      }
       
       // Se não houver vagas selecionadas, esconde o container
       if (selectedJobs.length === 0) {
@@ -519,13 +1342,16 @@
       selectedJobs.forEach(function(job) {
         const jobDiv = document.createElement('div');
         jobDiv.className = 'selected-job-item';
+        jobDiv.setAttribute('role', 'listitem');
         jobDiv.innerHTML = 
-          '<span style="font-weight: 500;">' + (job.title || job.name || 'Sem título') + '</span>' +
-          '<button type="button" class="btn-remove-job" onclick="removeJobFromParticipant(\'' + job.id + '\')">' +
-            '🗑️ Remover' +
+          '<span style="font-weight: 600;">' + (job.title || job.name || 'Sem título') + '</span>' +
+          '<button type="button" class="btn-remove-job" onclick="removeJobFromParticipant(\'' + job.id + '\')" aria-label="Remover vaga ' + (job.title || job.name) + '">' +
+            '<span aria-hidden="true">🗑️</span> Remover' +
           '</button>';
         list.appendChild(jobDiv);
       });
+      
+      console.log('📋 Lista de vagas renderizada:', selectedJobs.length + ' itens');
     }
 
     // ============================================
@@ -534,16 +1360,44 @@
     document.getElementById('participantForm').addEventListener('submit', function(e) {
       e.preventDefault();
       
+      console.log('💾 Salvando participante...');
+      
+      const btnSave = document.getElementById('btnSave');
+      
+      // Validação básica do formulário
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const user = document.getElementById('user').value.trim();
+      const password = document.getElementById('password').value;
+      
+      if (!name || !email || !user || !password) {
+        showToast('⚠️ Preencha todos os campos obrigatórios.', 'warning');
+        return;
+      }
+      
+      // Validação de email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showToast('⚠️ Por favor, insira um e-mail válido.', 'warning');
+        document.getElementById('email').focus();
+        return;
+      }
+      
+      // Desabilita botão e mostra loading
+      btnSave.disabled = true;
+      btnSave.classList.add('loading');
+      btnSave.textContent = 'Salvando...';
+      
       // Coleta todos os dados do formulário
       const participantData = {
         id: participantId || Date.now().toString(),
-        name: document.getElementById('name').value,
-        email: document.getElementById('email').value,
-        phone: document.getElementById('phone').value,
+        name: name,
+        email: email.toLowerCase(),
+        phone: document.getElementById('phone').value.trim(),
         companyId: document.getElementById('companyId').value,
-        jobs: selectedJobs, // NOVO: Salva array de objetos de vagas
-        user: document.getElementById('user').value,
-        password: document.getElementById('password').value,
+        jobs: JSON.parse(JSON.stringify(selectedJobs)), // Clone do array de vagas
+        user: user.toLowerCase(),
+        password: password, // Em produção: usar hash
         tests: participantId ? 
           (JSON.parse(localStorage.getItem('vigorre_participants') || '[]')
             .find(function(p) { return p.id === participantId; })?.tests || []) : [],
@@ -552,7 +1406,8 @@
             .find(function(p) { return p.id === participantId; })?.completedTests || []) : [],
         createdAt: participantId ? 
           (JSON.parse(localStorage.getItem('vigorre_participants') || '[]')
-            .find(function(p) { return p.id === participantId; })?.createdAt) : new Date().toISOString()
+            .find(function(p) { return p.id === participantId; })?.createdAt) : new Date().toISOString(),
+        updatedAt: new Date().toISOString()
       };
 
       // Busca lista atual de participantes do localStorage
@@ -561,21 +1416,43 @@
       // Verifica se o participante já existe (edição) ou é novo (cadastro)
       const existingIndex = participants.findIndex(function(p) { return p.id === participantData.id; });
       
-      if (existingIndex > -1) {
-        // Atualiza participante existente
-        participants[existingIndex] = participantData;
-        alert('✅ Participante atualizado com sucesso!');
-      } else {
-        // Adiciona novo participante à lista
-        participants.push(participantData);
-        alert('✅ Participante cadastrado com sucesso!');
-      }
-      
-      // Salva a lista atualizada no localStorage
-      localStorage.setItem('vigorre_participants', JSON.stringify(participants));
-      
-      // Redireciona para a página do admin
-      window.location.href = 'admin.html';
+      setTimeout(function() {
+        try {
+          if (existingIndex > -1) {
+            // Atualiza participante existente
+            participants[existingIndex] = { ...participants[existingIndex], ...participantData };
+            console.log('✏️ Participante atualizado:', participantData.name);
+            showToast('✅ Participante atualizado com sucesso!');
+          } else {
+            // Adiciona novo participante à lista
+            participants.push(participantData);
+            console.log('➕ Novo participante cadastrado:', participantData.name);
+            showToast('✅ Participante cadastrado com sucesso!');
+          }
+          
+          // Salva a lista atualizada no localStorage
+          localStorage.setItem('vigorre_participants', JSON.stringify(participants));
+          
+          // Resetar botão
+          btnSave.disabled = false;
+          btnSave.classList.remove('loading');
+          btnSave.innerHTML = '<span aria-hidden="true">💾</span> Salvar Participante';
+          
+          // Redireciona para a página do admin após delay
+          setTimeout(function() {
+            window.location.href = 'admin.html?ts=' + Date.now();
+          }, 1500);
+          
+        } catch (error) {
+          console.error('❌ Erro ao salvar participante:', error);
+          showToast('❌ Erro ao salvar. Tente novamente.', 'error');
+          
+          // Resetar botão em caso de erro
+          btnSave.disabled = false;
+          btnSave.classList.remove('loading');
+          btnSave.innerHTML = '<span aria-hidden="true">💾</span> Salvar Participante';
+        }
+      }, 800); // Simular tempo de processamento
     });
 
     // ============================================
@@ -583,6 +1460,8 @@
     // ============================================
     function loadParticipantData() {
       if (!participantId) return;
+      
+      console.log('🔍 Carregando dados do participante para edição...');
       
       const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
       const participant = participants.find(function(p) { return p.id === participantId; });
@@ -595,11 +1474,25 @@
         document.getElementById('user').value = participant.user || '';
         document.getElementById('password').value = participant.password || '';
         
+        console.log('✅ Dados do participante carregados');
+        
         // Carrega vagas já vinculadas ao participante
         if (participant.jobs && Array.isArray(participant.jobs) && participant.jobs.length > 0) {
           selectedJobs = JSON.parse(JSON.stringify(participant.jobs)); // Clone para evitar referência
           renderSelectedJobsList();
+          console.log('✅ ' + selectedJobs.length + ' vagas vinculadas carregadas');
         }
+        
+        // Carrega vagas disponíveis após definir a empresa
+        if (participant.companyId) {
+          loadAvailableJobs();
+        }
+      } else {
+        console.warn('⚠️ Participante não encontrado para edição:', participantId);
+        showToast('⚠️ Participante não encontrado.', 'error');
+        setTimeout(function() {
+          window.location.href = 'admin.html';
+        }, 2000);
       }
     }
 
@@ -607,6 +1500,8 @@
     // CANCELAR EDIÇÃO/CADASTRO
     // ============================================
     function cancel() {
+      console.log('❌ Cancelando operação...');
+      
       if (confirm('Deseja cancelar? Os dados não serão salvos.')) {
         window.location.href = 'admin.html';
       }
@@ -616,6 +1511,11 @@
     // LOGOUT DO SISTEMA - VIGORRE ONE™
     // ============================================
     function logout() {
+      console.log('🔐 Realizando logout...');
+      
+      // Marcar logout para sincronização entre abas
+      sessionStorage.setItem('vigorre_logged_out', 'true');
+      
       // Remove completamente a sessão do usuário
       localStorage.removeItem('vigorre_current_user');
       
@@ -623,23 +1523,110 @@
       sessionStorage.clear();
       
       // Redireciona para a tela de login
-      window.location.href = 'login.html';
+      window.location.href = 'login.html?loggedout=1&ts=' + Date.now();
     }
 
     // ============================================
-    // >>> CORREÇÕES ADICIONADAS (SEM OTIMIZAR) <<<
+    // FUNÇÃO: MOSTRAR NOTIFICAÇÃO TOAST
     // ============================================
+    function showToast(message, type) {
+      // Definir tipo padrão como 'success'
+      type = type || 'success';
+      
+      // Buscar elementos do toast
+      const toast = document.getElementById('toast');
+      const toastIcon = document.getElementById('toastIcon');
+      const toastMessage = document.getElementById('toastMessage');
+      
+      // Se não encontrar os elementos, sair
+      if (!toast) return;
+      
+      // Configurar ícone e mensagem
+      toastIcon.textContent = type === 'success' ? '✅' : type === 'error' ? '❌' : '⚠️';
+      toastMessage.textContent = message;
+      
+      // Aplicar classe de estilo conforme tipo
+      toast.className = 'toast ' + (type === 'error' ? 'error' : '') + (type === 'warning' ? 'warning' : '');
+      
+      // Mostrar toast
+      toast.style.display = 'flex';
+      
+      // Esconder após 4 segundos
+      if (toast.timeoutId) clearTimeout(toast.timeoutId);
+      toast.timeoutId = setTimeout(function() {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(120%)';
+        setTimeout(function() { 
+          toast.style.display = 'none';
+          toast.style.opacity = '1';
+          toast.style.transform = 'translateX(0)';
+        }, 300);
+      }, 4000);
+    }
 
-    // 1. Tratamento de erro global com fallback amigável
+    // ============================================
+    // TRATAMENTO DE ERROS GLOBAIS
+    // ============================================
     window.addEventListener('error', function(e) {
       console.error('❌ Erro no cadastro de participante Vigorre One™:', e);
-      alert('⚠️ Ocorreu um erro. Recarregue a página se o problema persistir.');
-      return true;
+      showToast('⚠️ Ocorreu um erro. Recarregue a página se o problema persistir.', 'error');
+      return true; // Previne erro no console do navegador
     });
 
-    // 2. Debug: Logar estado inicial no console para diagnóstico
+    // ============================================
+    // PREVENÇÃO DE BACK BUTTON APÓS LOGOUT
+    // ============================================
+    window.addEventListener('pageshow', function(event) {
+      if (event.persisted) {
+        const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+        const sessionActive = sessionStorage.getItem('vigorre_session_active') === 'true';
+        
+        if (!currentUser.role || !sessionActive) {
+          window.location.replace('login.html');
+        }
+      }
+    });
+
+    // ============================================
+    // VALIDAÇÃO EM TEMPO REAL
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+      // Validação de telefone em tempo real
+      const phoneInput = document.getElementById('phone');
+      if (phoneInput) {
+        phoneInput.addEventListener('input', function(e) {
+          let value = e.target.value.replace(/\D/g, '');
+          if (value.length <= 11) {
+            if (value.length > 10) {
+              value = value.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
+            } else if (value.length > 6) {
+              value = value.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3');
+            } else if (value.length > 2) {
+              value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
+            } else if (value.length > 0) {
+              value = value.replace(/^(\d*)/, '($1');
+            }
+            e.target.value = value;
+          }
+        });
+      }
+      
+      // Validação de usuário em tempo real
+      const userInput = document.getElementById('user');
+      if (userInput) {
+        userInput.addEventListener('input', function(e) {
+          // Permitir apenas letras, números, pontos, hífens e underlines
+          e.target.value = e.target.value.replace(/[^a-zA-Z0-9._-]/g, '');
+        });
+      }
+    });
+
+    // ============================================
+    // DEBUG INICIAL - LOGS PARA DIAGNÓSTICO
+    // ============================================
     console.log('🔍 Cadastro Participante Vigorre One™ - Estado inicial:', {
       participantId: participantId,
+      mode: participantId ? 'edição' : 'cadastro',
       companies: companies.length,
       localStorage: {
         participants: !!localStorage.getItem('vigorre_participants'),
@@ -648,6 +1635,12 @@
       }
     });
 
+    // ============================================
+    // EXPORTS PARA MÓDULOS (OPCIONAL)
+    // ============================================
+    if (typeof module !== 'undefined' && module.exports) {
+      module.exports = { showToast, logout, loadCompanies };
+    }
   </script>
 </body>
 </html>
