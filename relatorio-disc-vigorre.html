@@ -5,13 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Relatório DISC + VIGOR Vigorre One™ | People Analytics Enterprise</title>
   
+  <!-- ✅ SUPABASE SDK - CARREGAR PRIMEIRO -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- ✅ CONFIGURAÇÃO SUPABASE - SUAS CHAVES -->
   <script src="supabase-config.js"></script>
+  
+  <!-- Tailwind CSS & Chart.js -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   
+  <!-- Tailwind Config -->
   <script>
     tailwind.config = {
       theme: {
@@ -37,6 +44,9 @@
   </script>
 
   <style>
+    /* ============================================
+       BASE & RESET - ENTERPRISE PREMIUM
+       ============================================ */
     * { margin: 0; padding: 0; box-sizing: border-box !important; }
     html { scroll-behavior: smooth; }
     body { 
@@ -49,6 +59,9 @@
       print-color-adjust: exact !important;
     }
 
+    /* ============================================
+       LOGO BOX COM FUNDO BRANCO
+       ============================================ */
     .vigorre-logo-box {
       background-color: #ffffff !important;
       border: 2px solid #e2e8f0;
@@ -67,6 +80,9 @@
       object-fit: contain;
     }
 
+    /* ============================================
+       CARDS PREMIUM
+       ============================================ */
     .vigorre-card { 
       background: #ffffff; 
       border: 1px solid #e2e8f0; 
@@ -99,11 +115,17 @@
       padding: 30px;
     }
 
+    /* ============================================
+       SEÇÃO EXECUTIVA (DESTAQUE)
+       ============================================ */
     .executive-section {
       background: linear-gradient(to right, #f8fafc, #ffffff);
       border-left: 4px solid #1D4ED8;
     }
 
+    /* ============================================
+       CHART CONTAINERS
+       ============================================ */
     .chart-container {
       position: relative;
       height: 350px !important;
@@ -111,6 +133,9 @@
       margin-bottom: 15px;
     }
 
+    /* ============================================
+       PERCENTUAL DE ADERÊNCIA
+       ============================================ */
     .aderencia-bar-container {
       background: #e2e8f0;
       border-radius: 8px;
@@ -137,7 +162,9 @@
       color: white;
     }
 
-    /* GRID VIGOR - 5 DIMENSÕES (AJUSTADO PARA IMPRESSÃO) */
+    /* ============================================
+       GRID VIGOR - 5 DIMENSÕES
+       ============================================ */
     .vigor-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -187,6 +214,9 @@
       line-height: 1;
     }
 
+    /* ============================================
+       MODAL PREMIUM
+       ============================================ */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -223,6 +253,9 @@
       transition: all 0.3s ease;
     }
 
+    /* ============================================
+       MODAL VINCULAR EMPRESA
+       ============================================ */
     .modal-company-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -262,7 +295,7 @@
     }
 
     /* ============================================
-       PRINT OPTIMIZATION - MARGENS PRECISAS
+       PRINT OPTIMIZATION - MARGENS PRECISAS (CORREÇÃO FINAL)
        Header: 2.5cm (25mm) | Espaço: 3cm (30mm) | Footer: 2.5cm (25mm)
        ============================================ */
     @media print {
@@ -276,6 +309,8 @@
         color: #000000 !important;
         font-size: 9pt;
         line-height: 1.4;
+        width: 210mm !important; /* Largura total A4 */
+        margin: 0 auto !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
@@ -287,7 +322,7 @@
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 3mm 10mm !important;
+        padding: 0 !important; /* Remove padding externo que altera altura */
         position: fixed;
         top: 0;
         left: 0;
@@ -296,6 +331,7 @@
         height: 25mm !important; /* EXATO: 2.5cm */
         box-sizing: border-box !important;
         align-items: center;
+        justify-content: center;
       }
       
       .print-header .print-header-content {
@@ -303,8 +339,9 @@
         justify-content: space-between;
         align-items: center;
         width: 100%;
-        max-width: 185mm; /* Largura útil com margens laterais de 12.5mm */
-        margin: 0 auto;
+        max-width: 185mm; /* Largura útil com margens laterais */
+        padding: 0 12.5mm !important; /* Padding interno para conteúdo */
+        box-sizing: border-box !important;
       }
       
       .print-header .print-logo { display: flex; align-items: center; gap: 3mm; }
@@ -355,7 +392,7 @@
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 3mm 10mm !important;
+        padding: 0 !important; /* Remove padding externo que altera altura */
         position: fixed;
         bottom: 0;
         left: 0;
@@ -364,17 +401,19 @@
         height: 25mm !important; /* EXATO: 2.5cm */
         box-sizing: border-box !important;
         align-items: center;
+        justify-content: center;
       }
       
       .print-footer .print-footer-content {
         font-size: 5.5pt;
         width: 100%;
         max-width: 185mm;
-        margin: 0 auto;
+        padding: 0 12.5mm !important; /* Padding interno para conteúdo */
         color: white !important;
         display: flex !important;
         justify-content: space-between !important;
         align-items: center !important;
+        box-sizing: border-box !important;
       }
       
       .print-footer .footer-logo-box { display: flex; align-items: center; gap: 3mm; }
@@ -410,7 +449,7 @@
         margin-top: 55mm !important;
         /* Footer começa em 297mm - 25mm = 272mm, menos 30mm espaço = conteúdo termina em 242mm */
         margin-bottom: 55mm !important;
-        padding: 0 !important;
+        padding: 0 !important; /* Remove padding inline que interfere */
         width: 100% !important;
         max-width: 185mm !important; /* 210mm A4 - 12.5mm margem esquerda - 12.5mm margem direita */
         margin-left: auto !important;
@@ -419,6 +458,9 @@
         box-sizing: border-box !important;
         position: relative;
         z-index: 1;
+        /* Margens laterais explícitas */
+        padding-left: 12.5mm !important;
+        padding-right: 12.5mm !important;
       }
       
       /* Cards - SEM QUEBRA E COM PADDING AJUSTADO */
@@ -560,6 +602,7 @@
 </head>
 <body class="antialiased">
 
+  <!-- HEADER VIGORRE ONE™ PREMIUM (TELA) -->
   <header class="no-print bg-brand-navy text-white shadow-lg sticky top-0 z-50" style="height: 70px;">
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
       <div class="flex items-center gap-4">
@@ -579,6 +622,7 @@
     </div>
   </header>
 
+  <!-- HEADER DE IMPRESSÃO -->
   <div class="print-header">
     <div class="print-header-content">
       <div class="print-logo">
@@ -595,8 +639,10 @@
     </div>
   </div>
   
+  <!-- MARCA D'ÁGUA -->
   <div class="print-watermark">VIGORRE ONE</div>
 
+  <!-- RODAPÉ DE IMPRESSÃO -->
   <div class="print-footer">
     <div class="print-footer-content">
       <div class="footer-logo-box">
@@ -617,9 +663,10 @@
     </div>
   </div>
 
+  <!-- MAIN REPORT CONTENT -->
   <main class="max-w-5xl mx-auto px-4 py-12" style="padding-top: 90px; padding-bottom: 90px;">
     
-    <!-- CAPA -->
+    <!-- CAPA / DADOS DO PARTICIPANTE -->
     <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 mb-8">
       <div class="flex flex-col md:flex-row items-center gap-8">
         <div class="vigorre-logo-box" style="width:80px; height:80px;">
@@ -641,6 +688,7 @@
           <p class="text-xs text-gray-400 uppercase font-bold tracking-wider mb-1">Empresa</p>
           <div class="flex items-center gap-2">
             <p class="font-bold text-lg text-brand-navy" id="coverCompany">Independente</p>
+            <!-- ✅ BOTÃO VINCULAR EMPRESA -->
             <button onclick="openCompanyModal()" class="no-print text-xs bg-brand-blue/10 text-brand-blue px-2 py-1 rounded hover:bg-brand-blue/20 transition">
               Vincular
             </button>
@@ -1055,6 +1103,7 @@
 
   </main>
 
+  <!-- FOOTER VIGORRE ONE™ PREMIUM (TELA) -->
   <footer class="no-print bg-brand-navy text-white py-12 mt-12">
     <div class="max-w-5xl mx-auto px-6">
       <div class="flex flex-col md:flex-row justify-between items-center gap-8">
@@ -1076,10 +1125,12 @@
     </div>
   </footer>
 
+  <!-- TOAST NOTIFICATION -->
   <div id="toast" class="fixed top-4 right-4 bg-white px-5 py-4 rounded-lg shadow-xl z-50 flex items-center gap-3 hidden border border-gray-100">
     <span id="toastIcon" class="text-2xl">✅</span><span id="toastMessage" class="font-medium text-gray-800">Ação realizada!</span>
   </div>
 
+  <!-- ✅ MODAL VINCULAR EMPRESA -->
   <div id="companyModal" class="modal-company-overlay">
     <div class="modal-company-content">
       <h3>🏢 Vincular Empresa</h3>
@@ -1208,12 +1259,18 @@
       selectedCompanyName: null
     };
 
+    // ============================================
+    // FUNÇÃO AUXILIAR
+    // ============================================
     function safeGetElement(id) {
       const el = document.getElementById(id);
       if (!el) console.warn(`⚠️ Elemento não encontrado: #${id}`);
       return el;
     }
 
+    // ============================================
+    // INICIALIZAÇÃO
+    // ============================================
     document.addEventListener('DOMContentLoaded', async () => {
       console.log('🔹 Inicializando Relatório DISC + VIGOR Vigorre One™...');
       
@@ -1222,14 +1279,19 @@
         performLogout();
       });
       
+      // Aguardar carregamento completo antes de iniciar
       await loadSession();
       await loadDiscResults();
       
+      // Garantir que os dados estejam carregados antes de gerar o relatório
       if (AppState.discResults) {
         generateReport();
       }
     });
 
+    // ============================================
+    // ✅ FUNÇÃO: CARREGAR SESSÃO - SUPABASE + FALLBACK
+    // ============================================
     async function loadSession() {
       try {
         console.log('🔍 Tentando carregar sessão...');
@@ -1242,6 +1304,7 @@
           return;
         }
         
+        // Tentar Supabase primeiro
         if (window.VigorreDB && VigorreDB.supabase) {
           console.log('🌐 Tentando carregar do Supabase...');
           
@@ -1256,6 +1319,7 @@
               AppState.participant = participant;
               console.log('✅ Participante carregado do Supabase:', participant.name);
               
+              // Buscar empresa vinculada
               if (participant.companyId) {
                 const { data: company } = await VigorreDB.supabase
                   .from('companies')
@@ -1280,6 +1344,7 @@
           }
         }
         
+        // Fallback para localStorage
         console.log('📱 Usando fallback localStorage...');
         
         const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
@@ -1292,6 +1357,7 @@
         
         console.log('✅ Participante encontrado no localStorage:', AppState.participant.name);
         
+        // Buscar empresa no localStorage
         if (AppState.participant.companyId) {
           const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
           const company = companies.find(c => c.id === AppState.participant.companyId);
@@ -1314,6 +1380,9 @@
       }
     }
 
+    // ============================================
+    // ✅ FUNÇÃO: CARREGAR RESULTADOS DISC
+    // ============================================
     async function loadDiscResults() {
       try {
         console.log('🔍 Tentando carregar resultados DISC...');
@@ -1327,6 +1396,7 @@
           return false;
         }
         
+        // Tentar Supabase
         if (window.VigorreDB && VigorreDB.supabase) {
           console.log('🌐 Tentando carregar resultados do Supabase...');
           
@@ -1347,6 +1417,7 @@
               };
               console.log('✅ Resultados DISC carregados do Supabase');
               
+              // Calcular scores VIGOR baseados no DISC
               calculateVigorScores();
               
               return true;
@@ -1356,6 +1427,7 @@
           }
         }
         
+        // Fallback localStorage
         console.log('📱 Buscando resultados no localStorage...');
         const discData = localStorage.getItem('vigorre_last_disc_result');
         
@@ -1369,6 +1441,7 @@
         AppState.discResults = JSON.parse(discData);
         console.log('✅ Dados DISC carregados do localStorage');
         
+        // Calcular scores VIGOR
         calculateVigorScores();
         
         return true;
@@ -1380,16 +1453,34 @@
       }
     }
 
+    // ============================================
+    // CÁLCULO DOS SCORES VIGOR BASEADO NO DISC
+    // ============================================
     function calculateVigorScores() {
       const p = AppState.discResults.percentages;
+      
+      // Algoritmo de cálculo VIGOR baseado no perfil DISC
+      // V (Visão Estratégica): D + C (foco em resultados + análise)
       AppState.vigorScores.V = Math.round((p.D * 0.6 + p.C * 0.4));
+      
+      // I (Inteligência Humana): I + S (relacionamento + empatia)
       AppState.vigorScores.I = Math.round((p.I * 0.7 + p.S * 0.3));
+      
+      // G (Gestão de Performance): D + I (liderança + influência)
       AppState.vigorScores.G = Math.round((p.D * 0.5 + p.I * 0.5));
+      
+      // O (Organização Estrutural): C + S (processos + estabilidade)
       AppState.vigorScores.O = Math.round((p.C * 0.6 + p.S * 0.4));
+      
+      // R (Resultado Sustentável): S + C (consistência + qualidade)
       AppState.vigorScores.R = Math.round((p.S * 0.5 + p.C * 0.5));
+      
       console.log('✅ Scores VIGOR calculados:', AppState.vigorScores);
     }
 
+    // ============================================
+    // FUNÇÃO PRINCIPAL: GERAR RELATÓRIO
+    // ============================================
     function generateReport() {
       const r = AppState.discResults;
       if (!r || !r.percentages) {
@@ -1400,6 +1491,7 @@
 
       console.log('🎨 Gerando relatório DISC + VIGOR...');
 
+      // ✅ GARANTIR que os dados do participante estão carregados
       updateParticipantInfo();
 
       const scores = Object.entries(r.percentages);
@@ -1431,9 +1523,13 @@
       console.log('✅ Relatório DISC + VIGOR gerado com sucesso!');
     }
 
+    // ============================================
+    // ✅ CORREÇÃO DEFINITIVA: Leitura Inteligente de Dados
+    // ============================================
     function updateParticipantInfo() {
       console.log('📝 Atualizando informações do participante...');
       
+      // Nome do participante - BUSCA EM TODOS OS CAMPOS POSSÍVEIS
       const coverName = safeGetElement('coverName');
       if (coverName) {
         let participantName = 'Participante';
@@ -1447,12 +1543,15 @@
         coverName.textContent = participantName;
       }
       
+      // Empresa - ✅ BUSCA AGRESSIVA EM TODOS OS CAMPOS POSSÍVEIS
       const coverCompany = safeGetElement('coverCompany');
       if (coverCompany) {
         let companyName = 'Independente';
         
+        // Lista de campos possíveis para nome da empresa no participant
         const participantCompanyFields = ['companyName', 'compName', 'empresa', 'razao_social', 'fantasia', 'business_name'];
         
+        // 1. Tentar campos diretos no participant
         for (const field of participantCompanyFields) {
           if (AppState.participant?.[field]) {
             companyName = AppState.participant[field];
@@ -1461,6 +1560,7 @@
           }
         }
         
+        // 2. Se não encontrou, tentar por ID no localStorage
         if (companyName === 'Independente') {
           const companyId = AppState.participant?.companyId || AppState.participant?.compId;
           if (companyId) {
@@ -1473,6 +1573,7 @@
           }
         }
         
+        // 3. Tentar AppState.company (do Supabase)
         if (companyName === 'Independente' && AppState.company?.name) {
           companyName = AppState.company.name;
           console.log('✓ Empresa encontrada em AppState.company:', companyName);
@@ -1482,6 +1583,7 @@
         console.log('🏢 Empresa final:', companyName);
       }
       
+      // Vaga/Cargo - BUSCA EM TODOS OS CAMPOS POSSÍVEIS
       const coverJob = safeGetElement('coverJob');
       if (coverJob) {
         let jobName = 'Não vinculada';
@@ -1500,6 +1602,7 @@
         coverJob.textContent = jobName;
       }
       
+      // Código
       const coverCode = safeGetElement('coverCode');
       if (coverCode) {
         const year = new Date().getFullYear();
@@ -1508,12 +1611,16 @@
       }
     }
 
+    // ============================================
+    // ✅ FUNÇÕES DO MODAL VINCULAR EMPRESA
+    // ============================================
     function openCompanyModal() {
       const modal = document.getElementById('companyModal');
       const list = document.getElementById('companySelectList');
       
       if (!modal || !list) return;
       
+      // Carregar lista de empresas do localStorage
       const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
       
       if (companies.length === 0) {
@@ -1545,6 +1652,7 @@
       AppState.selectedCompanyId = id;
       AppState.selectedCompanyName = name;
       
+      // Atualizar visual da seleção
       document.querySelectorAll('.company-select-item').forEach(item => {
         item.classList.remove('selected');
       });
@@ -1557,15 +1665,18 @@
         return;
       }
       
+      // Atualizar AppState
       AppState.company = { 
         id: AppState.selectedCompanyId, 
         name: AppState.selectedCompanyName 
       };
       
+      // Atualizar participant se existir
       if (AppState.participant) {
         AppState.participant.companyId = AppState.selectedCompanyId;
         AppState.participant.companyName = AppState.selectedCompanyName;
         
+        // Salvar no localStorage para persistência
         const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
         const index = participants.findIndex(p => p.id === AppState.participant.id);
         if (index !== -1) {
@@ -1574,6 +1685,7 @@
         }
       }
       
+      // Atualizar interface
       const coverCompany = safeGetElement('coverCompany');
       if (coverCompany) {
         coverCompany.textContent = AppState.selectedCompanyName;
@@ -1582,6 +1694,7 @@
       closeCompanyModal();
       showToast('Empresa vinculada com sucesso! ✅');
       
+      // Recarregar seções que dependem do nome da empresa
       const dominant = Object.entries(AppState.discResults?.percentages || {})
         .sort((a,b) => b[1]-a[1])[0]?.[0] || 'C';
       renderAderenciaVaga(dominant, AppState.discResults?.percentages || {});
@@ -1589,89 +1702,9 @@
       renderExecutiveConclusion(dominant, AppState.discResults?.percentages || {}, PREMIUM_CONTENT[dominant]);
     }
 
-    function renderVigorAnalysis(dominant, percentages) {
-      const container = safeGetElement('vigorAnalysisContent');
-      if (!container) return;
-
-      document.getElementById('vigorV').textContent = AppState.vigorScores.V + '%';
-      document.getElementById('vigorI').textContent = AppState.vigorScores.I + '%';
-      document.getElementById('vigorG').textContent = AppState.vigorScores.G + '%';
-      document.getElementById('vigorO').textContent = AppState.vigorScores.O + '%';
-      document.getElementById('vigorR').textContent = AppState.vigorScores.R + '%';
-
-      const vigorAnalysis = {
-        V: {
-          title: "Visão Estratégica",
-          level: AppState.vigorScores.V >= 70 ? 'Alta' : AppState.vigorScores.V >= 50 ? 'Média' : 'Baixa',
-          desc: dominant === 'D' || dominant === 'C' 
-            ? "Perfil com forte capacidade de diagnóstico empresarial e leitura operacional. Analisa cenários com profundidade, identifica oportunidades e constrói direcionamento estratégico com base em dados concretos."
-            : "Perfil em desenvolvimento na visão estratégica. Beneficia-se de estruturar processos de análise de cenários e planejamento de longo prazo para ampliar sua capacidade de antecipação."
-        },
-        I: {
-          title: "Inteligência Humana",
-          level: AppState.vigorScores.I >= 70 ? 'Alta' : AppState.vigorScores.I >= 50 ? 'Média' : 'Baixa',
-          desc: dominant === 'I' || dominant === 'S'
-            ? "Alta capacidade de mapeamento comportamental e emocional. Compreende comportamentos, motivações e competências com sensibilidade, alinhando pessoas e propósito de forma natural."
-            : "Perfil mais técnico/operacional. Desenvolver inteligência emocional e empatia através de treinamentos específicos potencializará a conexão com equipes e stakeholders."
-        },
-        G: {
-          title: "Gestão de Performance",
-          level: AppState.vigorScores.G >= 70 ? 'Alta' : AppState.vigorScores.G >= 50 ? 'Média' : 'Baixa',
-          desc: dominant === 'D' || dominant === 'I'
-            ? "Forte orientação a indicadores, liderança e produtividade. Cria métricas claras, desenvolve líderes e aumenta produtividade com foco em resultado de forma consistente."
-            : "Perfil mais focado em execução do que gestão. Desenvolver competências de liderança e gestão de indicadores através de mentoria e cursos específicos será fundamental."
-        },
-        O: {
-          title: "Organização Estrutural",
-          level: AppState.vigorScores.O >= 70 ? 'Alta' : AppState.vigorScores.O >= 50 ? 'Média' : 'Baixa',
-          desc: dominant === 'C' || dominant === 'S'
-            ? "Excelente capacidade de padronização, processos e cultura. Estrutura processos de forma metódica, fortalece a cultura organizacional e garante organização para execução com excelência."
-            : "Perfil mais flexível/adaptável. Beneficia-se de desenvolver disciplina de documentação e padronização de processos para garantir escalabilidade e consistência."
-        },
-        R: {
-          title: "Resultado Sustentável",
-          level: AppState.vigorScores.R >= 70 ? 'Alta' : AppState.vigorScores.R >= 50 ? 'Média' : 'Baixa',
-          desc: dominant === 'S' || dominant === 'C'
-            ? "Foco em retenção, crescimento e estabilidade. Promove ambientes saudáveis, retenção de talentos e crescimento contínuo com estabilidade e propósito de longo prazo."
-            : "Perfil mais focado em resultados imediatos. Desenvolver visão de longo prazo e estratégias de retenção de talentos ampliará a sustentabilidade dos resultados."
-        }
-      };
-
-      container.innerHTML = `
-        <div class="space-y-6">
-          <div class="bg-gradient-to-r from-brand-purple to-brand-blue text-white p-6 rounded-xl">
-            <h4 class="font-bold text-xl mb-2">🎯 Análise Integrada DISC + V.I.G.O.R.</h4>
-            <p class="text-sm opacity-90">Cruzamento do perfil comportamental DISC com as 5 dimensões estratégicas da metodologia Vigorre</p>
-          </div>
-
-          <div class="grid md:grid-cols-2 gap-6">
-            ${Object.entries(vigorAnalysis).map(([key, data]) => `
-              <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                <div class="flex items-center justify-between mb-3">
-                  <h4 class="font-bold text-lg text-brand-navy">${data.title}</h4>
-                  <span class="px-3 py-1 rounded-full text-xs font-bold ${
-                    data.level === 'Alta' ? 'bg-emerald-100 text-emerald-700' :
-                    data.level === 'Média' ? 'bg-amber-100 text-amber-700' :
-                    'bg-red-100 text-red-700'
-                  }">${data.level} (${AppState.vigorScores[key]}%)</span>
-                </div>
-                <p class="text-gray-600 text-sm leading-relaxed">${data.desc}</p>
-              </div>
-            `).join('')}
-          </div>
-
-          <div class="bg-slate-50 p-6 rounded-xl border border-gray-200">
-            <h4 class="font-bold text-brand-navy mb-4">💡 Insights Estratégicos Baseados no V.I.G.O.R.</h4>
-            <div class="space-y-3 text-gray-700">
-              <p><strong>Brainstorm de Desenvolvimento:</strong> Com base no seu perfil ${PREMIUM_CONTENT[dominant].title}, recomendamos focar inicialmente nas dimensões V.I.G.O.R. com menor pontuação, criando um plano de desenvolvimento que equilibre competências técnicas e comportamentais.</p>
-              <p><strong>Alavancagem de Pontos Fortes:</strong> Suas dimensões mais fortes (${Object.entries(AppState.vigorScores).sort((a,b) => b[1]-a[1]).slice(0,2).map(x => vigorAnalysis[x[0]].title).join(' e ')}) são seus diferenciais competitivos. Utilize-as como base para desenvolver as demais áreas.</p>
-              <p><strong>Aplicação Prática:</strong> A metodologia V.I.G.O.R. deve ser aplicada de forma integrada - não adianta ter Visão Estratégica sem Organização Estrutural para executar, nem Inteligência Humana sem Gestão de Performance para gerar Resultados Sustentáveis.</p>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
+    // ============================================
+    // ✅ ANÁLISE DE ADERÊNCIA À VAGA
+    // ============================================
     function renderAderenciaVaga(dominant, percentages) {
       const container = safeGetElement('aderenciaContent');
       if (!container) return;
@@ -1757,6 +1790,9 @@
       return labels[key] || key;
     }
 
+    // ============================================
+    // RENDERIZADORES (versões otimizadas)
+    // ============================================
     function renderPerfilDetalhado(key, score, content) {
       const container = safeGetElement('perfilDetalhado');
       if (!container) return;
@@ -1845,6 +1881,7 @@
       }
     }
 
+    // Funções de renderização restantes (otimizadas para espaço)
     function renderProfessionalProfile(r, dominant) {
       const p = PREMIUM_CONTENT[dominant];
       safeGetElement('profPace').textContent = dominant === 'D'||dominant === 'I'?'Ritmo acelerado e orientado a impacto':'Ritmo consistente e orientado a processos';
@@ -1988,6 +2025,9 @@
       safeGetElement('finalQuote').textContent = quotes[Math.floor(Math.random()*quotes.length)];
     }
 
+    // ============================================
+    // UTILITÁRIOS
+    // ============================================
     function showToast(message, type = 'success') {
       const toast = safeGetElement('toast');
       if (!toast) return;
