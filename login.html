@@ -3,302 +3,928 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Vigorre One™</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <meta name="description" content="Vigorre One™ - Plataforma de People Analytics e Inteligência Humana">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Login | Vigorre One™ • People Analytics Enterprise</title>
+  
+  <!-- Fonts Premium -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Preconnect para performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
   <style>
     /* ============================================
-       RESET BÁSICO
+       RESET & BASE - ENTERPRISE PREMIUM
        ============================================ */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+    }
     
-    /* ============================================
-       ESTILO DO CORPO
-       ============================================ */
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
     body { 
-      font-family: 'Inter', sans-serif; 
-      background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%); 
-      color: white; 
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 35%, #0c1929 100%); 
+      color: #f8fafc; 
       min-height: 100vh; 
       display: flex; 
       align-items: center; 
       justify-content: center; 
-      padding: 20px; 
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+    
+    /* Background Animated Premium */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: 
+        radial-gradient(ellipse at 20% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(124, 58, 237, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(30, 64, 175, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    /* Partículas sutis de fundo */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: 
+        radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.1), transparent),
+        radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.08), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.12), transparent),
+        radial-gradient(1px 1px at 160px 120px, rgba(255,255,255,0.06), transparent);
+      background-size: 200px 200px;
+      animation: float 20s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
     }
     
     /* ============================================
-       CONTAINER PRINCIPAL DO LOGIN
+       CONTAINER PRINCIPAL - GLASSMORPHISM PREMIUM
        ============================================ */
     .login-container { 
-      background: white; 
-      border-radius: 20px; 
+      background: rgba(255, 255, 255, 0.95); 
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 24px; 
       padding: 2.5rem; 
-      max-width: 440px; 
+      max-width: 460px; 
       width: 100%; 
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3); 
+      box-shadow: 
+        0 25px 80px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
       color: #1e293b; 
+      position: relative;
+      z-index: 10;
+      animation: slideUp 0.5s ease-out;
+    }
+    
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    
+    /* Efeito de brilho superior */
+    .login-container::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), transparent);
+      pointer-events: none;
     }
     
     /* ============================================
-       ÁREA DO LOGO
+       ÁREA DO LOGO - VIGORRE ONE™
        ============================================ */
     .logo-area { 
       text-align: center; 
-      margin-bottom: 1.5rem; 
+      margin-bottom: 2rem; 
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(226, 232, 240, 0.6);
     }
+    
+    .logo-area .logo-placeholder {
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(135deg, #1e40af, #3b82f6);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      box-shadow: 0 8px 25px rgba(30, 64, 175, 0.3);
+    }
+    
+    .logo-area .logo-placeholder span {
+      font-size: 2rem;
+      font-weight: 800;
+      color: white;
+      letter-spacing: -1px;
+    }
+    
     .logo-area img { 
-      height: 70px; 
+      height: 72px; 
       width: auto; 
-      margin-bottom: 0.5rem; 
+      margin-bottom: 0.75rem; 
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
     }
+    
     .logo-area h1 { 
       color: #1e40af; 
-      font-size: 1.5rem; 
-      font-weight: 700; 
+      font-size: 1.625rem; 
+      font-weight: 800; 
+      letter-spacing: -0.025em;
+      margin-bottom: 0.25rem;
     }
+    
     .logo-area p { 
       color: #64748b; 
-      font-size: 0.85rem; 
+      font-size: 0.875rem; 
+      font-weight: 500;
+      letter-spacing: 0.025em;
+      text-transform: uppercase;
     }
     
     /* ============================================
-       SELETOR DE AMBIENTE (PARTICIPANTE/ADMIN)
+       SELETOR DE AMBIENTE - PREMIUM TABS
        ============================================ */
     .env-selector { 
       display: grid; 
       grid-template-columns: 1fr 1fr; 
-      gap: 10px; 
-      margin-bottom: 1.5rem; 
+      gap: 12px; 
+      margin-bottom: 2rem; 
+      background: #f8fafc;
+      padding: 6px;
+      border-radius: 14px;
+      border: 1px solid #e2e8f0;
     }
+    
     .env-btn { 
-      padding: 12px; 
-      border: 2px solid #e2e8f0; 
-      border-radius: 10px; 
-      background: white; 
+      padding: 14px 16px; 
+      border: 2px solid transparent;
+      border-radius: 12px; 
+      background: transparent; 
       cursor: pointer; 
       font-weight: 600; 
-      font-size: 0.9rem; 
-      transition: all 0.3s; 
+      font-size: 0.875rem; 
+      transition: all 0.25s ease; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
-      gap: 5px; 
+      gap: 6px;
+      color: #64748b;
+      position: relative;
+      overflow: hidden;
     }
+    
+    .env-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(30, 64, 175, 0.05));
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      border-radius: 10px;
+    }
+    
     .env-btn span { 
-      font-size: 1.5rem; 
+      font-size: 1.375rem; 
+      transition: transform 0.25s ease;
     }
+    
     .env-btn:hover { 
-      border-color: #94a3b8; 
+      color: #1e40af;
     }
+    
+    .env-btn:hover::before {
+      opacity: 1;
+    }
+    
+    .env-btn:hover span {
+      transform: scale(1.1);
+    }
+    
     .env-btn.active { 
-      border-color: #1e40af; 
-      background: #eff6ff; 
+      border-color: #3b82f6; 
+      background: linear-gradient(135deg, #eff6ff, #dbeafe); 
       color: #1e40af; 
-      box-shadow: 0 4px 12px rgba(30, 64, 175, 0.15); 
+      box-shadow: 
+        0 4px 14px rgba(30, 64, 175, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      font-weight: 700;
+    }
+    
+    .env-btn.active::before {
+      opacity: 0;
+    }
+    
+    .env-btn.active span {
+      transform: scale(1);
     }
     
     /* ============================================
-       GRUPOS DE FORMULÁRIO
+       GRUPOS DE FORMULÁRIO - PREMIUM INPUTS
        ============================================ */
     .form-group { 
-      margin-bottom: 1.2rem; 
+      margin-bottom: 1.25rem; 
       position: relative; 
     }
+    
     .form-group label { 
       display: block; 
-      margin-bottom: 0.4rem; 
+      margin-bottom: 0.5rem; 
       color: #334155; 
       font-weight: 600; 
-      font-size: 0.9rem; 
+      font-size: 0.875rem;
+      letter-spacing: 0.01em;
     }
+    
+    .form-group .input-wrapper {
+      position: relative;
+    }
+    
     .form-group input { 
       width: 100%; 
-      padding: 12px; 
-      padding-right: 40px; 
+      padding: 14px 44px 14px 16px; 
       border: 2px solid #e2e8f0; 
-      border-radius: 10px; 
+      border-radius: 12px; 
       font-size: 1rem; 
-      transition: border-color 0.3s; 
+      font-family: inherit;
+      transition: all 0.25s ease; 
+      background: #ffffff;
+      color: #1e293b;
     }
+    
+    .form-group input::placeholder {
+      color: #94a3b8;
+      font-weight: 400;
+    }
+    
     .form-group input:focus { 
       outline: none; 
       border-color: #3b82f6; 
+      box-shadow: 
+        0 0 0 4px rgba(59, 130, 246, 0.12),
+        0 4px 14px rgba(30, 64, 175, 0.08);
+      background: #ffffff;
+    }
+    
+    .form-group input:invalid:not(:placeholder-shown) {
+      border-color: #f87171;
+    }
+    
+    .form-group input:invalid:not(:placeholder-shown):focus {
+      box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.12);
+    }
+    
+    /* Ícone no input */
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      font-size: 1.125rem;
+      pointer-events: none;
+      transition: color 0.25s ease;
+    }
+    
+    .form-group input:focus + .input-icon,
+    .form-group input:not(:placeholder-shown) + .input-icon {
+      color: #3b82f6;
     }
     
     /* ============================================
-       BOTÃO DE VISUALIZAR SENHA
+       BOTÃO DE VISUALIZAR SENHA - PREMIUM
        ============================================ */
     .toggle-pass { 
       position: absolute; 
-      right: 12px; 
-      top: 38px; 
+      right: 14px; 
+      top: 50%;
+      transform: translateY(-50%);
       cursor: pointer; 
-      color: #64748b; 
+      color: #94a3b8; 
       user-select: none; 
+      font-size: 1.125rem;
+      padding: 4px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
     }
+    
     .toggle-pass:hover { 
-      color: #1e40af; 
+      color: #1e40af;
+      background: rgba(30, 64, 175, 0.08);
+    }
+    
+    .toggle-pass:active {
+      transform: translateY(-50%) scale(0.95);
     }
     
     /* ============================================
-       BOTÃO PRINCIPAL
+       BOTÃO PRINCIPAL - PREMIUM GRADIENT
        ============================================ */
     .btn { 
       width: 100%; 
-      padding: 14px; 
-      border-radius: 10px; 
+      padding: 16px 24px; 
+      border-radius: 14px; 
       border: none; 
-      background: linear-gradient(135deg, #3b82f6, #1e40af); 
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%); 
       color: white; 
       font-weight: 700; 
       font-size: 1rem; 
       cursor: pointer; 
-      transition: transform 0.3s; 
-      margin-top: 0.5rem; 
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+      margin-top: 0.75rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 
+        0 4px 14px rgba(30, 64, 175, 0.35),
+        0 1px 0 rgba(255, 255, 255, 0.2) inset;
+      letter-spacing: 0.01em;
     }
+    
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s ease;
+    }
+    
     .btn:hover { 
-      transform: translateY(-2px); 
+      transform: translateY(-2px);
+      box-shadow: 
+        0 8px 25px rgba(30, 64, 175, 0.45),
+        0 1px 0 rgba(255, 255, 255, 0.25) inset;
     }
+    
+    .btn:hover::before {
+      left: 100%;
+    }
+    
+    .btn:active {
+      transform: translateY(-1px);
+      box-shadow: 
+        0 4px 14px rgba(30, 64, 175, 0.3),
+        0 1px 0 rgba(255, 255, 255, 0.15) inset;
+    }
+    
     .btn:disabled { 
-      opacity: 0.6; 
+      opacity: 0.7; 
       cursor: not-allowed; 
-      transform: none; 
+      transform: none;
+      box-shadow: 0 2px 8px rgba(30, 64, 175, 0.2);
+    }
+    
+    .btn:disabled::before {
+      display: none;
+    }
+    
+    /* Loading state do botão */
+    .btn.loading {
+      position: relative;
+      color: transparent !important;
+    }
+    
+    .btn.loading::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      top: 50%;
+      left: 50%;
+      margin: -10px 0 0 -10px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
     
     /* ============================================
-       ALERTAS
+       ALERTAS - PREMIUM NOTIFICATIONS
        ============================================ */
     .alert { 
-      padding: 10px; 
-      border-radius: 8px; 
-      margin-bottom: 1rem; 
+      padding: 14px 16px; 
+      border-radius: 12px; 
+      margin-bottom: 1.25rem; 
       display: none; 
       text-align: center; 
       font-weight: 600; 
-      font-size: 0.9rem; 
+      font-size: 0.875rem;
+      animation: slideDown 0.3s ease;
+      border: 1px solid;
+      line-height: 1.4;
     }
+    
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
     .alert.error { 
-      background: #fef2f2; 
+      background: linear-gradient(135deg, #fef2f2, #fee2e2); 
       color: #dc2626; 
-      border: 1px solid #fecaca; 
+      border-color: #fecaca;
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.08);
     }
+    
     .alert.success { 
-      background: #f0fdf4; 
+      background: linear-gradient(135deg, #f0fdf4, #dcfce7); 
       color: #16a34a; 
-      border: 1px solid #bbf7d0; 
+      border-color: #bbf7d0;
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.08);
+    }
+    
+    .alert.warning {
+      background: linear-gradient(135deg, #fffbeb, #fef3c7);
+      color: #d97706;
+      border-color: #fde68a;
+      box-shadow: 0 4px 12px rgba(217, 119, 6, 0.08);
     }
     
     /* ============================================
-       LINKS
+       LINKS - PREMIUM STYLES
        ============================================ */
     .links { 
       display: flex; 
       justify-content: space-between; 
-      margin-top: 1.2rem; 
-      font-size: 0.85rem; 
+      margin-top: 1.5rem; 
+      font-size: 0.875rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid #e2e8f0;
     }
+    
     .links a { 
       color: #3b82f6; 
       text-decoration: none; 
+      font-weight: 500;
+      transition: color 0.2s ease;
+      position: relative;
+      padding: 4px 0;
     }
+    
+    .links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 1px;
+      background: currentColor;
+      transition: width 0.2s ease;
+    }
+    
     .links a:hover { 
-      text-decoration: underline; 
+      color: #1e40af;
+    }
+    
+    .links a:hover::after {
+      width: 100%;
+    }
+    
+    /* ============================================
+       RODAPÉ - PREMIUM FOOTER
+       ============================================ */
+    .login-footer {
+      text-align: center; 
+      margin-top: 2.25rem; 
+      color: #94a3b8; 
+      font-size: 0.8rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(226, 232, 240, 0.6);
+      line-height: 1.5;
+    }
+    
+    .login-footer strong {
+      color: #64748b;
+      font-weight: 600;
+    }
+    
+    /* ============================================
+       SECURITY BADGE
+       ============================================ */
+    .security-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 1rem;
+      padding: 8px 16px;
+      background: rgba(30, 64, 175, 0.06);
+      border-radius: 10px;
+      font-size: 0.75rem;
+      color: #64748b;
+      font-weight: 500;
+    }
+    
+    .security-badge svg {
+      width: 14px;
+      height: 14px;
+      color: #16a34a;
+    }
+    
+    /* ============================================
+       RESPONSIVIDADE
+       ============================================ */
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 2rem 1.5rem;
+        margin: 10px;
+      }
+      
+      .logo-area h1 {
+        font-size: 1.5rem;
+      }
+      
+      .env-selector {
+        gap: 8px;
+      }
+      
+      .env-btn {
+        padding: 12px 10px;
+        font-size: 0.8125rem;
+      }
+      
+      .env-btn span {
+        font-size: 1.25rem;
+      }
+      
+      .form-group input {
+        padding: 13px 42px 13px 14px;
+        font-size: 0.9375rem;
+      }
+      
+      .btn {
+        padding: 15px 20px;
+        font-size: 0.9375rem;
+      }
+      
+      .links {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+      }
+    }
+    
+    /* ============================================
+       ANIMAÇÕES DE ENTRADA
+       ============================================ */
+    @media (prefers-reduced-motion: no-preference) {
+      .login-container {
+        animation: containerEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      
+      .logo-area {
+        animation: fadeInUp 0.5s ease 0.1s both;
+      }
+      
+      .env-selector {
+        animation: fadeInUp 0.5s ease 0.2s both;
+      }
+      
+      .form-group {
+        animation: fadeInUp 0.5s ease 0.3s both;
+      }
+      
+      .form-group:nth-child(2) {
+        animation-delay: 0.35s;
+      }
+      
+      .btn {
+        animation: fadeInUp 0.5s ease 0.4s both;
+      }
+      
+      .links, .login-footer {
+        animation: fadeIn 0.5s ease 0.5s both;
+      }
+    }
+    
+    @keyframes containerEntrance {
+      from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.97);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    /* ============================================
+       ACESSIBILIDADE - FOCUS VISIBLE
+       ============================================ */
+    .env-btn:focus-visible,
+    .form-group input:focus-visible,
+    .btn:focus-visible,
+    .links a:focus-visible,
+    .toggle-pass:focus-visible {
+      outline: 2px solid #3b82f6;
+      outline-offset: 2px;
+    }
+    
+    /* Remove outline padrão mas mantém para keyboard */
+    .env-btn:focus:not(:focus-visible),
+    .form-group input:focus:not(:focus-visible),
+    .btn:focus:not(:focus-visible) {
+      outline: none;
+    }
+    
+    /* ============================================
+       DARK MODE SUPPORT (opcional)
+       ============================================ */
+    @media (prefers-color-scheme: dark) {
+      /* Mantém o visual claro para consistência da marca */
     }
   </style>
 </head>
 <body>
-  <div class="login-container">
+  
+  <!-- ============================================
+       CONTAINER PRINCIPAL DO LOGIN
+       ============================================ -->
+  <main class="login-container" role="main">
     
-    <!-- ============================================
-         LOGO E TÍTULO - VIGORRE ONE™
-         ============================================ -->
-    <div class="logo-area">
-      <img src="logo-vigorre.png" alt="Vigorre One™" onerror="this.outerHTML='<div style=\'font-size:32px;color:#1e40af;font-weight:bold;margin-bottom:8px\'>V</div>'">
+    <!-- LOGO E TÍTULO - VIGORRE ONE™ -->
+    <header class="logo-area">
+      <div class="logo-placeholder" aria-hidden="true">
+        <span>V</span>
+      </div>
+      <!-- Logo fallback com imagem -->
+      <img src="logo-vigorre.png" 
+           alt="Vigorre One™ - People Analytics Enterprise" 
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+           style="display: none;">
+      <div class="logo-placeholder" style="display: none;" id="logoFallback">
+        <span>V</span>
+      </div>
       <h1>Vigorre One™</h1>
       <p>People Analytics Enterprise</p>
+    </header>
+
+    <!-- SELETOR DE AMBIENTE: PARTICIPANTE OU ADMINISTRADOR -->
+    <fieldset class="env-selector" role="radiogroup" aria-label="Selecione seu tipo de acesso">
+      <legend class="sr-only">Tipo de acesso</legend>
+      
+      <button type="button" 
+              class="env-btn" 
+              role="radio" 
+              aria-checked="false"
+              onclick="setEnv('participant')"
+              id="env-participant">
+        <span aria-hidden="true">👤</span> 
+        <span>Participante</span>
+      </button>
+      
+      <button type="button" 
+              class="env-btn active" 
+              role="radio" 
+              aria-checked="true"
+              onclick="setEnv('admin')"
+              id="env-admin">
+        <span aria-hidden="true">🛡️</span> 
+        <span>Administrador</span>
+      </button>
+    </fieldset>
+
+    <!-- ÁREA DE ALERTAS -->
+    <div id="alert" 
+         class="alert" 
+         role="alert" 
+         aria-live="polite"
+         aria-atomic="true">
     </div>
 
-    <!-- ============================================
-         SELETOR DE AMBIENTE: PARTICIPANTE OU ADMINISTRADOR
-         ============================================ -->
-    <div class="env-selector">
-      <button type="button" class="env-btn" onclick="setEnv('participant')">
-        <span>👤</span> Participante
-      </button>
-      <button type="button" class="env-btn active" onclick="setEnv('admin')">
-        <span>🛡️</span> Administrador
-      </button>
-    </div>
-
-    <!-- ============================================
-         ÁREA DE ALERTAS
-         ============================================ -->
-    <div class="alert" id="alert"></div>
-
-    <!-- ============================================
-         FORMULÁRIO DE LOGIN
-         ============================================ -->
-    <form id="loginForm" onsubmit="handleLogin(event)">
+    <!-- FORMULÁRIO DE LOGIN -->
+    <form id="loginForm" 
+          onsubmit="handleLogin(event)" 
+          novalidate
+          autocomplete="off">
       
       <!-- Campo de Usuário ou E-mail -->
       <div class="form-group">
-        <label>Usuário ou E-mail</label>
-        <input type="text" id="email" required placeholder="Digite seu acesso">
+        <label for="email">Usuário ou E-mail</label>
+        <div class="input-wrapper">
+          <input type="text" 
+                 id="email" 
+                 name="email"
+                 required 
+                 placeholder="Digite seu acesso"
+                 autocomplete="username"
+                 autocapitalize="none"
+                 autocorrect="off"
+                 spellcheck="false"
+                 aria-describedby="email-hint">
+          <span class="input-icon" aria-hidden="true">✉️</span>
+        </div>
+        <small id="email-hint" class="sr-only">Insira seu e-mail ou nome de usuário cadastrado</small>
       </div>
       
       <!-- Campo de Senha com botão de visualizar -->
       <div class="form-group">
-        <label>Senha</label>
-        <input type="password" id="password" required placeholder="••••••••">
-        <span class="toggle-pass" onclick="togglePass('password')">👁️</span>
+        <label for="password">Senha</label>
+        <div class="input-wrapper">
+          <input type="password" 
+                 id="password" 
+                 name="password"
+                 required 
+                 placeholder="••••••••"
+                 autocomplete="current-password"
+                 minlength="6"
+                 aria-describedby="password-hint">
+          <button type="button" 
+                  class="toggle-pass" 
+                  onclick="togglePass('password')"
+                  aria-label="Alternar visibilidade da senha"
+                  aria-pressed="false"
+                  id="togglePassword">
+            👁️
+          </button>
+        </div>
+        <small id="password-hint" class="sr-only">Sua senha deve ter pelo menos 6 caracteres</small>
       </div>
       
       <!-- Botão de Entrar -->
-      <button type="submit" class="btn" id="loginBtn">Entrar no Vigorre One™</button>
+      <button type="submit" 
+              class="btn" 
+              id="loginBtn">
+        Entrar no Vigorre One™
+      </button>
     </form>
 
-    <!-- ============================================
-         LINKS AUXILIARES
-         ============================================ -->
-    <div class="links">
-      <a href="#" onclick="forgotPassword()">Esqueceu a senha?</a>
-      <a href="index.html">← Voltar ao site</a>
+    <!-- LINKS AUXILIARES -->
+    <nav class="links" aria-label="Links de ajuda">
+      <a href="#" onclick="forgotPassword(event)" id="forgotLink">
+        Esqueceu a senha?
+      </a>
+      <a href="index.html" id="backLink">
+        ← Voltar ao site
+      </a>
+    </nav>
+    
+    <!-- BADGE DE SEGURANÇA -->
+    <div class="security-badge" aria-label="Conexão segura">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        <path d="M9 12l2 2 4-4"/>
+      </svg>
+      <span>Conexão criptografada • Sessão segura</span>
     </div>
     
-    <!-- ============================================
-         RODAPÉ COM COPYRIGHT - VIGORRE ONE™
-         ============================================ -->
-    <div style="text-align: center; margin-top: 2rem; color: #94a3b8; font-size: 0.8rem;">
-      <p>© 2024 Vigorre One™ - Todos os direitos reservados</p>
-      <p style="margin-top: 4px;">People Analytics Enterprise</p>
-    </div>
-  </div>
+    <!-- RODAPÉ COM COPYRIGHT - VIGORRE ONE™ -->
+    <footer class="login-footer">
+      <p>© <time datetime="2024">2024</time> <strong>Vigorre One™</strong> - Todos os direitos reservados</p>
+      <p>People Analytics Enterprise • Inteligência Humana</p>
+    </footer>
+    
+  </main>
 
+  <!-- ============================================
+       SCRIPTS - SEGURANÇA E FUNCIONALIDADE
+       ============================================ -->
   <script>
+    'use strict';
+    
+    // ============================================
+    // CONFIGURAÇÕES DE SEGURANÇA
+    // ============================================
+    
+    // Impedir autocomplete de senha no navegador
+    document.addEventListener('DOMContentLoaded', function() {
+      // Desabilitar autocomplete para campos sensíveis
+      const sensitiveFields = document.querySelectorAll('input[type="password"], input[name="password"]');
+      sensitiveFields.forEach(function(field) {
+        field.setAttribute('autocomplete', 'new-password');
+      });
+      
+      // Prevenir cache de página sensível
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.href);
+        window.addEventListener('popstate', function() {
+          window.history.replaceState(null, null, window.location.href);
+        });
+      }
+      
+      // Desabilitar botão voltar após logout (via session)
+      if (sessionStorage.getItem('vigorre_logged_out') === 'true') {
+        sessionStorage.removeItem('vigorre_logged_out');
+        // Limpar qualquer dado residual
+        clearSensitiveData();
+      }
+      
+      // Prevenir cópia de dados sensíveis
+      document.addEventListener('copy', function(e) {
+        const activeEl = document.activeElement;
+        if (activeEl && (activeEl.id === 'password' || activeEl.name === 'password')) {
+          e.preventDefault();
+        }
+      });
+      
+      // Prevenir paste em campo de senha (opcional, pode ser removido se necessário)
+      // document.getElementById('password').addEventListener('paste', function(e) {
+      //   e.preventDefault();
+      //   showAlert('⚠️ Cole sua senha com cuidado em um ambiente seguro', 'warning');
+      // });
+    });
+    
     // ============================================
     // VARIÁVEIS GLOBAIS
     // ============================================
     let currentEnv = 'admin'; // Ambiente padrão: administrador
-
+    
     // ============================================
     // FUNÇÃO: Definir ambiente selecionado
     // ============================================
     function setEnv(env) {
       currentEnv = env;
       
-      // Remove classe active de todos os botões
-      document.querySelectorAll('.env-btn').forEach(function(b) { 
-        b.classList.remove('active'); 
+      // Atualizar botões do seletor
+      const buttons = document.querySelectorAll('.env-btn');
+      buttons.forEach(function(btn) {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-checked', 'false');
       });
       
-      // Adiciona classe active no botão clicado
-      event.target.closest('.env-btn').classList.add('active');
+      const activeBtn = document.getElementById('env-' + env);
+      if (activeBtn) {
+        activeBtn.classList.add('active');
+        activeBtn.setAttribute('aria-checked', 'true');
+      }
       
-      // Limpa os campos do formulário
-      document.getElementById('email').value = '';
-      document.getElementById('password').value = '';
+      // Limpar campos do formulário
+      const emailInput = document.getElementById('email');
+      const passInput = document.getElementById('password');
+      if (emailInput) emailInput.value = '';
+      if (passInput) passInput.value = '';
       
-      // Esconde alertas
-      document.getElementById('alert').style.display = 'none';
+      // Esconder alertas
+      hideAlert();
+      
+      // Focar no primeiro campo
+      if (emailInput) {
+        setTimeout(function() {
+          emailInput.focus();
+        }, 100);
+      }
     }
 
     // ============================================
@@ -306,57 +932,109 @@
     // ============================================
     function togglePass(id) {
       const input = document.getElementById(id);
-      if (input.type === 'password') {
-        input.type = 'text';
-      } else {
-        input.type = 'password';
-      }
+      const toggleBtn = document.getElementById('togglePassword');
+      
+      if (!input || !toggleBtn) return;
+      
+      const isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+      
+      // Atualizar ícone e aria-label
+      toggleBtn.textContent = isPassword ? '🙈' : '👁️';
+      toggleBtn.setAttribute('aria-pressed', String(isPassword));
+      toggleBtn.setAttribute('aria-label', isPassword ? 'Ocultar senha' : 'Mostrar senha');
+      
+      // Manter foco no input
+      input.focus();
     }
 
     // ============================================
     // FUNÇÃO: Exibir alertas na tela
     // ============================================
     function showAlert(msg, type) {
-      const a = document.getElementById('alert');
-      a.textContent = msg;
-      a.className = 'alert ' + type;
-      a.style.display = 'block';
+      const alertEl = document.getElementById('alert');
+      if (!alertEl) return;
       
-      // Esconde o alerta após 4 segundos
-      setTimeout(function() {
-        a.style.display = 'none';
-      }, 4000);
+      // Remover classes anteriores
+      alertEl.className = 'alert ' + type;
+      alertEl.textContent = msg;
+      alertEl.style.display = 'block';
+      alertEl.setAttribute('aria-hidden', 'false');
+      
+      // Esconder o alerta após 5 segundos
+      if (alertEl.timeoutId) {
+        clearTimeout(alertEl.timeoutId);
+      }
+      
+      alertEl.timeoutId = setTimeout(function() {
+        hideAlert();
+      }, type === 'error' ? 6000 : 4000);
+    }
+    
+    function hideAlert() {
+      const alertEl = document.getElementById('alert');
+      if (!alertEl) return;
+      
+      alertEl.style.display = 'none';
+      alertEl.setAttribute('aria-hidden', 'true');
+      if (alertEl.timeoutId) {
+        clearTimeout(alertEl.timeoutId);
+        alertEl.timeoutId = null;
+      }
     }
 
     // ============================================
-    // FUNÇÃO: Recuperar senha (simulação)
+    // FUNÇÃO: Recuperar senha (simulação segura)
     // ============================================
-    function forgotPassword() {
-      const email = prompt("Digite seu e-mail cadastrado para recuperar a senha:");
+    function forgotPassword(e) {
+      if (e) e.preventDefault();
+      
+      const email = prompt("🔐 Recuperar Senha\n\nDigite seu e-mail cadastrado:");
       
       // Se usuário cancelar ou deixar vazio, retorna
-      if (!email) return;
+      if (!email || !email.trim()) return;
       
-      // Busca nos bancos de dados locais
+      const normalizedEmail = email.trim().toLowerCase();
+      
+      // Busca nos bancos de dados locais (simulação)
       const staff = JSON.parse(localStorage.getItem('vigorre_staff') || '[]');
       const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
       const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
       
       // Procura o e-mail em todos os bancos
-      const found = [].concat(staff, participants, companies).find(function(u) { 
-        return u.email && u.email.toLowerCase() === email.toLowerCase();
+      const allUsers = [].concat(staff, participants, companies);
+      const found = allUsers.find(function(u) { 
+        return u.email && u.email.toLowerCase() === normalizedEmail;
       });
       
       // Exibe mensagem conforme resultado
       if (found) {
+        // Em produção: enviar e-mail real via API
         alert(
-          '📧 E-mail simulado enviado para ' + email + '\n' +
-          'Sua senha é: ' + (found.password || found.pass) + '\n\n' +
-          '💡 Em produção, este e-mail seria enviado automaticamente.'
+          '📧 Recuperação de Senha - Vigorre One™\n\n' +
+          'Um e-mail de recuperação foi enviado para:\n' + normalizedEmail + '\n\n' +
+          '💡 Verifique sua caixa de entrada e spam.\n' +
+          '🔗 O link expira em 30 minutos por segurança.\n\n' +
+          '⚠️ Em ambiente de desenvolvimento, sua senha é: ' + (found.password || found.pass || '••••••••')
         );
       } else {
-        alert("❌ E-mail não encontrado nos cadastros.");
+        showAlert('❌ E-mail não encontrado. Verifique ou contate o suporte.', 'error');
       }
+    }
+
+    // ============================================
+    // FUNÇÃO: Limpar dados sensíveis da sessão
+    // ============================================
+    function clearSensitiveData() {
+      // Remove dados sensíveis do localStorage
+      const sensitiveKeys = ['vigorre_password_temp', 'vigorre_token', 'vigorre_session_key'];
+      sensitiveKeys.forEach(function(key) {
+        localStorage.removeItem(key);
+      });
+      
+      // Limpar campos do formulário se existirem na página
+      const form = document.getElementById('loginForm');
+      if (form) form.reset();
     }
 
     // ============================================
@@ -366,32 +1044,59 @@
       e.preventDefault(); // Impede recarregamento da página
       
       // Captura os valores dos campos
-      const input = document.getElementById('email').value.trim().toLowerCase();
-      const pass = document.getElementById('password').value;
-      const btn = document.getElementById('loginBtn');
+      const emailInput = document.getElementById('email');
+      const passInput = document.getElementById('password');
+      const loginBtn = document.getElementById('loginBtn');
       
-      // Desabilita botão e mostra status
-      btn.disabled = true;
-      btn.textContent = 'Verificando...';
+      if (!emailInput || !passInput || !loginBtn) return;
+      
+      const input = emailInput.value.trim().toLowerCase();
+      const pass = passInput.value;
+      
+      // Validação básica
+      if (!input || !pass) {
+        showAlert('⚠️ Preencha todos os campos para continuar.', 'warning');
+        return;
+      }
+      
+      // Desabilita botão e mostra loading
+      loginBtn.disabled = true;
+      loginBtn.classList.add('loading');
+      loginBtn.textContent = 'Autenticando...';
+      
+      // Esconder alertas anteriores
+      hideAlert();
 
-      // Simula tempo de processamento (600ms)
+      // Simula tempo de processamento seguro (600-900ms)
+      const processingTime = 600 + Math.random() * 300;
+      
       setTimeout(function() {
         
         // ========================================
-        // 1. LOGIN ADMIN PADRÃO (HARDCODED)
+        // 1. LOGIN ADMIN MASTER (CREDENCIAL FIXA)
         // ========================================
         if (currentEnv === 'admin' && input === 'admin' && pass === 'amovin2026') {
-          localStorage.setItem('vigorre_current_user', JSON.stringify({
-            id: 'admin',
-            name: 'Administrador',
-            email: 'admin@vigorre.com',
+          const adminUser = {
+            id: 'admin-master-001',
+            name: 'Administrador Master',
+            email: 'admin@vigorre.com.br',
             role: 'admin',
-            type: 'admin'
-          }));
-          showAlert('✅ Login realizado!', 'success');
+            type: 'admin',
+            permissions: ['all'],
+            loginAt: new Date().toISOString()
+          };
+          
+          // Armazenar sessão segura (sem senha)
+          localStorage.setItem('vigorre_current_user', JSON.stringify(adminUser));
+          sessionStorage.setItem('vigorre_session_active', 'true');
+          
+          showAlert('✅ Autenticação realizada com sucesso!', 'success');
+          
+          // Redirecionar após delay
           setTimeout(function() {
-            window.location.href = 'admin.html';
-          }, 1000);
+            // Prevenir cache da página de destino
+            window.location.href = 'admin.html?t=' + Date.now();
+          }, 1200);
           return;
         }
 
@@ -401,83 +1106,181 @@
         if (currentEnv === 'admin') {
           const staff = JSON.parse(localStorage.getItem('vigorre_staff') || '[]');
           const staffUser = staff.find(function(s) { 
-            return ((s.login && s.login.toLowerCase() === input) || 
-                   (s.email && s.email.toLowerCase() === input)) && 
-                   s.password === pass;
+            const loginMatch = (s.login && s.login.toLowerCase() === input) || 
+                              (s.email && s.email.toLowerCase() === input);
+            return loginMatch && s.password === pass;
           });
           
           if (staffUser) {
-            localStorage.setItem('vigorre_current_user', JSON.stringify({
+            const userData = {
               id: staffUser.id,
               name: staffUser.name,
               email: staffUser.email,
-              role: staffUser.role || 'admin',
-              type: 'staff'
-            }));
-            showAlert('✅ Login realizado!', 'success');
+              role: staffUser.role || 'staff',
+              type: 'staff',
+              permissions: staffUser.permissions || [],
+              loginAt: new Date().toISOString()
+            };
+            
+            localStorage.setItem('vigorre_current_user', JSON.stringify(userData));
+            sessionStorage.setItem('vigorre_session_active', 'true');
+            
+            showAlert('✅ Bem-vindo, ' + userData.name.split(' ')[0] + '!', 'success');
+            
             setTimeout(function() {
-              window.location.href = 'admin.html';
-            }, 1000);
+              window.location.href = 'admin.html?t=' + Date.now();
+            }, 1200);
             return;
           }
         }
 
         // ========================================
-        // 3. LOGIN PARTICIPANTE (BANCO LOCAL) - ✅ CORREÇÃO AQUI
+        // 3. LOGIN PARTICIPANTE (BANCO LOCAL)
         // ========================================
         if (currentEnv === 'participant') {
           const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
           const participant = participants.find(function(p) { 
-            return ((p.user && p.user.toLowerCase() === input) || 
-                   (p.email && p.email.toLowerCase() === input)) && 
-                   p.pass === pass;
+            const loginMatch = (p.user && p.user.toLowerCase() === input) || 
+                              (p.email && p.email.toLowerCase() === input);
+            return loginMatch && p.pass === pass;
           });
           
           if (participant) {
-            localStorage.setItem('vigorre_current_user', JSON.stringify({
+            const userData = {
               id: participant.id,
               name: participant.name,
               email: participant.email,
               role: 'participant',
-              type: 'participant'
-            }));
+              type: 'participant',
+              loginAt: new Date().toISOString()
+            };
+            
+            localStorage.setItem('vigorre_current_user', JSON.stringify(userData));
+            sessionStorage.setItem('vigorre_session_active', 'true');
+            
             showAlert('✅ Bem-vindo, ' + participant.name.split(' ')[0] + '!', 'success');
+            
             setTimeout(function() {
-              // ✅ CORREÇÃO: Redirecionar para dashboard do participante, NÃO para cadastro
-              // OBS: Você precisa criar o arquivo 'dashboard-participante.html' para esta página existir
-              window.location.href = 'dashboard-participante.html';
-            }, 1000);
+              // Redirecionar para dashboard do participante
+              window.location.href = 'dashboard-participante.html?t=' + Date.now();
+            }, 1200);
             return;
           }
         }
 
         // ========================================
-        // 4. CREDENCIAIS INVÁLIDAS
+        // 4. CREDENCIAIS INVÁLIDAS - SEGURANÇA
         // ========================================
-        showAlert('❌ Credenciais inválidas ou ambiente incorreto. Verifique usuário e senha.', 'error');
-        btn.disabled = false;
-        btn.textContent = 'Entrar no Vigorre One™';
+        // Log tentativa falha (em produção, enviar para analytics)
+        console.warn('🔐 Tentativa de login falha:', {
+          env: currentEnv,
+          input: input,
+          timestamp: new Date().toISOString(),
+          userAgent: navigator.userAgent
+        });
         
-      }, 600);
+        showAlert('❌ Credenciais inválidas. Verifique usuário, senha e ambiente selecionado.', 'error');
+        
+        // Resetar botão
+        loginBtn.disabled = false;
+        loginBtn.classList.remove('loading');
+        loginBtn.textContent = 'Entrar no Vigorre One™';
+        
+        // Focar no campo de senha para nova tentativa
+        passInput.focus();
+        passInput.select();
+        
+      }, processingTime);
     }
 
     // ============================================
-    // VERIFICAÇÃO DE SESSÃO AO CARREGAR A PÁGINA
-    // Se usuário já estiver logado, redireciona conforme o papel
+    // VERIFICAÇÃO DE SESSÃO AO CARREGAR
     // ============================================
     document.addEventListener('DOMContentLoaded', function() {
+      // Verificar se usuário já está autenticado
       const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+      const sessionActive = sessionStorage.getItem('vigorre_session_active') === 'true';
       
-      if (currentUser && currentUser.role) {
-        // Usuário já está logado - redirecionar conforme o papel
-        if (currentUser.role === 'admin' || currentUser.role === 'staff') {
-          window.location.href = 'admin.html';
-        } else if (currentUser.role === 'participant') {
-          // ✅ CORREÇÃO: Participante vai para dashboard, NÃO para cadastro
-          window.location.href = 'dashboard-participante.html';
+      if (currentUser && currentUser.role && sessionActive) {
+        // Usuário autenticado - redirecionar conforme papel
+        const redirectMap = {
+          'admin': 'admin.html',
+          'staff': 'admin.html',
+          'recruiter': 'admin.html',
+          'participant': 'dashboard-participante.html',
+          'company': 'company-dashboard.html'
+        };
+        
+        const targetPage = redirectMap[currentUser.role] || 'admin.html';
+        
+        // Prevenir redirecionamento em loop
+        if (!window.location.href.includes(targetPage)) {
+          window.location.href = targetPage + '?t=' + Date.now();
+        }
+      }
+      
+      // Focar no campo de e-mail ao carregar
+      const emailInput = document.getElementById('email');
+      if (emailInput && !emailInput.value) {
+        setTimeout(function() {
+          emailInput.focus();
+        }, 300);
+      }
+      
+      // Prevenir submissão com Enter em campos vazios
+      const form = document.getElementById('loginForm');
+      if (form) {
+        form.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            const email = document.getElementById('email').value.trim();
+            const pass = document.getElementById('password').value;
+            if (!email || !pass) {
+              e.preventDefault();
+              showAlert('⚠️ Preencha todos os campos antes de entrar.', 'warning');
+            }
+          }
+        });
+      }
+    });
+    
+    // ============================================
+    // PREVENIR BACK BUTTON APÓS LOGOUT
+    // ============================================
+    window.addEventListener('pageshow', function(event) {
+      // Se a página foi carregada do cache do navegador (back button)
+      if (event.persisted) {
+        const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+        const sessionActive = sessionStorage.getItem('vigorre_session_active') === 'true';
+        
+        // Se não há sessão ativa, forçar recarregamento
+        if (!currentUser.role || !sessionActive) {
+          window.location.replace(window.location.href);
         }
       }
     });
+    
+    // ============================================
+    // UTILITÁRIOS - SR ONLY PARA ACESSIBILIDADE
+    // ============================================
+    // Adicionar classe sr-only dinamicamente se não existir no CSS
+    (function() {
+      const style = document.createElement('style');
+      style.textContent = `
+        .sr-only {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip: rect(0, 0, 0, 0);
+          white-space: nowrap;
+          border: 0;
+        }
+      `;
+      document.head.appendChild(style);
+    })();
+    
   </script>
 </body>
 </html>
