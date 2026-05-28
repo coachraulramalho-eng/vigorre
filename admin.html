@@ -699,6 +699,81 @@
       animation: spin 0.8s linear infinite;
     }
     
+    /* ============================================
+       ✅ CORREÇÕES APLICADAS
+       ============================================ */
+    
+    /* Seções - só uma visível por vez */
+    main section { display: none !important; }
+    main section#dashboard { display: block !important; }
+    
+    /* Modais - sempre escondidos por padrão */
+    .modal {
+      display: none !important;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 9999;
+    }
+    .modal.active {
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* Overlay do modal */
+    .modal::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(4px);
+      z-index: -1;
+    }
+    .modal-content { z-index: 10000; position: relative; }
+    
+    /* Painel de Logs Visível */
+    .log-panel {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      width: 320px;
+      max-height: 200px;
+      background: var(--brand-navy);
+      color: #10b981;
+      border-radius: var(--radius-lg);
+      padding: 0.75rem;
+      font-family: monospace;
+      font-size: 0.75rem;
+      overflow-y: auto;
+      z-index: 10001;
+      border: 1px solid var(--slate-700);
+      box-shadow: var(--shadow-lg);
+    }
+    .log-panel h4 {
+      margin: 0 0 0.5rem 0;
+      color: white;
+      font-size: 0.8125rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .log-panel .log-entry {
+      margin: 2px 0;
+      padding: 2px 4px;
+      border-left: 2px solid var(--brand-cyan);
+    }
+    .log-panel .log-entry.error { border-left-color: var(--brand-rose); color: #fca5a5; }
+    .log-panel .log-entry.warn { border-left-color: var(--brand-amber); color: #fcd34d; }
+    .log-panel .clear-log {
+      background: none;
+      border: none;
+      color: var(--slate-400);
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .log-panel .clear-log:hover { color: white; }
+    
     /* Responsivo */
     @media (max-width: 1024px) { 
       body.admin-page { grid-template-columns: 80px 1fr; }
@@ -1054,9 +1129,6 @@
   </main>
 
   <!-- Modals (Staff, Company, Participant, Report, Test) -->
-  <!-- [Os modais permanecem iguais, apenas usando classes do globals.css onde aplicável] -->
-  <!-- Devido ao tamanho, os modais foram mantidos como no original, mas usando as variáveis CSS do globals.css -->
-
   <!-- Modal Staff -->
   <div class="modal" id="staffModal" role="dialog" aria-labelledby="staffModalTitle" aria-modal="true">
     <div class="modal-content">
@@ -1265,7 +1337,16 @@
     </div>
   </div>
 
-  <!-- Scripts - Lógica JavaScript (100% PRESERVADA) -->
+  <!-- ✅ PAINEL DE LOGS VISÍVEL -->
+  <div class="log-panel" id="logPanel">
+    <h4>
+      📋 Logs do Sistema
+      <button class="clear-log" onclick="clearLogs()" title="Limpar logs">×</button>
+    </h4>
+    <div id="logContent"></div>
+  </div>
+
+  <!-- Scripts - Lógica JavaScript (100% PRESERVADA + CORREÇÕES) -->
   <script>
     'use strict';
     
@@ -1308,6 +1389,33 @@
     };
 
     // ============================================
+    // ✅ FUNÇÕES DE LOG (NOVAS)
+    // ============================================
+    function logMessage(message, type = 'info') {
+      const logContent = document.getElementById('logContent');
+      if (!logContent) return;
+      
+      const time = new Date().toLocaleTimeString('pt-BR');
+      const entry = document.createElement('div');
+      entry.className = 'log-entry ' + (type === 'error' ? 'error' : type === 'warn' ? 'warn' : '');
+      entry.textContent = '[' + time + '] ' + message;
+      
+      logContent.appendChild(entry);
+      logContent.scrollTop = logContent.scrollHeight;
+      
+      // Também mostra no console
+      if (type === 'error') console.error(message);
+      else if (type === 'warn') console.warn(message);
+      else console.log(message);
+    }
+
+    function clearLogs() {
+      const logContent = document.getElementById('logContent');
+      if (logContent) logContent.innerHTML = '';
+      logMessage('Logs limpos', 'info');
+    }
+
+    // ============================================
     // FUNÇÕES UTILITÁRIAS
     // ============================================
     function saveDB() {
@@ -1322,6 +1430,8 @@
 
     function showToast(msg, type) {
       type = type || 'success';
+      logMessage(msg, type === 'error' ? 'error' : type === 'warning' ? 'warn' : 'info');
+      
       const t = document.createElement('div');
       t.className = 'toast ' + (type === 'error' ? 'error' : '') + (type === 'warning' ? 'warning' : '');
       t.setAttribute('role', 'alert');
@@ -1330,46 +1440,96 @@
       setTimeout(function() { t.style.opacity = '0'; t.style.transform = 'translateX(120%)'; setTimeout(function() { t.remove(); }, 300); }, 4000);
     }
 
+    // ✅ FUNÇÃO closeModal - CORRIGIDA
     function closeModal(id) { 
-      document.getElementById(id).classList.remove('active'); 
-      document.querySelectorAll('#' + id + ' form').forEach(function(f) { f.reset(); }); 
-      document.querySelectorAll('#' + id + ' input[type="hidden"]').forEach(function(i) { i.value = ''; });
-      document.body.style.overflow = '';
-      if (id === 'partModal') { participantSelectedJobs = []; renderParticipantSelectedJobs(); }
+      const modal = document.getElementById(id);
+      if (modal) {
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+        modal.querySelectorAll('form').forEach(function(f) { f.reset(); });
+        modal.querySelectorAll('input[type="hidden"]').forEach(function(i) { i.value = ''; });
+        if (id === 'partModal') { participantSelectedJobs = []; renderParticipantSelectedJobs(); }
+        logMessage('Modal fechado: ' + id, 'info');
+      }
     }
     
-    function openModal(id) { 
-      document.getElementById(id).classList.add('active'); 
-      updateSelects();
-      document.body.style.overflow = 'hidden';
+    // ✅ FUNÇÃO openModal - CORRIGIDA
+    function openModal(id) {
+      // Fecha todos os modais primeiro
+      document.querySelectorAll('.modal').forEach(function(modal) {
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+      });
+      
+      const modal = document.getElementById(id);
+      if (modal) {
+        modal.style.display = 'flex';
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        logMessage('Modal aberto: ' + id, 'info');
+      }
     }
 
     // ============================================
     // INICIALIZAÇÃO
     // ============================================
     document.addEventListener('DOMContentLoaded', function() {
-      console.log('🔹 Admin Vigorre One™ - DOM carregado');
+      logMessage('🔹 Admin Vigorre One™ - DOM carregado', 'info');
       
+      // Verifica autenticação
       const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
       if (!currentUser.role || (currentUser.role !== 'admin' && currentUser.role !== 'staff')) {
+        logMessage('⚠️ Usuário não autenticado - redirecionando', 'warn');
         window.location.href = 'login.html';
         return;
       }
       
+      logMessage('✅ Usuário autenticado: ' + (currentUser.name || 'Admin'), 'info');
+      
+      // Garante visibilidade correta no load
+      document.querySelectorAll('main section').forEach(function(section) {
+        if (section.id === 'dashboard') {
+          section.style.display = 'block';
+          section.classList.add('active');
+        } else {
+          section.style.display = 'none';
+          section.classList.remove('active');
+        }
+      });
+      
+      document.querySelectorAll('.modal').forEach(function(modal) {
+        modal.style.display = 'none';
+        modal.classList.remove('active');
+      });
+      
       document.getElementById('userName').textContent = currentUser.name || 'Admin';
+      
       renderAll();
       updateStats();
+      logMessage('📊 Dados renderizados', 'info');
+      
       setTimeout(checkSupabaseConnection, 2000);
       updateSelects();
       
       // Fechar modais ao clicar fora
       document.querySelectorAll('.modal').forEach(function(modal) {
-        modal.addEventListener('click', function(e) { if (e.target === modal) closeModal(modal.id); });
+        modal.addEventListener('click', function(e) { 
+          if (e.target === modal) { 
+            closeModal(modal.id); 
+            logMessage('Modal fechado (clique fora): ' + modal.id, 'info');
+          } 
+        });
       });
       
       // Fechar modal com ESC
       document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') { document.querySelectorAll('.modal.active').forEach(function(modal) { closeModal(modal.id); }); }
+        if (e.key === 'Escape') { 
+          document.querySelectorAll('.modal.active').forEach(function(modal) { 
+            closeModal(modal.id);
+            logMessage('Modal fechado (ESC): ' + modal.id, 'info');
+          }); 
+        }
       });
     });
 
@@ -1387,29 +1547,33 @@
       if (typeof window.VigorreDB === 'undefined' || !VigorreDB) {
         statusDot.className = 'status-dot notloaded';
         statusText.textContent = 'Config não carregada';
+        logMessage('⚠️ VigorreDB não definido', 'warn');
         return;
       }
       
       if (!VigorreDB.supabase) {
         statusDot.className = 'status-dot notloaded';
         statusText.textContent = 'Supabase não inicializado';
+        logMessage('⚠️ Supabase não inicializado', 'warn');
         return;
       }
       
       statusDot.className = 'status-dot connecting';
       statusText.textContent = 'Testando...';
+      logMessage('🔄 Testando conexão Supabase...', 'info');
       
       VigorreDB.supabase.from('participants').select('id').limit(1).maybeSingle()
         .then(function({ data, error }) {
           if (error) throw error;
           statusDot.className = 'status-dot connected';
           statusText.textContent = 'Supabase OK ✓';
-          console.log('✅ Supabase conectado com sucesso!');
+          logMessage('✅ Supabase conectado com sucesso!', 'info');
         })
         .catch(function(error) {
           console.error('❌ Falha na conexão com Supabase:', error);
           statusDot.className = 'status-dot error';
           statusText.textContent = 'Offline ✗';
+          logMessage('❌ Erro Supabase: ' + error.message, 'error');
         });
     }
 
@@ -1427,28 +1591,57 @@
       document.getElementById('statReports').textContent = DB.reports.length;
     }
     
-    function showSection(id) {
-      document.querySelectorAll('main section').forEach(function(s) { s.style.display = 'none'; });
-      document.getElementById(id).style.display = 'block';
-      document.querySelectorAll('.nav-menu a').forEach(function(a) { a.classList.remove('active'); a.removeAttribute('aria-current'); });
-      if (event && event.target) { const activeLink = event.target.closest('a'); if (activeLink) { activeLink.classList.add('active'); activeLink.setAttribute('aria-current', 'page'); } }
-      const titles = { dashboard: 'Dashboard', staff: 'Staff Vigorre One™', companies: 'Empresas', participants: 'Participantes' };
-      document.getElementById('pageTitle').textContent = titles[id] || id;
-      if (id !== 'companies') closeCompanyDetails();
-      if (id === 'staff') { currentPage.staff = 1; renderStaff(); }
-      if (id === 'companies') { currentPage.companies = 1; renderCompanies(); }
-      if (id === 'participants') { currentPage.participants = 1; renderParticipants(); }
+    // ✅ FUNÇÃO showSection - CORRIGIDA
+    function showSection(sectionId) {
+      // Esconde todas as seções
+      document.querySelectorAll('main section').forEach(function(section) {
+        section.style.display = 'none';
+        section.classList.remove('active');
+      });
+      
+      // Mostra apenas a selecionada
+      const target = document.getElementById(sectionId);
+      if (target) {
+        target.style.display = 'block';
+        target.classList.add('active');
+        logMessage('Seção aberta: ' + sectionId, 'info');
+      }
+      
+      // Atualiza menu
+      document.querySelectorAll('.nav-menu a').forEach(function(link) {
+        link.classList.remove('active');
+      });
+      if (event && event.currentTarget) {
+        event.currentTarget.classList.add('active');
+      }
+      
+      // Atualiza título
+      const titles = {
+        'dashboard': 'Dashboard',
+        'staff': 'Staff Vigorre One™',
+        'companies': 'Empresas',
+        'participants': 'Participantes'
+      };
+      document.getElementById('pageTitle').textContent = titles[sectionId] || sectionId;
+      
+      // Fecha detalhes se mudar de seção
+      if (sectionId !== 'companies') closeCompanyDetails();
+      
+      // Re-renderiza se necessário
+      if (sectionId === 'staff') { currentPage.staff = 1; renderStaff(); }
+      if (sectionId === 'companies') { currentPage.companies = 1; renderCompanies(); }
+      if (sectionId === 'participants') { currentPage.participants = 1; renderParticipants(); }
     }
     
     function closeCompanyDetails() {
       document.getElementById('companyListView').style.display = 'block';
       document.getElementById('companyDetails').style.display = 'none';
       currentCompanyId = null;
+      logMessage('Detalhes da empresa fechados', 'info');
     }
 
     // ============================================
     // FUNÇÕES DE CRUD (Staff, Companies, Participants)
-    // [As funções de CRUD permanecem 100% iguais ao original]
     // ============================================
     
     // Staff Functions
@@ -1478,7 +1671,7 @@
       const data = { id: id, name: document.getElementById('sName').value, email: document.getElementById('sEmail').value.toLowerCase(), phone: document.getElementById('sPhone').value, login: document.getElementById('sLogin').value.toLowerCase(), password: document.getElementById('sPass').value, role: document.getElementById('sRole').value };
       const idx = DB.staff.findIndex(function(x) { return x.id === id; });
       if (idx > -1) { DB.staff[idx] = { ...DB.staff[idx], ...data }; } else { DB.staff.push(data); }
-      if (window.VigorreDB && VigorreDB.supabase) { VigorreDB.saveToSupabase('staff', data, 'vigorre_staff').then(function(saved) { if (saved) console.log('✅ Staff salvo no Supabase'); }); }
+      if (window.VigorreDB && VigorreDB.supabase) { VigorreDB.saveToSupabase('staff', data, 'vigorre_staff').then(function(saved) { if (saved) logMessage('✅ Staff salvo no Supabase', 'info'); }); }
       saveDB(); closeModal('staffModal'); showToast('✅ Funcionário salvo com sucesso!');
     }
     
@@ -1487,6 +1680,7 @@
       document.getElementById('sId').value = s.id; document.getElementById('sName').value = s.name; document.getElementById('sEmail').value = s.email; document.getElementById('sPhone').value = s.phone; document.getElementById('sLogin').value = s.login; document.getElementById('sPass').value = s.password; document.getElementById('sRole').value = s.role;
       document.getElementById('staffModalTitle').textContent = 'Editar Funcionário';
       openModal('staffModal');
+      logMessage('Editando funcionário: ' + s.name, 'info');
     }
 
     // Companies Functions
@@ -1516,7 +1710,7 @@
       const data = { id: id, name: document.getElementById('cName').value, cnpj: document.getElementById('cCnpj').value, resp: document.getElementById('cResp').value, email: document.getElementById('cEmail').value.toLowerCase(), phone: document.getElementById('cPhone').value };
       const idx = DB.companies.findIndex(function(x) { return x.id === id; });
       if (idx > -1) { DB.companies[idx] = { ...DB.companies[idx], ...data }; } else { DB.companies.push(data); }
-      if (window.VigorreDB && VigorreDB.supabase) { VigorreDB.saveToSupabase('companies', data, 'vigorre_companies').then(function(saved) { if (saved) console.log('✅ Empresa salva no Supabase'); }); }
+      if (window.VigorreDB && VigorreDB.supabase) { VigorreDB.saveToSupabase('companies', data, 'vigorre_companies').then(function(saved) { if (saved) logMessage('✅ Empresa salva no Supabase', 'info'); }); }
       saveDB(); closeModal('compModal'); showToast('✅ Empresa salva com sucesso!');
     }
     
@@ -1525,6 +1719,7 @@
       document.getElementById('cId').value = c.id; document.getElementById('cName').value = c.name; document.getElementById('cCnpj').value = c.cnpj || ''; document.getElementById('cResp').value = c.resp; document.getElementById('cEmail').value = c.email || ''; document.getElementById('cPhone').value = c.phone || '';
       document.getElementById('compTitle').textContent = 'Editar Empresa';
       openModal('compModal');
+      logMessage('Editando empresa: ' + c.name, 'info');
     }
     
     function viewCompany(cid) {
@@ -1535,6 +1730,7 @@
       document.getElementById('detailCompanyTitle').textContent = '📂 ' + c.name + ' - Gestão de Vagas e Participantes';
       renderJobs();
       renderLinkedParticipants();
+      logMessage('Visualizando empresa: ' + c.name, 'info');
     }
     
     function saveJob() {
@@ -1545,6 +1741,7 @@
       saveDB(); renderJobs();
       document.getElementById('jobName').value = ''; document.getElementById('jobProfile').value = '';
       showToast('✅ Vaga e perfil cadastrados!');
+      logMessage('Vaga cadastrada: ' + name, 'info');
     }
     
     function renderJobs() {
@@ -1558,7 +1755,7 @@
     
     function editJob(jobId) {
       const job = DB.jobs.find(function(j) { return j.id === jobId; });
-      if (job) { document.getElementById('jobName').value = job.name; document.getElementById('jobProfile').value = job.profile || ''; DB.jobs = DB.jobs.filter(function(j) { return j.id !== jobId; }); showToast('✏️ Edite os dados e clique em Salvar Vaga'); }
+      if (job) { document.getElementById('jobName').value = job.name; document.getElementById('jobProfile').value = job.profile || ''; DB.jobs = DB.jobs.filter(function(j) { return j.id !== jobId; }); showToast('✏️ Edite os dados e clique em Salvar Vaga'); logMessage('Editando vaga: ' + job.name, 'info'); }
     }
     
     function deleteJob(jid) {
@@ -1566,6 +1763,7 @@
         DB.jobs = DB.jobs.filter(function(j) { return j.id !== jid; });
         saveDB(); renderJobs();
         showToast('✅ Vaga excluída com sucesso!');
+        logMessage('Vaga excluída: ' + jid, 'warn');
       }
     }
     
@@ -1635,8 +1833,9 @@
       const data = { id: id, name: document.getElementById('pName').value, phone: document.getElementById('pPhone').value, email: document.getElementById('pEmail').value.toLowerCase(), compId: document.getElementById('pComp').value, jobs: participantSelectedJobs, user: document.getElementById('pUser').value.toLowerCase(), pass: document.getElementById('pPass').value, exp: document.getElementById('pExp').value, tests: tests, assignedTests: tests };
       const idx = DB.participants.findIndex(function(x) { return x.id === id; });
       if (idx > -1) { const existingCompletedTests = existingParticipant.completedTests || []; const existingTestResults = existingParticipant.testResults || {}; DB.participants[idx] = { ...DB.participants[idx], ...data, completedTests: existingCompletedTests, testResults: existingTestResults }; } else { data.completedTests = []; data.testResults = {}; DB.participants.push(data); }
-      if (window.VigorreDB && VigorreDB.supabase) { VigorreDB.saveToSupabase('participants', data, 'vigorre_participants').then(function(saved) { if (saved) console.log('✅ Participante salvo no Supabase'); }); }
+      if (window.VigorreDB && VigorreDB.supabase) { VigorreDB.saveToSupabase('participants', data, 'vigorre_participants').then(function(saved) { if (saved) logMessage('✅ Participante salvo no Supabase', 'info'); }); }
       saveDB(); closeModal('partModal'); showToast('✅ Participante salvo com sucesso!');
+      logMessage('Participante salvo: ' + data.name, 'info');
     }
     
     function editParticipant(id) {
@@ -1650,6 +1849,7 @@
       document.getElementById('partTitle').textContent = 'Editar Participante';
       document.getElementById('partModal').classList.add('active');
       document.body.style.overflow = 'hidden';
+      logMessage('Editando participante: ' + p.name, 'info');
     }
 
     // Job Management for Participants
@@ -1677,6 +1877,7 @@
         participantSelectedJobs.push({ id: job.id, name: job.name || job.title || 'Sem título', compId: job.compId, profile: job.profile || '' });
         renderParticipantSelectedJobs(); loadAvailableJobsForParticipant(); if (jobSelect) jobSelect.value = '';
         showToast('✅ Vaga "' + job.name + '" vinculada ao participante!');
+        logMessage('Vaga vinculada: ' + job.name, 'info');
       }
     }
     
@@ -1684,6 +1885,7 @@
       participantSelectedJobs = participantSelectedJobs.filter(function(j) { return j.id !== jobId; });
       renderParticipantSelectedJobs(); loadAvailableJobsForParticipant();
       showToast('✅ Vaga removida do participante!');
+      logMessage('Vaga removida do participante: ' + jobId, 'warn');
     }
     
     function renderParticipantSelectedJobs() {
@@ -1701,24 +1903,25 @@
     }
 
     // Utilities
-    function resendTest(id) { const p = DB.participants.find(function(x) { return x.id === id; }); if (p) showToast('📧 Credenciais reenviadas para ' + p.email); }
-    function openVigorreLaudo(participantId) { window.open('laudo-vigorre.html?participantId=' + participantId, '_blank'); }
+    function resendTest(id) { const p = DB.participants.find(function(x) { return x.id === id; }); if (p) { showToast('📧 Credenciais reenviadas para ' + p.email); logMessage('Credenciais reenviadas: ' + p.email, 'info'); } }
+    function openVigorreLaudo(participantId) { window.open('laudo-vigorre.html?participantId=' + participantId, '_blank'); logMessage('Abrindo laudo: ' + participantId, 'info'); }
     
     function openTestModal(pid) {
       const p = DB.participants.find(function(x) { return x.id === pid; }); if (!p) return;
       document.getElementById('testModalName').textContent = p.name; document.getElementById('testModalId').value = pid;
       document.querySelectorAll('#testModal .test-check').forEach(function(cb) { cb.checked = p.assignedTests && p.assignedTests.includes(cb.value); });
       openModal('testModal');
+      logMessage('Abrindo modal de testes: ' + p.name, 'info');
     }
     
     function confirmTestRelease() {
       const pid = document.getElementById('testModalId').value;
       const selected = Array.from(document.querySelectorAll('#testModal .test-check:checked')).map(function(cb) { return cb.value; });
       const idx = DB.participants.findIndex(function(x) { return x.id === pid; });
-      if (idx > -1) { DB.participants[idx].assignedTests = selected; DB.participants[idx].tests = selected; saveDB(); closeModal('testModal'); showToast('✅ Testes liberados para ' + DB.participants[idx].name + '!'); }
+      if (idx > -1) { DB.participants[idx].assignedTests = selected; DB.participants[idx].tests = selected; saveDB(); closeModal('testModal'); showToast('✅ Testes liberados para ' + DB.participants[idx].name + '!'); logMessage('Testes liberados: ' + selected.join(', ') + ' para ' + DB.participants[idx].name, 'info'); }
     }
     
-    function openReportModal(pid, name) { document.getElementById('reportTargetName').textContent = name; currentCompanyId = pid; openModal('reportModal'); }
+    function openReportModal(pid, name) { document.getElementById('reportTargetName').textContent = name; currentCompanyId = pid; openModal('reportModal'); logMessage('Abrindo modal de relatório: ' + name, 'info'); }
     
     function generateReport() {
       const type = document.getElementById('reportTypeSelect').value;
@@ -1737,7 +1940,7 @@
         else if (type === 'vigorre-valores') reportFile = 'relatorio-valores-vigorre.html';
         if (reportFile) {
           const newWindow = window.open(reportFile + '?participantId=' + p.id, '_blank');
-          if (newWindow) { closeModal('reportModal'); showToast('📊 Abrindo Relatório Vigorre One™ ' + reportType.toUpperCase() + '...'); } else { showToast('⚠️ Bloqueador de pop-up pode estar impedindo.', 'error'); }
+          if (newWindow) { closeModal('reportModal'); showToast('📊 Abrindo Relatório Vigorre One™ ' + reportType.toUpperCase() + '...'); logMessage('Relatório aberto: ' + reportType + ' - ' + p.name, 'info'); } else { showToast('⚠️ Bloqueador de pop-up pode estar impedindo.', 'error'); }
         } else { showToast('⚠️ Arquivo de relatório não encontrado.', 'error'); }
         return;
       }
@@ -1754,10 +1957,11 @@
       }
 
       DB.reports.push({ id: Date.now().toString(), participantId: p.id, name: p.name, type: type, test: test, date: new Date().toLocaleString('pt-BR'), content: content });
-      if (window.VigorreDB && VigorreDB.supabase) { VigorreDB.saveToSupabase('reports', { participantId: p.id, name: p.name, type: type, test: test, date: new Date().toLocaleString('pt-BR'), content: content }, 'vigorre_reports').then(function(saved) { if (saved) console.log('✅ Relatório salvo no Supabase'); }); }
+      if (window.VigorreDB && VigorreDB.supabase) { VigorreDB.saveToSupabase('reports', { participantId: p.id, name: p.name, type: type, test: test, date: new Date().toLocaleString('pt-BR'), content: content }, 'vigorre_reports').then(function(saved) { if (saved) logMessage('✅ Relatório salvo no Supabase', 'info'); }); }
       saveDB(); closeModal('reportModal'); showToast('✅ Relatório ' + type.toUpperCase() + ' (' + test + ') gerado para ' + p.email);
       const win = window.open('', '_blank');
       if (win) { win.document.write('<html><head><title>Relatório Vigorre One™</title><style>body{font-family:Inter,sans-serif;max-width:800px;margin:40px auto;padding:20px;line-height:1.6;}h2{color:#1e40af;border-bottom:2px solid #e2e8f0;padding-bottom:10px;}h3{color:#334155;margin-top:20px;}ul{padding-left:20px;}li{margin-bottom:5px;}</style></head><body>' + content + '</body></html>'); }
+      logMessage('Relatório gerado: ' + type + ' - ' + p.name, 'info');
     }
 
     function checkTestStatus(participantId, testType) {
@@ -1829,6 +2033,7 @@
       else if (type === 'participants') renderParticipants();
       const table = document.querySelector('#' + type + ' table');
       if (table) { table.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      logMessage('Página alterada: ' + type + ' - página ' + page, 'info');
     }
 
     function updateSelects() {
@@ -1843,6 +2048,7 @@
       if (!confirm('⚠️ Tem certeza que deseja excluir este item? Esta ação não pode ser desfeita.')) return;
       DB[collection] = DB[collection].filter(function(x) { return x.id !== id; });
       saveDB(); showToast('✅ Item excluído com sucesso!');
+      logMessage('Item excluído: ' + collection + ' - ' + id, 'warn');
     }
 
     function logout() {
@@ -1850,11 +2056,12 @@
       localStorage.removeItem('vigorre_current_user');
       localStorage.removeItem('vigorre_password_temp');
       sessionStorage.clear();
+      logMessage('🔐 Logout realizado', 'info');
       window.location.href = 'login.html?loggedout=1&ts=' + Date.now();
     }
 
     function syncCompletedTests() {
-      console.log('🔄 Sincronizando completedTests com localStorage...');
+      logMessage('🔄 Sincronizando completedTests com localStorage...', 'info');
       let updated = false;
       DB.participants.forEach(function(p) {
         if (!p.completedTests) p.completedTests = [];
@@ -1863,10 +2070,10 @@
           if (test === 'DISC') resultKey = 'vigorre_last_disc_result';
           else if (test === 'IE') resultKey = 'vigorre_last_ie_result';
           else if (test === 'Valores') resultKey = 'vigorre_last_valores_result';
-          if (localStorage.getItem(resultKey) && !p.completedTests.includes(test)) { p.completedTests.push(test); console.log('✅ Adicionado', test, 'a completedTests de', p.name); updated = true; }
+          if (localStorage.getItem(resultKey) && !p.completedTests.includes(test)) { p.completedTests.push(test); logMessage('✅ Adicionado ' + test + ' a completedTests de ' + p.name, 'info'); updated = true; }
         });
       });
-      if (updated) { localStorage.setItem('vigorre_participants', JSON.stringify(DB.participants)); console.log('💾 Dados salvos após sincronização'); renderParticipants(); renderLinkedParticipants(); updateStats(); showToast('✅ Testes sincronizados com sucesso!'); }
+      if (updated) { localStorage.setItem('vigorre_participants', JSON.stringify(DB.participants)); logMessage('💾 Dados salvos após sincronização', 'info'); renderParticipants(); renderLinkedParticipants(); updateStats(); showToast('✅ Testes sincronizados com sucesso!'); }
       else { showToast('ℹ️ Nenhum ajuste necessário'); }
     }
 
@@ -1880,21 +2087,18 @@
 
     window.addEventListener('error', function(e) {
       console.error('❌ Erro no Admin Vigorre One™:', e);
+      logMessage('❌ Erro: ' + e.message, 'error');
       showToast('⚠️ Ocorreu um erro. Recarregue a página se o problema persistir.', 'error');
       return true;
     });
 
-    console.log('🔍 Admin Vigorre One™ - Estado inicial:', {
-      staff: DB.staff.length, companies: DB.companies.length, participants: DB.participants.length, jobs: DB.jobs.length,
-      localStorage: { disc: !!localStorage.getItem('vigorre_last_disc_result'), ie: !!localStorage.getItem('vigorre_last_ie_result'), valores: !!localStorage.getItem('vigorre_last_valores_result') },
-      supabase: { available: typeof window.VigorreDB !== 'undefined', connected: VigorreDB?.supabase ? 'conectado' : 'não conectado' }
-    });
+    logMessage('🔍 Admin Vigorre One™ - Estado inicial: ' + DB.staff.length + ' staff, ' + DB.companies.length + ' companies, ' + DB.participants.length + ' participants', 'info');
 
     document.addEventListener('DOMContentLoaded', function() {
       ['disc', 'ie', 'valores'].forEach(function(test) {
         const key = 'vigorre_last_' + test + '_result';
         const data = localStorage.getItem(key);
-        if (data) { try { JSON.parse(data); } catch (e) { console.warn('⚠️ Resultado ' + test.toUpperCase() + ' corrompido, removendo...'); localStorage.removeItem(key); } }
+        if (data) { try { JSON.parse(data); } catch (e) { logMessage('⚠️ Resultado ' + test.toUpperCase() + ' corrompido, removendo...', 'warn'); localStorage.removeItem(key); } }
       });
       const headerActions = document.querySelector('.header-actions');
       if (headerActions && window.location.hostname === 'localhost') {
@@ -1927,9 +2131,9 @@
         else if (reportType === 'Valores') reportFile = 'relatorio-valores-vigorre.html';
         if (reportFile) {
           const newWindow = window.open(reportFile + '?participantId=' + participantId + '&ts=' + Date.now(), '_blank');
-          if (newWindow) { showToast('📊 Abrindo relatório Vigorre One™...', 'success'); } else { showToast('⚠️ Bloqueador de pop-up pode estar impedindo.', 'warning'); }
+          if (newWindow) { showToast('📊 Abrindo relatório Vigorre One™...', 'success'); logMessage('Relatório aberto: ' + reportType + ' - ' + participant.name, 'info'); } else { showToast('⚠️ Bloqueador de pop-up pode estar impedindo.', 'warning'); }
         } else { showToast('Arquivo de relatório não encontrado.', 'error'); }
-      } catch (e) { console.error('Erro ao abrir relatório:', e); showToast('Erro ao abrir relatório', 'error'); }
+      } catch (e) { console.error('Erro ao abrir relatório:', e); logMessage('Erro ao abrir relatório: ' + e.message, 'error'); showToast('Erro ao abrir relatório', 'error'); }
     }
 
     if (typeof module !== 'undefined' && module.exports) {
