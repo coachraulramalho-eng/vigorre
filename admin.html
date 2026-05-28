@@ -1123,7 +1123,7 @@
     }
     
     /* ============================================
-       REPORT BUTTONS PREMIUM
+       REPORT BUTTONS PREMIUM COM TOOLTIPS
        ============================================ */
     .btn-report {
       background: linear-gradient(135deg, var(--brand-purple), var(--brand-blue));
@@ -1420,6 +1420,59 @@
       border-top-color: white;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
+    }
+    
+    /* ============================================
+       TOOLTIPS PREMIUM - GLASSMORPHISM
+       ============================================ */
+    [data-tooltip] {
+      position: relative;
+    }
+    
+    [data-tooltip]:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%) translateY(8px);
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 0.625rem 1rem;
+      border-radius: var(--radius-lg);
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--slate-800);
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--transition);
+      box-shadow: var(--shadow-xl);
+      border: 1px solid var(--glass-border);
+      z-index: var(--z-tooltip, 1070);
+      pointer-events: none;
+    }
+    
+    [data-tooltip]:hover::before {
+      content: '';
+      position: absolute;
+      bottom: 115%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: var(--glass-bg);
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--transition);
+      z-index: var(--z-tooltip, 1070);
+      pointer-events: none;
+    }
+    
+    [data-tooltip]:hover::after,
+    [data-tooltip]:hover::before {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
     }
   </style>
 </head>
@@ -2293,8 +2346,8 @@
           '<td><code style="background:var(--slate-100);padding:4px 8px;border-radius:6px;font-size:0.8rem">' + s.login + '</code></td>' +
           '<td><span class="badge" style="background:' + (s.role === 'admin' ? '#dbeafe' : '#dcfce7') + '; color:' + (s.role === 'admin' ? '#1e40af' : '#166534') + '; border:1px solid ' + (s.role === 'admin' ? '#93c5fd' : '#86efac') + ';">' + (s.role === 'admin' ? 'Administrador' : 'Consultor') + '</span></td>' +
           '<td>' +
-            '<button class="btn btn-warning btn-sm" onclick="editStaff(\'' + s.id + '\')" aria-label="Editar ' + s.name + '">✏️</button>' +
-            '<button class="btn btn-danger btn-sm" onclick="deleteItem(\'staff\',\'' + s.id + '\')" aria-label="Excluir ' + s.name + '">🗑️</button>' +
+            '<button class="btn btn-warning btn-sm" onclick="editStaff(\'' + s.id + '\')" aria-label="Editar ' + s.name + '" data-tooltip="Editar">✏️</button>' +
+            '<button class="btn btn-danger btn-sm" onclick="deleteItem(\'staff\',\'' + s.id + '\')" aria-label="Excluir ' + s.name + '" data-tooltip="Excluir">🗑️</button>' +
           '</td>' +
         '</tr>';
       }).join('');
@@ -2386,9 +2439,9 @@
           '<td>' + c.resp + '</td>' +
           '<td>' + (c.phone || '-') + '</td>' +
           '<td>' +
-            '<button class="btn btn-primary btn-sm" onclick="viewCompany(\'' + c.id + '\')" aria-label="Ver detalhes de ' + c.name + '">👁️</button>' +
-            '<button class="btn btn-warning btn-sm" onclick="editCompany(\'' + c.id + '\')" aria-label="Editar ' + c.name + '">✏️</button>' +
-            '<button class="btn btn-danger btn-sm" onclick="deleteItem(\'companies\',\'' + c.id + '\')" aria-label="Excluir ' + c.name + '">🗑️</button>' +
+            '<button class="btn btn-primary btn-sm" onclick="viewCompany(\'' + c.id + '\')" aria-label="Ver detalhes de ' + c.name + '" data-tooltip="Ver detalhes">👁️</button>' +
+            '<button class="btn btn-warning btn-sm" onclick="editCompany(\'' + c.id + '\')" aria-label="Editar ' + c.name + '" data-tooltip="Editar">✏️</button>' +
+            '<button class="btn btn-danger btn-sm" onclick="deleteItem(\'companies\',\'' + c.id + '\')" aria-label="Excluir ' + c.name + '" data-tooltip="Excluir">🗑️</button>' +
           '</td>' +
         '</tr>';
       }).join('');
@@ -2505,8 +2558,8 @@
             '<small>Perfil: ' + (j.profile || 'Não definido') + '</small>' +
           '</div>' +
           '<div class="job-actions">' +
-            '<button class="btn btn-warning btn-sm" onclick="editJob(\'' + j.id + '\')" aria-label="Editar vaga">✏️</button>' +
-            '<button class="btn btn-danger btn-sm" onclick="deleteJob(\'' + j.id + '\')" aria-label="Excluir vaga">🗑️</button>' +
+            '<button class="btn btn-warning btn-sm" onclick="editJob(\'' + j.id + '\')" aria-label="Editar vaga" data-tooltip="Editar">✏️</button>' +
+            '<button class="btn btn-danger btn-sm" onclick="deleteJob(\'' + j.id + '\')" aria-label="Excluir vaga" data-tooltip="Excluir">🗑️</button>' +
           '</div>' +
         '</div>';
       }).join('');
@@ -2556,13 +2609,13 @@
         // ✅ TOOLTIPS ADICIONADOS NOS BOTÕES DE RELATÓRIO
         let reportBtns = '';
         if (discStatus.canAccess) {
-          reportBtns += '<button class="btn-report" onclick="openVigorreReport(\'' + p.id + '\', \'DISC\')" title="Relatório DISC Vigorre One™">📊</button> ';
+          reportBtns += '<button class="btn-report" onclick="openVigorreReport(\'' + p.id + '\', \'DISC\')" data-tooltip="Relatório DISC Vigorre One™">📊</button> ';
         }
         if (ieStatus.canAccess) {
-          reportBtns += '<button class="btn-report btn-report-ie" onclick="openVigorreReport(\'' + p.id + '\', \'IE\')" title="Relatório IE Vigorre One™">🧠</button> ';
+          reportBtns += '<button class="btn-report btn-report-ie" onclick="openVigorreReport(\'' + p.id + '\', \'IE\')" data-tooltip="Relatório IE Vigorre One™">🧠</button> ';
         }
         if (valoresStatus.canAccess) {
-          reportBtns += '<button class="btn-report btn-report-valores" onclick="openVigorreReport(\'' + p.id + '\', \'Valores\')" title="Relatório Valores Vigorre One™">💎</button>';
+          reportBtns += '<button class="btn-report btn-report-valores" onclick="openVigorreReport(\'' + p.id + '\', \'Valores\')" data-tooltip="Relatório Valores Vigorre One™">💎</button>';
         }
         if (!reportBtns) {
           reportBtns = '<span class="badge-pill badge-pending" title="Aguardando testes">⏳</span>';
@@ -2622,13 +2675,13 @@
         // ✅ TOOLTIPS ADICIONADOS NOS BOTÕES DE RELATÓRIO
         let reportBtns = '';
         if (discStatus.canAccess) {
-          reportBtns += '<button class="btn-report" onclick="openVigorreReport(\'' + p.id + '\', \'DISC\')" title="Relatório DISC Vigorre One™">📊</button> ';
+          reportBtns += '<button class="btn-report" onclick="openVigorreReport(\'' + p.id + '\', \'DISC\')" data-tooltip="Relatório DISC Vigorre One™">📊</button> ';
         }
         if (ieStatus.canAccess) {
-          reportBtns += '<button class="btn-report btn-report-ie" onclick="openVigorreReport(\'' + p.id + '\', \'IE\')" title="Relatório IE Vigorre One™">🧠</button> ';
+          reportBtns += '<button class="btn-report btn-report-ie" onclick="openVigorreReport(\'' + p.id + '\', \'IE\')" data-tooltip="Relatório IE Vigorre One™">🧠</button> ';
         }
         if (valoresStatus.canAccess) {
-          reportBtns += '<button class="btn-report btn-report-valores" onclick="openVigorreReport(\'' + p.id + '\', \'Valores\')" title="Relatório Valores Vigorre One™">💎</button>';
+          reportBtns += '<button class="btn-report btn-report-valores" onclick="openVigorreReport(\'' + p.id + '\', \'Valores\')" data-tooltip="Relatório Valores Vigorre One™">💎</button>';
         }
         if (!reportBtns) {
           reportBtns = '<span class="badge-pill badge-pending" title="Aguardando conclusão">⏳</span>';
@@ -2642,10 +2695,10 @@
           '<td>' + statusBadges + '</td>' +
           '<td>' + reportBtns + '</td>' +
           '<td>' +
-            '<button class="btn btn-warning btn-sm" onclick="editParticipant(\'' + p.id + '\')" aria-label="Editar">✏️</button> ' +
-            '<button class="btn btn-primary btn-sm" onclick="resendTest(\'' + p.id + '\')" aria-label="Reenviar">📧</button> ' +
-            '<button class="btn btn-secondary btn-sm" onclick="openTestModal(\'' + p.id + '\')" aria-label="Liberar testes">🔓</button> ' +
-            '<button class="btn btn-danger btn-sm" onclick="deleteItem(\'participants\',\'' + p.id + '\')" aria-label="Excluir">🗑️</button>' +
+            '<button class="btn btn-warning btn-sm" onclick="editParticipant(\'' + p.id + '\')" aria-label="Editar" data-tooltip="Editar">✏️</button> ' +
+            '<button class="btn btn-primary btn-sm" onclick="resendTest(\'' + p.id + '\')" aria-label="Reenviar" data-tooltip="Reenviar credenciais">📧</button> ' +
+            '<button class="btn btn-secondary btn-sm" onclick="openTestModal(\'' + p.id + '\')" aria-label="Liberar testes" data-tooltip="Liberar testes">🔓</button> ' +
+            '<button class="btn btn-danger btn-sm" onclick="deleteItem(\'participants\',\'' + p.id + '\')" aria-label="Excluir" data-tooltip="Excluir">🗑️</button>' +
           '</td>' +
         '</tr>';
       }).join('');
