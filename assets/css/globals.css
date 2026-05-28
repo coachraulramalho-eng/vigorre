@@ -1,0 +1,579 @@
+/* ============================================
+   VIGORRE ONE™ — GLOBAL STYLES PREMIUM
+   Plataforma Internacional de Inteligência Humana
+   ============================================ */
+
+/* ============================================
+   VARIÁVEIS GLOBAIS — DESIGN SYSTEM
+   ============================================ */
+:root {
+  /* Cores Principais — Identidade Vigorre™ */
+  --brand-navy: #0A1628;
+  --brand-navy-dark: #020617;
+  --brand-blue: #1D4ED8;
+  --brand-blue-dark: #1E40AF;
+  --brand-purple: #7C3AED;
+  --brand-cyan: #06B6D4;
+  --brand-emerald: #10B981;
+  --brand-amber: #F59E0B;
+  --brand-rose: #F43F5E;
+  
+  /* Cores Neutras — Slate Premium */
+  --slate-50: #F8FAFC;
+  --slate-100: #F1F5F9;
+  --slate-200: #E2E8F0;
+  --slate-300: #CBD5E1;
+  --slate-400: #94A3B8;
+  --slate-500: #64748B;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1E293B;
+  --slate-900: #0F172A;
+  
+  /* Sombras Premium — Multinacional */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-glow: 0 0 40px rgba(29, 78, 216, 0.15);
+  
+  /* Glassmorphism — Efeito Premium */
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  
+  /* Gradientes Premium */
+  --gradient-primary: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-purple) 100%);
+  --gradient-secondary: linear-gradient(135deg, var(--brand-cyan) 0%, var(--brand-emerald) 100%);
+  --gradient-dark: linear-gradient(135deg, var(--brand-navy) 0%, var(--brand-navy-dark) 100%);
+  
+  /* Bordas */
+  --radius-sm: 0.375rem;
+  --radius: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+  
+  /* Transições Suaves */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Z-Index — Hierarquia */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+}
+
+/* ============================================
+   RESET & BASE
+   ============================================ */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--slate-50);
+  color: var(--slate-800);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ============================================
+   TIPOGRAFIA PREMIUM
+   ============================================ */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--slate-900);
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1rem; }
+
+p {
+  margin-bottom: 1rem;
+  color: var(--slate-600);
+}
+
+/* ============================================
+   UTILITÁRIOS GLOBAIS
+   ============================================ */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.container-sm {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.container-lg {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 3rem;
+}
+
+/* ============================================
+   GLASSMORPHISM PREMIUM
+   ============================================ */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.glass-dark {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================
+   CARDS PREMIUM — ESTILO STRIPE/SAP
+   ============================================ */
+.card-premium {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--slate-200);
+  transition: all var(--transition);
+}
+
+.card-premium:hover {
+  box-shadow: var(--shadow-xl);
+  transform: translateY(-2px);
+}
+
+.card-executive {
+  background: linear-gradient(135deg, white 0%, var(--slate-50) 100%);
+  border-radius: var(--radius-2xl);
+  padding: 2.5rem;
+  box-shadow: var(--shadow-xl), var(--shadow-glow);
+  border: 1px solid var(--slate-200);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-executive::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-primary);
+}
+
+/* ============================================
+   BOTÕES PREMIUM — SAAS ENTERPRISE
+   ============================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all var(--transition);
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary {
+  background: var(--gradient-primary);
+  color: white;
+  box-shadow: 0 4px 14px rgba(29, 78, 216, 0.4);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(29, 78, 216, 0.6);
+}
+
+.btn-secondary {
+  background: white;
+  color: var(--slate-700);
+  border: 1px solid var(--slate-300);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary:hover {
+  background: var(--slate-50);
+  border-color: var(--slate-400);
+}
+
+.btn-glow {
+  background: var(--gradient-primary);
+  color: white;
+  box-shadow: 0 0 20px rgba(29, 78, 216, 0.3);
+  animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(29, 78, 216, 0.3); }
+  50% { box-shadow: 0 0 30px rgba(29, 78, 216, 0.5); }
+}
+
+/* ============================================
+   INPUTS PREMIUM — FLOATING LABELS
+   ============================================ */
+.input-group {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.input-premium {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  border: 2px solid var(--slate-200);
+  border-radius: var(--radius-lg);
+  font-size: 1rem;
+  transition: all var(--transition);
+  background: white;
+}
+
+.input-premium:focus {
+  outline: none;
+  border-color: var(--brand-blue);
+  box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.1);
+}
+
+.floating-label {
+  position: absolute;
+  left: 1.25rem;
+  top: 1rem;
+  color: var(--slate-500);
+  font-size: 1rem;
+  pointer-events: none;
+  transition: all var(--transition);
+  background: white;
+  padding: 0 0.25rem;
+}
+
+.input-premium:focus + .floating-label,
+.input-premium:not(:placeholder-shown) + .floating-label {
+  top: -0.625rem;
+  left: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--brand-blue);
+  font-weight: 600;
+}
+
+/* ============================================
+   TABELAS ENTERPRISE — SAP/ORACLE STYLE
+   ============================================ */
+.table-enterprise {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: white;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.table-enterprise thead {
+  background: linear-gradient(135deg, var(--brand-navy) 0%, var(--brand-blue) 100%);
+  color: white;
+}
+
+.table-enterprise th {
+  padding: 1rem 1.5rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.table-enterprise td {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--slate-100);
+  transition: all var(--transition-fast);
+}
+
+.table-enterprise tbody tr:hover {
+  background: var(--slate-50);
+}
+
+/* ============================================
+   BADGES & STATUS — SOFISTICADOS
+   ============================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.875rem;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.badge-success {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--brand-emerald);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.badge-warning {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--brand-amber);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.badge-danger {
+  background: rgba(244, 63, 94, 0.1);
+  color: var(--brand-rose);
+  border: 1px solid rgba(244, 63, 94, 0.2);
+}
+
+.badge-info {
+  background: rgba(6, 182, 212, 0.1);
+  color: var(--brand-cyan);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+}
+
+/* ============================================
+   LOADING STATES — PREMIUM
+   ============================================ */
+.loading-skeleton {
+  background: linear-gradient(90deg, var(--slate-200) 25%, var(--slate-100) 50%, var(--slate-200) 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s ease-in-out infinite;
+  border-radius: var(--radius);
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.spinner-premium {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--slate-200);
+  border-top-color: var(--brand-blue);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   TOOLTIPS PREMIUM — GLASSMORPHISM
+   ============================================ */
+.tooltip-premium {
+  position: relative;
+}
+
+.tooltip-premium::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 0.625rem 1rem;
+  border-radius: var(--radius-lg);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--slate-800);
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--glass-border);
+  z-index: var(--z-tooltip);
+}
+
+.tooltip-premium:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ============================================
+   ANIMAÇÕES GLOBAIS
+   ============================================ */
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.slide-up {
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ============================================
+   RESPONSIVIDADE — MOBILE FIRST
+   ============================================ */
+@media (max-width: 1024px) {
+  .container-lg {
+    padding: 0 2rem;
+  }
+  
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.75rem; }
+  h3 { font-size: 1.5rem; }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
+  }
+  
+  .card-premium,
+  .card-executive {
+    padding: 1.5rem;
+  }
+  
+  .table-enterprise {
+    font-size: 0.875rem;
+  }
+  
+  .table-enterprise th,
+  .table-enterprise td {
+    padding: 0.75rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 { font-size: 1.75rem; }
+  h2 { font-size: 1.5rem; }
+  
+  .btn {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* ============================================
+   PRINT OPTIMIZATION — PADRÃO EDITORIAL
+   ============================================ */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+  
+  .card-premium,
+  .card-executive {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+    break-inside: avoid;
+  }
+}
+
+/* ============================================
+   ACESSIBILIDADE — WCAG 2.1 AA
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Foco visível para navegação por teclado */
+*:focus-visible {
+  outline: 2px solid var(--brand-blue);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   UTILITÁRIOS DE CORES
+   ============================================ */
+.text-brand { color: var(--brand-blue); }
+.text-brand-navy { color: var(--brand-navy); }
+.text-brand-purple { color: var(--brand-purple); }
+.text-brand-cyan { color: var(--brand-cyan); }
+.text-brand-emerald { color: var(--brand-emerald); }
+.text-brand-amber { color: var(--brand-amber); }
+.text-brand-rose { color: var(--brand-rose); }
+
+.bg-brand { background: var(--brand-blue); }
+.bg-brand-navy { background: var(--brand-navy); }
+.bg-brand-purple { background: var(--brand-purple); }
+.bg-gradient-primary { background: var(--gradient-primary); }
+.bg-gradient-secondary { background: var(--gradient-secondary); }
+
+/* ============================================
+   VIGORRE ONE™ — MARCA REGISTRADA
+   © 2024 Todos os direitos reservados
+   ============================================ */
