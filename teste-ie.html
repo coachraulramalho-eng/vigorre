@@ -14,12 +14,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   
-  <!-- ✅ FIREBASE SDK - CARREGAR ANTES DO CONFIG -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <!-- ✅ SUPABASE SDK - CARREGAR PRIMEIRO -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
-  <!-- ✅ SUA CONFIGURAÇÃO FIREBASE -->
-  <script src="firebase-config.js"></script>
+  <!-- ✅ SUA CONFIGURAÇÃO SUPABASE -->
+  <script src="supabase-config.js"></script>
   
   <style>
     /* ============================================
@@ -1197,19 +1196,23 @@
     });
 
     // ============================================
-    // CARREGAR SESSÃO COM FIREBASE + FALLBACK
+    // CARREGAR SESSÃO COM SUPABASE + FALLBACK
     // ============================================
     async function loadSession() {
       try {
-        // Tentar Firebase primeiro
-        if (window.firebaseDB?.db) {
+        // Tentar Supabase primeiro
+        if (window.VigorreDB && VigorreDB.supabase) {
           const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
           if (currentUser?.id) {
-            const doc = await firebaseDB.db.collection('participants').doc(currentUser.id).get();
-            if (doc.exists) {
-              const data = doc.data();
+            const { data, error } = await VigorreDB.supabase
+              .from('participants')
+              .select('*')
+              .eq('id', currentUser.id)
+              .maybeSingle();
+            
+            if (data && !error) {
               AppState.session = { id: data.id, name: data.name, email: data.email, role: 'participant' };
-              AppState.participant = { id: doc.id, ...data };
+              AppState.participant = data;
               return true;
             }
           }
@@ -1293,7 +1296,7 @@
     }
 
     // ============================================
-    // FINALIZAR TESTE E SALVAR NO FIREBASE
+    // FINALIZAR TESTE E SALVAR NO SUPABASE
     // ============================================
     async function finishTest() {
       console.log('🔄 Finalizando teste de Inteligência Emocional...');
@@ -1332,16 +1335,16 @@
         dominant: Object.entries(percentages).sort((a, b) => b[1] - a[1])[0][0]
       };
       
-      // Salvar no Firebase com fallback
-      await saveResultsFirebase(results);
+      // Salvar no Supabase com fallback
+      await saveResultsSupabase(results);
       
       // Mostrar loading e resultados
       document.getElementById('loadingOverlay').classList.remove('hidden');
       setTimeout(() => { showResults(results); }, 1500);
     }
 
-    // ✅ FUNÇÃO FIREBASE CORRIGIDA
-    async function saveResultsFirebase(results) {
+    // ✅ FUNÇÃO SUPABASE CORRIGIDA
+    async function saveResultsSupabase(results) {
       if (!AppState.participant) {
         // Fallback localStorage
         saveResultsLocalStorage(results);
@@ -1349,48 +1352,55 @@
       }
       
       try {
-        // Preparar dados para Firebase
+        // Preparar dados para Supabase
         const resultData = {
-          participantId: AppState.participant.id,
-          testType: 'IE',
+          id: VigorreDB?.generateId?.() || Date.now().toString(),
+          participant_id: AppState.participant.id,
+          test_type: 'IE',
           scores: results.dimensions,
           percentages: results.percentages,
           dominant: results.dominant,
-          avgQE: results.avgQE,
-          completedAt: new Date().toISOString(),
-          createdAt: new Date().toISOString()
+          avg_qe: results.avgQE,
+          completed_at: new Date().toISOString(),
+          created_at: new Date().toISOString()
         };
         
-        // ✅ Verificação robusta do Firebase
-        if (window.firebaseDB && firebaseDB.db) {
-          console.log('💾 Salvando no Firebase...');
+        // ✅ Verificação robusta do Supabase
+        if (window.VigorreDB && VigorreDB.supabase) {
+          console.log('💾 Salvando no Supabase...');
           
-          // Salvar resultados
-          await firebaseDB.db.collection('test_results').add(resultData);
+          // Salvar resultados usando função utilitária
+          await VigorreDB.saveToSupabase(
+            'test_results',
+            resultData,
+            'vigorre_test_results'
+          );
           
           // Atualizar participante com teste concluído
-          const participantRef = firebaseDB.db.collection('participants').doc(AppState.participant.id);
-          const participantDoc = await participantRef.get();
+          const { data: participantData, error: pError } = await VigorreDB.supabase
+            .from('participants')
+            .select('completed_tests')
+            .eq('id', AppState.participant.id)
+            .maybeSingle();
           
-          if (participantDoc.exists) {
-            const currentData = participantDoc.data();
-            const completedTests = currentData.completedTests || [];
-            
+          if (!pError && participantData) {
+            const completedTests = participantData.completed_tests || [];
             if (!completedTests.includes('IE')) {
-              await participantRef.update({
-                completedTests: [...completedTests, 'IE']
-              });
+              await VigorreDB.supabase
+                .from('participants')
+                .update({ completed_tests: [...completedTests, 'IE'] })
+                .eq('id', AppState.participant.id);
             }
           }
           
-          console.log('✅ Resultados salvos no Firebase!');
+          console.log('✅ Resultados salvos no Supabase!');
         }
         
         // Sempre salvar no localStorage como backup
         saveResultsLocalStorage(results);
         
       } catch (e) {
-        console.warn('⚠️ Firebase falhou, usando localStorage:', e);
+        console.warn('⚠️ Supabase falhou, usando localStorage:', e);
         saveResultsLocalStorage(results);
       }
     }
@@ -1602,9 +1612,9 @@
     // Debug inicial
     console.log('🔍 Teste IE - Estado:', {
       session: AppState.session?.name || 'não carregado',
-      firebase: {
-        available: typeof window.firebaseDB !== 'undefined',
-        db: window.firebaseDB?.db ? 'conectado' : 'não conectado'
+      supabase: {
+        available: typeof window.VigorreDB !== 'undefined',
+        connected: VigorreDB?.supabase ? 'conectado' : 'não conectado'
       }
     });
   </script>
