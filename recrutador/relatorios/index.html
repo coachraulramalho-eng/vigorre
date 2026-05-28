@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Vigorre One™ - Relatórios do Recrutador">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Relatórios | Vigorre One™ • Área do Recrutador</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <!-- ✅ GLOBAL STYLES -->
+  <link rel="stylesheet" href="../../assets/css/globals.css">
+  
+  <!-- ✅ SUPABASE -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../../supabase-config.js"></script>
+  
+  <!-- ✅ RECRUITER GUARD -->
+  <script src="../../middleware/recruiter-guard.js"></script>
+  
+  <style>
+    /* ============================================
+       ESTILOS ESPECÍFICOS - RELATÓRIOS
+       ============================================ */
+    body {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--slate-50) 0%, #ffffff 100%);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: var(--brand-navy);
+      color: white;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .sidebar-logo {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 2rem;
+      padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1);
+      cursor: pointer; text-decoration: none; color: white;
+    }
+
+    .sidebar-logo .logo-badge {
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, var(--brand-cyan), var(--brand-emerald));
+      border-radius: 12px; display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 1.25rem;
+    }
+
+    .sidebar-logo .logo-text h2 { font-size: 1.125rem; font-weight: 700; margin: 0; }
+    .sidebar-logo .logo-text span { font-size: 0.75rem; opacity: 0.7; text-transform: uppercase; }
+
+    .nav-menu { list-style: none; padding: 0; flex: 1; }
+    .nav-menu li { margin-bottom: 0.375rem; }
+    .nav-menu a {
+      display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+      color: rgba(255,255,255,0.7); text-decoration: none; border-radius: 12px;
+      transition: all var(--transition); font-weight: 500;
+    }
+    .nav-menu a:hover, .nav-menu a.active { background: rgba(255,255,255,0.1); color: white; }
+    .nav-menu a.active { border-left: 3px solid var(--brand-cyan); }
+    .nav-menu a.danger { color: #fca5a5; margin-top: auto; }
+    
+    .recruiter-info {
+      padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 12px;
+      border-top: 1px solid rgba(255,255,255,0.1); margin-top: auto; font-size: 0.875rem;
+    }
+    .recruiter-info p:first-child { font-weight: 600; margin-bottom: 0.25rem; }
+    .recruiter-info p:last-child { opacity: 0.7; font-size: 0.75rem; }
+
+    /* Main */
+    .main { padding: 2rem; overflow-y: auto; }
+    
+    .header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 2rem; background: white; padding: 1.25rem 1.75rem;
+      border-radius: 16px; box-shadow: var(--shadow); border: 1px solid var(--slate-200);
+    }
+    
+    .header h1 { font-size: 1.5rem; color: var(--brand-blue-dark); font-weight: 700; }
+
+    /* Filters */
+    .filters-bar {
+      display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;
+    }
+
+    .search-input {
+      flex: 1; min-width: 250px; position: relative;
+    }
+
+    .search-input input {
+      width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem;
+      border: 2px solid var(--slate-200); border-radius: 10px; font-size: 0.9375rem;
+    }
+
+    .search-input input:focus {
+      outline: none; border-color: var(--brand-blue); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+    }
+
+    .search-input .icon {
+      position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%);
+      color: var(--slate-400);
+    }
+
+    .filter-select {
+      padding: 0.75rem 1rem; border: 2px solid var(--slate-200);
+      border-radius: 10px; font-size: 0.9375rem; min-width: 180px;
+    }
+
+    .filter-select:focus { outline: none; border-color: var(--brand-blue); }
+
+    /* Table */
+    .table-card {
+      background: white; border-radius: 16px; border: 1px solid var(--slate-200);
+      box-shadow: var(--shadow-sm); overflow: hidden;
+    }
+    .table-card table { width: 100%; border-collapse: collapse; }
+    .table-card th {
+      background: var(--slate-50); padding: 1rem 1.25rem; text-align: left;
+      font-size: 0.75rem; text-transform: uppercase; color: var(--slate-500);
+      font-weight: 600; letter-spacing: 0.05em;
+    }
+    .table-card td {
+      padding: 1rem 1.25rem; border-bottom: 1px solid var(--slate-100);
+      font-size: 0.875rem; color: var(--slate-700);
+    }
+    .table-card tr:last-child td { border-bottom: none; }
+    .table-card tr:hover { background: var(--slate-50); }
+
+    /* Badges */
+    .badge-test {
+      display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px;
+      border-radius: 100px; font-size: 0.75rem; font-weight: 600;
+    }
+    .badge-test.disc { background: #fee2e2; color: #b91c1c; }
+    .badge-test.ie { background: #dbeafe; color: #1d4ed8; }
+    .badge-test.valores { background: #fef3c7; color: #b45309; }
+
+    .badge-status {
+      display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px;
+      border-radius: 100px; font-size: 0.75rem; font-weight: 600;
+    }
+    .badge-status.completed { background: #dcfce7; color: #166534; }
+    .badge-status.pending { background: #fef3c7; color: #92400e; }
+    .badge-status.reviewing { background: #e0f2fe; color: #0369a1; }
+
+    /* Actions */
+    .actions-cell { display: flex; gap: 0.5rem; }
+    .btn-action {
+      padding: 6px 12px; border-radius: 8px; font-size: 0.8125rem;
+      font-weight: 600; cursor: pointer; transition: all var(--transition);
+      border: none; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-action.view { background: #eff6ff; color: #2563eb; }
+    .btn-action.download { background: #dcfce7; color: #15803d; }
+    .btn-action:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.85); display: flex;
+      align-items: center; justify-content: center; z-index: 1000;
+    }
+    .modal-content {
+      background: white; border-radius: 20px; padding: 2rem;
+      max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto;
+    }
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--slate-100);
+    }
+    .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--slate-400); }
+
+    .report-preview {
+      background: var(--slate-50); padding: 1.5rem; border-radius: 12px;
+      margin-top: 1.5rem; border: 1px solid var(--slate-200);
+    }
+    .report-preview h4 { color: var(--brand-blue-dark); margin-bottom: 0.5rem; }
+    .report-preview p { color: var(--slate-600); font-size: 0.9375rem; line-height: 1.6; }
+
+    /* Empty State */
+    .empty-state { text-align: center; padding: 3rem; color: var(--slate-500); }
+    .empty-state-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
+
+    /* Responsivo */
+    @media (max-width: 1024px) { body { grid-template-columns: 1fr; } .sidebar { display: none; } }
+    @media (max-width: 768px) {
+      .header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .filters-bar { flex-direction: column; }
+      .search-input, .filter-select { width: 100%; }
+      .table-card { overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <a href="../dashboard.html" class="sidebar-logo">
+      <div class="logo-badge">V</div>
+      <div class="logo-text">
+        <h2>Vigorre One™</h2>
+        <span>Recrutador</span>
+      </div>
+    </a>
+    
+    <ul class="nav-menu">
+      <li><a href="../dashboard.html">📊 Dashboard</a></li>
+      <li><a href="../empresas/">🏢 Empresas</a></li>
+      <li><a href="../participantes/">👥 Participantes</a></li>
+      <li><a href="../creditos/">💳 Créditos</a></li>
+      <li><a href="index.html" class="active">📄 Relatórios</a></li>
+      <li><a href="../../login.html" class="danger">🚪 Sair</a></li>
+    </ul>
+    
+    <div class="recruiter-info">
+      <p id="sidebarName">Carregando...</p>
+      <p>Recrutador Vigorre™</p>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <header class="header">
+      <div>
+        <h1>📄 Relatórios Disponíveis</h1>
+        <p style="color: var(--slate-500); font-size: 0.875rem;">Visualize e gerencie os relatórios dos seus participantes</p>
+      </div>
+      <button onclick="refreshReports()" class="btn btn-primary" style="padding: 0.75rem 1.5rem; border-radius: 10px;">
+        🔄 Atualizar
+      </button>
+    </header>
+
+    <!-- Filters -->
+    <div class="filters-bar">
+      <div class="search-input">
+        <span class="icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Buscar por participante ou empresa..." oninput="filterReports()">
+      </div>
+      <select class="filter-select" id="testTypeFilter" onchange="filterReports()">
+        <option value="">Todos os testes</option>
+        <option value="DISC">📊 DISC</option>
+        <option value="IE">🧠 IE</option>
+        <option value="Valores">💎 Valores</option>
+      </select>
+      <select class="filter-select" id="statusFilter" onchange="filterReports()">
+        <option value="">Todos os status</option>
+        <option value="completed">Concluídos</option>
+        <option value="reviewing">Em Análise</option>
+      </select>
+    </div>
+
+    <!-- Table -->
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Participante</th>
+            <th>Empresa</th>
+            <th>Teste</th>
+            <th>Data de Conclusão</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="reportsTableBody">
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 3rem; color: var(--slate-500);">
+              Carregando...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Modal de Visualização -->
+  <div id="viewModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">📄 Visualizar Relatório</h3>
+        <button class="modal-close" onclick="closeViewModal()">&times;</button>
+      </div>
+      
+      <div class="report-preview">
+        <h4 id="reportParticipant">--</h4>
+        <p id="reportTestType">--</p>
+        <p id="reportDate">--</p>
+        <hr style="margin: 1rem 0; border-color: var(--slate-200);">
+        <div id="reportContent">
+          <p>Conteúdo do relatório será carregado aqui...</p>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem;">
+        <button onclick="closeViewModal()" class="btn btn-secondary" style="padding: 0.75rem 1.5rem; border-radius: 10px;">Fechar</button>
+        <button onclick="downloadReport()" class="btn btn-primary" style="padding: 0.75rem 1.5rem; border-radius: 10px;">📥 Baixar PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    'use strict';
+    
+    let reports = [];
+    let filteredReports = [];
+    
+    // ============================================
+    // INICIALIZAÇÃO
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🔹 Relatórios do Recrutador - Iniciando...');
+      
+      const isAuthorized = initRecruiterGuard(true);
+      if (!isAuthorized) return;
+      
+      const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+      document.getElementById('sidebarName').textContent = currentUser.name || 'Recrutador';
+      
+      loadReports();
+    });
+    
+    // ============================================
+    // CARREGAR RELATÓRIOS
+    // ============================================
+    async function loadReports() {
+      try {
+        // Simulação de dados (em produção: buscar do Supabase)
+        reports = [
+          { id: '1', participantId: 'p1', participantName: 'Ana Silva', companyName: 'TechCorp', testType: 'DISC', date: '2024-05-20', status: 'completed', summary: 'Perfil D predominante. Excelente para cargos de liderança e gestão de crises.' },
+          { id: '2', participantId: 'p2', participantName: 'Carlos Souza', companyName: 'InovaLab', testType: 'IE', date: '2024-05-18', status: 'completed', summary: 'Inteligência Emocional alta. Excelente empatia e autocontrole.' },
+          { id: '3', participantId: 'p3', participantName: 'Mariana Costa', companyName: 'TechCorp', testType: 'Valores', date: '2024-05-15', status: 'reviewing', summary: 'Valores alinhados com a cultura organizacional. Aguardando análise final.' },
+          { id: '4', participantId: 'p4', participantName: 'Pedro Lima', companyName: 'StartupX', testType: 'DISC', date: '2024-05-10', status: 'completed', summary: 'Perfil S predominante. Ideal para equipes de suporte e operação.' },
+          { id: '5', participantId: 'p5', participantName: 'Julia Santos', companyName: 'InovaLab', testType: 'IE', date: '2024-05-05', status: 'completed', summary: 'Pontuação média em IE. Recomenda-se treinamento focado em autocontrole.' }
+        ];
+        
+        filteredReports = reports;
+        renderTable();
+        
+      } catch (e) {
+        console.error('❌ Erro ao carregar relatórios:', e);
+        showToast('Erro ao carregar relatórios', 'error');
+      }
+    }
+    
+    // ============================================
+    // RENDERIZAR TABELA
+    // ============================================
+    function renderTable() {
+      const tbody = document.getElementById('reportsTableBody');
+      
+      if (filteredReports.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6">
+              <div class="empty-state">
+                <div class="empty-state-icon">📄</div>
+                <h3 style="color: var(--slate-700); margin-bottom: 0.5rem;">Nenhum relatório encontrado</h3>
+                <p>Ainda não há relatórios disponíveis para os participantes.</p>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+      
+      tbody.innerHTML = filteredReports.map(function(report) {
+        const testBadgeClass = report.testType.toLowerCase() === 'disc' ? 'disc' : 
+                               report.testType.toLowerCase() === 'ie' ? 'ie' : 'valores';
+        
+        const statusBadge = report.status === 'completed' 
+          ? '<span class="badge-status completed">✅ Concluído</span>'
+          : '<span class="badge-status reviewing">🔄 Em Análise</span>';
+        
+        return `
+          <tr>
+            <td style="font-weight: 600;">${report.participantName}</td>
+            <td>${report.companyName}</td>
+            <td><span class="badge-test ${testBadgeClass}">${report.testType}</span></td>
+            <td>${report.date}</td>
+            <td>${statusBadge}</td>
+            <td>
+              <div class="actions-cell">
+                <button class="btn-action view" onclick="viewReport('${report.id}')" data-tooltip="Visualizar">👁️</button>
+                <button class="btn-action download" onclick="downloadReportById('${report.id}')" data-tooltip="Baixar PDF">📥</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+    
+    // ============================================
+    // FILTRAR RELATÓRIOS
+    // ============================================
+    function filterReports() {
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const testType = document.getElementById('testTypeFilter').value;
+      const status = document.getElementById('statusFilter').value;
+      
+      filteredReports = reports.filter(function(report) {
+        const matchesSearch = report.participantName.toLowerCase().includes(search) ||
+                              report.companyName.toLowerCase().includes(search);
+        const matchesTest = !testType || report.testType === testType;
+        const matchesStatus = !status || report.status === status;
+        return matchesSearch && matchesTest && matchesStatus;
+      });
+      
+      renderTable();
+    }
+    
+    // ============================================
+    // VISUALIZAR RELATÓRIO
+    // ============================================
+    function viewReport(id) {
+      const report = reports.find(r => r.id === id);
+      if (!report) return;
+      
+      document.getElementById('modalTitle').textContent = `📄 Relatório: ${report.participantName}`;
+      document.getElementById('reportParticipant').textContent = `Participante: ${report.participantName}`;
+      document.getElementById('reportTestType').textContent = `Teste: ${report.testType}`;
+      document.getElementById('reportDate').textContent = `Data: ${report.date}`;
+      document.getElementById('reportContent').innerHTML = `<p>${report.summary}</p>`;
+      
+      document.getElementById('viewModal').style.display = 'flex';
+    }
+    
+    function closeViewModal() {
+      document.getElementById('viewModal').style.display = 'none';
+    }
+    
+    function downloadReport() {
+      alert('Download do relatório em PDF iniciado!');
+    }
+    
+    function downloadReportById(id) {
+      alert(`Download do relatório ${id} iniciado!`);
+    }
+    
+    function refreshReports() {
+      loadReports();
+      showToast('Relatórios atualizados!', 'success');
+    }
+    
+    // Fechar modais ao clicar fora
+    document.getElementById('viewModal').addEventListener('click', function(e) {
+      if (e.target === this) closeViewModal();
+    });
+    
+    // Toast
+    function showToast(message, type) {
+      const existing = document.getElementById('toast');
+      if (existing) existing.remove();
+      
+      const toast = document.createElement('div');
+      toast.id = 'toast';
+      toast.style.cssText = `
+        position: fixed; top: 24px; right: 24px; background: white; padding: 14px 24px;
+        border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        display: flex; align-items: center; gap: 12px; font-weight: 600; z-index: 10001;
+        border-left: 4px solid ${type === 'error' ? 'var(--brand-rose)' : 'var(--brand-emerald)'};
+        animation: slideIn 0.3s ease;
+      `;
+      toast.innerHTML = `<span style="font-size: 1.25rem;">${type === 'success' ? '✅' : '❌'}</span><span>${message}</span>`;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.opacity = '0'; toast.style.transform = 'translateX(120%)';
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+    
+    const style = document.createElement('style');
+    style.textContent = `@keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }`;
+    document.head.appendChild(style);
+    
+    console.log('🔍 Relatórios Recrutador - Estado:', {
+      recruiterScope: window.recruiterScope,
+      reports: reports.length
+    });
+  </script>
+</body>
+</html>
