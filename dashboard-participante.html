@@ -14,6 +14,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   
+  <!-- ✅ GLOBAL STYLES PREMIUM -->
+  <link rel="stylesheet" href="assets/css/globals.css">
+  
   <!-- ✅ SUPABASE SDK - CARREGAR PRIMEIRO -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
@@ -21,44 +24,20 @@
   <script src="supabase-config.js"></script>
   
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    :root {
-      --primary-dark: #0F172A;
-      --primary-blue: #1D4ED8;
-      --primary-purple: #7C3AED;
-      --accent-cyan: #06B6D4;
-      --success: #10B981;
-      --warning: #F59E0B;
-      --gray-50: #F8FAFC;
-      --gray-100: #F1F5F9;
-      --gray-200: #E2E8F0;
-      --gray-300: #CBD5E1;
-      --gray-600: #475569;
-      --gray-700: #334155;
-      --gray-800: #1E293B;
-      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    }
-
+    /* ============================================
+       ESTILOS ESPECÍFICOS DO DASHBOARD PARTICIPANTE
+       ============================================ */
     body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #f0f9ff 0%, #f8fafc 100%);
-      color: var(--gray-800);
+      background: linear-gradient(135deg, var(--slate-50) 0%, #ffffff 100%);
+      color: var(--slate-800);
       min-height: 100vh;
     }
 
     /* Header Premium */
     .header {
-      background: var(--primary-dark);
+      background: var(--brand-navy);
       color: white;
-      padding: 1.25rem 0;
+      padding: 1rem 0;
       box-shadow: var(--shadow-lg);
       position: sticky;
       top: 0;
@@ -81,15 +60,17 @@
     }
 
     .logo {
-      width: 40px;
-      height: 40px;
-      background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
-      border-radius: 10px;
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 800;
       font-size: 1.25rem;
+      color: white;
+      box-shadow: 0 4px 14px rgba(29, 78, 216, 0.4);
     }
 
     .brand-text h1 {
@@ -100,28 +81,28 @@
 
     .brand-text span {
       font-size: 0.75rem;
-      opacity: 0.8;
+      opacity: 0.85;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
 
     .logout-btn {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
       color: white;
       padding: 0.625rem 1.25rem;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
       font-weight: 600;
       font-size: 0.875rem;
-      transition: all 0.3s;
+      transition: all var(--transition);
       display: flex;
       align-items: center;
       gap: 0.5rem;
     }
 
     .logout-btn:hover {
-      background: rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.25);
       transform: translateY(-1px);
     }
 
@@ -132,14 +113,20 @@
       padding: 2rem;
     }
 
-    /* Card de Perfil */
+    /* Card de Perfil - Glassmorphism */
     .profile-card {
       background: white;
-      border-radius: 16px;
+      border-radius: 20px;
       padding: 2rem;
       margin-bottom: 2rem;
       box-shadow: var(--shadow);
-      border: 1px solid var(--gray-200);
+      border: 1px solid var(--slate-200);
+      transition: box-shadow var(--transition), transform var(--transition);
+    }
+
+    .profile-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
     }
 
     .profile-header {
@@ -148,13 +135,13 @@
       gap: 1.5rem;
       margin-bottom: 1.5rem;
       padding-bottom: 1.5rem;
-      border-bottom: 2px solid var(--gray-100);
+      border-bottom: 2px solid var(--slate-100);
     }
 
     .profile-avatar {
       width: 80px;
       height: 80px;
-      background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+      background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -163,6 +150,7 @@
       font-size: 2rem;
       font-weight: 700;
       flex-shrink: 0;
+      box-shadow: 0 8px 25px rgba(29, 78, 216, 0.3);
     }
 
     .profile-info {
@@ -172,7 +160,7 @@
     .profile-info h2 {
       font-size: 1.5rem;
       font-weight: 700;
-      color: var(--gray-800);
+      color: var(--slate-800);
       margin-bottom: 0.5rem;
     }
 
@@ -186,7 +174,7 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      color: var(--gray-600);
+      color: var(--slate-600);
       font-size: 0.875rem;
     }
 
@@ -208,12 +196,12 @@
       align-items: center;
       gap: 0.5rem;
       padding: 0.375rem 0.875rem;
-      background: var(--gray-100);
+      background: var(--slate-50);
       border-radius: 100px;
       font-size: 0.875rem;
       font-weight: 500;
-      color: var(--gray-700);
-      border: 1px solid var(--gray-200);
+      color: var(--slate-700);
+      border: 1px solid var(--slate-200);
     }
 
     .tag svg {
@@ -225,7 +213,7 @@
     .section-title {
       font-size: 1.25rem;
       font-weight: 700;
-      color: var(--gray-800);
+      color: var(--slate-800);
       margin-bottom: 1.5rem;
       display: flex;
       align-items: center;
@@ -235,7 +223,7 @@
     .section-title svg {
       width: 24px;
       height: 24px;
-      color: var(--primary-blue);
+      color: var(--brand-blue);
     }
 
     .tests-grid {
@@ -246,12 +234,13 @@
 
     .test-card {
       background: white;
-      border-radius: 16px;
+      border-radius: 20px;
       padding: 2rem;
-      border: 2px solid var(--gray-200);
-      transition: all 0.3s;
+      border: 1px solid var(--slate-200);
+      transition: all var(--transition);
       position: relative;
       overflow: hidden;
+      box-shadow: var(--shadow);
     }
 
     .test-card::before {
@@ -261,14 +250,14 @@
       left: 0;
       right: 0;
       height: 4px;
-      background: linear-gradient(90deg, var(--primary-blue), var(--primary-purple));
+      background: linear-gradient(90deg, var(--brand-blue), var(--brand-purple));
       opacity: 0;
-      transition: opacity 0.3s;
+      transition: opacity var(--transition);
     }
 
     .test-card:hover {
-      border-color: var(--primary-blue);
-      box-shadow: var(--shadow-xl);
+      border-color: var(--brand-blue);
+      box-shadow: var(--shadow-lg);
       transform: translateY(-2px);
     }
 
@@ -279,24 +268,26 @@
     .test-icon {
       width: 64px;
       height: 64px;
-      background: linear-gradient(135deg, #60A5FA, #A78BFA);
+      background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
       border-radius: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
       margin-bottom: 1.25rem;
       font-size: 2rem;
+      color: white;
+      box-shadow: 0 4px 14px rgba(29, 78, 216, 0.3);
     }
 
     .test-card h3 {
       font-size: 1.25rem;
       font-weight: 700;
-      color: var(--gray-800);
+      color: var(--slate-800);
       margin-bottom: 0.75rem;
     }
 
     .test-description {
-      color: var(--gray-600);
+      color: var(--slate-600);
       font-size: 0.875rem;
       line-height: 1.6;
       margin-bottom: 1.5rem;
@@ -307,13 +298,25 @@
       align-items: center;
       gap: 0.5rem;
       padding: 0.5rem 1rem;
-      background: linear-gradient(135deg, #FEF3C7, #FDE68A);
-      color: #92400E;
+      background: var(--slate-100);
+      color: var(--slate-700);
       border-radius: 100px;
       font-size: 0.875rem;
       font-weight: 600;
       margin-bottom: 1.25rem;
-      border: 1px solid #FCD34D;
+      border: 1px solid var(--slate-200);
+    }
+
+    .status-badge.pending {
+      background: #fffbeb;
+      color: #92400e;
+      border-color: #fde68a;
+    }
+
+    .status-badge.completed {
+      background: #dcfce7;
+      color: #166534;
+      border-color: #bbf7d0;
     }
 
     .status-badge svg {
@@ -324,24 +327,39 @@
     .btn-start {
       width: 100%;
       padding: 1rem;
-      background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+      background: linear-gradient(135deg, var(--brand-blue), var(--brand-blue-dark));
       color: white;
       border: none;
       border-radius: 12px;
       font-weight: 700;
       font-size: 1rem;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all var(--transition);
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 0.75rem;
-      box-shadow: 0 4px 14px rgba(29, 78, 216, 0.3);
+      box-shadow: 0 4px 14px rgba(29, 78, 216, 0.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-start::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn-start:hover::before {
+      left: 100%;
     }
 
     .btn-start:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(29, 78, 216, 0.4);
+      box-shadow: 0 8px 25px rgba(29, 78, 216, 0.45);
     }
 
     .btn-start svg {
@@ -350,10 +368,11 @@
     }
 
     .btn-start:disabled {
-      opacity: 0.6;
+      opacity: 0.7;
       cursor: not-allowed;
       transform: none;
       box-shadow: none;
+      background: var(--slate-300);
     }
 
     /* Loading State */
@@ -362,14 +381,14 @@
       align-items: center;
       justify-content: center;
       padding: 3rem;
-      color: var(--gray-600);
+      color: var(--slate-600);
     }
 
     .loading-spinner {
       width: 24px;
       height: 24px;
-      border: 3px solid var(--gray-200);
-      border-top-color: var(--primary-blue);
+      border: 3px solid var(--slate-200);
+      border-top-color: var(--brand-blue);
       border-radius: 50%;
       animation: spin 1s linear infinite;
       margin-right: 12px;
@@ -383,10 +402,11 @@
     .empty-state {
       text-align: center;
       padding: 3rem 2rem;
-      color: var(--gray-600);
-      background: var(--gray-50);
+      color: var(--slate-600);
+      background: var(--slate-50);
       border-radius: 16px;
-      border: 2px dashed var(--gray-200);
+      border: 2px dashed var(--slate-200);
+      grid-column: 1 / -1;
     }
 
     .empty-state-icon {
@@ -395,7 +415,62 @@
       opacity: 0.5;
     }
 
-    /* Responsivo */
+    /* ============================================
+       TOOLTIPS PREMIUM - GLASSMORPHISM
+       ============================================ */
+    [data-tooltip] {
+      position: relative;
+    }
+    
+    [data-tooltip]:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%) translateY(8px);
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 0.625rem 1rem;
+      border-radius: var(--radius-lg);
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--slate-800);
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--transition);
+      box-shadow: var(--shadow-xl);
+      border: 1px solid var(--glass-border);
+      z-index: var(--z-tooltip, 1070);
+      pointer-events: none;
+    }
+    
+    [data-tooltip]:hover::before {
+      content: '';
+      position: absolute;
+      bottom: 115%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: var(--glass-bg);
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--transition);
+      z-index: var(--z-tooltip, 1070);
+      pointer-events: none;
+    }
+    
+    [data-tooltip]:hover::after,
+    [data-tooltip]:hover::before {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ============================================
+       RESPONSIVO
+       ============================================ */
     @media (max-width: 768px) {
       .header-content {
         padding: 0 1rem;
@@ -423,7 +498,19 @@
       }
     }
 
-    /* Animações */
+    /* ============================================
+       ANIMAÇÕES DE ENTRADA
+       ============================================ */
+    @media (prefers-reduced-motion: no-preference) {
+      .test-card {
+        animation: fadeIn 0.5s ease-out both;
+      }
+      
+      .test-card:nth-child(1) { animation-delay: 0.1s; }
+      .test-card:nth-child(2) { animation-delay: 0.2s; }
+      .test-card:nth-child(3) { animation-delay: 0.3s; }
+    }
+    
     @keyframes fadeIn {
       from {
         opacity: 0;
@@ -435,13 +522,14 @@
       }
     }
 
-    .test-card {
-      animation: fadeIn 0.5s ease-out;
+    /* ============================================
+       ACESSIBILIDADE
+       ============================================ */
+    .btn-start:focus-visible,
+    .logout-btn:focus-visible {
+      outline: 2px solid var(--brand-blue);
+      outline-offset: 2px;
     }
-
-    .test-card:nth-child(1) { animation-delay: 0.1s; }
-    .test-card:nth-child(2) { animation-delay: 0.2s; }
-    .test-card:nth-child(3) { animation-delay: 0.3s; }
   </style>
 </head>
 <body>
@@ -456,7 +544,7 @@
           <span>Minha Área</span>
         </div>
       </div>
-      <button class="logout-btn" onclick="logout()">
+      <button class="logout-btn" onclick="logout()" data-tooltip="Sair da sua conta">
         <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
         </svg>
@@ -671,21 +759,21 @@
           name: 'Teste DISC', 
           description: 'Análise de perfil comportamental baseada na metodologia DISC de William Marston', 
           icon: '📊',
-          color: 'linear-gradient(135deg, #60A5FA, #A78BFA)'
+          color: 'linear-gradient(135deg, var(--brand-blue), var(--brand-purple))'
         },
         { 
           id: 'IE', 
           name: 'Inteligência Emocional', 
           description: 'Avaliação de competências emocionais e relacionais para alta performance', 
           icon: '🧠',
-          color: 'linear-gradient(135deg, #34D399, #10B981)'
+          color: 'linear-gradient(135deg, var(--brand-cyan), var(--brand-emerald))'
         },
         { 
           id: 'Valores', 
           name: 'Valores Pessoais', 
           description: 'Mapeamento de valores e motivadores profissionais para fit cultural', 
           icon: '💎',
-          color: 'linear-gradient(135deg, #FBBF24, #F59E0B)'
+          color: 'linear-gradient(135deg, var(--brand-amber), var(--brand-rose))'
         }
       ];
       
@@ -700,9 +788,9 @@
       // Se não houver testes atribuídos
       if (!assignedTests || assignedTests.length === 0) {
         grid.innerHTML = `
-          <div class="empty-state" style="grid-column: 1 / -1;">
+          <div class="empty-state">
             <div class="empty-state-icon">📭</div>
-            <h3 style="color: var(--gray-700); margin-bottom: 0.5rem;">Nenhum teste liberado ainda</h3>
+            <h3 style="color: var(--slate-700); margin-bottom: 0.5rem;">Nenhum teste liberado ainda</h3>
             <p>Entre em contato com o administrador da Vigorre One™ para liberar seus testes comportamentais.</p>
           </div>
         `;
@@ -730,8 +818,9 @@
               </div>
               <button class="btn-start" 
                       onclick="${isCompleted ? `viewReport('${test.id}')` : `startTest('${test.id}')`}" 
-                      ${isCompleted ? 'style="background: linear-gradient(135deg, var(--gray-600), var(--gray-700))"' : ''}
-                      ${isCompleted ? 'disabled' : ''}>
+                      ${isCompleted ? 'style="background: linear-gradient(135deg, var(--slate-600), var(--slate-700))"' : ''}
+                      ${isCompleted ? 'disabled' : ''}
+                      data-tooltip="${isCompleted ? 'Visualizar relatório do teste concluído' : 'Clique para iniciar o teste'}">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${isCompleted ? 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' : 'M13 10V3L4 14h7v7l9-11h-7z'}"/>
                 </svg>
@@ -834,17 +923,18 @@
         background: white;
         padding: 14px 24px;
         border-radius: 12px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        box-shadow: var(--shadow-xl);
         display: flex;
         align-items: center;
         gap: 12px;
         font-weight: 600;
-        color: var(--gray-800);
+        color: var(--slate-800);
         z-index: 10001;
-        border-left: 4px solid ${type === 'error' ? '#F43F5E' : type === 'warning' ? '#F59E0B' : '#10B981'};
+        border-left: 4px solid ${type === 'error' ? 'var(--brand-rose)' : type === 'warning' ? 'var(--brand-amber)' : 'var(--brand-emerald)'};
         animation: slideIn 0.3s ease;
         max-width: 400px;
         font-size: 0.875rem;
+        border: 1px solid var(--slate-200);
       `;
       
       toast.innerHTML = `
