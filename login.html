@@ -23,11 +23,11 @@
   <!-- ✅ GLOBAL STYLES PREMIUM (DESIGN SYSTEM) -->
   <link rel="stylesheet" href="assets/css/globals.css">
   
-  <!-- ✅ ESTILOS ESPECÍFICOS DO LOGIN (apenas o que não está no globals.css) -->
+  <!-- ✅ ESTILOS ESPECÍFICOS DO LOGIN (CORRIGIDO) -->
   <style>
     /* ============================================
        LOGIN - ESTILOS ESPECÍFICOS
-       (Complementa o globals.css)
+       (Complementa o globals.css) - CORRIGIDO
        ============================================ */
     
     body.login-page { 
@@ -114,11 +114,10 @@
       text-transform: uppercase;
     }
     
-    /* ✅ SELETOR COM 3 BOTÕES */
+    /* ✅ SELETOR COM 3 BOTÕES - CORRIGIDO */
     .env-selector { 
-      display: grid; 
-      grid-template-columns: repeat(3, 1fr); 
-      gap: 12px; 
+      display: flex; /* Mudado de grid para flex */
+      gap: 8px; /* Reduzido gap */
       margin-bottom: 2rem; 
       background: var(--slate-50);
       padding: 6px;
@@ -127,10 +126,11 @@
     }
     
     .env-btn { 
-      padding: 14px 12px; 
+      flex: 1; /* Espaço igual para cada botão */
+      padding: 14px 8px; /* Padding ajustado */
       border: 2px solid transparent;
       border-radius: var(--radius); 
-      background: transparent; 
+      background: white; /* Fundo branco para contraste */
       cursor: pointer; 
       font-weight: 600; 
       font-size: 0.8125rem; 
@@ -139,16 +139,19 @@
       flex-direction: column; 
       align-items: center; 
       gap: 6px;
-      color: var(--slate-500);
+      color: var(--slate-600); /* Cor mais escura */
     }
     
-    .env-btn span { font-size: 1.25rem; }
+    .env-btn span { 
+      font-size: 1.375rem; 
+      line-height: 1;
+    }
     
     .env-btn.active { 
       border-color: var(--brand-blue); 
-      background: linear-gradient(135deg, var(--slate-100), var(--slate-50)); 
-      color: var(--brand-blue-dark); 
-      box-shadow: var(--shadow);
+      background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple)); 
+      color: white; 
+      box-shadow: 0 4px 14px rgba(29, 78, 216, 0.3);
       font-weight: 700;
     }
     
@@ -267,12 +270,12 @@
       border: 0;
     }
     
-    /* Responsivo */
+    /* Responsivo - CORRIGIDO */
     @media (max-width: 480px) {
       .login-container { padding: 2rem 1.5rem; margin: 10px; }
       .logo-area h1 { font-size: 1.5rem; }
-      .env-selector { grid-template-columns: 1fr; gap: 8px; }
-      .env-btn { padding: 12px 10px; font-size: 0.8125rem; }
+      .env-selector { flex-direction: column; gap: 6px; } /* Empilha no mobile */
+      .env-btn { padding: 12px; font-size: 0.875rem; }
       .env-btn span { font-size: 1.25rem; }
       .form-group input { padding: 13px 14px; font-size: 0.9375rem; }
       .btn-login { padding: 15px 20px; font-size: 0.9375rem; }
