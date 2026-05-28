@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Vigorre One™ - Gestão de Empresas do Recrutador">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Empresas | Vigorre One™ • Área do Recrutador</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <!-- ✅ GLOBAL STYLES -->
+  <link rel="stylesheet" href="../../assets/css/globals.css">
+  
+  <!-- ✅ SUPABASE -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../../supabase-config.js"></script>
+  
+  <!-- ✅ RECRUITER GUARD -->
+  <script src="../../middleware/recruiter-guard.js"></script>
+  
+  <style>
+    /* ============================================
+       ESTILOS ESPECÍFICOS - EMPRESAS RECRUTADOR
+       ============================================ */
+    body {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--slate-50) 0%, #ffffff 100%);
+    }
+
+    /* Sidebar (mesma do dashboard) */
+    .sidebar {
+      background: var(--brand-navy);
+      color: white;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      cursor: pointer;
+      text-decoration: none;
+      color: white;
+    }
+
+    .sidebar-logo .logo-badge {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--brand-cyan), var(--brand-emerald));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.25rem;
+    }
+
+    .sidebar-logo .logo-text h2 {
+      font-size: 1.125rem;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .sidebar-logo .logo-text span {
+      font-size: 0.75rem;
+      opacity: 0.7;
+      text-transform: uppercase;
+    }
+
+    .nav-menu {
+      list-style: none;
+      padding: 0;
+      flex: 1;
+    }
+
+    .nav-menu li { margin-bottom: 0.375rem; }
+
+    .nav-menu a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      border-radius: 12px;
+      transition: all var(--transition);
+      font-weight: 500;
+    }
+
+    .nav-menu a:hover,
+    .nav-menu a.active {
+      background: rgba(255,255,255,0.1);
+      color: white;
+    }
+
+    .nav-menu a.active {
+      border-left: 3px solid var(--brand-cyan);
+    }
+
+    .nav-menu a.danger {
+      color: #fca5a5;
+      margin-top: auto;
+    }
+
+    .recruiter-info {
+      padding-top: 1.25rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 1rem;
+      font-size: 0.875rem;
+    }
+
+    .recruiter-info p:first-child {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    /* Main */
+    .main {
+      padding: 2rem;
+      overflow-y: auto;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      background: white;
+      padding: 1.25rem 1.75rem;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--slate-200);
+    }
+
+    .header h1 {
+      font-size: 1.5rem;
+      color: var(--brand-blue-dark);
+      font-weight: 700;
+    }
+
+    /* Search e Filtros */
+    .filters-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 250px;
+      position: relative;
+    }
+
+    .search-input input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.5rem;
+      border: 2px solid var(--slate-200);
+      border-radius: 10px;
+      font-size: 0.9375rem;
+      transition: all var(--transition);
+    }
+
+    .search-input input:focus {
+      outline: none;
+      border-color: var(--brand-blue);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+    }
+
+    .search-input .icon {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--slate-400);
+    }
+
+    .filter-select {
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--slate-200);
+      border-radius: 10px;
+      font-size: 0.9375rem;
+      min-width: 180px;
+    }
+
+    .filter-select:focus {
+      outline: none;
+      border-color: var(--brand-blue);
+    }
+
+    /* Tabela */
+    .table-card {
+      background: white;
+      border-radius: 16px;
+      border: 1px solid var(--slate-200);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .table-card table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table-card th {
+      background: var(--slate-50);
+      padding: 1rem 1.25rem;
+      text-align: left;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--slate-500);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    .table-card td {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--slate-100);
+      font-size: 0.875rem;
+      color: var(--slate-700);
+    }
+
+    .table-card tr:last-child td { border-bottom: none; }
+    .table-card tr:hover { background: var(--slate-50); }
+
+    /* Ações */
+    .actions-cell {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-action {
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition);
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-action.view {
+      background: #eff6ff;
+      color: #2563eb;
+    }
+
+    .btn-action.edit {
+      background: #fffbeb;
+      color: #d97706;
+    }
+
+    .btn-action.delete {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .btn-action:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Badge */
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-status.active {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge-status.inactive {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--slate-500);
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      max-width: 600px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--slate-100);
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--slate-400);
+    }
+
+    /* Form */
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--slate-700);
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--slate-200);
+      border-radius: 10px;
+      font-size: 0.9375rem;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--brand-blue);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    /* Responsivo */
+    @media (max-width: 1024px) {
+      body { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .main { margin-left: 0; }
+    }
+
+    @media (max-width: 768px) {
+      .header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .filters-bar { flex-direction: column; }
+      .search-input, .filter-select { width: 100%; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <a href="../dashboard.html" class="sidebar-logo">
+      <div class="logo-badge">V</div>
+      <div class="logo-text">
+        <h2>Vigorre One™</h2>
+        <span>Recrutador</span>
+      </div>
+    </a>
+    
+    <ul class="nav-menu">
+      <li><a href="../dashboard.html">📊 Dashboard</a></li>
+      <li><a href="index.html" class="active">🏢 Empresas</a></li>
+      <li><a href="../participantes/">👥 Participantes</a></li>
+      <li><a href="../creditos/">💳 Créditos</a></li>
+      <li><a href="../relatorios/">📄 Relatórios</a></li>
+      <li><a href="../../login.html" class="danger">🚪 Sair</a></li>
+    </ul>
+    
+    <div class="recruiter-info">
+      <p id="sidebarName">Carregando...</p>
+      <p>Recrutador Vigorre™</p>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <header class="header">
+      <div>
+        <h1>🏢 Minhas Empresas</h1>
+        <p style="color: var(--slate-500); font-size: 0.875rem;">Gerencie as empresas vinculadas à sua conta</p>
+      </div>
+      <button onclick="openCreateModal()" class="btn btn-primary" style="padding: 0.75rem 1.5rem; border-radius: 10px;">
+        ➕ Nova Empresa
+      </button>
+    </header>
+
+    <!-- Filtros -->
+    <div class="filters-bar">
+      <div class="search-input">
+        <span class="icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Buscar empresa..." oninput="filterCompanies()">
+      </div>
+      <select class="filter-select" id="statusFilter" onchange="filterCompanies()">
+        <option value="">Todos os status</option>
+        <option value="active">Ativas</option>
+        <option value="inactive">Inativas</option>
+      </select>
+    </div>
+
+    <!-- Tabela -->
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Empresa</th>
+            <th>CNPJ</th>
+            <th>Responsável</th>
+            <th>Participantes</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="companiesTableBody">
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 3rem; color: var(--slate-500);">
+              Carregando...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Modal de Criação/Edição -->
+  <div id="companyModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">Nova Empresa</h3>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      
+      <form id="companyForm" onsubmit="saveCompany(event)">
+        <input type="hidden" id="companyId">
+        
+        <div class="form-group">
+          <label for="companyName">Nome da Empresa *</label>
+          <input type="text" id="companyName" required placeholder="Razão Social ou Nome Fantasia">
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="companyCnpj">CNPJ</label>
+            <input type="text" id="companyCnpj" placeholder="00.000.000/0000-00">
+          </div>
+          <div class="form-group">
+            <label for="companyResp">Responsável</label>
+            <input type="text" id="companyResp" placeholder="Nome do responsável">
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="companyEmail">Email</label>
+            <input type="email" id="companyEmail" placeholder="contato@empresa.com">
+          </div>
+          <div class="form-group">
+            <label for="companyPhone">Telefone</label>
+            <input type="tel" id="companyPhone" placeholder="(00) 00000-0000">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="companyNotes">Observações</label>
+          <textarea id="companyNotes" rows="3" placeholder="Informações adicionais..."></textarea>
+        </div>
+        
+        <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem;">
+          <button type="button" onclick="closeModal()" class="btn btn-secondary" style="padding: 0.75rem 1.5rem; border-radius: 10px;">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.5rem; border-radius: 10px;">
+            💾 Salvar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    'use strict';
+    
+    let companies = [];
+    let filteredCompanies = [];
+    
+    // ============================================
+    // INICIALIZAÇÃO
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🔹 Empresas do Recrutador - Iniciando...');
+      
+      // Inicializar segurança
+      const isAuthorized = initRecruiterGuard(true);
+      if (!isAuthorized) return;
+      
+      // Carregar nome na sidebar
+      const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+      document.getElementById('sidebarName').textContent = currentUser.name || 'Recrutador';
+      
+      // Carregar empresas
+      loadCompanies();
+    });
+    
+    // ============================================
+    // CARREGAR EMPRESAS
+    // ============================================
+    async function loadCompanies() {
+      try {
+        // Tentar Supabase primeiro
+        if (window.VigorreDB && VigorreDB.supabase && window.recruiterScope?.companyIds?.length > 0) {
+          try {
+            const { data, error } = await VigorreDB.supabase
+              .from('companies')
+              .select('*')
+              .in('id', window.recruiterScope.companyIds);
+            
+            if (data && !error) {
+              companies = data;
+              filteredCompanies = data;
+              renderTable();
+              return;
+            }
+          } catch (e) {
+            console.warn('⚠️ Erro Supabase, usando localStorage:', e);
+          }
+        }
+        
+        // Fallback localStorage
+        const allCompanies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+        companies = filterByRecruiterScope(allCompanies, 'id');
+        filteredCompanies = companies;
+        renderTable();
+        
+      } catch (e) {
+        console.error('❌ Erro ao carregar empresas:', e);
+        showToast('Erro ao carregar dados', 'error');
+      }
+    }
+    
+    // ============================================
+    // RENDERIZAR TABELA
+    // ============================================
+    function renderTable() {
+      const tbody = document.getElementById('companiesTableBody');
+      
+      if (filteredCompanies.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6">
+              <div class="empty-state">
+                <div class="empty-state-icon">🏢</div>
+                <h3 style="color: var(--slate-700); margin-bottom: 0.5rem;">Nenhuma empresa encontrada</h3>
+                <p>Cadastre uma nova empresa para começar.</p>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+      
+      // Contar participantes por empresa (simulado)
+      const allParticipants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+      
+      tbody.innerHTML = filteredCompanies.map(function(company) {
+        const participantCount = allParticipants.filter(p => p.compId === company.id).length;
+        const status = company.status || 'active';
+        const statusBadge = status === 'active' 
+          ? '<span class="badge-status active">✅ Ativa</span>'
+          : '<span class="badge-status inactive">⏸️ Inativa</span>';
+        
+        return `
+          <tr>
+            <td style="font-weight: 600;">${company.name || 'Sem nome'}</td>
+            <td><code style="background: var(--slate-100); padding: 4px 8px; border-radius: 6px; font-size: 0.8125rem;">${company.cnpj || '-'}</code></td>
+            <td>${company.resp || '-'}</td>
+            <td style="text-align: center;">
+              <span style="background: var(--slate-100); padding: 4px 10px; border-radius: 8px;">${participantCount}</span>
+            </td>
+            <td>${statusBadge}</td>
+            <td>
+              <div class="actions-cell">
+                <button class="btn-action view" onclick="viewCompany('${company.id}')" data-tooltip="Ver detalhes">👁️</button>
+                <button class="btn-action edit" onclick="editCompany('${company.id}')" data-tooltip="Editar">✏️</button>
+                <button class="btn-action delete" onclick="deleteCompany('${company.id}')" data-tooltip="Excluir">🗑️</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+    
+    // ============================================
+    // FILTRAR EMPRESAS
+    // ============================================
+    function filterCompanies() {
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const status = document.getElementById('statusFilter').value;
+      
+      filteredCompanies = companies.filter(function(company) {
+        const matchesSearch = (company.name || '').toLowerCase().includes(search) ||
+                              (company.cnpj || '').includes(search);
+        const matchesStatus = !status || (company.status || 'active') === status;
+        return matchesSearch && matchesStatus;
+      });
+      
+      renderTable();
+    }
+    
+    // ============================================
+    // MODAL
+    // ============================================
+    function openCreateModal() {
+      document.getElementById('modalTitle').textContent = 'Nova Empresa';
+      document.getElementById('companyForm').reset();
+      document.getElementById('companyId').value = '';
+      document.getElementById('companyModal').style.display = 'flex';
+    }
+    
+    function closeModal() {
+      document.getElementById('companyModal').style.display = 'none';
+    }
+    
+    // ============================================
+    // SALVAR EMPRESA
+    // ============================================
+    async function saveCompany(e) {
+      e.preventDefault();
+      
+      const id = document.getElementById('companyId').value;
+      const companyData = {
+        id: id || Date.now().toString(),
+        name: document.getElementById('companyName').value,
+        cnpj: document.getElementById('companyCnpj').value,
+        resp: document.getElementById('companyResp').value,
+        email: document.getElementById('companyEmail').value,
+        phone: document.getElementById('companyPhone').value,
+        notes: document.getElementById('companyNotes').value,
+        status: 'active',
+        created_at: new Date().toISOString()
+      };
+      
+      try {
+        // Tentar Supabase
+        if (window.VigorreDB && VigorreDB.supabase) {
+          const { error } = await VigorreDB.supabase
+            .from('companies')
+            .upsert(companyData);
+          
+          if (!error) {
+            showToast('Empresa salva com sucesso!', 'success');
+            closeModal();
+            loadCompanies();
+            return;
+          }
+        }
+        
+        // Fallback localStorage
+        const allCompanies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+        const idx = allCompanies.findIndex(c => c.id === companyData.id);
+        
+        if (idx > -1) {
+          allCompanies[idx] = { ...allCompanies[idx], ...companyData };
+        } else {
+          allCompanies.push(companyData);
+        }
+        
+        localStorage.setItem('vigorre_companies', JSON.stringify(allCompanies));
+        showToast('Empresa salva com sucesso!', 'success');
+        closeModal();
+        loadCompanies();
+        
+      } catch (e) {
+        console.error('❌ Erro ao salvar empresa:', e);
+        showToast('Erro ao salvar empresa', 'error');
+      }
+    }
+    
+    // ============================================
+    // EDITAR EMPRESA
+    // ============================================
+    function editCompany(id) {
+      const company = companies.find(c => c.id === id);
+      if (!company) return;
+      
+      document.getElementById('modalTitle').textContent = 'Editar Empresa';
+      document.getElementById('companyId').value = company.id;
+      document.getElementById('companyName').value = company.name || '';
+      document.getElementById('companyCnpj').value = company.cnpj || '';
+      document.getElementById('companyResp').value = company.resp || '';
+      document.getElementById('companyEmail').value = company.email || '';
+      document.getElementById('companyPhone').value = company.phone || '';
+      document.getElementById('companyNotes').value = company.notes || '';
+      
+      document.getElementById('companyModal').style.display = 'flex';
+    }
+    
+    // ============================================
+    // DELETAR EMPRESA
+    // ============================================
+    async function deleteCompany(id) {
+      if (!confirm('Tem certeza que deseja excluir esta empresa? Esta ação não pode ser desfeita.')) return;
+      
+      try {
+        // Tentar Supabase
+        if (window.VigorreDB && VigorreDB.supabase) {
+          await VigorreDB.supabase.from('companies').delete().eq('id', id);
+        }
+        
+        // Fallback localStorage
+        const allCompanies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+        const filtered = allCompanies.filter(c => c.id !== id);
+        localStorage.setItem('vigorre_companies', JSON.stringify(filtered));
+        
+        showToast('Empresa excluída com sucesso!', 'success');
+        loadCompanies();
+        
+      } catch (e) {
+        console.error('❌ Erro ao excluir empresa:', e);
+        showToast('Erro ao excluir empresa', 'error');
+      }
+    }
+    
+    // ============================================
+    // VER DETALHES
+    // ============================================
+    function viewCompany(id) {
+      // Em produção: redirecionar para página de detalhes
+      // Por enquanto: alert de demonstração
+      const company = companies.find(c => c.id === id);
+      if (company) {
+        alert(`Empresa: ${company.name}\nCNPJ: ${company.cnpj || '-'}\nResponsável: ${company.resp || '-'}`);
+      }
+    }
+    
+    // ============================================
+    // TOAST
+    // ============================================
+    function showToast(message, type) {
+      const existing = document.getElementById('toast');
+      if (existing) existing.remove();
+      
+      const toast = document.createElement('div');
+      toast.id = 'toast';
+      toast.style.cssText = `
+        position: fixed;
+        top: 24px;
+        right: 24px;
+        background: white;
+        padding: 14px 24px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 600;
+        z-index: 10001;
+        border-left: 4px solid ${type === 'error' ? 'var(--brand-rose)' : 'var(--brand-emerald)'};
+        animation: slideIn 0.3s ease;
+      `;
+      toast.innerHTML = `<span style="font-size: 1.25rem;">${type === 'success' ? '✅' : '❌'}</span><span>${message}</span>`;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(120%)';
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+    
+    // Animação toast
+    const style = document.createElement('style');
+    style.textContent = `@keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }`;
+    document.head.appendChild(style);
+    
+    // Fechar modal ao clicar fora
+    document.getElementById('companyModal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+    
+    // ============================================
+    // DEBUG
+    // ============================================
+    console.log('🔍 Empresas Recrutador - Estado:', {
+      recruiterScope: window.recruiterScope,
+      companies: companies.length
+    });
+  </script>
+</body>
+</html>
