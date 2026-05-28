@@ -14,13 +14,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   
-  <!-- ✅ FIREBASE SDK - CARREGAR ANTES DO CONFIG -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <!-- ✅ SUPABASE SDK - CARREGAR PRIMEIRO -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
-  <!-- ✅ SUA CONFIGURAÇÃO FIREBASE -->
-  <script src="firebase-config.js"></script>
+  <!-- ✅ SUA CONFIGURAÇÃO SUPABASE -->
+  <script src="supabase-config.js"></script>
   
   <style>
     /* ============================================
@@ -847,7 +845,7 @@
   </main>
 
   <!-- ============================================
-       SCRIPTS - SEGURANÇA E FUNCIONALIDADE COM FIREBASE
+       SCRIPTS - SEGURANÇA E FUNCIONALIDADE COM SUPABASE
        ============================================ -->
   <script>
     'use strict';
@@ -1040,7 +1038,7 @@
     }
 
     // ============================================
-    // FUNÇÃO PRINCIPAL: Processar login COM FIREBASE
+    // FUNÇÃO PRINCIPAL: Processar login COM SUPABASE
     // ============================================
     async function handleLogin(e) {
       e.preventDefault(); // Impede recarregamento da página
@@ -1099,68 +1097,75 @@
         }
 
         // ========================================
-        // 2. LOGIN COM FIREBASE AUTH
+        // 2. LOGIN COM SUPABASE (ONLINE)
         // ========================================
-        // Verificar se Firebase está disponível
-        if (typeof firebase !== 'undefined' && firebase.auth) {
+        // Verificar se VigorreDB está disponível
+        if (window.VigorreDB && VigorreDB.supabase) {
           
-          // Tentar autenticação com Firebase
-          const userCredential = await firebase.auth()
-            .signInWithEmailAndPassword(input, pass)
-            .catch(function(error) {
-              // Se falhar no Firebase, tenta fallback no localStorage
-              throw error;
-            });
+          // Tentar buscar participante no Supabase
+          const { data: participant, error } = await VigorreDB.supabase
+            .from('participants')
+            .select('*')
+            .eq('email', input)
+            .maybeSingle();
           
-          // Login Firebase bem-sucedido
-          const user = userCredential.user;
-          
-          // Buscar dados adicionais do usuário no Firestore
-          let userData = {
-            id: user.uid,
-            name: user.displayName || input.split('@')[0],
-            email: user.email,
-            role: currentEnv === 'admin' ? 'admin' : 'participant',
-            type: currentEnv,
-            loginAt: new Date().toISOString()
-          };
-          
-          // Tentar buscar dados completos do Firestore
-          if (window.firebaseDB && firebaseDB.db) {
-            try {
-              const doc = await firebaseDB.db.collection('users').doc(user.uid).get();
-              if (doc.exists) {
-                userData = { ...userData, ...doc.data() };
-              }
-            } catch (e) {
-              console.log('ℹ️ Dados adicionais não encontrados, usando padrão');
-            }
+          if (error) {
+            console.warn('⚠️ Erro ao buscar do Supabase:', error);
+            // Continua para fallback no localStorage
           }
           
-          // Armazenar sessão
-          localStorage.setItem('vigorre_current_user', JSON.stringify(userData));
-          sessionStorage.setItem('vigorre_session_active', 'true');
-          
-          showAlert('✅ Bem-vindo, ' + userData.name.split(' ')[0] + '!', 'success');
-          
-          // Redirecionar conforme papel
-          const redirectMap = {
-            'admin': 'admin.html',
-            'staff': 'admin.html',
-            'participant': 'dashboard-participante.html'
-          };
-          
-          setTimeout(function() {
-            window.location.href = (redirectMap[userData.role] || 'admin.html') + '?t=' + Date.now();
-          }, 1200);
-          
-          return;
+          if (participant && participant.password === pass) {
+            // Login Supabase bem-sucedido
+            const userData = {
+              id: participant.id,
+              name: participant.name,
+              email: participant.email,
+              role: participant.role || (currentEnv === 'admin' ? 'admin' : 'participant'),
+              type: currentEnv,
+              companyId: participant.company_id,
+              jobs: participant.jobs,
+              loginAt: new Date().toISOString()
+            };
+            
+            // Salvar sessão no Supabase
+            await VigorreDB.saveToSupabase(
+              'sessions',
+              {
+                id: VigorreDB.generateId(),
+                participant_id: participant.id,
+                token: VigorreDB.generateId(),
+                created_at: new Date().toISOString(),
+                expires_at: new Date(Date.now() + 24*60*60*1000).toISOString()
+              },
+              'vigorre_sessions'
+            );
+            
+            // Armazenar sessão local
+            localStorage.setItem('vigorre_current_user', JSON.stringify(userData));
+            sessionStorage.setItem('vigorre_session_active', 'true');
+            sessionStorage.setItem('vigorre_session_token', userData.token);
+            
+            showAlert('✅ Bem-vindo, ' + userData.name.split(' ')[0] + '!', 'success');
+            
+            // Redirecionar conforme papel
+            const redirectMap = {
+              'admin': 'admin.html',
+              'staff': 'admin.html',
+              'participant': 'dashboard-participante.html'
+            };
+            
+            setTimeout(function() {
+              window.location.href = (redirectMap[userData.role] || 'admin.html') + '?t=' + Date.now();
+            }, 1200);
+            
+            return;
+          }
         }
         
         // ========================================
-        // 3. FALLBACK: LOGIN LOCAL (SEM FIREBASE)
+        // 3. FALLBACK: LOGIN LOCAL (SEM SUPABASE)
         // ========================================
-        // Se Firebase não estiver disponível, usa localStorage como fallback
+        // Se Supabase não estiver disponível ou usuário não encontrado, usa localStorage
         
         // Login Staff Vigorre (banco local)
         if (currentEnv === 'admin') {
@@ -1237,17 +1242,15 @@
         showAlert('❌ Credenciais inválidas. Verifique usuário, senha e ambiente selecionado.', 'error');
         
       } catch (error) {
-        // Tratamento de erro do Firebase ou fallback
+        // Tratamento de erro do Supabase ou fallback
         console.error('❌ Erro no login:', error);
         
         let errorMsg = '❌ Erro ao conectar. Verifique sua internet.';
         
-        if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-          errorMsg = '❌ Usuário ou senha incorretos.';
-        } else if (error.code === 'auth/too-many-requests') {
-          errorMsg = '⚠️ Muitas tentativas. Aguarde alguns minutos.';
-        } else if (error.code === 'auth/network-request-failed') {
+        if (error.message && error.message.includes('network')) {
           errorMsg = '❌ Sem conexão. Verifique sua internet.';
+        } else if (error.message && error.message.includes('timeout')) {
+          errorMsg = '⚠️ Tempo de conexão esgotado. Tente novamente.';
         }
         
         showAlert(errorMsg, 'error');
