@@ -1,783 +1,281 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Vigorre One™ - Área do Recrutador • People Analytics Enterprise">
-  <meta name="robots" content="noindex, nofollow">
-  <title>Dashboard Recrutador | Vigorre One™ • People Analytics Enterprise</title>
+/* ============================================
+   VIGORRE ONE™ — RECRUITER AUTH GUARD
+   Proteção e Isolamento de Dados para Recrutadores
+   ============================================ */
+
+/**
+ * Verifica se o usuário é recrutador e possui permissão para acessar a área.
+ * @returns {boolean} - True se autorizado, false se redirecionado.
+ */
+function checkRecruiterAuth() {
+  try {
+    // 1. Obter dados da sessão
+    const storedUser = localStorage.getItem('vigorre_current_user');
+    const sessionActive = sessionStorage.getItem('vigorre_session_active');
+    
+    if (!storedUser || !sessionActive) {
+      console.warn('🔐 Acesso Negado: Sessão inexistente.');
+      redirectToRecruiterLogin();
+      return false;
+    }
+
+    // 2. Parsear dados do usuário
+    let currentUser;
+    try {
+      currentUser = JSON.parse(storedUser);
+    } catch (e) {
+      console.error('❌ Erro ao parsear dados do usuário:', e);
+      clearRecruiterSession();
+      window.location.href = 'login.html';
+      return false;
+    }
+
+    // 3. Verificar se é recrutador
+    if (currentUser.role !== 'recruiter') {
+      console.warn(`🚫 Acesso Negado: Usuário é '${currentUser.role}', necessário 'recruiter'.`);
+      // Redirecionar para dashboard apropriado
+      if (currentUser.role === 'admin' || currentUser.role === 'staff') {
+        window.location.href = 'admin.html';
+      } else if (currentUser.role === 'participant') {
+        window.location.href = 'dashboard-participante.html';
+      } else {
+        window.location.href = 'login.html';
+      }
+      return false;
+    }
+
+    // 4. Configurar escopo de dados do recrutador (ISOLAMENTO)
+    window.recruiterScope = {
+      id: currentUser.id,
+      companyIds: currentUser.companies || [],
+      participantIds: currentUser.participants || [],
+      credits: currentUser.credits || { DISC: 0, IE: 0, Valores: 0 },
+      permissions: currentUser.permissions || ['view_reports', 'manage_participants']
+    };
+
+    console.log('✅ Recrutador autorizado:', currentUser.name);
+    console.log('🔒 Escopo de dados:', window.recruiterScope);
+    return true;
+
+  } catch (error) {
+    console.error('❌ Erro crítico no RecruiterAuthGuard:', error);
+    clearRecruiterSession();
+    window.location.href = 'login.html?reason=error';
+    return false;
+  }
+}
+
+/**
+ * Filtra dados pelo escopo do recrutador (apenas empresas/participantes dele)
+ * @param {Array} data - Lista de itens para filtrar
+ * @param {string} field - Campo para comparar (ex: 'companyId', 'id')
+ * @returns {Array} - Dados filtrados
+ */
+function filterByRecruiterScope(data, field = 'companyId') {
+  if (!window.recruiterScope || !Array.isArray(data)) return [];
   
-  <!-- Fonts Premium -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  // Se recrutador tem empresas vinculadas, filtra por elas
+  if (window.recruiterScope.companyIds && window.recruiterScope.companyIds.length > 0) {
+    return data.filter(item => 
+      window.recruiterScope.companyIds.includes(item[field]) ||
+      window.recruiterScope.companyIds.includes(item.company_id) ||
+      window.recruiterScope.participantIds.includes(item.id)
+    );
+  }
   
-  <!-- Preconnect para performance -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  // Se não tem empresas vinculadas, retorna vazio (segurança)
+  return [];
+}
+
+/**
+ * Verifica se recrutador tem créditos suficientes para liberar teste
+ * @param {string} testType - Tipo do teste: 'DISC', 'IE' ou 'Valores'
+ * @returns {boolean} - True se tem créditos, false caso contrário
+ */
+function hasRecruiterCredits(testType) {
+  if (!window.recruiterScope || !window.recruiterScope.credits) return false;
   
-  <!-- ✅ GLOBAL STYLES PREMIUM -->
-  <link rel="stylesheet" href="../assets/css/globals.css">
+  const available = window.recruiterScope.credits[testType] || 0;
+  return available > 0;
+}
+
+/**
+ * Desconta crédito do recrutador ao liberar teste
+ * @param {string} testType - Tipo do teste liberado
+ * @returns {boolean} - True se sucesso, false se erro
+ */
+function consumeRecruiterCredit(testType) {
+  try {
+    if (!hasRecruiterCredits(testType)) {
+      console.warn('❌ Créditos insuficientes para:', testType);
+      return false;
+    }
+    
+    // Atualizar escopo local
+    window.recruiterScope.credits[testType] -= 1;
+    
+    // Atualizar localStorage para persistência
+    const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+    if (currentUser.credits) {
+      currentUser.credits[testType] = (currentUser.credits[testType] || 1) - 1;
+      localStorage.setItem('vigorre_current_user', JSON.stringify(currentUser));
+    }
+    
+    // Salvar no Supabase se disponível
+    if (window.VigorreDB && VigorreDB.supabase && currentUser.id) {
+      VigorreDB.supabase
+        .from('recruiters')
+        .update({ 
+          credits: currentUser.credits,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', currentUser.id);
+    }
+    
+    console.log(`✅ Crédito consumido: ${testType} (-1)`);
+    return true;
+    
+  } catch (e) {
+    console.error('❌ Erro ao consumir crédito:', e);
+    return false;
+  }
+}
+
+/**
+ * Redireciona para login com parâmetro de recrutador
+ */
+function redirectToRecruiterLogin() {
+  clearRecruiterSession();
+  window.location.href = 'login.html?role=recruiter&reason=auth_required';
+}
+
+/**
+ * Limpa sessão do recrutador
+ */
+function clearRecruiterSession() {
+  localStorage.removeItem('vigorre_current_user');
+  sessionStorage.removeItem('vigorre_session_active');
+  sessionStorage.removeItem('vigorre_session_token');
+  window.recruiterScope = null;
+  console.log('🧹 Sessão de recrutador limpa.');
+}
+
+/**
+ * Inicializa o Recruiter Guard na página
+ * @param {boolean} requireScope - Se deve exigir escopo de empresas definido
+ */
+function initRecruiterGuard(requireScope = true) {
+  // 1. Verificar autenticação
+  const isAuthorized = checkRecruiterAuth();
   
-  <!-- ✅ SUPABASE SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  if (!isAuthorized) return false;
   
-  <!-- ✅ CONFIGURAÇÃO SUPABASE -->
-  <script src="../supabase-config.js"></script>
-  
-  <!-- ✅ RECRUITER AUTH GUARD -->
-  <script src="../middleware/recruiter-guard.js"></script>
-  
-  <style>
-    /* ============================================
-       ESTILOS ESPECÍFICOS DO DASHBOARD RECRUTADOR
-       ============================================ */
-    body {
-      display: grid;
-      grid-template-columns: 260px 1fr;
-      min-height: 100vh;
-      background: linear-gradient(135deg, var(--slate-50) 0%, #ffffff 100%);
-    }
-
-    /* Sidebar Premium - Recrutador */
-    .sidebar {
-      background: var(--brand-navy);
-      color: white;
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      position: sticky;
-      top: 0;
-      box-shadow: var(--shadow-xl);
-      z-index: 100;
-      border-right: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .sidebar-logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 2rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      cursor: pointer;
-    }
-
-    .sidebar-logo .logo-badge {
-      width: 44px;
-      height: 44px;
-      background: linear-gradient(135deg, var(--brand-cyan), var(--brand-emerald));
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 1.25rem;
-      color: white;
-    }
-
-    .sidebar-logo .logo-text h2 {
-      font-size: 1.125rem;
-      font-weight: 700;
-      margin: 0;
-    }
-
-    .sidebar-logo .logo-text span {
-      font-size: 0.75rem;
-      opacity: 0.7;
-      text-transform: uppercase;
-    }
-
-    .nav-menu {
-      list-style: none;
-      padding: 0;
-      flex: 1;
-    }
-
-    .nav-menu li {
-      margin-bottom: 0.375rem;
-    }
-
-    .nav-menu a {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-      color: rgba(255,255,255,0.7);
-      text-decoration: none;
-      border-radius: 12px;
-      transition: all var(--transition);
-      font-weight: 500;
-      font-size: 0.9375rem;
-    }
-
-    .nav-menu a:hover,
-    .nav-menu a.active {
-      background: rgba(255,255,255,0.1);
-      color: white;
-    }
-
-    .nav-menu a.active {
-      border-left: 3px solid var(--brand-cyan);
-      font-weight: 600;
-    }
-
-    .nav-menu a.danger {
-      color: #fca5a5;
-      margin-top: auto;
-    }
-
-    .nav-menu a.danger:hover {
-      background: rgba(239, 68, 68, 0.15);
-    }
-
-    .recruiter-info {
-      padding-top: 1.25rem;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      font-size: 0.875rem;
-      background: rgba(255,255,255,0.05);
-      border-radius: 12px;
-      padding: 1rem;
-    }
-
-    .recruiter-info p:first-child {
-      font-weight: 600;
-      color: white;
-      margin-bottom: 0.25rem;
-    }
-
-    .recruiter-info p:last-child {
-      opacity: 0.7;
-      font-size: 0.75rem;
-    }
-
-    /* Main Content */
-    .main {
-      padding: 2rem;
-      overflow-y: auto;
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-      background: white;
-      padding: 1.25rem 1.75rem;
-      border-radius: 16px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--slate-200);
-      position: sticky;
-      top: 1rem;
-      z-index: 50;
-    }
-
-    .header h1 {
-      font-size: 1.5rem;
-      color: var(--brand-blue-dark);
-      font-weight: 700;
-    }
-
-    /* Cards de Créditos */
-    .credits-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-
-    .credit-card {
-      background: white;
-      border-radius: 16px;
-      padding: 1.5rem;
-      border: 1px solid var(--slate-200);
-      box-shadow: var(--shadow-sm);
-      text-align: center;
-      transition: all var(--transition);
-    }
-
-    .credit-card:hover {
-      border-color: var(--brand-cyan);
-      box-shadow: var(--shadow-md);
-    }
-
-    .credit-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 1rem;
-      font-size: 1.5rem;
-    }
-
-    .credit-icon.disc { background: #fef2f2; color: #dc2626; }
-    .credit-icon.ie { background: #eff6ff; color: #2563eb; }
-    .credit-icon.valores { background: #fffbeb; color: #d97706; }
-
-    .credit-value {
-      font-size: 2rem;
-      font-weight: 800;
-      color: var(--slate-800);
-      margin-bottom: 0.25rem;
-    }
-
-    .credit-label {
-      font-size: 0.875rem;
-      color: var(--slate-500);
-      font-weight: 500;
-    }
-
-    .credit-sublabel {
-      font-size: 0.75rem;
-      color: var(--slate-400);
-      margin-top: 0.25rem;
-    }
-
-    /* Cards de Resumo */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-
-    .stat-card {
-      background: white;
-      border-radius: 16px;
-      padding: 1.5rem;
-      border: 1px solid var(--slate-200);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .stat-card h4 {
-      font-size: 0.875rem;
-      color: var(--slate-500);
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .stat-card .value {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--slate-800);
-    }
-
-    .stat-card .trend {
-      font-size: 0.8125rem;
-      margin-top: 0.5rem;
-    }
-
-    .stat-card .trend.up { color: var(--brand-emerald); }
-    .stat-card .trend.down { color: var(--brand-rose); }
-
-    /* Ações Rápidas */
-    .quick-actions {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-
-    .action-btn {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 1rem 1.25rem;
-      background: white;
-      border: 2px solid var(--slate-200);
-      border-radius: 12px;
-      color: var(--slate-700);
-      font-weight: 600;
-      font-size: 0.9375rem;
-      cursor: pointer;
-      transition: all var(--transition);
-      text-decoration: none;
-    }
-
-    .action-btn:hover {
-      border-color: var(--brand-cyan);
-      background: var(--slate-50);
-      transform: translateY(-2px);
-    }
-
-    .action-btn svg {
-      width: 24px;
-      height: 24px;
-      color: var(--brand-cyan);
-    }
-
-    /* Tabela de Atividade Recente */
-    .recent-table {
-      background: white;
-      border-radius: 16px;
-      border: 1px solid var(--slate-200);
-      box-shadow: var(--shadow-sm);
-      overflow: hidden;
-    }
-
-    .recent-table table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .recent-table th {
-      background: var(--slate-50);
-      padding: 1rem 1.25rem;
-      text-align: left;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      color: var(--slate-500);
-      font-weight: 600;
-      letter-spacing: 0.05em;
-    }
-
-    .recent-table td {
-      padding: 1rem 1.25rem;
-      border-bottom: 1px solid var(--slate-100);
-      font-size: 0.875rem;
-      color: var(--slate-700);
-    }
-
-    .recent-table tr:last-child td {
-      border-bottom: none;
-    }
-
-    .recent-table tr:hover {
-      background: var(--slate-50);
-    }
-
-    /* Badges de Status */
-    .badge-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 4px 10px;
-      border-radius: 100px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-
-    .badge-status.completed {
-      background: #dcfce7;
-      color: #166534;
-    }
-
-    .badge-status.pending {
-      background: #fef3c7;
-      color: #92400e;
-    }
-
-    .badge-status.expired {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-
-    /* Responsivo */
-    @media (max-width: 1024px) {
-      body {
-        grid-template-columns: 1fr;
-      }
-      
-      .sidebar {
-        display: none; /* Em mobile, implementar menu hamburger depois */
-      }
-      
-      .main {
-        margin-left: 0;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-      }
-      
-      .credits-grid,
-      .stats-grid,
-      .quick-actions {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
-</head>
-<body>
-
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="sidebar-logo" onclick="window.location.href='dashboard.html'">
-      <div class="logo-badge">V</div>
-      <div class="logo-text">
-        <h2>Vigorre One™</h2>
-        <span>Recrutador</span>
-      </div>
-    </div>
-    
-    <ul class="nav-menu">
-      <li><a href="dashboard.html" class="active">📊 Dashboard</a></li>
-      <li><a href="empresas/">🏢 Empresas</a></li>
-      <li><a href="participantes/">👥 Participantes</a></li>
-      <li><a href="creditos/">💳 Créditos</a></li>
-      <li><a href="relatorios/">📄 Relatórios</a></li>
-      <li><a href="../login.html" class="danger">🚪 Sair</a></li>
-    </ul>
-    
-    <div class="recruiter-info">
-      <p id="recruiterName">Carregando...</p>
-      <p>Recrutador Vigorre™</p>
-    </div>
-  </aside>
-
-  <!-- Main Content -->
-  <main class="main">
-    <header class="header">
-      <div>
-        <h1>Dashboard do Recrutador</h1>
-        <p style="color: var(--slate-500); font-size: 0.875rem;">Gerencie seus participantes e testes</p>
-      </div>
-      <div style="display: flex; align-items: center; gap: 1rem;">
-        <span style="font-size: 0.875rem; color: var(--slate-500);">
-          Última sincronização: <strong id="lastSync">--:--</strong>
-        </span>
-      </div>
-    </header>
-
-    <!-- Cards de Créditos -->
-    <h2 style="font-size: 1.125rem; font-weight: 700; color: var(--slate-800); margin-bottom: 1rem;">
-      💳 Créditos Disponíveis
-    </h2>
-    <div class="credits-grid">
-      <div class="credit-card">
-        <div class="credit-icon disc">📊</div>
-        <div class="credit-value" id="creditsDisc">--</div>
-        <div class="credit-label">Testes DISC</div>
-        <div class="credit-sublabel">de 50 disponíveis</div>
-      </div>
-      <div class="credit-card">
-        <div class="credit-icon ie">🧠</div>
-        <div class="credit-value" id="creditsIE">--</div>
-        <div class="credit-label">Inteligência Emocional</div>
-        <div class="credit-sublabel">de 20 disponíveis</div>
-      </div>
-      <div class="credit-card">
-        <div class="credit-icon valores">💎</div>
-        <div class="credit-value" id="creditsValores">--</div>
-        <div class="credit-label">Valores Pessoais</div>
-        <div class="credit-sublabel">de 30 disponíveis</div>
-      </div>
-    </div>
-
-    <!-- Cards de Resumo -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <h4>Empresas Gerenciadas</h4>
-        <div class="value" id="statCompanies">0</div>
-        <div class="trend up">📈 Ativas</div>
-      </div>
-      <div class="stat-card">
-        <h4>Participantes Vinculados</h4>
-        <div class="value" id="statParticipants">0</div>
-        <div class="trend up">👥 Total</div>
-      </div>
-      <div class="stat-card">
-        <h4>Testes Concluídos</h4>
-        <div class="value" id="statCompleted">0</div>
-        <div class="trend up">✅ Esta semana</div>
-      </div>
-      <div class="stat-card">
-        <h4>Relatórios Gerados</h4>
-        <div class="value" id="statReports">0</div>
-        <div class="trend">📊 Disponíveis</div>
-      </div>
-    </div>
-
-    <!-- Ações Rápidas -->
-    <h2 style="font-size: 1.125rem; font-weight: 700; color: var(--slate-800); margin-bottom: 1rem;">
-      ⚡ Ações Rápidas
-    </h2>
-    <div class="quick-actions">
-      <a href="empresas/create.html" class="action-btn">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-        </svg>
-        Nova Empresa
-      </a>
-      <a href="participantes/create.html" class="action-btn">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
-        </svg>
-        Novo Participante
-      </a>
-      <a href="participantes/tests.html" class="action-btn">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
-        </svg>
-        Liberar Teste
-      </a>
-      <a href="relatorios/" class="action-btn">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-        </svg>
-        Ver Relatórios
-      </a>
-    </div>
-
-    <!-- Atividade Recente -->
-    <h2 style="font-size: 1.125rem; font-weight: 700; color: var(--slate-800); margin: 2rem 0 1rem;">
-      📋 Atividade Recente
-    </h2>
-    <div class="recent-table">
-      <table>
-        <thead>
-          <tr>
-            <th>Participante</th>
-            <th>Empresa</th>
-            <th>Teste</th>
-            <th>Status</th>
-            <th>Data</th>
-          </tr>
-        </thead>
-        <tbody id="recentActivityTable">
-          <tr>
-            <td colspan="5" style="text-align: center; padding: 2rem; color: var(--slate-500);">
-              Nenhuma atividade recente para exibir.
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </main>
-
-  <script>
-    'use strict';
-    
-    // ============================================
-    // INICIALIZAÇÃO
-    // ============================================
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('🔹 Dashboard Recrutador - Iniciando...');
-      
-      // 1. Inicializar segurança do recrutador
-      const isAuthorized = initRecruiterGuard(true);
-      if (!isAuthorized) return;
-      
-      // 2. Carregar dados do dashboard
-      loadRecruiterDashboard();
-      
-      // 3. Atualizar horário de sincronização
-      updateLastSync();
-      
-      // 4. Sincronizar créditos em tempo real (se Supabase disponível)
-      if (window.VigorreDB && VigorreDB.supabase && window.recruiterScope?.id) {
-        syncRecruiterData(window.recruiterScope.id).then(function(updatedCredits) {
-          if (Object.keys(updatedCredits).length > 0) {
-            renderCredits(updatedCredits);
-          }
-        });
-      }
-    });
-    
-    // ============================================
-    // CARREGAR DADOS DO DASHBOARD
-    // ============================================
-    async function loadRecruiterDashboard() {
-      try {
-        // Atualizar nome do recrutador
-        const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
-        document.getElementById('recruiterName').textContent = currentUser.name || 'Recrutador';
-        
-        // Carregar créditos do escopo
-        if (window.recruiterScope?.credits) {
-          renderCredits(window.recruiterScope.credits);
-        }
-        
-        // Carregar estatísticas (simulado - substituir por Supabase depois)
-        loadStats();
-        
-        // Carregar atividade recente
-        loadRecentActivity();
-        
-      } catch (e) {
-        console.error('❌ Erro ao carregar dashboard:', e);
-        showToast('Erro ao carregar dados', 'error');
-      }
-    }
-    
-    // ============================================
-    // RENDERIZAR CRÉDITOS
-    // ============================================
-    function renderCredits(credits) {
-      const discEl = document.getElementById('creditsDisc');
-      const ieEl = document.getElementById('creditsIE');
-      const valoresEl = document.getElementById('creditsValores');
-      
-      if (discEl) discEl.innerHTML = formatRecruiterCredits(credits.DISC || 0);
-      if (ieEl) ieEl.innerHTML = formatRecruiterCredits(credits.IE || 0);
-      if (valoresEl) valoresEl.innerHTML = formatRecruiterCredits(credits.Valores || 0);
-    }
-    
-    // ============================================
-    // CARREGAR ESTATÍSTICAS (SIMULADO)
-    // ============================================
-    function loadStats() {
-      // Em produção: buscar do Supabase
-      // Por enquanto: dados simulados para demonstração
-      
-      const companies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
-      const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-      
-      // Filtrar apenas empresas/participantes do recrutador (simulado)
-      const recruiterCompanies = filterByRecruiterScope(companies, 'id');
-      const recruiterParticipants = filterByRecruiterScope(participants, 'compId');
-      
-      document.getElementById('statCompanies').textContent = recruiterCompanies.length || Math.floor(Math.random() * 5) + 1;
-      document.getElementById('statParticipants').textContent = recruiterParticipants.length || Math.floor(Math.random() * 20) + 5;
-      document.getElementById('statCompleted').textContent = Math.floor(Math.random() * 15) + 3;
-      document.getElementById('statReports').textContent = Math.floor(Math.random() * 10) + 2;
-    }
-    
-    // ============================================
-    // CARREGAR ATIVIDADE RECENTE (SIMULADO)
-    // ============================================
-    function loadRecentActivity() {
-      const tbody = document.getElementById('recentActivityTable');
-      if (!tbody) return;
-      
-      // Dados simulados para demonstração
-      const activities = [
-        { name: 'Ana Silva', company: 'TechCorp', test: 'DISC', status: 'completed', date: 'Hoje' },
-        { name: 'Carlos Souza', company: 'InovaLab', test: 'IE', status: 'pending', date: 'Ontem' },
-        { name: 'Mariana Costa', company: 'TechCorp', test: 'Valores', status: 'completed', date: '2 dias' },
-        { name: 'Pedro Lima', company: 'StartupX', test: 'DISC', status: 'expired', date: '3 dias' }
-      ];
-      
-      if (activities.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 2rem; color: var(--slate-500);">Nenhuma atividade recente</td></tr>';
-        return;
-      }
-      
-      tbody.innerHTML = activities.map(function(activity) {
-        const statusBadge = activity.status === 'completed' 
-          ? '<span class="badge-status completed">✅ Concluído</span>'
-          : activity.status === 'pending'
-          ? '<span class="badge-status pending">⏳ Pendente</span>'
-          : '<span class="badge-status expired">⚠️ Expirado</span>';
-        
-        return `
-          <tr>
-            <td style="font-weight: 600;">${activity.name}</td>
-            <td>${activity.company}</td>
-            <td><span style="background: var(--slate-100); padding: 4px 10px; border-radius: 8px; font-size: 0.8125rem;">${activity.test}</span></td>
-            <td>${statusBadge}</td>
-            <td style="color: var(--slate-500);">${activity.date}</td>
-          </tr>
-        `;
-      }).join('');
-    }
-    
-    // ============================================
-    // ATUALIZAR HORÁRIO DE SINCRONIZAÇÃO
-    // ============================================
-    function updateLastSync() {
-      const now = new Date();
-      const timeStr = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-      document.getElementById('lastSync').textContent = timeStr;
-    }
-    
-    // ============================================
-    // LOGOUT
-    // ============================================
-    function logout() {
-      sessionStorage.setItem('vigorre_logged_out', 'true');
-      localStorage.removeItem('vigorre_current_user');
-      sessionStorage.clear();
-      window.location.href = '../login.html?loggedout=1&ts=' + Date.now();
-    }
-    
-    // ============================================
-    // TOAST NOTIFICATIONS
-    // ============================================
-    function showToast(message, type) {
-      type = type || 'success';
-      
-      const existing = document.getElementById('toast');
-      if (existing) existing.remove();
-      
-      const toast = document.createElement('div');
-      toast.id = 'toast';
-      toast.style.cssText = `
-        position: fixed;
-        top: 24px;
-        right: 24px;
-        background: white;
-        padding: 14px 24px;
-        border-radius: 12px;
-        box-shadow: var(--shadow-xl);
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        font-weight: 600;
-        color: var(--slate-800);
-        z-index: 10001;
-        border-left: 4px solid ${type === 'error' ? 'var(--brand-rose)' : type === 'warning' ? 'var(--brand-amber)' : 'var(--brand-emerald)'};
-        animation: slideIn 0.3s ease;
-        max-width: 400px;
-        font-size: 0.875rem;
-        border: 1px solid var(--slate-200);
+  // 2. Se exigir escopo, verificar se recrutador tem empresas vinculadas
+  if (requireScope && (!window.recruiterScope.companyIds || window.recruiterScope.companyIds.length === 0)) {
+    console.warn('⚠️ Recrutador sem empresas vinculadas. Contate o administrador.');
+    // Mostrar mensagem amigável em vez de redirecionar
+    const main = document.querySelector('main');
+    if (main) {
+      main.innerHTML = `
+        <div style="text-align: center; padding: 4rem 2rem; background: #f8fafc; border-radius: 16px; border: 2px dashed #e2e8f0;">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">🔐</div>
+          <h3 style="color: #334155; margin-bottom: 0.5rem;">Aguardando Configuração</h3>
+          <p style="color: #64748b; margin-bottom: 1.5rem;">
+            Seu perfil de recrutador ainda não possui empresas vinculadas.<br>
+            Entre em contato com o administrador da Vigorre One™ para configurar seu acesso.
+          </p>
+          <button onclick="logout()" class="btn btn-secondary">Sair</button>
+        </div>
       `;
-      
-      toast.innerHTML = `
-        <span style="font-size: 1.25rem;">${type === 'success' ? '✅' : type === 'error' ? '❌' : '⚠️'}</span>
-        <span>${message}</span>
-      `;
-      
-      document.body.appendChild(toast);
-      
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateX(120%)';
-        setTimeout(() => toast.remove(), 300);
-      }, 4000);
+    }
+    return false;
+  }
+  
+  // 3. Ativar proteção contra botão voltar
+  preventBackButton();
+  
+  console.log('✅ RecruiterGuard inicializado com sucesso');
+  return true;
+}
+
+/**
+ * Previne botão voltar após logout (mesma lógica do auth-guard)
+ */
+function preventBackButton() {
+  window.history.pushState(null, null, window.location.href);
+  
+  window.addEventListener('popstate', function () {
+    window.history.pushState(null, null, window.location.href);
+    
+    const sessionActive = sessionStorage.getItem('vigorre_session_active');
+    if (!sessionActive) {
+      window.location.href = 'login.html';
+    }
+  });
+}
+
+/**
+ * Formata número de créditos para exibição
+ * @param {number} credits - Quantidade de créditos
+ * @returns {string} - Texto formatado com cor
+ */
+function formatRecruiterCredits(credits) {
+  if (credits >= 10) return `<span style="color: #10B981; font-weight: 700;">${credits}</span>`;
+  if (credits >= 3) return `<span style="color: #F59E0B; font-weight: 700;">${credits}</span>`;
+  return `<span style="color: #F43F5E; font-weight: 700;">${credits}</span>`;
+}
+
+/**
+ * Busca dados do recrutador no Supabase para atualizar créditos em tempo real
+ * @param {string} recruiterId - ID do recrutador
+ * @returns {Promise<Object>} - Dados atualizados do recrutador
+ */
+async function syncRecruiterData(recruiterId) {
+  try {
+    if (!window.VigorreDB || !VigorreDB.supabase) {
+      // Fallback para localStorage
+      const user = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+      return user.credits || {};
     }
     
-    // Animção do toast
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes slideIn {
-        from { transform: translateX(120%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-      }
-    `;
-    document.head.appendChild(style);
+    const { data, error } = await VigorreDB.supabase
+      .from('recruiters')
+      .select('credits, companies, participants')
+      .eq('id', recruiterId)
+      .maybeSingle();
     
-    // ============================================
-    // PREVENIR BACK BUTTON
-    // ============================================
-    window.addEventListener('pageshow', function(event) {
-      if (event.persisted) {
-        const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
-        const sessionActive = sessionStorage.getItem('vigorre_session_active') === 'true';
-        
-        if (currentUser.role !== 'recruiter' || !sessionActive) {
-          window.location.replace('../login.html');
-        }
-      }
-    });
+    if (error || !data) {
+      console.warn('⚠️ Não foi possível sincronizar dados do recrutador');
+      return {};
+    }
     
-    // ============================================
-    // DEBUG
-    // ============================================
-    console.log('🔍 Recruiter Dashboard - Estado:', {
-      recruiterScope: window.recruiterScope,
-      supabase: {
-        available: typeof window.VigorreDB !== 'undefined',
-        connected: VigorreDB?.supabase ? 'conectado' : 'não conectado'
-      }
-    });
-  </script>
-</body>
-</html>  
+    // Atualizar escopo local
+    if (window.recruiterScope) {
+      window.recruiterScope.credits = data.credits || window.recruiterScope.credits;
+      window.recruiterScope.companyIds = data.companies || window.recruiterScope.companyIds;
+      window.recruiterScope.participantIds = data.participants || window.recruiterScope.participantIds;
+    }
+    
+    return data.credits || {};
+    
+  } catch (e) {
+    console.error('❌ Erro ao sincronizar dados do recrutador:', e);
+    return {};
+  }
+}
+
+// ============================================
+// EXPORTS PARA MÓDULOS (OPCIONAL)
+// ============================================
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    checkRecruiterAuth,
+    filterByRecruiterScope,
+    hasRecruiterCredits,
+    consumeRecruiterCredit,
+    initRecruiterGuard,
+    formatRecruiterCredits,
+    syncRecruiterData,
+    clearRecruiterSession
+  };
+}
