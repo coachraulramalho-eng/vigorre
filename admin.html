@@ -14,13 +14,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   
-  <!-- ✅ FIREBASE SDK - CARREGAR ANTES DO CONFIG -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <!-- ✅ SUPABASE SDK - CARREGAR PRIMEIRO -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
-  <!-- ✅ SUA CONFIGURAÇÃO FIREBASE -->
-  <script src="firebase-config.js"></script>
+  <!-- ✅ SUA CONFIGURAÇÃO SUPABASE -->
+  <script src="supabase-config.js"></script>
   
   <style>
     /* ============================================
@@ -314,9 +312,9 @@
     }
     
     /* ============================================
-       INDICADOR DE STATUS DO FIREBASE - PREMIUM
+       INDICADOR DE STATUS DO SUPABASE - PREMIUM
        ============================================ */
-    .firebase-status {
+    .supabase-status {
       display: flex;
       align-items: center;
       gap: 10px;
@@ -331,7 +329,7 @@
       transition: all var(--transition);
     }
     
-    .firebase-status:hover {
+    .supabase-status:hover {
       background: var(--slate-50);
       border-color: var(--slate-300);
     }
@@ -1316,7 +1314,7 @@
       .main { margin-left: 80px; padding: 1.25rem; } 
       .form-row { grid-template-columns: 1fr; }
       .header { padding: 1rem 1.25rem; }
-      .firebase-status { display: none; }
+      .supabase-status { display: none; }
     }
     
     @media (max-width: 768px) {
@@ -1488,8 +1486,8 @@
       <h1 id="pageTitle">Dashboard</h1>
       
       <div class="header-actions">
-        <!-- INDICADOR DE STATUS DO FIREBASE - PREMIUM -->
-        <div id="firebaseStatus" class="firebase-status" role="status" aria-live="polite">
+        <!-- INDICADOR DE STATUS DO SUPABASE - PREMIUM -->
+        <div id="supabaseStatus" class="supabase-status" role="status" aria-live="polite">
           <span class="status-dot notloaded" id="statusDot" aria-hidden="true"></span>
           <span class="status-text" id="statusText">Aguardando...</span>
         </div>
@@ -2016,13 +2014,13 @@
   </div>
 
   <!-- ============================================
-       SCRIPTS - FUNCIONALIDADE E SEGURANÇA COM FIREBASE
+       SCRIPTS - FUNCIONALIDADE E SEGURANÇA COM SUPABASE
        ============================================ -->
   <script>
     'use strict';
     
     // ============================================
-    // BANCO DE DADOS - FIREBASE COM FALLBACK LOCAL
+    // BANCO DE DADOS - SUPABASE COM FALLBACK LOCAL
     // ============================================
     let DB = {
       staff: JSON.parse(localStorage.getItem('vigorre_staff') || '[]'),
@@ -2095,18 +2093,18 @@
       renderAll();
       updateStats();
       
-      // Verificar conexão com Firebase com delay
-      setTimeout(checkFirebaseConnection, 2000);
+      // Verificar conexão com Supabase com delay
+      setTimeout(checkSupabaseConnection, 2000);
       
       // Atualizar selects
       updateSelects();
     });
 
     // ============================================
-    // FUNÇÃO ROBUSTA: VERIFICAR CONEXÃO COM FIREBASE
+    // FUNÇÃO ROBUSTA: VERIFICAR CONEXÃO COM SUPABASE
     // ============================================
-    function checkFirebaseConnection() {
-      const statusElement = document.getElementById('firebaseStatus');
+    function checkSupabaseConnection() {
+      const statusElement = document.getElementById('supabaseStatus');
       const statusDot = document.getElementById('statusDot');
       const statusText = document.getElementById('statusText');
       
@@ -2114,16 +2112,16 @@
       
       statusElement.style.display = 'flex';
       
-      // ✅ CORREÇÃO: Verificação robusta do Firebase
-      if (typeof window.firebaseDB === 'undefined' || !firebaseDB) {
+      // ✅ CORREÇÃO: Verificação robusta do Supabase
+      if (typeof window.VigorreDB === 'undefined' || !VigorreDB) {
         statusDot.className = 'status-dot notloaded';
         statusText.textContent = 'Config não carregada';
         return;
       }
       
-      if (!firebaseDB.db) {
+      if (!VigorreDB.supabase) {
         statusDot.className = 'status-dot notloaded';
-        statusText.textContent = 'Firestore não inicializado';
+        statusText.textContent = 'Supabase não inicializado';
         return;
       }
       
@@ -2131,14 +2129,21 @@
       statusText.textContent = 'Testando...';
       
       // Testar conexão com uma query simples
-      firebaseDB.db.collection('participants').limit(1).get()
-        .then(function(snapshot) {
+      VigorreDB.supabase
+        .from('participants')
+        .select('id')
+        .limit(1)
+        .maybeSingle()
+        .then(function({ data, error }) {
+          if (error) {
+            throw error;
+          }
           statusDot.className = 'status-dot connected';
-          statusText.textContent = 'Firebase OK ✓';
-          console.log('✅ Firebase conectado com sucesso!');
+          statusText.textContent = 'Supabase OK ✓';
+          console.log('✅ Supabase conectado com sucesso!');
         })
         .catch(function(error) {
-          console.error('❌ Falha na conexão com Firebase:', error);
+          console.error('❌ Falha na conexão com Supabase:', error);
           statusDot.className = 'status-dot error';
           statusText.textContent = 'Offline ✗';
         });
@@ -2321,11 +2326,15 @@
         DB.staff.push(data);
       }
       
-      // Salvar no Firebase se disponível
-      if (window.firebaseDB && firebaseDB.db) {
-        firebaseDB.saveStaff(data).then(function(result) {
-          if (result.success) {
-            console.log('✅ Staff salvo no Firebase');
+      // Salvar no Supabase se disponível
+      if (window.VigorreDB && VigorreDB.supabase) {
+        VigorreDB.saveToSupabase(
+          'staff',
+          data,
+          'vigorre_staff'
+        ).then(function(saved) {
+          if (saved) {
+            console.log('✅ Staff salvo no Supabase');
           }
         });
       }
@@ -2410,11 +2419,15 @@
         DB.companies.push(data);
       }
       
-      // Salvar no Firebase se disponível
-      if (window.firebaseDB && firebaseDB.db) {
-        firebaseDB.saveCompany(data).then(function(result) {
-          if (result.success) {
-            console.log('✅ Empresa salva no Firebase');
+      // Salvar no Supabase se disponível
+      if (window.VigorreDB && VigorreDB.supabase) {
+        VigorreDB.saveToSupabase(
+          'companies',
+          data,
+          'vigorre_companies'
+        ).then(function(saved) {
+          if (saved) {
+            console.log('✅ Empresa salva no Supabase');
           }
         });
       }
@@ -2684,11 +2697,15 @@
         DB.participants.push(data);
       }
       
-      // Salvar no Firebase se disponível
-      if (window.firebaseDB && firebaseDB.db) {
-        firebaseDB.saveParticipant(data).then(function(result) {
-          if (result.success) {
-            console.log('✅ Participante salvo no Firebase');
+      // Salvar no Supabase se disponível
+      if (window.VigorreDB && VigorreDB.supabase) {
+        VigorreDB.saveToSupabase(
+          'participants',
+          data,
+          'vigorre_participants'
+        ).then(function(saved) {
+          if (saved) {
+            console.log('✅ Participante salvo no Supabase');
           }
         });
       }
@@ -2968,18 +2985,22 @@
         content: content 
       });
       
-      // Salvar no Firebase se disponível
-      if (window.firebaseDB && firebaseDB.db) {
-        firebaseDB.saveReport({
-          participantId: p.id,
-          name: p.name,
-          type: type,
-          test: test,
-          date: new Date().toLocaleString('pt-BR'),
-          content: content
-        }).then(function(result) {
-          if (result.success) {
-            console.log('✅ Relatório salvo no Firebase');
+      // Salvar no Supabase se disponível
+      if (window.VigorreDB && VigorreDB.supabase) {
+        VigorreDB.saveToSupabase(
+          'reports',
+          {
+            participantId: p.id,
+            name: p.name,
+            type: type,
+            test: test,
+            date: new Date().toLocaleString('pt-BR'),
+            content: content
+          },
+          'vigorre_reports'
+        ).then(function(saved) {
+          if (saved) {
+            console.log('✅ Relatório salvo no Supabase');
           }
         });
       }
@@ -3260,9 +3281,9 @@
         ie: !!localStorage.getItem('vigorre_last_ie_result'),
         valores: !!localStorage.getItem('vigorre_last_valores_result')
       },
-      firebase: {
-        available: typeof window.firebaseDB !== 'undefined',
-        db: window.firebaseDB?.db ? 'conectado' : 'não conectado'
+      supabase: {
+        available: typeof window.VigorreDB !== 'undefined',
+        connected: VigorreDB?.supabase ? 'conectado' : 'não conectado'
       }
     });
 
@@ -3285,7 +3306,7 @@
       });
       
       // Botões de debug apenas em localhost
-      const headerActions = document.getElementById('headerActions');
+      const headerActions = document.querySelector('.header-actions');
       if (headerActions && window.location.hostname === 'localhost') {
         const syncBtn = document.createElement('button');
         syncBtn.className = 'btn btn-warning btn-sm';
@@ -3298,8 +3319,8 @@
         testBtn.className = 'btn btn-secondary btn-sm';
         testBtn.textContent = '🔗 Testar';
         testBtn.onclick = function() {
-          showToast('🔄 Testando conexão Firebase...');
-          checkFirebaseConnection();
+          showToast('🔄 Testando conexão Supabase...');
+          checkSupabaseConnection();
         };
         testBtn.style.marginLeft = '8px';
         headerActions.appendChild(testBtn);
