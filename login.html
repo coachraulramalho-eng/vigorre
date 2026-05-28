@@ -114,9 +114,10 @@
       text-transform: uppercase;
     }
     
+    /* ✅ SELETOR COM 3 BOTÕES */
     .env-selector { 
       display: grid; 
-      grid-template-columns: 1fr 1fr; 
+      grid-template-columns: repeat(3, 1fr); 
       gap: 12px; 
       margin-bottom: 2rem; 
       background: var(--slate-50);
@@ -126,13 +127,13 @@
     }
     
     .env-btn { 
-      padding: 14px 16px; 
+      padding: 14px 12px; 
       border: 2px solid transparent;
       border-radius: var(--radius); 
       background: transparent; 
       cursor: pointer; 
       font-weight: 600; 
-      font-size: 0.875rem; 
+      font-size: 0.8125rem; 
       transition: all var(--transition); 
       display: flex; 
       flex-direction: column; 
@@ -141,7 +142,7 @@
       color: var(--slate-500);
     }
     
-    .env-btn span { font-size: 1.375rem; }
+    .env-btn span { font-size: 1.25rem; }
     
     .env-btn.active { 
       border-color: var(--brand-blue); 
@@ -270,7 +271,7 @@
     @media (max-width: 480px) {
       .login-container { padding: 2rem 1.5rem; margin: 10px; }
       .logo-area h1 { font-size: 1.5rem; }
-      .env-selector { gap: 8px; }
+      .env-selector { grid-template-columns: 1fr; gap: 8px; }
       .env-btn { padding: 12px 10px; font-size: 0.8125rem; }
       .env-btn span { font-size: 1.25rem; }
       .form-group input { padding: 13px 14px; font-size: 0.9375rem; }
@@ -292,7 +293,7 @@
       <p>People Analytics Enterprise</p>
     </header>
 
-    <!-- SELETOR DE AMBIENTE -->
+    <!-- ✅ SELETOR DE AMBIENTE COM 3 OPÇÕES -->
     <fieldset class="env-selector" role="radiogroup" aria-label="Selecione seu tipo de acesso">
       <legend class="sr-only">Tipo de acesso</legend>
       
@@ -304,6 +305,16 @@
               id="env-participant">
         <span aria-hidden="true">👤</span> 
         <span>Participante</span>
+      </button>
+      
+      <button type="button" 
+              class="env-btn" 
+              role="radio" 
+              aria-checked="false"
+              onclick="setEnv('recruiter')"
+              id="env-recruiter">
+        <span aria-hidden="true">🎯</span> 
+        <span>Recrutador</span>
       </button>
       
       <button type="button" 
@@ -423,8 +434,9 @@
       const normalizedEmail = email.trim().toLowerCase();
       const staff = JSON.parse(localStorage.getItem('vigorre_staff') || '[]');
       const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+      const recruiters = JSON.parse(localStorage.getItem('vigorre_recruiters') || '[]');
       
-      const allUsers = [].concat(staff, participants);
+      const allUsers = [].concat(staff, participants, recruiters);
       const found = allUsers.find(function(u) { 
         return u.email && u.email.toLowerCase() === normalizedEmail;
       });
@@ -479,73 +491,159 @@
           return;
         }
 
-        // 2. LOGIN COM SUPABASE
-        if (window.VigorreDB && VigorreDB.supabase) {
-          const { data: participant, error } = await VigorreDB.supabase
-            .from('participants')
-            .select('*')
-            .eq('email', input)
-            .maybeSingle();
+        // ✅ 2. LOGIN RECRUTADOR (NOVO!)
+        if (currentEnv === 'recruiter') {
+          // Primeiro tenta Supabase
+          if (window.VigorreDB && VigorreDB.supabase) {
+            try {
+              const { data: recruiter, error } = await VigorreDB.supabase
+                .from('recruiters')
+                .select('*')
+                .eq('email', input)
+                .maybeSingle();
+              
+              if (recruiter && recruiter.password === pass) {
+                const userData = {
+                  id: recruiter.id,
+                  name: recruiter.name,
+                  email: recruiter.email,
+                  role: 'recruiter',
+                  type: 'recruiter',
+                  companies: recruiter.companies || [],
+                  credits: recruiter.credits || { DISC: 50, IE: 20, Valores: 30 }
+                };
+                
+                localStorage.setItem('vigorre_current_user', JSON.stringify(userData));
+                sessionStorage.setItem('vigorre_session_active', 'true');
+                
+                showAlert('✅ Bem-vindo, ' + userData.name.split(' ')[0] + '!', 'success');
+                setTimeout(function() {
+                  window.location.href = 'recrutador/dashboard.html?t=' + Date.now();
+                }, 1200);
+                return;
+              }
+            } catch (e) {
+              console.warn('⚠️ Erro Supabase recruiter, usando localStorage:', e);
+            }
+          }
           
-          if (participant && participant.password === pass) {
+          // Fallback localStorage
+          const recruiters = JSON.parse(localStorage.getItem('vigorre_recruiters') || '[]');
+          const recruiter = recruiters.find(function(r) { 
+            return (r.login === input || r.email === input) && r.password === pass;
+          });
+          
+          if (recruiter) {
             const userData = {
-              id: participant.id,
-              name: participant.name,
-              email: participant.email,
-              role: participant.role || 'participant',
-              type: currentEnv
+              id: recruiter.id,
+              name: recruiter.name,
+              email: recruiter.email,
+              role: 'recruiter',
+              type: 'recruiter',
+              companies: recruiter.companies || [],
+              credits: recruiter.credits || { DISC: 50, IE: 20, Valores: 30 }
             };
             
             localStorage.setItem('vigorre_current_user', JSON.stringify(userData));
             sessionStorage.setItem('vigorre_session_active', 'true');
             
             showAlert('✅ Bem-vindo, ' + userData.name.split(' ')[0] + '!', 'success');
-            
             setTimeout(function() {
-              window.location.href = userData.role === 'admin' ? 'admin.html' : 'dashboard-participante.html';
+              window.location.href = 'recrutador/dashboard.html?t=' + Date.now();
             }, 1200);
             return;
           }
         }
-        
-        // 3. FALLBACK: LOGIN LOCAL
-        const staff = JSON.parse(localStorage.getItem('vigorre_staff') || '[]');
-        const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-        
-        let foundUser = null;
-        
-        if (currentEnv === 'admin') {
-          foundUser = staff.find(function(s) { 
-            return (s.login === input || s.email === input) && s.password === pass;
-          });
-        } else {
-          foundUser = participants.find(function(p) { 
+
+        // 3. LOGIN PARTICIPANTE
+        if (currentEnv === 'participant') {
+          // Tenta Supabase primeiro
+          if (window.VigorreDB && VigorreDB.supabase) {
+            try {
+              const { data: participant, error } = await VigorreDB.supabase
+                .from('participants')
+                .select('*')
+                .eq('email', input)
+                .maybeSingle();
+              
+              if (participant && participant.password === pass) {
+                const userData = {
+                  id: participant.id,
+                  name: participant.name,
+                  email: participant.email,
+                  role: participant.role || 'participant',
+                  type: 'participant'
+                };
+                
+                localStorage.setItem('vigorre_current_user', JSON.stringify(userData));
+                sessionStorage.setItem('vigorre_session_active', 'true');
+                
+                showAlert('✅ Bem-vindo, ' + userData.name.split(' ')[0] + '!', 'success');
+                setTimeout(function() {
+                  window.location.href = 'dashboard-participante.html?t=' + Date.now();
+                }, 1200);
+                return;
+              }
+            } catch (e) {
+              console.warn('⚠️ Erro Supabase participant, usando localStorage:', e);
+            }
+          }
+          
+          // Fallback localStorage
+          const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+          const participant = participants.find(function(p) { 
             return (p.user === input || p.email === input) && p.pass === pass;
           });
-        }
-        
-        if (foundUser) {
-          const userData = {
-            id: foundUser.id,
-            name: foundUser.name,
-            email: foundUser.email,
-            role: foundUser.role || 'participant',
-            type: currentEnv
-          };
           
-          localStorage.setItem('vigorre_current_user', JSON.stringify(userData));
-          sessionStorage.setItem('vigorre_session_active', 'true');
-          
-          showAlert('✅ Bem-vindo, ' + foundUser.name.split(' ')[0] + '!', 'success');
-          
-          setTimeout(function() {
-            window.location.href = currentEnv === 'admin' ? 'admin.html' : 'dashboard-participante.html';
-          }, 1200);
-          return;
+          if (participant) {
+            const userData = {
+              id: participant.id,
+              name: participant.name,
+              email: participant.email,
+              role: 'participant',
+              type: 'participant'
+            };
+            
+            localStorage.setItem('vigorre_current_user', JSON.stringify(userData));
+            sessionStorage.setItem('vigorre_session_active', 'true');
+            
+            showAlert('✅ Bem-vindo, ' + participant.name.split(' ')[0] + '!', 'success');
+            setTimeout(function() {
+              window.location.href = 'dashboard-participante.html?t=' + Date.now();
+            }, 1200);
+            return;
+          }
         }
 
-        // 4. CREDENCIAIS INVÁLIDAS
-        showAlert('❌ Credenciais inválidas.', 'error');
+        // 4. LOGIN STAFF (para admin env)
+        if (currentEnv === 'admin') {
+          const staff = JSON.parse(localStorage.getItem('vigorre_staff') || '[]');
+          const staffUser = staff.find(function(s) { 
+            return (s.login === input || s.email === input) && s.password === pass;
+          });
+          
+          if (staffUser) {
+            const userData = {
+              id: staffUser.id,
+              name: staffUser.name,
+              email: staffUser.email,
+              role: staffUser.role || 'staff',
+              type: 'staff'
+            };
+            
+            localStorage.setItem('vigorre_current_user', JSON.stringify(userData));
+            sessionStorage.setItem('vigorre_session_active', 'true');
+            
+            showAlert('✅ Bem-vindo, ' + userData.name.split(' ')[0] + '!', 'success');
+            setTimeout(function() {
+              window.location.href = 'admin.html?t=' + Date.now();
+            }, 1200);
+            return;
+          }
+        }
+
+        // 5. CREDENCIAIS INVÁLIDAS
+        showAlert('❌ Credenciais inválidas. Verifique usuário, senha e ambiente selecionado.', 'error');
         
       } catch (error) {
         console.error('❌ Erro no login:', error);
@@ -566,15 +664,67 @@
       const sessionActive = sessionStorage.getItem('vigorre_session_active') === 'true';
       
       if (currentUser && currentUser.role && sessionActive) {
-        const targetPage = currentUser.role === 'admin' ? 'admin.html' : 'dashboard-participante.html';
+        let targetPage = 'login.html';
+        
+        if (currentUser.role === 'admin' || currentUser.role === 'staff') {
+          targetPage = 'admin.html';
+        } else if (currentUser.role === 'recruiter') {
+          targetPage = 'recrutador/dashboard.html';
+        } else if (currentUser.role === 'participant') {
+          targetPage = 'dashboard-participante.html';
+        }
+        
         if (!window.location.href.includes(targetPage)) {
-          window.location.href = targetPage;
+          window.location.href = targetPage + '?t=' + Date.now();
         }
       }
       
       document.getElementById('email').focus();
     });
     
+    // ============================================
+    // PREVENIR BACK BUTTON APÓS LOGOUT
+    // ============================================
+    window.addEventListener('pageshow', function(event) {
+      if (event.persisted) {
+        const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+        const sessionActive = sessionStorage.getItem('vigorre_session_active') === 'true';
+        
+        if (!currentUser.role || !sessionActive) {
+          window.location.replace('login.html');
+        }
+      }
+    });
+    
+    // ============================================
+    // DEBUG - CRIAR RECRUTADOR DE TESTE (apenas localhost)
+    // ============================================
+    if (window.location.hostname === 'localhost') {
+      console.log('🔧 Modo desenvolvedor: Criando credenciais de teste...');
+      
+      // Criar recrutador de teste se não existir
+      const recruiters = JSON.parse(localStorage.getItem('vigorre_recruiters') || '[]');
+      const exists = recruiters.find(r => r.login === 'recrutador');
+      
+      if (!exists) {
+        const testRecruiter = {
+          id: 'rec_test_001',
+          name: 'Recrutador Teste',
+          email: 'recrutador@vigorre.com',
+          login: 'recrutador',
+          password: 'rec123',
+          role: 'recruiter',
+          companies: [],
+          credits: { DISC: 50, IE: 20, Valores: 30 }
+        };
+        recruiters.push(testRecruiter);
+        localStorage.setItem('vigorre_recruiters', JSON.stringify(recruiters));
+        console.log('✅ Recrutador de teste criado:');
+        console.log('   Login: recrutador');
+        console.log('   Senha: rec123');
+        console.log('   Ambiente: Selecione "Recrutador" no login');
+      }
+    }
   </script>
 </body>
 </html>
