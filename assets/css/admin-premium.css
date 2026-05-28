@@ -1,0 +1,122 @@
+/* ============================================
+   VIGORRE ONE™ — ADMIN PREMIUM OVERRIDES
+   Transforma o admin existente em UI Enterprise
+   ============================================ */
+
+:root {
+  --brand-navy: #0f172a;
+  --brand-blue: #3b82f6;
+  --brand-purple: #8b5cf6;
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(255, 255, 255, 0.5);
+}
+
+/* 1. Global & Body */
+body {
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%) !important;
+  font-family: 'Inter', sans-serif !important;
+  color: #334155 !important;
+}
+
+/* 2. Cards Enterprise */
+.card, .vigorre-card, .glass-card, .bg-white {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.card:hover, .vigorre-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* 3. Tabelas Estilo SAP/Oracle */
+table {
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  width: 100% !important;
+  background: white !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03) !important;
+}
+
+thead {
+  background: #f8fafc !important;
+}
+
+th {
+  font-size: 0.75rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  color: #64748b !important;
+  padding: 1rem !important;
+  border-bottom: 2px solid #e2e8f0 !important;
+}
+
+td {
+  padding: 1rem !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  font-size: 0.875rem !important;
+  color: #334155 !important;
+}
+
+tbody tr:hover {
+  background-color: #f8fafc !important;
+}
+
+/* 4. Botões Premium */
+.btn, button {
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+}
+
+.btn-primary, button.bg-blue-600, button.bg-blue-500 {
+  background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+  border: none !important;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3) !important;
+}
+
+/* 5. Badges de Status */
+.badge {
+  border-radius: 100px !important;
+  padding: 4px 10px !important;
+  font-size: 0.7rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+}
+
+/* 6. Sidebar Premium (Se existir) */
+.sidebar, aside {
+  background: var(--brand-navy) !important;
+  box-shadow: 4px 0 20px rgba(0,0,0,0.1) !important;
+}
+
+/* 7. Tooltips */
+[data-tooltip] {
+  position: relative;
+}
+[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e293b;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  z-index: 1000;
+  pointer-events: none;
+}
