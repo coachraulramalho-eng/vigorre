@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Vigorre One™ - Gestão de Participantes do Recrutador">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Participantes | Vigorre One™ • Área do Recrutador</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <!-- ✅ GLOBAL STYLES -->
+  <link rel="stylesheet" href="../../assets/css/globals.css">
+  
+  <!-- ✅ SUPABASE -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../../supabase-config.js"></script>
+  
+  <!-- ✅ RECRUITER GUARD -->
+  <script src="../../middleware/recruiter-guard.js"></script>
+  
+  <style>
+    /* ============================================
+       ESTILOS ESPECÍFICOS - PARTICIPANTES
+       ============================================ */
+    body {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--slate-50) 0%, #ffffff 100%);
+    }
+
+    /* Sidebar (reutilizada) */
+    .sidebar {
+      background: var(--brand-navy);
+      color: white;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      cursor: pointer;
+      text-decoration: none;
+      color: white;
+    }
+
+    .sidebar-logo .logo-badge {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--brand-cyan), var(--brand-emerald));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.25rem;
+    }
+
+    .sidebar-logo .logo-text h2 { font-size: 1.125rem; font-weight: 700; margin: 0; }
+    .sidebar-logo .logo-text span { font-size: 0.75rem; opacity: 0.7; text-transform: uppercase; }
+
+    .nav-menu { list-style: none; padding: 0; flex: 1; }
+    .nav-menu li { margin-bottom: 0.375rem; }
+    .nav-menu a {
+      display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+      color: rgba(255,255,255,0.7); text-decoration: none; border-radius: 12px;
+      transition: all var(--transition); font-weight: 500;
+    }
+    .nav-menu a:hover, .nav-menu a.active { background: rgba(255,255,255,0.1); color: white; }
+    .nav-menu a.active { border-left: 3px solid var(--brand-cyan); }
+    .nav-menu a.danger { color: #fca5a5; margin-top: auto; }
+    
+    .recruiter-info {
+      padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 12px;
+      border-top: 1px solid rgba(255,255,255,0.1); margin-top: auto; font-size: 0.875rem;
+    }
+    .recruiter-info p:first-child { font-weight: 600; margin-bottom: 0.25rem; }
+    .recruiter-info p:last-child { opacity: 0.7; font-size: 0.75rem; }
+
+    /* Main */
+    .main { padding: 2rem; overflow-y: auto; }
+    
+    .header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 2rem; background: white; padding: 1.25rem 1.75rem;
+      border-radius: 16px; box-shadow: var(--shadow); border: 1px solid var(--slate-200);
+    }
+    
+    .header h1 { font-size: 1.5rem; color: var(--brand-blue-dark); font-weight: 700; }
+
+    /* Tabela */
+    .table-card {
+      background: white; border-radius: 16px; border: 1px solid var(--slate-200);
+      box-shadow: var(--shadow-sm); overflow: hidden;
+    }
+    .table-card table { width: 100%; border-collapse: collapse; }
+    .table-card th {
+      background: var(--slate-50); padding: 1rem 1.25rem; text-align: left;
+      font-size: 0.75rem; text-transform: uppercase; color: var(--slate-500);
+      font-weight: 600; letter-spacing: 0.05em;
+    }
+    .table-card td {
+      padding: 1rem 1.25rem; border-bottom: 1px solid var(--slate-100);
+      font-size: 0.875rem; color: var(--slate-700);
+    }
+    .table-card tr:last-child td { border-bottom: none; }
+    .table-card tr:hover { background: var(--slate-50); }
+
+    /* Badges */
+    .badge-status {
+      display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px;
+      border-radius: 100px; font-size: 0.75rem; font-weight: 600;
+    }
+    .badge-status.completed { background: #dcfce7; color: #166534; }
+    .badge-status.pending { background: #fef3c7; color: #92400e; }
+
+    .badge-test {
+      display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px;
+      border-radius: 6px; font-size: 0.7rem; font-weight: 600; background: var(--slate-100); color: var(--slate-700);
+    }
+    .badge-test.disc { background: #fee2e2; color: #b91c1c; }
+    .badge-test.ie { background: #dbeafe; color: #1d4ed8; }
+    .badge-test.valores { background: #fef3c7; color: #b45309; }
+
+    /* Actions */
+    .actions-cell { display: flex; gap: 0.5rem; }
+    .btn-action {
+      padding: 6px 12px; border-radius: 8px; font-size: 0.8125rem;
+      font-weight: 600; cursor: pointer; transition: all var(--transition);
+      border: none; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-action.liberate { background: #dcfce7; color: #15803d; }
+    .btn-action.edit { background: #e0f2fe; color: #0284c7; }
+    .btn-action.delete { background: #fee2e2; color: #b91c1c; }
+    .btn-action:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+
+    /* Modais */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.85); display: flex;
+      align-items: center; justify-content: center; z-index: 1000;
+    }
+    .modal-content {
+      background: white; border-radius: 20px; padding: 2rem;
+      max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto;
+    }
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--slate-100);
+    }
+    .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--slate-400); }
+
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem; }
+    .form-group input, .form-group select {
+      width: 100%; padding: 0.75rem 1rem; border: 2px solid var(--slate-200);
+      border-radius: 10px; font-size: 0.9375rem;
+    }
+    .form-group input:focus, .form-group select:focus {
+      outline: none; border-color: var(--brand-blue); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+    }
+
+    /* Responsivo */
+    @media (max-width: 1024px) { body { grid-template-columns: 1fr; } .sidebar { display: none; } }
+    @media (max-width: 768px) {
+      .header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .table-card { overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <a href="../dashboard.html" class="sidebar-logo">
+      <div class="logo-badge">V</div>
+      <div class="logo-text">
+        <h2>Vigorre One™</h2>
+        <span>Recrutador</span>
+      </div>
+    </a>
+    
+    <ul class="nav-menu">
+      <li><a href="../dashboard.html">📊 Dashboard</a></li>
+      <li><a href="../empresas/">🏢 Empresas</a></li>
+      <li><a href="index.html" class="active">👥 Participantes</a></li>
+      <li><a href="../creditos/">💳 Créditos</a></li>
+      <li><a href="../relatorios/">📄 Relatórios</a></li>
+      <li><a href="../../login.html" class="danger">🚪 Sair</a></li>
+    </ul>
+    
+    <div class="recruiter-info">
+      <p id="sidebarName">Carregando...</p>
+      <p>Recrutador Vigorre™</p>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <header class="header">
+      <div>
+        <h1>👥 Meus Participantes</h1>
+        <p style="color: var(--slate-500); font-size: 0.875rem;">Gerencie seus candidatos e libere testes</p>
+      </div>
+      <button onclick="openCreateModal()" class="btn btn-primary" style="padding: 0.75rem 1.5rem; border-radius: 10px;">
+        ➕ Novo Participante
+      </button>
+    </header>
+
+    <!-- Tabela -->
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Participante</th>
+            <th>Empresa</th>
+            <th>Email</th>
+            <th>Testes Liberados</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="participantsTableBody">
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 3rem; color: var(--slate-500);">
+              Carregando...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Modal Novo Participante -->
+  <div id="createModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Novo Participante</h3>
+        <button class="modal-close" onclick="closeCreateModal()">&times;</button>
+      </div>
+      
+      <form id="createForm" onsubmit="saveParticipant(event)">
+        <div class="form-group">
+          <label>Nome Completo *</label>
+          <input type="text" id="pName" required placeholder="Nome do candidato">
+        </div>
+        
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" id="pEmail" required placeholder="email@exemplo.com">
+        </div>
+        
+        <div class="form-group">
+          <label>Vincular à Empresa</label>
+          <select id="pCompany">
+            <option value="">Independente</option>
+            <!-- Preenchido via JS -->
+          </select>
+        </div>
+        
+        <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem;">
+          <button type="button" onclick="closeCreateModal()" class="btn btn-secondary" style="padding: 0.75rem 1.5rem; border-radius: 10px;">Cancelar</button>
+          <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.5rem; border-radius: 10px;">💾 Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Liberar Teste -->
+  <div id="liberateModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>🔓 Liberar Teste</h3>
+        <button class="modal-close" onclick="closeLiberateModal()">&times;</button>
+      </div>
+      
+      <div style="margin-bottom: 1.5rem;">
+        <p style="color: var(--slate-500); margin-bottom: 0.5rem;">Participante:</p>
+        <p id="liberateParticipantName" style="font-weight: 700; font-size: 1.125rem; color: var(--slate-800);">--</p>
+        <input type="hidden" id="liberateParticipantId">
+      </div>
+
+      <div class="form-group">
+        <label>Selecione o Teste</label>
+        <select id="testType" onchange="updateCreditsDisplay()">
+          <option value="">Selecione...</option>
+          <option value="DISC">📊 Teste DISC</option>
+          <option value="IE">🧠 Inteligência Emocional</option>
+          <option value="Valores">💎 Valores Pessoais</option>
+        </select>
+      </div>
+
+      <div id="creditsInfo" style="display: none; background: var(--slate-50); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; text-align: center;">
+        <p style="color: var(--slate-500); font-size: 0.875rem;">Créditos disponíveis para este teste:</p>
+        <p id="creditsValue" style="font-size: 1.5rem; font-weight: 800; color: var(--brand-blue);">--</p>
+      </div>
+
+      <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem;">
+        <button type="button" onclick="closeLiberateModal()" class="btn btn-secondary" style="padding: 0.75rem 1.5rem; border-radius: 10px;">Cancelar</button>
+        <button type="button" id="confirmLiberateBtn" onclick="confirmLiberate()" class="btn btn-primary" style="padding: 0.75rem 1.5rem; border-radius: 10px;" disabled>✅ Confirmar Liberação</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    'use strict';
+    
+    let participants = [];
+    let companies = [];
+    
+    // ============================================
+    // INICIALIZAÇÃO
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🔹 Participantes do Recrutador - Iniciando...');
+      
+      const isAuthorized = initRecruiterGuard(true);
+      if (!isAuthorized) return;
+      
+      const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+      document.getElementById('sidebarName').textContent = currentUser.name || 'Recrutador';
+      
+      loadRecruiterData();
+    });
+    
+    // ============================================
+    // CARREGAR DADOS DO RECRUTADOR
+    // ============================================
+    async function loadRecruiterData() {
+      try {
+        // Carregar empresas do recrutador para popular o select e filtrar participantes
+        if (window.VigorreDB && VigorreDB.supabase && window.recruiterScope?.companyIds?.length > 0) {
+          const { data: companiesData } = await VigorreDB.supabase
+            .from('companies')
+            .select('id, name')
+            .in('id', window.recruiterScope.companyIds);
+          if (companiesData) companies = companiesData;
+        } else {
+          const allCompanies = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+          companies = filterByRecruiterScope(allCompanies, 'id');
+        }
+        
+        // Popular select de empresas
+        const select = document.getElementById('pCompany');
+        select.innerHTML = '<option value="">Independente</option>';
+        companies.forEach(c => {
+          select.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+        });
+        
+        // Carregar participantes
+        if (window.VigorreDB && VigorreDB.supabase && window.recruiterScope?.companyIds?.length > 0) {
+          // Em produção: filtrar participantes por company_id que está no escopo
+          const { data: participantsData } = await VigorreDB.supabase
+            .from('participants')
+            .select('*');
+          if (participantsData) {
+            participants = participantsData.filter(p => 
+              window.recruiterScope.companyIds.includes(p.companyId) || 
+              window.recruiterScope.companyIds.includes(p.company_id)
+            );
+          }
+        } else {
+          const allParticipants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+          participants = filterByRecruiterScope(allParticipants, 'compId');
+        }
+        
+        renderTable();
+        
+      } catch (e) {
+        console.error('❌ Erro ao carregar dados:', e);
+        showToast('Erro ao carregar dados', 'error');
+      }
+    }
+    
+    // ============================================
+    // RENDERIZAR TABELA
+    // ============================================
+    function renderTable() {
+      const tbody = document.getElementById('participantsTableBody');
+      
+      if (participants.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6">
+              <div style="text-align: center; padding: 3rem; color: var(--slate-500);">
+                <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;">👥</div>
+                <h3 style="color: var(--slate-700); margin-bottom: 0.5rem;">Nenhum participante encontrado</h3>
+                <p>Cadastre um novo participante para começar.</p>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+      
+      tbody.innerHTML = participants.map(function(p) {
+        const tests = p.tests || p.assignedTests || [];
+        const testsBadges = tests.map(t => {
+          const cls = t.toLowerCase() === 'disc' ? 'disc' : t.toLowerCase() === 'ie' ? 'ie' : 'valores';
+          return `<span class="badge-test ${cls}">${t}</span>`;
+        }).join(' ') || '-';
+        
+        const completed = p.completedTests || [];
+        const status = tests.length === 0 ? 'pending' : (completed.length === tests.length ? 'completed' : 'pending');
+        const statusBadge = status === 'completed' 
+          ? '<span class="badge-status completed">✅ Concluído</span>'
+          : '<span class="badge-status pending">⏳ Pendente</span>';
+        
+        return `
+          <tr>
+            <td style="font-weight: 600;">${p.name || 'Sem nome'}</td>
+            <td>${p.companyName || '-'}</td>
+            <td>${p.email || '-'}</td>
+            <td>${testsBadges}</td>
+            <td>${statusBadge}</td>
+            <td>
+              <div class="actions-cell">
+                <button class="btn-action liberate" onclick="openLiberateModal('${p.id}', '${p.name}')" data-tooltip="Liberar Teste">🔓</button>
+                <button class="btn-action edit" onclick="editParticipant('${p.id}')" data-tooltip="Editar">✏️</button>
+                <button class="btn-action delete" onclick="deleteParticipant('${p.id}')" data-tooltip="Excluir">🗑️</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+    
+    // ============================================
+    // MODAIS
+    // ============================================
+    function openCreateModal() {
+      document.getElementById('createForm').reset();
+      document.getElementById('createModal').style.display = 'flex';
+    }
+    function closeCreateModal() {
+      document.getElementById('createModal').style.display = 'none';
+    }
+    
+    function openLiberateModal(id, name) {
+      document.getElementById('liberateParticipantId').value = id;
+      document.getElementById('liberateParticipantName').textContent = name;
+      document.getElementById('testType').value = '';
+      document.getElementById('creditsInfo').style.display = 'none';
+      document.getElementById('confirmLiberateBtn').disabled = true;
+      document.getElementById('liberateModal').style.display = 'flex';
+    }
+    function closeLiberateModal() {
+      document.getElementById('liberateModal').style.display = 'none';
+    }
+    
+    // ============================================
+    // ATUALIZAR CRÉDITOS NO MODAL
+    // ============================================
+    function updateCreditsDisplay() {
+      const type = document.getElementById('testType').value;
+      const infoDiv = document.getElementById('creditsInfo');
+      const btn = document.getElementById('confirmLiberateBtn');
+      
+      if (!type) {
+        infoDiv.style.display = 'none';
+        btn.disabled = true;
+        return;
+      }
+      
+      const available = (window.recruiterScope.credits && window.recruiterScope.credits[type]) || 0;
+      document.getElementById('creditsValue').textContent = available;
+      
+      if (value > 0) {
+        infoDiv.style.display = 'block';
+        btn.disabled = false;
+      } else {
+        infoDiv.style.display = 'block';
+        document.getElementById('creditsValue').style.color = 'var(--brand-rose)';
+        btn.disabled = true;
+      }
+    }
+    
+    // ============================================
+    // SALVAR PARTICIPANTE
+    // ============================================
+    async function saveParticipant(e) {
+      e.preventDefault();
+      
+      const data = {
+        id: Date.now().toString(),
+        name: document.getElementById('pName').value,
+        email: document.getElementById('pEmail').value,
+        companyId: document.getElementById('pCompany').value || null,
+        tests: [],
+        completedTests: [],
+        created_at: new Date().toISOString()
+      };
+      
+      try {
+        if (window.VigorreDB && VigorreDB.supabase) {
+          await VigorreDB.supabase.from('participants').insert([data]);
+        }
+        
+        const all = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+        all.push(data);
+        localStorage.setItem('vigorre_participants', JSON.stringify(all));
+        
+        showToast('Participante salvo com sucesso!', 'success');
+        closeCreateModal();
+        loadRecruiterData();
+        
+      } catch (e) {
+        console.error('❌ Erro ao salvar:', e);
+        showToast('Erro ao salvar participante', 'error');
+      }
+    }
+    
+    // ============================================
+    // CONFIRMAR LIBERAÇÃO
+    // ============================================
+    async function confirmLiberate() {
+      const id = document.getElementById('liberateParticipantId').value;
+      const type = document.getElementById('testType').value;
+      
+      if (!confirm(`Confirmar liberação do teste ${type} para este participante? Um crédito será consumido.`)) return;
+      
+      try {
+        // Consumir crédito
+        if (consumeRecruiterCredit(type)) {
+          // Atualizar participante
+          if (window.VigorreDB && VigorreDB.supabase) {
+            // Lógica de update no Supabase
+          }
+          
+          const all = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+          const idx = all.findIndex(p => p.id === id);
+          if (idx > -1) {
+            if (!all[idx].tests) all[idx].tests = [];
+            if (!all[idx].tests.includes(type)) {
+              all[idx].tests.push(type);
+            }
+            localStorage.setItem('vigorre_participants', JSON.stringify(all));
+          }
+          
+          showToast(`Teste ${type} liberado com sucesso!`, 'success');
+          closeLiberateModal();
+          loadRecruiterData();
+        } else {
+          showToast('Erro: Créditos insuficientes.', 'error');
+        }
+        
+      } catch (e) {
+        console.error('❌ Erro ao liberar teste:', e);
+        showToast('Erro ao liberar teste', 'error');
+      }
+    }
+    
+    // ============================================
+    // DELETAR
+    // ============================================
+    async function deleteParticipant(id) {
+      if (!confirm('Excluir este participante?')) return;
+      
+      try {
+        if (window.VigorreDB && VigorreDB.supabase) {
+          await VigorreDB.supabase.from('participants').delete().eq('id', id);
+        }
+        
+        const all = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+        const filtered = all.filter(p => p.id !== id);
+        localStorage.setItem('vigorre_participants', JSON.stringify(filtered));
+        
+        showToast('Participante excluído.', 'success');
+        loadRecruiterData();
+        
+      } catch (e) {
+        console.error('❌ Erro:', e);
+        showToast('Erro ao excluir', 'error');
+      }
+    }
+    
+    function editParticipant(id) {
+      alert('Funcionalidade de edição completa em breve!');
+    }
+    
+    // ============================================
+    // TOAST
+    // ============================================
+    function showToast(message, type) {
+      const existing = document.getElementById('toast');
+      if (existing) existing.remove();
+      
+      const toast = document.createElement('div');
+      toast.id = 'toast';
+      toast.style.cssText = `
+        position: fixed; top: 24px; right: 24px; background: white; padding: 14px 24px;
+        border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        display: flex; align-items: center; gap: 12px; font-weight: 600; z-index: 10001;
+        border-left: 4px solid ${type === 'error' ? 'var(--brand-rose)' : 'var(--brand-emerald)'};
+        animation: slideIn 0.3s ease;
+      `;
+      toast.innerHTML = `<span style="font-size: 1.25rem;">${type === 'success' ? '✅' : '❌'}</span><span>${message}</span>`;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.opacity = '0'; toast.style.transform = 'translateX(120%)';
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+    
+    const style = document.createElement('style');
+    style.textContent = `@keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }`;
+    document.head.appendChild(style);
+    
+    // Fechar modais ao clicar fora
+    document.getElementById('createModal').addEventListener('click', function(e) { if (e.target === this) closeCreateModal(); });
+    document.getElementById('liberateModal').addEventListener('click', function(e) { if (e.target === this) closeLiberateModal(); });
+    
+    console.log('🔍 Participantes Recrutador - Estado:', {
+      recruiterScope: window.recruiterScope,
+      participants: participants.length
+    });
+  </script>
+</body>
+</html>
