@@ -14,12 +14,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   
-  <!-- ✅ FIREBASE SDK - CARREGAR ANTES DO CONFIG -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <!-- ✅ SUPABASE SDK - CARREGAR PRIMEIRO -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
-  <!-- ✅ SUA CONFIGURAÇÃO FIREBASE -->
-  <script src="firebase-config.js"></script>
+  <!-- ✅ SUA CONFIGURAÇÃO SUPABASE -->
+  <script src="supabase-config.js"></script>
   
   <!-- Chart.js para gráficos -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -1432,7 +1431,7 @@
     });
 
     // ============================================
-    // CARREGAR SESSÃO COM FIREBASE + FALLBACK
+    // CARREGAR SESSÃO COM SUPABASE + FALLBACK
     // ============================================
     async function loadSession() {
       try {
@@ -1446,36 +1445,45 @@
           return;
         }
         
-        // PRIMEIRO: Tentar Firebase
-        if (window.firebaseDB?.db) {
-          console.log('🌐 Tentando carregar do Firebase...');
+        // PRIMEIRO: Tentar Supabase
+        if (window.VigorreDB?.supabase) {
+          console.log('🌐 Tentando carregar do Supabase...');
           
           try {
-            const doc = await firebaseDB.db.collection('participants').doc(participantId).get();
-            if (doc.exists) {
-              const data = doc.data();
-              AppState.participant = { id: doc.id, ...data };
-              console.log('✅ Participante carregado do Firebase:', data.name);
+            const { data, error } = await VigorreDB.supabase
+              .from('participants')
+              .select('*')
+              .eq('id', participantId)
+              .maybeSingle();
+            
+            if (data && !error) {
+              AppState.participant = data;
+              console.log('✅ Participante carregado do Supabase:', data.name);
               
               // Carregar empresa se existir
-              if (data.companyId) {
-                const companyDoc = await firebaseDB.db.collection('companies').doc(data.companyId).get();
-                if (companyDoc.exists) {
-                  AppState.company = { id: companyDoc.id, ...companyDoc.data() };
-                  console.log('✅ Empresa carregada do Firebase:', AppState.company.name);
+              if (data.company_id) {
+                const { data: companyData, error: companyError } = await VigorreDB.supabase
+                  .from('companies')
+                  .select('*')
+                  .eq('id', data.company_id)
+                  .maybeSingle();
+                
+                if (companyData && !companyError) {
+                  AppState.company = companyData;
+                  console.log('✅ Empresa carregada do Supabase:', AppState.company.name);
                 }
               }
               
               // Carregar vagas
               if (data.jobs && Array.isArray(data.jobs)) {
                 AppState.jobs = data.jobs;
-                console.log('✅ Vagas carregadas do Firebase');
+                console.log('✅ Vagas carregadas do Supabase');
               }
               
               return true;
             }
-          } catch (firebaseError) {
-            console.warn('⚠️ Erro ao buscar do Firebase:', firebaseError);
+          } catch (supabaseError) {
+            console.warn('⚠️ Erro ao buscar do Supabase:', supabaseError);
           }
         }
         
@@ -1517,7 +1525,7 @@
     }
 
     // ============================================
-    // CARREGAR RESULTADOS IE COM FIREBASE
+    // CARREGAR RESULTADOS IE COM SUPABASE
     // ============================================
     async function loadIEResults() {
       try {
@@ -1532,34 +1540,33 @@
           return false;
         }
         
-        // PRIMEIRO: Tentar Firebase
-        if (window.firebaseDB?.db) {
-          console.log('🌐 Tentando carregar resultados do Firebase...');
+        // PRIMEIRO: Tentar Supabase
+        if (window.VigorreDB?.supabase) {
+          console.log('🌐 Tentando carregar resultados do Supabase...');
           
           try {
-            const snapshot = await firebaseDB.db.collection('test_results')
-              .where('participantId', '==', participantId)
-              .where('testType', '==', 'IE')
+            const { data, error } = await VigorreDB.supabase
+              .from('test_results')
+              .select('*')
+              .eq('participant_id', participantId)
+              .eq('test_type', 'IE')
               .limit(1)
-              .get();
+              .maybeSingle();
             
-            if (!snapshot.empty) {
-              const doc = snapshot.docs[0];
-              const data = doc.data();
-              
+            if (data && !error) {
               AppState.ieResults = {
                 percentages: data.percentages || {},
                 scores: data.scores || {},
                 dominant: data.dominant,
-                date: data.completedAt
+                date: data.completed_at
               };
               
-              console.log('✅ Resultados IE carregados do Firebase');
+              console.log('✅ Resultados IE carregados do Supabase');
               generateReport();
               return true;
             }
-          } catch (firebaseError) {
-            console.warn('⚠️ Erro ao buscar do Firebase:', firebaseError);
+          } catch (supabaseError) {
+            console.warn('⚠️ Erro ao buscar do Supabase:', supabaseError);
           }
         }
         
@@ -1658,7 +1665,7 @@
         let companyName = 'Independente';
         
         // Buscar em múltiplos campos possíveis
-        const participantCompanyFields = ['companyName', 'compName', 'empresa', 'razao_social', 'fantasia', 'business_name'];
+        const participantCompanyFields = ['company_name', 'companyName', 'compName', 'empresa', 'razao_social', 'fantasia', 'business_name'];
         
         for (const field of participantCompanyFields) {
           if (AppState.participant?.[field]) {
@@ -2216,9 +2223,9 @@
     async function performLogout() {
       console.log('🔐 Realizando logoff...');
       
-      if (window.firebaseDB?.db) {
-        // Remover sessão do Firebase se aplicável
-        console.log('🔄 Limpando sessão do Firebase...');
+      if (window.VigorreDB?.supabase) {
+        // Remover sessão do Supabase se aplicável
+        console.log('🔄 Limpando sessão do Supabase...');
       }
       
       // Limpar dados locais
@@ -2268,9 +2275,9 @@
       participant: AppState.participant?.name || 'não carregado',
       company: AppState.company?.name || AppState.participant?.companyName || 'não carregada',
       jobs: AppState.jobs || 'não carregadas',
-      firebase: {
-        available: typeof window.firebaseDB !== 'undefined',
-        db: window.firebaseDB?.db ? 'conectado' : 'não conectado'
+      supabase: {
+        available: typeof window.VigorreDB !== 'undefined',
+        connected: VigorreDB?.supabase ? 'conectado' : 'não conectado'
       }
     });
   </script>
