@@ -14,13 +14,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   
-  <!-- ✅ FIREBASE SDK - CARREGAR ANTES DO CONFIG -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <!-- ✅ SUPABASE SDK - CARREGAR PRIMEIRO -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
-  <!-- ✅ SUA CONFIGURAÇÃO FIREBASE -->
-  <script src="firebase-config.js"></script>
+  <!-- ✅ SUA CONFIGURAÇÃO SUPABASE -->
+  <script src="supabase-config.js"></script>
   
   <style>
     * {
@@ -564,25 +562,30 @@
     }
 
     // ============================================
-    // CARREGAR DADOS DO PARTICIPANTE
+    // CARREGAR DADOS DO PARTICIPANTE COM SUPABASE
     // ============================================
     async function loadParticipantData() {
       try {
         console.log('🔍 Buscando dados do participante...');
         
-        // PRIMEIRO: Tentar Firebase
-        if (window.firebaseDB && firebaseDB.db && currentUser?.id) {
+        // PRIMEIRO: Tentar Supabase
+        if (window.VigorreDB && VigorreDB.supabase && currentUser?.id) {
           try {
-            const doc = await firebaseDB.db.collection('participants').doc(currentUser.id).get();
-            if (doc.exists) {
-              participantData = { id: doc.id, ...doc.data() };
-              console.log('✅ Dados carregados do Firebase');
+            const { data, error } = await VigorreDB.supabase
+              .from('participants')
+              .select('*')
+              .eq('id', currentUser.id)
+              .maybeSingle();
+            
+            if (data && !error) {
+              participantData = data;
+              console.log('✅ Dados carregados do Supabase');
               updateUI(participantData);
               loadTests(participantData);
               return;
             }
           } catch (e) {
-            console.warn('⚠️ Erro ao buscar do Firebase, usando localStorage:', e);
+            console.warn('⚠️ Erro ao buscar do Supabase, usando localStorage:', e);
           }
         }
         
@@ -888,9 +891,9 @@
     // ============================================
     console.log('🔍 Dashboard - Estado:', {
       currentUser: currentUser?.name || 'não carregado',
-      firebase: {
-        available: typeof window.firebaseDB !== 'undefined',
-        db: window.firebaseDB?.db ? 'conectado' : 'não conectado'
+      supabase: {
+        available: typeof window.VigorreDB !== 'undefined',
+        connected: VigorreDB?.supabase ? 'conectado' : 'não conectado'
       }
     });
   </script>
