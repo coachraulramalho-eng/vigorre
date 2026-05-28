@@ -1,5 +1,5 @@
 /* ============================================
-   VIGORRE ONE™ - GLOBAL JAVASCRIPT
+   VIGORRE ONE™ — GLOBAL JAVASCRIPT
    Funções reutilizáveis em toda a plataforma
    ============================================ */
 
@@ -35,6 +35,9 @@ function showToast(message, type) {
     z-index: 10001;
     border-left: 4px solid ${type === 'error' ? 'var(--brand-rose)' : type === 'warning' ? 'var(--brand-amber)' : 'var(--brand-emerald)'};
     animation: slideIn 0.3s ease;
+    max-width: 400px;
+    font-size: 0.875rem;
+    border: 1px solid var(--slate-200);
   `;
   
   const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : '⚠️';
@@ -57,7 +60,10 @@ function showToast(message, type) {
 function closeModal(modalId) {
   const modal = document.getElementById(modalId);
   if (modal) {
-    modal.style.display = 'none';
+    modal.classList.remove('active');
+    modal.querySelectorAll('form')?.forEach(f => f.reset());
+    modal.querySelectorAll('input[type="hidden"]')?.forEach(i => i.value = '');
+    document.body.style.overflow = '';
   }
 }
 
@@ -68,7 +74,8 @@ function closeModal(modalId) {
 function openModal(modalId) {
   const modal = document.getElementById(modalId);
   if (modal) {
-    modal.style.display = 'flex';
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
   }
 }
 
@@ -78,6 +85,7 @@ function openModal(modalId) {
  * @returns {string} Data formatada (DD/MM/YYYY).
  */
 function formatDateBR(date) {
+  if (!date) return '-';
   const d = new Date(date);
   return d.toLocaleDateString('pt-BR');
 }
@@ -88,6 +96,7 @@ function formatDateBR(date) {
  * @returns {string} Valor formatado (R$ 0,00).
  */
 function formatCurrencyBRL(value) {
+  if (value === null || value === undefined) return '-';
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL'
@@ -112,8 +121,9 @@ function sanitizeString(str) {
  * @returns {boolean} True se válido.
  */
 function isValidEmail(email) {
+  if (!email) return false;
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return re.test(email);
+  return re.test(String(email).toLowerCase());
 }
 
 /**
@@ -139,59 +149,217 @@ function debounce(func, wait = 300) {
  * @param {string} text - Texto a ser copiado.
  */
 function copyToClipboard(text) {
+  if (!text) return;
+  
   if (navigator.clipboard && window.isSecureContext) {
     navigator.clipboard.writeText(text).then(() => {
       showToast('Copiado para a área de transferência!', 'success');
+    }).catch(() => {
+      fallbackCopy(text);
     });
   } else {
-    // Fallback para navegadores antigos
-    const textArea = document.createElement('textarea');
-    textArea.value = text;
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-    try {
-      document.execCommand('copy');
-      showToast('Copiado!', 'success');
-    } catch (err) {
-      showToast('Erro ao copiar.', 'error');
-    }
-    document.body.removeChild(textArea);
+    fallbackCopy(text);
   }
 }
 
-// Adicionar animação slideIn ao documento
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes slideIn {
-    from { transform: translateX(120%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
+function fallbackCopy(text) {
+  const textArea = document.createElement('textarea');
+  textArea.value = text;
+  textArea.style.position = 'fixed';
+  textArea.style.left = '-999999px';
+  textArea.style.top = '-999999px';
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    document.execCommand('copy');
+    showToast('Copiado!', 'success');
+  } catch (err) {
+    showToast('Erro ao copiar.', 'error');
   }
-`;
-document.head.appendChild(style);
+  document.body.removeChild(textArea);
+}
 
-// Fechar modais ao pressionar ESC
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') {
-    document.querySelectorAll('.modal-overlay').forEach(modal => {
-      if (modal.style.display === 'flex') {
-        modal.style.display = 'none';
+/**
+ * Previne o botão voltar do navegador após logout.
+ */
+function preventBackButton() {
+  window.history.pushState(null, null, window.location.href);
+  window.addEventListener('popstate', function () {
+    window.history.pushState(null, null, window.location.href);
+    const sessionActive = sessionStorage.getItem('vigorre_session_active') === 'true';
+    if (!sessionActive) {
+      window.location.href = 'login.html';
+    }
+  });
+}
+
+/**
+ * Logout seguro - limpa sessão e redireciona.
+ * @param {string} redirectUrl - URL para redirecionar após logout.
+ */
+function logout(redirectUrl = 'login.html') {
+  // Marcar logout para sincronização entre abas
+  sessionStorage.setItem('vigorre_logged_out', 'true');
+  
+  // Limpar dados sensíveis
+  localStorage.removeItem('vigorre_current_user');
+  localStorage.removeItem('vigorre_password_temp');
+  localStorage.removeItem('vigorre_report_participant');
+  sessionStorage.clear();
+  
+  // Redirecionar com timestamp para evitar cache
+  window.location.href = `${redirectUrl}?loggedout=1&ts=${Date.now()}`;
+}
+
+/**
+ * Verifica se o usuário está autenticado.
+ * @param {string} requiredRole - Papel necessário (opcional).
+ * @returns {boolean} True se autenticado.
+ */
+function isAuthenticated(requiredRole = null) {
+  const stored = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+  const sessionActive = sessionStorage.getItem('vigorre_session_active') === 'true';
+  
+  if (!stored.role || !sessionActive) return false;
+  if (requiredRole && stored.role !== requiredRole) return false;
+  
+  return true;
+}
+
+/**
+ * Redireciona para login se não autenticado.
+ * @param {string} requiredRole - Papel necessário (opcional).
+ */
+function requireAuth(requiredRole = null) {
+  if (!isAuthenticated(requiredRole)) {
+    window.location.href = `login.html?reason=auth_required&ts=${Date.now()}`;
+    return false;
+  }
+  return true;
+}
+
+/**
+ * Carrega dados do localStorage com fallback seguro.
+ * @param {string} key - Chave do localStorage.
+ * @param {*} defaultValue - Valor padrão se não existir.
+ * @returns {*} Dados parseados ou valor padrão.
+ */
+function loadFromStorage(key, defaultValue = []) {
+  try {
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : defaultValue;
+  } catch (e) {
+    console.warn(`⚠️ Erro ao carregar ${key}:`, e);
+    return defaultValue;
+  }
+}
+
+/**
+ * Salva dados no localStorage com tratamento de erro.
+ * @param {string} key - Chave do localStorage.
+ * @param {*} value - Valor a ser salvo.
+ * @returns {boolean} True se sucesso.
+ */
+function saveToStorage(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+    return true;
+  } catch (e) {
+    console.error(`❌ Erro ao salvar ${key}:`, e);
+    showToast('Erro ao salvar dados. Tente novamente.', 'error');
+    return false;
+  }
+}
+
+/**
+ * Debounce para buscas em tempo real.
+ */
+const searchDebounce = debounce(function(callback, value) {
+  callback(value);
+}, 300);
+
+/**
+ * Inicializa tooltips em elementos com data-tooltip.
+ */
+function initTooltips() {
+  // Tooltips são puramente CSS via globals.css, esta função é placeholder
+  // para futuras expansões com JavaScript se necessário.
+}
+
+/**
+ * Inicializa animações de entrada para elementos.
+ * @param {string} selector - Seletor CSS dos elementos.
+ * @param {string} animation - Nome da animação.
+ */
+function initEntranceAnimations(selector = '.card', animation = 'fadeIn') {
+  const elements = document.querySelectorAll(selector);
+  elements.forEach((el, index) => {
+    el.style.animationDelay = `${0.1 + index * 0.05}s`;
+    el.classList.add(animation);
+  });
+}
+
+// ============================================
+// INICIALIZAÇÃO GLOBAL
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+  // Inicializar tooltips
+  initTooltips();
+  
+  // Fechar modais ao pressionar ESC
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal.active').forEach(modal => {
+        closeModal(modal.id);
+      });
+    }
+  });
+  
+  // Fechar modais ao clicar fora
+  document.querySelectorAll('.modal').forEach(modal => {
+    modal.addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal(this.id);
       }
     });
-  }
-});
-
-// Fechar modais ao clicar fora
-document.querySelectorAll('.modal-overlay').forEach(modal => {
-  modal.addEventListener('click', function(e) {
-    if (e.target === this) {
-      this.style.display = 'none';
-    }
+  });
+  
+  // Prevenir submit de forms com Enter em inputs vazios
+  document.querySelectorAll('form[novalidate]').forEach(form => {
+    form.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        const inputs = form.querySelectorAll('input[required]');
+        const empty = Array.from(inputs).find(input => !input.value.trim());
+        if (empty) {
+          e.preventDefault();
+          empty.focus();
+          showToast('Preencha todos os campos obrigatórios.', 'warning');
+        }
+      }
+    });
   });
 });
 
 // ============================================
-// EXPORTS PARA MÓDULOS (OPCIONAL)
+// ANIMAÇÃO DO TOAST (injetada no head se não existir)
+// ============================================
+(function() {
+  if (!document.getElementById('globals-toast-style')) {
+    const style = document.createElement('style');
+    style.id = 'globals-toast-style';
+    style.textContent = `
+      @keyframes slideIn {
+        from { transform: translateX(120%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+})();
+
+// ============================================
+// EXPORTS PARA MÓDULOS (Node.js / Bundlers)
 // ============================================
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
@@ -203,6 +371,15 @@ if (typeof module !== 'undefined' && module.exports) {
     sanitizeString,
     isValidEmail,
     debounce,
-    copyToClipboard
+    copyToClipboard,
+    preventBackButton,
+    logout,
+    isAuthenticated,
+    requireAuth,
+    loadFromStorage,
+    saveToStorage,
+    searchDebounce,
+    initTooltips,
+    initEntranceAnimations
   };
 }
