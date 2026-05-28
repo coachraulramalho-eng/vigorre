@@ -23,7 +23,7 @@
   <!-- ✅ GLOBAL STYLES PREMIUM -->
   <link rel="stylesheet" href="assets/css/globals.css">
   
-  <!-- ✅ ESTILOS ESPECÍFICOS DO ADMIN -->
+  <!-- ✅ ESTILOS ESPECÍFICOS DO ADMIN (SEU LAYOUT ORIGINAL) -->
   <style>
     /* ============================================
        ADMIN - LAYOUT CORRETO
@@ -175,6 +175,7 @@
     
     .header-actions { display: flex; align-items: center; gap: 1rem; }
     
+    /* Indicador Supabase */
     .supabase-status {
       display: flex;
       align-items: center;
@@ -196,7 +197,7 @@
     .status-dot.connected { background: var(--brand-emerald); }
     .status-dot.notloaded { background: var(--slate-400); }
     
-    /* SEÇÕES - Controle de visibilidade */
+    /* SEÇÕES */
     main section { 
       display: none !important;
     }
@@ -235,6 +236,7 @@
       font-weight: 700;
     }
     
+    /* Stats Grid */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -261,38 +263,123 @@
     .stat-trend { font-size: 0.75rem; margin-top: 0.5rem; color: var(--brand-emerald); }
     
     /* Tabelas */
-    table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9rem; }
-    thead { background: linear-gradient(135deg, var(--slate-50), var(--slate-100)); border-bottom: 2px solid var(--slate-200); }
-    th { padding: 1rem 1.25rem; text-align: left; font-weight: 700; color: var(--slate-600); font-size: 0.8125rem; text-transform: uppercase; }
-    td { padding: 1rem 1.25rem; border-bottom: 1px solid var(--slate-100); color: var(--slate-700); }
-    tbody tr:hover { background: linear-gradient(135deg, rgba(59, 130, 246, 0.03), rgba(124, 58, 237, 0.02)); }
+    table { 
+      width: 100%; 
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.9rem;
+    }
+    
+    thead {
+      background: linear-gradient(135deg, var(--slate-50), var(--slate-100));
+      border-bottom: 2px solid var(--slate-200);
+    }
+    
+    th { 
+      padding: 1rem 1.25rem; 
+      text-align: left; 
+      font-weight: 700; 
+      color: var(--slate-600);
+      font-size: 0.8125rem;
+      text-transform: uppercase;
+    }
+    
+    td { 
+      padding: 1rem 1.25rem; 
+      border-bottom: 1px solid var(--slate-100);
+      color: var(--slate-700);
+    }
+    
+    tbody tr:hover { 
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.03), rgba(124, 58, 237, 0.02));
+    }
     
     /* Avatar */
-    .avatar { width: 36px; height: 36px; border-radius: var(--radius); background: var(--gradient-primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.875rem; margin-right: 12px; }
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius);
+      background: var(--gradient-primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.875rem;
+      margin-right: 12px;
+    }
+    
     .user-cell { display: flex; align-items: center; gap: 12px; }
     .user-info-cell { display: flex; flex-direction: column; }
     .user-name { font-weight: 600; color: var(--slate-800); }
     .user-email { font-size: 0.8125rem; color: var(--slate-500); }
     
     /* Badges */
-    .badge-pill { padding: 5px 14px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; border: 1px solid; }
+    .badge-pill {
+      padding: 5px 14px;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid;
+    }
+    
     .badge-disc { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
     .badge-ie { background: #eff6ff; color: #2563eb; border-color: #bfdbfe; }
     .badge-valores { background: #fffbeb; color: #d97706; border-color: #fde68a; }
     .badge-completed { background: #dcfce7; color: #166534; border-color: #bbf7d0; }
     .badge-pending { background: var(--slate-100); color: var(--slate-600); border-color: var(--slate-200); }
     
-    /* Search */
+    /* Search & Filter */
     .search-bar { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
     .search-input { flex: 1; min-width: 250px; position: relative; }
-    .search-input input { width: 100%; padding: 12px 16px 12px 44px; border: 2px solid var(--slate-200); border-radius: var(--radius-lg); font-size: 0.9375rem; }
-    .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--slate-400); }
-    .filter-select { padding: 12px 16px; border: 2px solid var(--slate-200); border-radius: var(--radius-lg); font-size: 0.9375rem; background: white; min-width: 180px; }
+    .search-input input {
+      width: 100%;
+      padding: 12px 16px 12px 44px;
+      border: 2px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      font-size: 0.9375rem;
+    }
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--slate-400);
+    }
+    .filter-select {
+      padding: 12px 16px;
+      border: 2px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      font-size: 0.9375rem;
+      background: white;
+      min-width: 180px;
+    }
     
     /* Pagination */
-    .pagination { display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--slate-200); }
-    .pagination button { padding: 8px 14px; border: 2px solid var(--slate-200); background: white; border-radius: var(--radius); font-weight: 600; cursor: pointer; }
-    .pagination button:hover:not(:disabled) { border-color: var(--brand-blue); color: var(--brand-blue); }
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--slate-200);
+    }
+    .pagination button {
+      padding: 8px 14px;
+      border: 2px solid var(--slate-200);
+      background: white;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .pagination button:hover:not(:disabled) {
+      border-color: var(--brand-blue);
+      color: var(--brand-blue);
+    }
     .pagination button:disabled { opacity: 0.5; cursor: not-allowed; }
     .pagination button.active { background: var(--brand-blue); border-color: var(--brand-blue); color: white; }
     
@@ -301,22 +388,104 @@
     .empty-state-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
     .empty-state h4 { font-size: 1.125rem; font-weight: 600; color: var(--slate-700); margin-bottom: 0.5rem; }
     
-    /* Modals */
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; }
-    .modal.active { display: flex; align-items: center; justify-content: center; }
-    .modal::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(4px); z-index: -1; }
-    .modal-content { background: white; border-radius: var(--radius-2xl); padding: 2rem; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; z-index: 10000; position: relative; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--slate-100); }
-    .modal-close { background: var(--slate-100); border: none; width: 36px; height: 36px; border-radius: var(--radius); font-size: 1.5rem; cursor: pointer; color: var(--slate-600); display: flex; align-items: center; justify-content: center; }
-    .modal-close:hover { background: var(--brand-rose); color: white; }
+    /* Modais */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 9999;
+    }
+    .modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(4px);
+      z-index: -1;
+    }
+    .modal-content { 
+      background: white;
+      border-radius: var(--radius-2xl);
+      padding: 2rem;
+      max-width: 600px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      z-index: 10000;
+      position: relative;
+    }
+    .modal-header { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      margin-bottom: 1.5rem; 
+      padding-bottom: 1rem; 
+      border-bottom: 2px solid var(--slate-100); 
+    }
+    .modal-close { 
+      background: var(--slate-100);
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius);
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--slate-600);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-close:hover {
+      background: var(--brand-rose);
+      color: white;
+    }
     
-    /* Log Panel */
-    .log-panel { position: fixed; bottom: 1rem; right: 1rem; width: 300px; max-height: 200px; background: var(--brand-navy); color: #10b981; border-radius: var(--radius-lg); padding: 0.75rem; font-family: monospace; font-size: 0.7rem; overflow-y: auto; z-index: 9998; border: 1px solid var(--slate-700); box-shadow: var(--shadow-xl); }
-    .log-panel h4 { margin: 0 0 0.5rem 0; color: white; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; }
-    .log-panel .log-entry { margin: 2px 0; padding: 2px 4px; border-left: 2px solid var(--brand-cyan); }
+    /* Painel de Logs */
+    .log-panel {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      width: 300px;
+      max-height: 200px;
+      background: var(--brand-navy);
+      color: #10b981;
+      border-radius: var(--radius-lg);
+      padding: 0.75rem;
+      font-family: monospace;
+      font-size: 0.7rem;
+      overflow-y: auto;
+      z-index: 9998;
+      border: 1px solid var(--slate-700);
+      box-shadow: var(--shadow-xl);
+    }
+    .log-panel h4 {
+      margin: 0 0 0.5rem 0;
+      color: white;
+      font-size: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .log-panel .log-entry {
+      margin: 2px 0;
+      padding: 2px 4px;
+      border-left: 2px solid var(--brand-cyan);
+    }
     .log-panel .log-entry.error { border-left-color: var(--brand-rose); color: #fca5a5; }
     .log-panel .log-entry.warn { border-left-color: var(--brand-amber); color: #fcd34d; }
-    .log-panel .clear-log { background: none; border: none; color: var(--slate-400); cursor: pointer; font-size: 1rem; }
+    .log-panel .clear-log {
+      background: none;
+      border: none;
+      color: var(--slate-400);
+      cursor: pointer;
+      font-size: 1rem;
+    }
     .log-panel .clear-log:hover { color: white; }
     
     /* Responsivo */
@@ -329,11 +498,22 @@
     }
     @media (max-width: 768px) {
       body.admin-page { grid-template-columns: 1fr; }
-      .sidebar { width: 100%; height: auto; position: relative; padding: 1rem; flex-direction: row; justify-content: space-between; align-items: center; }
+      .sidebar { 
+        width: 100%; 
+        height: auto; 
+        position: relative; 
+        padding: 1rem;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
       .sidebar .logo { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
       .nav-menu { display: none; }
       .main { margin-left: 0; padding: 1rem; }
-      .log-panel { width: calc(100% - 2rem); max-height: 150px; }
+      .log-panel { 
+        width: calc(100% - 2rem);
+        max-height: 150px;
+      }
     }
   </style>
 </head>
@@ -398,6 +578,7 @@
           <div class="stat-label">Relatórios Gerados</div>
         </div>
       </div>
+      
       <div class="card">
         <h3>Bem-vindo ao Painel Vigorre One™</h3>
         <p style="color: var(--slate-600); line-height: 1.7;">
@@ -420,7 +601,9 @@
           </div>
         </div>
         <table>
-          <thead><tr><th>Nome</th><th>Email</th><th>Login</th><th>Ações</th></tr></thead>
+          <thead>
+            <tr><th>Nome</th><th>Email</th><th>Login</th><th>Ações</th></tr>
+          </thead>
           <tbody id="staffTableBody"></tbody>
         </table>
         <div class="pagination" id="staffPagination"></div>
@@ -441,7 +624,9 @@
           </div>
         </div>
         <table>
-          <thead><tr><th>Empresa</th><th>CNPJ</th><th>Responsável</th><th>Ações</th></tr></thead>
+          <thead>
+            <tr><th>Empresa</th><th>CNPJ</th><th>Responsável</th><th>Ações</th></tr>
+          </thead>
           <tbody id="companiesTableBody"></tbody>
         </table>
         <div class="pagination" id="companiesPagination"></div>
@@ -462,7 +647,9 @@
           </div>
         </div>
         <table>
-          <thead><tr><th>Participante</th><th>Email</th><th>Status</th><th>Ações</th></tr></thead>
+          <thead>
+            <tr><th>Participante</th><th>Email</th><th>Status</th><th>Ações</th></tr>
+          </thead>
           <tbody id="participantsTableBody"></tbody>
         </table>
         <div class="pagination" id="participantsPagination"></div>
@@ -479,10 +666,22 @@
       </div>
       <form onsubmit="saveStaff(event)">
         <input type="hidden" id="sId">
-        <div class="form-group"><label>Nome Completo *</label><input type="text" id="sName" required placeholder="Digite o nome completo"></div>
-        <div class="form-group"><label>Email *</label><input type="email" id="sEmail" required placeholder="email@empresa.com"></div>
-        <div class="form-group"><label>Login *</label><input type="text" id="sLogin" required placeholder="usuario"></div>
-        <div class="form-group"><label>Senha *</label><input type="password" id="sPass" required placeholder="••••••••"></div>
+        <div class="form-group">
+          <label>Nome Completo *</label>
+          <input type="text" id="sName" required placeholder="Digite o nome completo">
+        </div>
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" id="sEmail" required placeholder="email@empresa.com">
+        </div>
+        <div class="form-group">
+          <label>Login *</label>
+          <input type="text" id="sLogin" required placeholder="usuario">
+        </div>
+        <div class="form-group">
+          <label>Senha *</label>
+          <input type="password" id="sPass" required placeholder="••••••••">
+        </div>
         <button type="submit" class="btn btn-primary" style="width:100%; padding: 14px;">💾 Salvar</button>
       </form>
     </div>
@@ -496,9 +695,18 @@
       </div>
       <form onsubmit="saveCompany(event)">
         <input type="hidden" id="cId">
-        <div class="form-group"><label>Nome da Empresa *</label><input type="text" id="cName" required placeholder="Razão Social"></div>
-        <div class="form-group"><label>CNPJ *</label><input type="text" id="cCnpj" required placeholder="00.000.000/0000-00"></div>
-        <div class="form-group"><label>Responsável *</label><input type="text" id="cResp" required placeholder="Nome do responsável"></div>
+        <div class="form-group">
+          <label>Nome da Empresa *</label>
+          <input type="text" id="cName" required placeholder="Razão Social">
+        </div>
+        <div class="form-group">
+          <label>CNPJ *</label>
+          <input type="text" id="cCnpj" required placeholder="00.000.000/0000-00">
+        </div>
+        <div class="form-group">
+          <label>Responsável *</label>
+          <input type="text" id="cResp" required placeholder="Nome do responsável">
+        </div>
         <button type="submit" class="btn btn-primary" style="width:100%; padding: 14px;">💾 Salvar</button>
       </form>
     </div>
@@ -512,17 +720,32 @@
       </div>
       <form onsubmit="saveParticipant(event)">
         <input type="hidden" id="pId">
-        <div class="form-group"><label>Nome Completo *</label><input type="text" id="pName" required></div>
-        <div class="form-group"><label>Email *</label><input type="email" id="pEmail" required></div>
-        <div class="form-group"><label>Telefone *</label><input type="tel" id="pPhone" required></div>
-        <div class="form-group"><label>Usuário *</label><input type="text" id="pUser" required></div>
-        <div class="form-group"><label>Senha *</label><input type="password" id="pPass" required></div>
+        <div class="form-group">
+          <label>Nome Completo *</label>
+          <input type="text" id="pName" required>
+        </div>
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" id="pEmail" required>
+        </div>
+        <div class="form-group">
+          <label>Telefone *</label>
+          <input type="tel" id="pPhone" required>
+        </div>
+        <div class="form-group">
+          <label>Usuário *</label>
+          <input type="text" id="pUser" required>
+        </div>
+        <div class="form-group">
+          <label>Senha *</label>
+          <input type="password" id="pPass" required>
+        </div>
         <button type="submit" class="btn btn-primary" style="width:100%; padding: 14px;">💾 Salvar</button>
       </form>
     </div>
   </div>
 
-  <!-- Log Panel -->
+  <!-- Painel de Logs -->
   <div class="log-panel" id="logPanel">
     <h4>📋 Logs <button class="clear-log" onclick="clearLogs()">×</button></h4>
     <div id="logContent"></div>
@@ -543,7 +766,7 @@
     const ITEMS_PER_PAGE = 10;
     let currentPage = { staff: 1, companies: 1, participants: 1 };
 
-    // ✅ Funções de Log
+    // Funções de Log
     function logMessage(message, type = 'info') {
       const logContent = document.getElementById('logContent');
       if (!logContent) return;
@@ -572,7 +795,6 @@
       setTimeout(function() { t.remove(); }, 4000);
     }
 
-    // ✅ Modal functions
     function closeModal(id) { 
       const modal = document.getElementById(id);
       if (modal) {
@@ -596,44 +818,25 @@
       }
     }
 
-    // ✅ NAVEGAÇÃO - CORRIGIDA
+    // NAVEGAÇÃO - CORRIGIDA (apenas return false adicionado)
     function showSection(sectionId) {
-      // Esconde todas as seções
       document.querySelectorAll('main section').forEach(function(s) {
         s.style.display = 'none';
         s.classList.remove('active');
       });
-      
-      // Mostra a seção selecionada
       const target = document.getElementById(sectionId);
       if (target) {
         target.style.display = 'block';
         target.classList.add('active');
-        logMessage('Navegando para: ' + sectionId);
+        logMessage('Seção: ' + sectionId);
       }
-      
-      // Atualiza menu ativo
-      document.querySelectorAll('.nav-menu a').forEach(function(a) {
-        a.classList.remove('active');
-      });
-      
-      // Atualiza o link clicado (se disponível via event)
-      if (window.event && window.event.currentTarget) {
-        window.event.currentTarget.classList.add('active');
-      }
-      
-      // Atualiza título
+      document.querySelectorAll('.nav-menu a').forEach(function(a) { a.classList.remove('active'); });
+      if (event && event.currentTarget) event.currentTarget.classList.add('active');
       const titles = {'dashboard':'Dashboard','staff':'Staff','companies':'Empresas','participants':'Participantes'};
       document.getElementById('pageTitle').textContent = titles[sectionId] || sectionId;
-      
-      // Previne comportamento padrão do link
-      if (window.event) {
-        window.event.preventDefault();
-      }
       return false;
     }
 
-    // ✅ CRUD functions
     function saveDB() {
       localStorage.setItem('vigorre_staff', JSON.stringify(DB.staff));
       localStorage.setItem('vigorre_companies', JSON.stringify(DB.companies));
@@ -730,34 +933,21 @@
       window.location.href = 'login.html';
     }
 
-    // ✅ Inicialização
+    // Inicialização
     document.addEventListener('DOMContentLoaded', function() {
       logMessage('✅ Admin carregado');
-      
-      // Verifica autenticação
       const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
-      if (!currentUser.role) { 
-        logMessage('⚠️ Não autenticado - redirecionando');
-        window.location.href = 'login.html'; 
-        return; 
-      }
-      
+      if (!currentUser.role) { window.location.href = 'login.html'; return; }
       document.getElementById('userName').textContent = currentUser.name || 'Admin';
       renderAll();
       updateStats();
       
-      // Fechar modais ao clicar fora
       document.querySelectorAll('.modal').forEach(function(modal) {
-        modal.addEventListener('click', function(e) { 
-          if (e.target === modal) closeModal(modal.id); 
-        });
+        modal.addEventListener('click', function(e) { if (e.target === modal) closeModal(modal.id); });
       });
       
-      // ESC fecha modal
       document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-          document.querySelectorAll('.modal.active').forEach(function(m) { closeModal(m.id); });
-        }
+        if (e.key === 'Escape') document.querySelectorAll('.modal.active').forEach(function(m) { closeModal(m.id); });
       });
     });
   </script>
