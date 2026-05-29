@@ -81,8 +81,6 @@
       line-height: 1.6; 
       position: relative; 
       overflow-x: hidden;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
     }
     
     /* Background animado premium */
@@ -855,312 +853,6 @@
     .toast-icon { font-size: 1.25rem; }
     
     /* ============================================
-       PRINT OPTIMIZATION - ULTRA PREMIUM
-       ============================================ */
-    @media print {
-      @page {
-        size: A4 portrait;
-        margin: 32mm 16mm 24mm 16mm;
-      }
-      
-      body { 
-        background: #ffffff !important;
-        color: #111111 !important;
-        font-size: 10pt;
-        line-height: 1.5;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-      
-      /* Esconder elementos não impressos */
-      .no-print, header, .modal-overlay, .toast, .btn, .btn-report, .navigation-buttons { 
-        display: none !important; 
-      }
-      
-      /* Header de impressão */
-      .print-header {
-        display: flex !important;
-        background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
-        color: white !important;
-        padding: 8mm 16mm 4mm 16mm !important;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 9999;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-      
-      .print-header .print-header-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        max-width: 210mm;
-        margin: 0 auto;
-      }
-      
-      .print-header .print-logo-box {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-      
-      .print-header .print-logo {
-        width: 40px;
-        height: 40px;
-        background: linear-gradient(135deg, #1D4ED8, #7C3AED) !important;
-        color: white;
-        border-radius: 10px;
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
-        font-weight: 900;
-        font-size: 20pt;
-      }
-      
-      .print-header .print-logo-text h4 {
-        font-size: 14pt;
-        font-weight: 700;
-        margin: 0;
-        color: white !important;
-      }
-      
-      .print-header .print-logo-text p {
-        font-size: 8pt;
-        margin: 0;
-        opacity: 0.9;
-        color: rgba(255,255,255,0.9) !important;
-      }
-      
-      .print-header h1 {
-        font-size: 14pt;
-        font-weight: 800;
-        margin: 0;
-        color: white !important;
-      }
-      
-      .print-header p {
-        font-size: 8pt;
-        margin: 0;
-        opacity: 0.9;
-        color: rgba(255,255,255,0.9) !important;
-      }
-      
-      /* Conteúdo principal com margem para header/footer */
-      main, .results-container {
-        margin-top: 32mm !important;
-        margin-bottom: 24mm !important;
-        padding: 0 !important;
-        max-width: 100% !important;
-      }
-      
-      /* Cards na impressão */
-      .question-card, .results-header, .chart-card, .summary-card, .report-card {
-        background: #ffffff !important;
-        border: 1px solid #e2e8f0 !important;
-        box-shadow: none !important;
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
-        margin-bottom: 20px !important;
-      }
-      
-      .question-card {
-        padding: 2rem !important;
-        border-radius: 12px !important;
-      }
-      
-      .results-header {
-        padding: 2rem !important;
-        border-radius: 12px !important;
-        text-align: center !important;
-      }
-      
-      /* Gráficos na impressão */
-      .chart-container {
-        height: 280px !important;
-        max-width: 100% !important;
-        page-break-inside: avoid;
-      }
-      
-      canvas {
-        max-width: 100% !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-      
-      /* Textos na impressão */
-      h1, h2, h3, h4 {
-        color: #0F172A !important;
-        page-break-after: avoid;
-      }
-      
-      p, li, td { 
-        color: #334155 !important; 
-      }
-      
-      /* Perfil badge na impressão */
-      .profile-badge {
-        background: #10B981 !important;
-        color: white !important;
-        border: none !important;
-        box-shadow: none !important;
-      }
-      
-      /* Rodapé de impressão */
-      .print-footer {
-        display: flex !important;
-        background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
-        color: white !important;
-        padding: 3mm 16mm !important;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        z-index: 9999;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-      
-      .print-footer .print-footer-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 7.5pt;
-        width: 100%;
-        max-width: 210mm;
-        margin: 0 auto;
-        color: white !important;
-      }
-      
-      .print-footer .print-footer-content div {
-        color: rgba(255,255,255,0.9) !important;
-      }
-      
-      .print-footer .footer-logo-box {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-      
-      .print-footer .footer-logo {
-        width: 28px;
-        height: 28px;
-        background: linear-gradient(135deg, #1D4ED8, #7C3AED) !important;
-        color: white;
-        border-radius: 8px;
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
-        font-weight: 900;
-        font-size: 12pt;
-      }
-      
-      .print-footer .footer-text h4 {
-        font-size: 9pt;
-        font-weight: 700;
-        margin: 0;
-        color: white !important;
-      }
-      
-      .print-footer .footer-text p {
-        font-size: 7pt;
-        margin: 0;
-        opacity: 0.9;
-        color: rgba(255,255,255,0.9) !important;
-      }
-      
-      .print-page-number::after {
-        content: "Página " counter(page) " de " counter(pages);
-        color: white !important;
-        font-weight: 600;
-        font-size: 8pt;
-      }
-      
-      /* Marca d'água */
-      .print-watermark {
-        display: block !important;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) rotate(-30deg);
-        font-size: 120pt;
-        color: rgba(15, 23, 42, 0.04) !important;
-        font-weight: 900;
-        pointer-events: none;
-        z-index: 0;
-        white-space: nowrap;
-        letter-spacing: -5px;
-        text-transform: uppercase;
-      }
-      
-      /* Assinatura corporativa final */
-      .print-signature-block {
-        display: block !important;
-        margin-top: 2rem !important;
-        padding-top: 1.5rem !important;
-        border-top: 2px solid #1D4ED8 !important;
-        text-align: center;
-        page-break-inside: avoid;
-      }
-      
-      .print-signature-title {
-        font-size: 9pt;
-        font-weight: 700;
-        color: #111 !important;
-        margin-bottom: 0.5rem;
-      }
-      
-      .print-signature-text {
-        font-size: 8pt;
-        color: #555 !important;
-        line-height: 1.4;
-      }
-      
-      .print-signature-contact {
-        margin-top: 0.5rem;
-        font-size: 7.5pt;
-        color: #777 !important;
-      }
-      
-      .print-signature-contact a {
-        color: #1D4ED8 !important;
-        text-decoration: none;
-      }
-      
-      /* Quebras de página */
-      section, .question-card, .results-header, .chart-card, .summary-card {
-        page-break-inside: avoid !important;
-      }
-      
-      h2, h3, h4 {
-        page-break-after: avoid !important;
-      }
-      
-      p, ul, ol {
-        orphans: 3;
-        widows: 3;
-      }
-      
-      table {
-        page-break-inside: avoid;
-      }
-      
-      img, .logo-badge {
-        page-break-inside: avoid;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-    }
-    
-    .print-header { display: none; }
-    .print-footer { display: none; }
-    .print-watermark { display: none; }
-    .print-signature-block { display: none; }
-    .page-number { display: none; }
-    
-    /* ============================================
        RESPONSIVO
        ============================================ */
     @media (max-width: 768px) {
@@ -1225,7 +917,7 @@
 <body>
 
   <!-- Header Premium -->
-  <header class="no-print">
+  <header>
     <div class="header-content">
       <div class="logo">
         <div class="logo-badge">V</div>
@@ -1242,66 +934,6 @@
       </div>
     </div>
   </header>
-
-  <!-- Cabeçalho de Impressão -->
-  <div class="print-header">
-    <div class="print-header-content">
-      <div class="print-logo-box">
-        <div class="print-logo">V</div>
-        <div class="print-logo-text">
-          <h4>Vigorre One™</h4>
-          <p>Assessment DISC</p>
-        </div>
-      </div>
-      <div>
-        <h1>Resultado do Assessment DISC</h1>
-        <p>Perfil Comportamental • Metodologia Vigorre</p>
-      </div>
-      <div style="text-align: right;">
-        <p style="font-size: 8pt;">Confidencial</p>
-        <p style="font-size: 8pt; opacity: 0.8;">Vigorre One™ Analytics</p>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Marca d'água -->
-  <div class="print-watermark">VIGORRE ONE</div>
-
-  <!-- Rodapé de Impressão -->
-  <div class="print-footer">
-    <div class="print-footer-content">
-      <div class="footer-logo-box">
-        <div class="footer-logo">V</div>
-        <div class="footer-text">
-          <h4>Vigorre One™</h4>
-          <p>Assessment DISC</p>
-        </div>
-      </div>
-      <div style="text-align: center;">
-        <p style="margin: 0; font-size: 8pt;">Resultado do Assessment • Gerado automaticamente</p>
-        <p style="margin: 0; font-size: 7pt; opacity: 0.7;">Documento confidencial • Vigorre One™</p>
-      </div>
-      <div style="text-align: right;">
-        <p style="margin: 0; font-size: 8pt;">contato@vigorre.com.br</p>
-        <p style="margin: 0; font-size: 7pt; opacity: 0.7;">vigorre.com.br</p>
-      </div>
-      <div class="print-page-number"></div>
-    </div>
-  </div>
-  
-  <!-- Assinatura corporativa final -->
-  <div class="print-signature-block">
-    <p class="print-signature-title">Documento Confidencial — Vigorre One™ People Analytics</p>
-    <p class="print-signature-text">
-      Este resultado foi gerado automaticamente pela plataforma Vigorre One™ utilizando metodologia proprietária DISC.
-      O conteúdo é de uso exclusivo para desenvolvimento profissional, gestão de talentos e processos seletivos estratégicos.
-    </p>
-    <p class="print-signature-contact">
-      Para adquirir relatórios premium ou laudos personalizados: 
-      📱 <a href="https://wa.me/5534991857735">34 99185-7735</a> • 
-      📧 <a href="mailto:contato@vigorre.com.br">contato@vigorre.com.br</a>
-    </p>
-  </div>
 
   <!-- Main Content - Perguntas -->
   <main id="testContainer">
@@ -1330,8 +962,8 @@
     </div>
   </main>
 
-  <!-- Results View (hidden initially) -->
-  <div id="resultsView" class="results-container hidden">
+  <!-- Results View (hidden initially) - ✅ CORREÇÃO: Remover hidden inicial para teste -->
+  <div id="resultsView" class="results-container">
     <div class="results-header">
       <h1 class="results-title">Seu Perfil Comportamental DISC</h1>
       <p style="color: var(--slate-400); margin-bottom: 1.5rem; font-size: 1rem;">Análise Comportamental Vigorre One™</p>
@@ -1377,7 +1009,7 @@
       <div class="report-card">
         <h4>🔓 Laudo Vigorre Completo</h4>
         <p>Análise integrada com IE + Valores</p>
-        <button onclick="window.location.href='relatorio-disc-vigorre.html'" class="btn-report btn-report-secondary">
+        <button onclick="goToFullReport()" class="btn-report btn-report-secondary">
           Ver Relatório Completo
         </button>
       </div>
@@ -1429,7 +1061,8 @@
       answers: [], 
       completed: false, 
       session: null, 
-      participant: null 
+      participant: null,
+      results: null // ✅ ADICIONADO: Armazenar resultados localmente
     };
     
     let discRadarChartInstance = null;
@@ -1618,9 +1251,9 @@
     };
 
     // ============================================
-    // INICIALIZAÇÃO
+    // INICIALIZAÇÃO - ✅ CORREÇÃO PRINCIPAL
     // ============================================
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       console.log('🔹 Inicializando Teste DISC Vigorre One™...');
       
       // Detectar botão voltar do navegador
@@ -1632,14 +1265,62 @@
       }
       
       // Carregar sessão
-      loadSession();
+      await loadSession();
       
-      if (AppState.session?.id) {
+      // ✅ CORREÇÃO: Verificar se já tem resultados salvos e mostrar imediatamente
+      await checkAndShowExistingResults();
+      
+      // Se não tem resultados, mostrar teste
+      if (!AppState.results && AppState.session?.id) {
         renderQuestion();
-      } else {
-        window.location.href = 'login.html';
       }
     });
+
+    // ✅ NOVA FUNÇÃO: Verificar e mostrar resultados existentes
+    async function checkAndShowExistingResults() {
+      try {
+        console.log('🔍 Verificando resultados existentes...');
+        
+        // Tentar carregar do localStorage primeiro
+        const savedResults = localStorage.getItem('vigorre_last_disc_result');
+        
+        if (savedResults) {
+          AppState.results = JSON.parse(savedResults);
+          console.log('✅ Resultados carregados do localStorage:', AppState.results);
+          showResults(AppState.results);
+          return true;
+        }
+        
+        // Tentar carregar do Supabase se disponível
+        if (window.VigorreDB && VigorreDB.supabase && AppState.participant?.id) {
+          const { data, error } = await VigorreDB.supabase
+            .from('test_results')
+            .select('*')
+            .eq('participant_id', AppState.participant.id)
+            .eq('test_type', 'DISC')
+            .maybeSingle();
+          
+          if (data && !error) {
+            AppState.results = {
+              dimensions: data.scores || data.dimensions || {},
+              percentages: data.percentages || data.scores || {},
+              dominant: data.dominant,
+              date: data.completed_at
+            };
+            console.log('✅ Resultados carregados do Supabase:', AppState.results);
+            showResults(AppState.results);
+            return true;
+          }
+        }
+        
+        console.log('ℹ️ Nenhum resultado encontrado, mostrando teste');
+        return false;
+        
+      } catch (e) {
+        console.error('❌ Erro ao verificar resultados:', e);
+        return false;
+      }
+    }
 
     // ============================================
     // CARREGAR SESSÃO COM SUPABASE + FALLBACK
@@ -1768,6 +1449,10 @@
         dominant: Object.entries(percentages).sort((a, b) => b[1] - a[1])[0][0]
       };
       
+      // ✅ CORREÇÃO: Salvar resultados no AppState antes de mostrar
+      AppState.results = results;
+      AppState.completed = true;
+      
       // Salvar no Supabase com fallback
       await saveResultsSupabase(results);
       
@@ -1862,116 +1547,185 @@
     }
 
     // ============================================
-    // EXIBIR RESULTADOS
+    // ✅ CORREÇÃO CRÍTICA: EXIBIR RESULTADOS
     // ============================================
     function showResults(results) {
-      document.getElementById('loadingOverlay').classList.add('hidden');
-      document.getElementById('testContainer').classList.add('hidden');
-      document.getElementById('resultsView').classList.remove('hidden');
-      
-      // Determinar perfil predominante
-      const sorted = Object.entries(results.percentages).sort((a, b) => b[1] - a[1]);
-      const [dominant] = sorted;
-      const dominantProfile = DISC_INTERPRETATIONS[dominant[0]];
-      
-      document.getElementById('profileText').textContent = `${dominantProfile.name} (${dominant[1]}%)`;
-      
-      // Resumo Executivo
-      document.getElementById('executiveSummary').textContent = 
-        `Seu perfil DISC predominante é ${dominantProfile.name} com ${dominant[1]}% de intensidade. ${dominantProfile.high}`;
-      
-      // Recomendações
-      document.getElementById('recommendations').innerHTML = `
-        <li>Pratique auto-observação diária para fortalecer consciência comportamental</li>
-        <li>Solicite feedback regular sobre seu impacto nas relações profissionais</li>
-        <li>Considere o laudo completo Vigorre para análise integrada com IE e Valores</li>
-      `;
-      
-      // Renderizar gráficos com tema dark
-      renderCharts(results.percentages);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      try {
+        console.log('📊 Exibindo resultados:', results);
+        
+        // ✅ CORREÇÃO: Garantir que containers estejam visíveis
+        document.getElementById('loadingOverlay')?.classList.add('hidden');
+        document.getElementById('testContainer')?.classList.add('hidden');
+        document.getElementById('resultsView')?.classList.remove('hidden');
+        
+        // Rolar para o topo suavemente
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // Determinar perfil predominante
+        const sorted = Object.entries(results.percentages).sort((a, b) => b[1] - a[1]);
+        const [dominant] = sorted;
+        const dominantProfile = DISC_INTERPRETATIONS[dominant[0]];
+        
+        // Atualizar badge do perfil
+        const profileText = document.getElementById('profileText');
+        if (profileText) {
+          profileText.textContent = `${dominantProfile.name} (${dominant[1]}%)`;
+        }
+        
+        // Resumo Executivo
+        const executiveSummary = document.getElementById('executiveSummary');
+        if (executiveSummary) {
+          executiveSummary.textContent = 
+            `Seu perfil DISC predominante é ${dominantProfile.name} com ${dominant[1]}% de intensidade. ${dominantProfile.high}`;
+        }
+        
+        // Recomendações
+        const recommendations = document.getElementById('recommendations');
+        if (recommendations) {
+          recommendations.innerHTML = `
+            <li>Pratique auto-observação diária para fortalecer consciência comportamental</li>
+            <li>Solicite feedback regular sobre seu impacto nas relações profissionais</li>
+            <li>Considere o laudo completo Vigorre para análise integrada com IE e Valores</li>
+          `;
+        }
+        
+        // ✅ CORREÇÃO: Renderizar gráficos com delay para garantir que canvas esteja visível
+        setTimeout(() => {
+          renderCharts(results.percentages);
+        }, 100);
+        
+        console.log('✅ Resultados exibidos com sucesso!');
+        
+      } catch (e) {
+        console.error('❌ Erro ao exibir resultados:', e);
+        showToast('Erro ao carregar resultados. Tente recarregar a página.', 'error');
+      }
     }
 
     // ============================================
     // RENDERIZAR GRÁFICOS COM TEMA DARK
     // ============================================
     function renderCharts(percentages) {
-      // Configurações de tema dark para Chart.js
-      Chart.defaults.color = '#94A3B8';
-      Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
-      
-      if (discRadarChartInstance) discRadarChartInstance.destroy();
-      if (discBarChartInstance) discBarChartInstance.destroy();
+      try {
+        console.log('📈 Renderizando gráficos...');
+        
+        // Configurações de tema dark para Chart.js
+        Chart.defaults.color = '#94A3B8';
+        Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
+        
+        // Destruir instâncias anteriores se existirem
+        if (discRadarChartInstance) {
+          try { discRadarChartInstance.destroy(); } catch(e) {}
+          discRadarChartInstance = null;
+        }
+        if (discBarChartInstance) {
+          try { discBarChartInstance.destroy(); } catch(e) {}
+          discBarChartInstance = null;
+        }
 
-      // Radar Chart
-      const radarCtx = document.getElementById('discRadarChart');
-      if (radarCtx) {
-        discRadarChartInstance = new Chart(radarCtx, {
-          type: 'radar',
-          data: { 
-            labels: ['Dominância', 'Influência', 'Estabilidade', 'Conformidade'], 
-            datasets: [{ 
-              label: 'Seu Perfil', 
-              data: [percentages.D, percentages.I, percentages.S, percentages.C], 
-              backgroundColor: 'rgba(29, 78, 216, 0.25)', 
-              borderColor: '#60A5FA', 
-              borderWidth: 2, 
-              pointBackgroundColor: '#60A5FA',
-              pointBorderColor: '#fff',
-              pointBorderWidth: 2
-            }] 
-          },
-          options: { 
-            responsive: true, 
-            maintainAspectRatio: false, 
-            scales: { 
-              r: { 
-                min: 0, 
-                max: 100, 
-                angleLines: { color: 'rgba(255,255,255,0.1)' }, 
-                grid: { color: 'rgba(255,255,255,0.1)' }, 
-                pointLabels: { color: '#CBD5E1', font: { size: 11, family: 'Inter', weight: '600' } }, 
-                ticks: { display: false, backdropColor: 'transparent' } 
-              } 
-            }, 
-            plugins: { legend: { display: false } } 
+        // Radar Chart
+        const radarCanvas = document.getElementById('discRadarChart');
+        if (radarCanvas) {
+          const ctxRadar = radarCanvas.getContext('2d');
+          if (ctxRadar) {
+            discRadarChartInstance = new Chart(ctxRadar, {
+              type: 'radar',
+              data: { 
+                labels: ['Dominância', 'Influência', 'Estabilidade', 'Conformidade'], 
+                datasets: [{ 
+                  label: 'Seu Perfil', 
+                  data: [percentages.D, percentages.I, percentages.S, percentages.C], 
+                  backgroundColor: 'rgba(29, 78, 216, 0.25)', 
+                  borderColor: '#60A5FA', 
+                  borderWidth: 2, 
+                  pointBackgroundColor: '#60A5FA',
+                  pointBorderColor: '#fff',
+                  pointBorderWidth: 2
+                }] 
+              },
+              options: { 
+                responsive: true, 
+                maintainAspectRatio: false, 
+                scales: { 
+                  r: { 
+                    min: 0, 
+                    max: 100, 
+                    angleLines: { color: 'rgba(255,255,255,0.1)' }, 
+                    grid: { color: 'rgba(255,255,255,0.1)' }, 
+                    pointLabels: { color: '#CBD5E1', font: { size: 11, family: 'Inter', weight: '600' } }, 
+                    ticks: { display: false, backdropColor: 'transparent' } 
+                  } 
+                }, 
+                plugins: { legend: { display: false } } 
+              }
+            });
+            console.log('✅ Radar chart renderizado');
           }
-        });
+        }
+
+        // Bar Chart
+        const barCanvas = document.getElementById('discBarChart');
+        if (barCanvas) {
+          const ctxBar = barCanvas.getContext('2d');
+          if (ctxBar) {
+            discBarChartInstance = new Chart(ctxBar, {
+              type: 'bar',
+              data: { 
+                labels: ['D', 'I', 'S', 'C'], 
+                datasets: [{ 
+                  label: '%', 
+                  data: [percentages.D, percentages.I, percentages.S, percentages.C], 
+                  backgroundColor: ['#F87171', '#60A5FA', '#34D399', '#A78BFA'], 
+                  borderRadius: 8,
+                  borderSkipped: false
+                }] 
+              },
+              options: { 
+                responsive: true, 
+                maintainAspectRatio: false, 
+                scales: { 
+                  y: { 
+                    beginAtZero: true, 
+                    max: 100, 
+                    grid: { color: 'rgba(255,255,255,0.08)' }, 
+                    ticks: { color: '#94A3B8', font: { family: 'Inter' } } 
+                  }, 
+                  x: { 
+                    grid: { display: false }, 
+                    ticks: { color: '#F1F5F9', font: { weight: '700', size: 12, family: 'Inter' } } 
+                  } 
+                }, 
+                plugins: { legend: { display: false } } 
+              }
+            });
+            console.log('✅ Bar chart renderizado');
+          }
+        }
+        
+      } catch (e) {
+        console.error('❌ Erro ao renderizar gráficos:', e);
       }
+    }
 
-      // Bar Chart
-      const barCtx = document.getElementById('discBarChart');
-      if (barCtx) {
-        discBarChartInstance = new Chart(barCtx, {
-          type: 'bar',
-          data: { 
-            labels: ['D', 'I', 'S', 'C'], 
-            datasets: [{ 
-              label: '%', 
-              data: [percentages.D, percentages.I, percentages.S, percentages.C], 
-              backgroundColor: ['#F87171', '#60A5FA', '#34D399', '#A78BFA'], 
-              borderRadius: 8,
-              borderSkipped: false
-            }] 
-          },
-          options: { 
-            responsive: true, 
-            maintainAspectRatio: false, 
-            scales: { 
-              y: { 
-                beginAtZero: true, 
-                max: 100, 
-                grid: { color: 'rgba(255,255,255,0.08)' }, 
-                ticks: { color: '#94A3B8', font: { family: 'Inter' } } 
-              }, 
-              x: { 
-                grid: { display: false }, 
-                ticks: { color: '#F1F5F9', font: { weight: '700', size: 12, family: 'Inter' } } 
-              } 
-            }, 
-            plugins: { legend: { display: false } } 
-          }
-        });
+    // ============================================
+    // ✅ NOVA FUNÇÃO: Ir para relatório completo com dados
+    // ============================================
+    function goToFullReport() {
+      try {
+        console.log('🔗 Navegando para relatório completo...');
+        
+        // ✅ CORREÇÃO: Salvar resultados no sessionStorage para o relatório usar
+        if (AppState.results) {
+          sessionStorage.setItem('vigorre_disc_results', JSON.stringify(AppState.results));
+          console.log('✅ Resultados salvos no sessionStorage para relatório');
+        }
+        
+        // Navegar para o relatório
+        window.location.href = 'relatorio-disc-vigorre.html';
+        
+      } catch (e) {
+        console.error('❌ Erro ao navegar para relatório:', e);
+        showToast('Erro ao abrir relatório. Tente novamente.', 'error');
       }
     }
 
@@ -2000,6 +1754,8 @@
     // ============================================
     function showToast(message, type) {
       const toast = document.getElementById('toast');
+      if (!toast) return;
+      
       document.getElementById('toastIcon').textContent = type === 'success' ? '✅' : '❌';
       document.getElementById('toastMessage').textContent = message;
       
@@ -2038,99 +1794,10 @@
     // Debug inicial
     console.log('🔍 Teste DISC - Estado:', {
       session: AppState.session?.name || 'não carregado',
+      results: AppState.results ? 'carregados' : 'não carregados',
       supabase: {
         available: typeof window.VigorreDB !== 'undefined',
         connected: VigorreDB?.supabase ? 'conectado' : 'não conectado'
-      }
-    });
-
-    // ============================================
-    // JAVASCRIPT DE IMPRESSÃO ENTERPRISE PREMIUM
-    // ============================================
-
-    // Preencher metadados do header de impressão
-    function populatePrintMetadata() {
-      // Atualizar informações do participante no header de impressão
-      const printHeader = document.querySelector('.print-header h1');
-      if (printHeader && AppState.participant) {
-        printHeader.textContent = `Resultado DISC: ${AppState.participant.name || 'Participante'}`;
-      }
-    }
-
-    // Preparar para impressão - otimizar gráficos e remover animações
-    window.onbeforeprint = function() {
-      console.log('🖨️ Preparando impressão do teste DISC...');
-      
-      // Preencher metadados
-      populatePrintMetadata();
-      
-      // Otimizar gráficos para impressão (alta qualidade)
-      if (discRadarChartInstance && discRadarChartInstance.canvas) {
-        discRadarChartInstance.resize();
-        discRadarChartInstance.update('none');
-      }
-      if (discBarChartInstance && discBarChartInstance.canvas) {
-        discBarChartInstance.resize();
-        discBarChartInstance.update('none');
-      }
-      
-      // Remover animações que podem causar problemas na impressão
-      document.querySelectorAll('.fade-in, .slide-up, .pulse-slow').forEach(el => {
-        el.style.animation = 'none';
-        el.style.transition = 'none';
-      });
-      
-      console.log('✅ Gráficos otimizados para impressão');
-    };
-
-    // Restaurar interface após impressão
-    window.onafterprint = function() {
-      console.log('✅ Impressão concluída - restaurando interface');
-      
-      // Restaurar animações
-      document.querySelectorAll('.fade-in, .slide-up, .pulse-slow').forEach(el => {
-        el.style.animation = '';
-        el.style.transition = '';
-      });
-      
-      // Re-renderizar gráficos para a tela
-      setTimeout(() => {
-        if (AppState.completed) {
-          // Recarregar resultados se disponíveis
-          const results = JSON.parse(localStorage.getItem('vigorre_last_disc_result') || '{}');
-          if (results.percentages) {
-            renderCharts(results.percentages);
-          }
-        }
-        console.log('🔄 Gráficos restaurados para visualização');
-      }, 300);
-    };
-
-    // Função de exportação PDF aprimorada
-    function exportPDF() {
-      showToast('📄 Preparando PDF executivo de alta resolução...', 'success');
-      
-      // Pequeno delay para garantir que tudo esteja renderizado
-      setTimeout(() => {
-        // Chamar impressão nativa do navegador
-        window.print();
-        
-        // Log para analytics (se implementado)
-        console.log('📊 Resultado DISC exportado:', {
-          participant: AppState.participant?.name,
-          dominant: AppState.completed ? Object.entries(JSON.parse(localStorage.getItem('vigorre_last_disc_result') || '{}').percentages || {}).sort((a, b) => b[1] - a[1])[0]?.[0] : null,
-          timestamp: new Date().toISOString()
-        });
-      }, 800);
-    }
-
-    // ============================================
-    // INICIALIZAÇÃO FINAL
-    // ============================================
-    document.addEventListener('DOMContentLoaded', () => {
-      // Garantir que elementos de impressão existam
-      if (document.querySelector('.print-header')) {
-        console.log('✅ Elementos de impressão premium carregados');
       }
     });
   </script>
