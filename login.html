@@ -548,7 +548,7 @@
           return;
         }
 
-        // ✅ Recruiter - CORREÇÃO: Usar dashboard.htm (sem 'l') e preservar créditos
+        // ✅ Recruiter - CORREÇÃO: Usar dashboard.html (sem 'l') e preservar créditos
         if (currentEnv === 'recruiter') {
           let recruiter = null;
           
@@ -593,8 +593,8 @@
               }
             };
             
-            // ✅ CORREÇÃO: Usar dashboard.htm (sem 'l') conforme GitHub
-            saveUser(userData, 'recrutador/dashboard.htm');
+            // ✅ CORREÇÃO: Usar dashboard.html (sem 'l') conforme GitHub
+            saveUser(userData, 'recrutador/dashboard.html');
             return;
           }
         }
@@ -698,7 +698,7 @@
         const pages = {
           admin: 'admin.html',
           staff: 'admin.html',
-          recruiter: 'recrutador/dashboard.htm',  // ✅ CORREÇÃO: .htm sem 'l'
+          recruiter: 'recrutador/dashboard.html',  // ✅ CORREÇÃO: .htm sem 'l'
           participant: 'dashboard-participante.html'
         };
         
