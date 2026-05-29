@@ -1,263 +1,575 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Vigorre One™ - Plataforma de People Analytics e Inteligência Humana">
+  <meta name="description" content="Vigorre One™ - Premium People Analytics & Human Intelligence Platform">
   <meta name="robots" content="noindex, nofollow">
-  <title>Login | Vigorre One™ • People Analytics Enterprise</title>
-  
-  <!-- Fonts Premium -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Preconnect para performance -->
+  <title>Sign In | Vigorre One™ • Enterprise People Analytics</title>
+
+  <!-- 🌟 Fonts Premium (Inter + Playfair Display para elegância) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- ⚡ Performance Optimization -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  
-  <!-- ✅ SUPABASE SDK - CARREGAR PRIMEIRO -->
+
+  <!-- 🔗 Supabase SDK (Manter primeiro para prioridade) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  
-  <!-- ✅ SUA CONFIGURAÇÃO SUPABASE -->
   <script src="supabase-config.js"></script>
-  
-  <!-- ✅ GLOBAL STYLES PREMIUM (DESIGN SYSTEM) -->
+
+  <!-- 🎨 Global Styles -->
   <link rel="stylesheet" href="assets/css/globals.css">
-  
-  <!-- ✅ ESTILOS ESPECÍFICOS DO LOGIN (CORRIGIDO) -->
+
   <style>
+    :root {
+      /* 🎨 Paleta de Cores Premium */
+      --brand-gold: #D4AF37;       /* Dourado elegante */
+      --brand-gold-light: #F4E4BC; /* Dourado claro */
+      --brand-navy: #0A192F;       /* Azul marinho profundo */
+      --brand-navy-dark: #020c1b;  /* Azul escuro para contraste */
+      --brand-blue: #1E3A8A;       /* Azul royal */
+      --brand-purple: #7C3AED;     /* Roxo sofisticado */
+      --brand-rose: #E11D48;       /* Rosa para erros */
+      --brand-emerald: #059669;    /* Verde para sucessos */
+
+      /* 💎 Efeitos de Vidro Premium */
+      --glass-bg: rgba(255, 255, 255, 0.98);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+      /* ⚡ Variáveis de Animação */
+      --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      --radius: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-2xl: 32px;
+    }
+
     /* ============================================
-       LOGIN - ESTILOS ESPECÍFICOS
-       (Complementa o globals.css) - CORRIGIDO
+       🌌 FUNDO ANIMADO PREMIUM
        ============================================ */
-    
-    body.login-page { 
-      background: linear-gradient(135deg, var(--brand-navy) 0%, var(--brand-blue-dark) 35%, var(--brand-navy-dark) 100%); 
-      min-height: 100vh; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
+    body.login-page {
+      background: linear-gradient(135deg, var(--brand-navy) 0%, var(--brand-blue) 35%, var(--brand-navy-dark) 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       padding: 20px;
       position: relative;
       overflow-x: hidden;
+      font-family: 'Inter', sans-serif;
+      color: var(--brand-navy);
     }
-    
-    /* Background Animated Premium */
+
+    /* ✨ Partículas Flutuantes (Efeito de Luxo) */
     body.login-page::before {
       content: '';
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: 
+      background:
         radial-gradient(ellipse at 20% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
         radial-gradient(ellipse at 80% 20%, rgba(124, 58, 237, 0.12) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 50%, rgba(30, 64, 175, 0.08) 0%, transparent 70%);
+        radial-gradient(ellipse at 50% 50%, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
       pointer-events: none;
       z-index: 0;
+      animation: bgPulse 15s ease-in-out infinite;
     }
-    
-    .login-container { 
-      background: rgba(255, 255, 255, 0.95); 
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+
+    @keyframes bgPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+
+    /* 🌟 Partículas Animadas (Efeito de Profundidade) */
+    body.login-page::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image:
+        radial-gradient(2px 2px at 20px 30px, rgba(212,175,55,0.2), transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.1), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(212,175,55,0.15), transparent),
+        radial-gradient(2px 2px at 130px 80px, rgba(255,255,255,0.1), transparent),
+        radial-gradient(1px 1px at 160px 30px, rgba(212,175,55,0.2), transparent);
+      background-repeat: repeat;
+      background-size: 200px 100px;
+      pointer-events: none;
+      z-index: 1;
+      animation: particlesMove 20s linear infinite;
+    }
+
+    @keyframes particlesMove {
+      from { transform: translateY(0) translateX(0); }
+      to { transform: translateY(-100px) translateX(100px); }
+    }
+
+    /* ============================================
+       🏛️ CONTAINER DE LOGIN (DESIGN DE LUXO)
+       ============================================ */
+    .login-container {
+      background: var(--glass-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
       border: 1px solid var(--glass-border);
-      border-radius: var(--radius-2xl); 
-      padding: 2.5rem; 
-      max-width: 460px; 
-      width: 100%; 
-      box-shadow: var(--shadow-2xl);
-      color: var(--slate-800); 
+      border-radius: var(--radius-2xl);
+      padding: 3rem;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: var(--glass-shadow),
+                  0 0 0 1px rgba(212, 175, 55, 0.1),
+                  inset 0 0 0 1px rgba(212, 175, 55, 0.05);
       position: relative;
       z-index: 10;
-      animation: slideUp 0.5s ease-out;
+      animation: slideUpPremium 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+      overflow: hidden;
+      transform: perspective(1000px) rotateX(5deg);
     }
-    
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(30px) scale(0.98); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
+
+    @keyframes slideUpPremium {
+      0% {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95) perspective(1000px) rotateX(5deg);
+        box-shadow: 0 0 0 rgba(0,0,0,0);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1) perspective(1000px) rotateX(5deg);
+        box-shadow: var(--glass-shadow),
+                    0 0 0 1px rgba(212, 175, 55, 0.1),
+                    inset 0 0 0 1px rgba(212, 175, 55, 0.05);
+      }
     }
-    
-    .logo-area { 
-      text-align: center; 
-      margin-bottom: 2rem; 
-      padding-bottom: 1.5rem;
-      border-bottom: 1px solid var(--slate-200);
+
+    /* 🎖️ Borda Dourada Premium (Efeito de Luxo) */
+    .login-container::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      border-radius: var(--radius-2xl);
+      padding: 1px;
+      background: linear-gradient(135deg, var(--brand-gold), #F4E4BC, var(--brand-gold));
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0.3;
     }
-    
+
+    /* ============================================
+       👑 ÁREA DO LOGO (ELEGÂNCIA MÁXIMA)
+       ============================================ */
+    .logo-area {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+      position: relative;
+    }
+
     .logo-placeholder {
-      width: 72px;
-      height: 72px;
-      background: var(--gradient-primary);
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--brand-navy), var(--brand-blue), var(--brand-purple));
       border-radius: var(--radius-lg);
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 1rem;
-      box-shadow: var(--shadow-lg);
+      margin: 0 auto 1.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2),
+                  inset 0 0 0 1px rgba(212, 175, 55, 0.2);
+      position: relative;
+      overflow: hidden;
     }
-    
+
+    /* ⚡ Efeito Shimmer no Logo (Brilho Premium) */
+    .logo-placeholder::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: linear-gradient(
+        to bottom right,
+        transparent, transparent,
+        rgba(212, 175, 55, 0.1), transparent
+      );
+      transform: rotate(45deg);
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) rotate(45deg); }
+    }
+
     .logo-placeholder span {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: white;
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .logo-area h1 {
+      color: var(--brand-navy);
       font-size: 2rem;
       font-weight: 800;
-      color: white;
+      margin-bottom: 0.5rem;
+      font-family: 'Playfair Display', serif;
+      letter-spacing: -0.5px;
     }
-    
-    .logo-area h1 { 
-      color: var(--brand-blue-dark); 
-      font-size: 1.625rem; 
-      font-weight: 800; 
-      margin-bottom: 0.25rem;
-    }
-    
-    .logo-area p { 
-      color: var(--slate-500); 
-      font-size: 0.875rem; 
+
+    .logo-area p {
+      color: var(--brand-blue);
+      font-size: 0.9rem;
       font-weight: 500;
       text-transform: uppercase;
+      letter-spacing: 1.5px;
     }
-    
-    /* ✅ SELETOR COM 3 BOTÕES - CORRIGIDO */
-    .env-selector { 
-      display: flex; /* Mudado de grid para flex */
-      gap: 8px; /* Reduzido gap */
-      margin-bottom: 2rem; 
-      background: var(--slate-50);
-      padding: 6px;
+
+    /* ============================================
+       🎯 SELETOR DE AMBIENTE (DESIGN EXECUTIVO)
+       ============================================ */
+    .env-selector {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 2.5rem;
+      background: rgba(255, 255, 255, 0.6);
+      padding: 8px;
       border-radius: var(--radius-lg);
-      border: 1px solid var(--slate-200);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      backdrop-filter: blur(10px);
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
     }
-    
-    .env-btn { 
-      flex: 1; /* Espaço igual para cada botão */
-      padding: 14px 8px; /* Padding ajustado */
+
+    .env-btn {
+      flex: 1;
+      padding: 16px 12px;
       border: 2px solid transparent;
-      border-radius: var(--radius); 
-      background: white; /* Fundo branco para contraste */
-      cursor: pointer; 
-      font-weight: 600; 
-      font-size: 0.8125rem; 
-      transition: all var(--transition); 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      gap: 6px;
-      color: var(--slate-600); /* Cor mais escura */
-    }
-    
-    .env-btn span { 
-      font-size: 1.375rem; 
-      line-height: 1;
-    }
-    
-    .env-btn.active { 
-      border-color: var(--brand-blue); 
-      background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple)); 
-      color: white; 
-      box-shadow: 0 4px 14px rgba(29, 78, 216, 0.3);
-      font-weight: 700;
-    }
-    
-    .form-group { margin-bottom: 1.25rem; }
-    
-    .form-group label { 
-      display: block; 
-      margin-bottom: 0.5rem; 
-      color: var(--slate-700); 
-      font-weight: 600; 
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.8);
+      cursor: pointer;
+      font-weight: 600;
       font-size: 0.875rem;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--brand-navy);
+      position: relative;
+      overflow: hidden;
     }
-    
-    .form-group input { 
-      width: 100%; 
-      padding: 14px 16px; 
-      border: 2px solid var(--slate-200); 
-      border-radius: var(--radius); 
-      font-size: 1rem; 
-      transition: all var(--transition); 
-      background: white;
+
+    .env-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, rgba(212,175,55,0.1), rgba(255,255,255,0.2));
+      opacity: 0;
+      transition: var(--transition);
     }
-    
-    .form-group input:focus { 
-      outline: none; 
-      border-color: var(--brand-blue); 
-      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+
+    .env-btn:hover::before {
+      opacity: 1;
     }
-    
-    .btn-login { 
-      width: 100%; 
-      padding: 16px 24px; 
-      border-radius: var(--radius-lg); 
-      border: none; 
-      background: var(--gradient-primary); 
-      color: white; 
-      font-weight: 700; 
-      font-size: 1rem; 
-      cursor: pointer; 
-      transition: all var(--transition); 
-      margin-top: 0.75rem;
-      box-shadow: 0 4px 14px rgba(30, 64, 175, 0.35);
+
+    .env-btn span[aria-hidden="true"] {
+      font-size: 1.5rem;
     }
-    
-    .btn-login:hover { 
+
+    .env-btn.active {
+      border-color: var(--brand-gold);
+      background: linear-gradient(135deg, var(--brand-navy), var(--brand-blue));
+      color: white;
+      box-shadow: 0 6px 20px rgba(30, 58, 138, 0.3),
+                  inset 0 0 0 1px rgba(212, 175, 55, 0.2);
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(30, 64, 175, 0.45);
     }
-    
-    .btn-login:disabled { 
-      opacity: 0.7; 
-      cursor: not-allowed; 
+
+    .env-btn.active::before {
+      opacity: 0;
+    }
+
+    /* ============================================
+       📝 FORMULÁRIO (DESIGN REFINADO)
+       ============================================ */
+    .form-group {
+      margin-bottom: 1.75rem;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.75rem;
+      color: var(--brand-navy);
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 16px 20px;
+      border: 2px solid rgba(212, 175, 55, 0.2);
+      border-radius: var(--radius);
+      font-size: 1rem;
+      transition: var(--transition);
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(10px);
+      color: var(--brand-navy);
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--brand-gold);
+      box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1),
+                  0 2px 8px rgba(212, 175, 55, 0.2);
+    }
+
+    .form-group input::placeholder {
+      color: rgba(10, 25, 47, 0.4);
+      font-weight: 400;
+    }
+
+    /* ============================================
+       🔐 BOTÃO DE LOGIN (IMPACTO VISUAL)
+       ============================================ */
+    .btn-login {
+      width: 100%;
+      padding: 18px 28px;
+      border-radius: var(--radius-lg);
+      border: none;
+      background: linear-gradient(135deg, var(--brand-navy), var(--brand-blue), var(--brand-purple));
+      color: white;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 1rem;
+      box-shadow: 0 6px 20px rgba(30, 58, 138, 0.3),
+                  0 2px 8px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-login::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transition: var(--transition);
+    }
+
+    .btn-login:hover::before {
+      left: 100%;
+    }
+
+    .btn-login:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(30, 58, 138, 0.4),
+                  0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .btn-login:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
       transform: none;
     }
-    
-    .alert { 
-      padding: 14px 16px; 
-      border-radius: var(--radius); 
-      margin-bottom: 1.25rem; 
-      display: none; 
-      text-align: center; 
-      font-weight: 600; 
-      font-size: 0.875rem;
+
+    /* 🌀 Animação de Loading no Botão */
+    .btn-login.loading {
+      position: relative;
+      color: transparent;
     }
-    
-    .alert.error { 
-      background: #fef2f2; 
-      color: var(--brand-rose); 
-      border: 1px solid #fecaca;
+
+    .btn-login.loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 24px;
+      height: 24px;
+      margin: -12px 0 0 -12px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: buttonLoading 0.8s linear infinite;
     }
-    
-    .alert.success { 
-      background: #f0fdf4; 
-      color: var(--brand-emerald); 
-      border: 1px solid #bbf7d0;
+
+    @keyframes buttonLoading {
+      to { transform: rotate(360deg); }
     }
-    
-    .links { 
-      display: flex; 
-      justify-content: space-between; 
-      margin-top: 1.5rem; 
-      font-size: 0.875rem;
-      padding-top: 1.25rem;
-      border-top: 1px solid var(--slate-200);
+
+    /* ============================================
+       ⚠️ ALERTAS (DESIGN PROFISSIONAL)
+       ============================================ */
+    .alert {
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      margin-bottom: 1.5rem;
+      display: none;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+      animation: alertSlideIn 0.4s ease-out;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-    
-    .links a { 
-      color: var(--brand-blue); 
-      text-decoration: none; 
+
+    @keyframes alertSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .alert.error {
+      background: rgba(225, 29, 72, 0.1);
+      color: var(--brand-rose);
+      border: 1px solid rgba(225, 29, 72, 0.2);
+    }
+
+    .alert.success {
+      background: rgba(5, 150, 105, 0.1);
+      color: var(--brand-emerald);
+      border: 1px solid rgba(5, 150, 105, 0.2);
+    }
+
+    /* ============================================
+       🔗 LINKS AUXILIARES (ESTILO ELEGANTE)
+       ============================================ */
+    .links {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(212, 175, 55, 0.1);
+    }
+
+    .links a {
+      color: var(--brand-blue);
+      text-decoration: none;
       font-weight: 500;
+      transition: var(--transition);
+      position: relative;
     }
-    
-    .links a:hover { 
-      color: var(--brand-blue-dark);
-      text-decoration: underline;
+
+    .links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--brand-gold);
+      transition: var(--transition);
     }
-    
+
+    .links a:hover {
+      color: var(--brand-navy);
+      text-decoration: none;
+    }
+
+    .links a:hover::after {
+      width: 100%;
+    }
+
+    /* ============================================
+       📜 RODAPÉ (TOQUE FINAL PROFISSIONAL)
+       ============================================ */
     .login-footer {
-      text-align: center; 
-      margin-top: 2.25rem; 
-      color: var(--slate-400); 
+      text-align: center;
+      margin-top: 2.5rem;
+      color: rgba(10, 25, 47, 0.5);
       font-size: 0.8rem;
       padding-top: 1.5rem;
-      border-top: 1px solid var(--slate-200);
+      border-top: 1px solid rgba(212, 175, 55, 0.1);
+      line-height: 1.6;
     }
-    
+
+    .login-footer strong {
+      color: var(--brand-navy);
+      font-weight: 700;
+    }
+
+    /* 🔒 Selo de Segurança (Transmite Confiança) */
+    .security-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .security-badge::after {
+      content: '🔒';
+      font-size: 1.2rem;
+      color: rgba(212, 175, 55, 0.8);
+    }
+
+    /* ============================================
+       📱 RESPONSIVO (ADAPTAÇÃO PERFEITA)
+       ============================================ */
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 2rem 1.5rem;
+        margin: 10px;
+        transform: perspective(1000px) rotateX(0deg);
+      }
+
+      .logo-area h1 {
+        font-size: 1.75rem;
+      }
+
+      .env-selector {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .env-btn {
+        padding: 14px;
+        font-size: 0.9rem;
+      }
+
+      .env-btn span[aria-hidden="true"] {
+        font-size: 1.3rem;
+      }
+
+      .form-group input {
+        padding: 15px 14px;
+        font-size: 0.95rem;
+      }
+
+      .btn-login {
+        padding: 16px 20px;
+        font-size: 0.95rem;
+      }
+
+      .links {
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+      }
+    }
+
+    /* Acessibilidade */
     .sr-only {
       position: absolute;
       width: 1px;
@@ -269,137 +581,125 @@
       white-space: nowrap;
       border: 0;
     }
-    
-    /* Responsivo - CORRIGIDO */
-    @media (max-width: 480px) {
-      .login-container { padding: 2rem 1.5rem; margin: 10px; }
-      .logo-area h1 { font-size: 1.5rem; }
-      .env-selector { flex-direction: column; gap: 6px; } /* Empilha no mobile */
-      .env-btn { padding: 12px; font-size: 0.875rem; }
-      .env-btn span { font-size: 1.25rem; }
-      .form-group input { padding: 13px 14px; font-size: 0.9375rem; }
-      .btn-login { padding: 15px 20px; font-size: 0.9375rem; }
-      .links { flex-direction: column; gap: 10px; align-items: center; }
-    }
   </style>
 </head>
 <body class="login-page">
-  
+
   <main class="login-container" role="main">
-    
-    <!-- LOGO E TÍTULO -->
+    <!-- 🔒 Selo de Segurança (Transmite Confiança Imediata) -->
+    <div class="security-badge" aria-hidden="true"></div>
+
+    <!-- 👑 Logo e Título (Impacto Visual) -->
     <header class="logo-area">
       <div class="logo-placeholder" aria-hidden="true">
         <span>V</span>
       </div>
       <h1>Vigorre One™</h1>
-      <p>People Analytics Enterprise</p>
+      <p>Enterprise People Analytics</p>
     </header>
 
-    <!-- ✅ SELETOR DE AMBIENTE COM 3 OPÇÕES -->
-    <fieldset class="env-selector" role="radiogroup" aria-label="Selecione seu tipo de acesso">
-      <legend class="sr-only">Tipo de acesso</legend>
-      
-      <button type="button" 
-              class="env-btn" 
-              role="radio" 
+    <!-- 🎯 Seleção de Ambiente (Design Executivo) -->
+    <fieldset class="env-selector" role="radiogroup" aria-label="Select your access type">
+      <legend class="sr-only">Access type</legend>
+
+      <button type="button"
+              class="env-btn"
+              role="radio"
               aria-checked="false"
               onclick="setEnv('participant')"
               id="env-participant">
-        <span aria-hidden="true">👤</span> 
-        <span>Participante</span>
+        <span aria-hidden="true">👤</span>
+        <span>Participant</span>
       </button>
-      
-      <button type="button" 
-              class="env-btn" 
-              role="radio" 
+
+      <button type="button"
+              class="env-btn"
+              role="radio"
               aria-checked="false"
               onclick="setEnv('recruiter')"
               id="env-recruiter">
-        <span aria-hidden="true">🎯</span> 
-        <span>Recrutador</span>
+        <span aria-hidden="true">🎯</span>
+        <span>Recruiter</span>
       </button>
-      
-      <button type="button" 
-              class="env-btn active" 
-              role="radio" 
+
+      <button type="button"
+              class="env-btn active"
+              role="radio"
               aria-checked="true"
               onclick="setEnv('admin')"
               id="env-admin">
-        <span aria-hidden="true">🛡️</span> 
-        <span>Administrador</span>
+        <span aria-hidden="true">🛡️</span>
+        <span>Administrator</span>
       </button>
     </fieldset>
 
-    <!-- ÁREA DE ALERTAS -->
+    <!-- ⚠️ Área de Alertas (Feedback Visual) -->
     <div id="alert" class="alert" role="alert" aria-live="polite"></div>
 
-    <!-- FORMULÁRIO DE LOGIN -->
+    <!-- 📝 Formulário de Login (Refinado) -->
     <form id="loginForm" onsubmit="handleLogin(event)" novalidate autocomplete="off">
-      
       <div class="form-group">
-        <label for="email">Usuário ou E-mail</label>
-        <input type="text" 
-               id="email" 
+        <label for="email">Username or Email</label>
+        <input type="text"
+               id="email"
                name="email"
-               required 
-               placeholder="Digite seu acesso"
+               required
+               placeholder="Enter your credentials"
                autocomplete="username"
                autocapitalize="none">
       </div>
-      
+
       <div class="form-group">
-        <label for="password">Senha</label>
-        <input type="password" 
-               id="password" 
+        <label for="password">Password</label>
+        <input type="password"
+               id="password"
                name="password"
-               required 
+               required
                placeholder="••••••••"
                autocomplete="current-password">
       </div>
-      
+
       <button type="submit" class="btn-login" id="loginBtn">
-        Entrar no Vigorre One™
+        Sign In to Vigorre One™
       </button>
     </form>
 
-    <!-- LINKS AUXILIARES -->
-    <nav class="links" aria-label="Links de ajuda">
-      <a href="#" onclick="forgotPassword(event)">Esqueceu a senha?</a>
-      <a href="index.html">← Voltar ao site</a>
+    <!-- 🔗 Links Auxiliares (Navegação Intuitiva) -->
+    <nav class="links" aria-label="Help links">
+      <a href="#" onclick="forgotPassword(event)">Forgot password?</a>
+      <a href="index.html">← Back to site</a>
     </nav>
-    
-    <!-- RODAPÉ -->
+
+    <!-- 📜 Rodapé (Toque Final Profissional) -->
     <footer class="login-footer">
-      <p>© 2024 <strong>Vigorre One™</strong> - Todos os direitos reservados</p>
-      <p>People Analytics Enterprise • Inteligência Humana</p>
+      <p>© 2024 <strong>Vigorre One™</strong> - All rights reserved</p>
+      <p>Enterprise People Analytics • Human Intelligence</p>
     </footer>
-    
   </main>
 
   <script>
     'use strict';
-    
+
     let currentEnv = 'admin';
-    
+
     // ============================================
-    // FUNÇÃO: Definir ambiente selecionado
+    // 🎯 Definir Ambiente Selecionado
     // ============================================
     function setEnv(env) {
       currentEnv = env;
-      
+
       const buttons = document.querySelectorAll('.env-btn');
       buttons.forEach(function(btn) {
         btn.classList.remove('active');
         btn.setAttribute('aria-checked', 'false');
       });
-      
+
       const activeBtn = document.getElementById('env-' + env);
       if (activeBtn) {
         activeBtn.classList.add('active');
         activeBtn.setAttribute('aria-checked', 'true');
       }
-      
+
       document.getElementById('email').value = '';
       document.getElementById('password').value = '';
       hideAlert();
@@ -407,104 +707,104 @@
     }
 
     // ============================================
-    // FUNÇÃO: Exibir alertas
+    // ⚠️ Exibir Alertas (Feedback Visual)
     // ============================================
     function showAlert(msg, type) {
       const alertEl = document.getElementById('alert');
       alertEl.className = 'alert ' + type;
       alertEl.textContent = msg;
       alertEl.style.display = 'block';
-      
+
       setTimeout(function() {
         hideAlert();
       }, type === 'error' ? 6000 : 4000);
     }
-    
+
     function hideAlert() {
       const alertEl = document.getElementById('alert');
       alertEl.style.display = 'none';
     }
 
     // ============================================
-    // FUNÇÃO: Recuperar senha
+    // 🔐 Recuperar Senha
     // ============================================
     function forgotPassword(e) {
       if (e) e.preventDefault();
-      
-      const email = prompt("🔐 Recuperar Senha\n\nDigite seu e-mail cadastrado:");
+
+      const email = prompt("🔐 Password Recovery\n\nEnter your registered email:");
       if (!email || !email.trim()) return;
-      
+
       const normalizedEmail = email.trim().toLowerCase();
       const staff = JSON.parse(localStorage.getItem('vigorre_staff') || '[]');
       const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
       const recruiters = JSON.parse(localStorage.getItem('vigorre_recruiters') || '[]');
-      
+
       const allUsers = [].concat(staff, participants, recruiters);
-      const found = allUsers.find(function(u) { 
+      const found = allUsers.find(function(u) {
         return u.email && u.email.toLowerCase() === normalizedEmail;
       });
-      
+
       if (found) {
-        alert('📧 Recuperação de Senha\n\nUm e-mail foi enviado para: ' + normalizedEmail);
+        alert('📧 Password Recovery\n\nA recovery email was sent to: ' + normalizedEmail);
       } else {
-        showAlert('❌ E-mail não encontrado.', 'error');
+        showAlert('❌ Email not found.', 'error');
       }
     }
 
     // ============================================
-    // FUNÇÃO PRINCIPAL: Processar login COM SUPABASE
+    // 🚀 Função Principal: Processar Login (Supabase)
     // ============================================
     async function handleLogin(e) {
       e.preventDefault();
-      
+
       const emailInput = document.getElementById('email');
       const passInput = document.getElementById('password');
       const loginBtn = document.getElementById('loginBtn');
-      
+
       const input = emailInput.value.trim().toLowerCase();
       const pass = passInput.value;
-      
+
       if (!input || !pass) {
-        showAlert('⚠️ Preencha todos os campos.', 'error');
+        showAlert('⚠️ Please fill all fields.', 'error');
         return;
       }
-      
+
       loginBtn.disabled = true;
-      loginBtn.textContent = 'Autenticando...';
+      loginBtn.classList.add('loading');
+      loginBtn.textContent = 'Authenticating...';
       hideAlert();
 
       try {
-        // 1. LOGIN ADMIN MASTER
+        // 1. ADMIN MASTER LOGIN
         if (currentEnv === 'admin' && input === 'admin' && pass === 'amovin2026') {
           const adminUser = {
             id: 'admin-master-001',
-            name: 'Administrador Master',
-            email: 'admin@vigorre.com.br',
+            name: 'Master Administrator',
+            email: 'admin@vigorre.com',
             role: 'admin',
             type: 'admin'
           };
-          
+
           localStorage.setItem('vigorre_current_user', JSON.stringify(adminUser));
           sessionStorage.setItem('vigorre_session_active', 'true');
-          
-          showAlert('✅ Autenticação realizada!', 'success');
+
+          showAlert('✅ Authentication successful!', 'success');
           setTimeout(function() {
             window.location.href = 'admin.html?t=' + Date.now();
           }, 1200);
           return;
         }
 
-        // ✅ 2. LOGIN RECRUTADOR (NOVO!)
+        // 2. RECRUITER LOGIN
         if (currentEnv === 'recruiter') {
-          // Primeiro tenta Supabase
           if (window.VigorreDB && VigorreDB.supabase) {
             try {
-              const { data: recruiter, error } = await VigorreDB.supabase
+              const { data: recruiter } = await VigorreDB.supabase
                 .from('recruiters')
                 .select('*')
                 .eq('email', input)
                 .maybeSingle();
-              
+
               if (recruiter && recruiter.password === pass) {
                 const userData = {
                   id: recruiter.id,
@@ -515,27 +815,27 @@
                   companies: recruiter.companies || [],
                   credits: recruiter.credits || { DISC: 50, IE: 20, Valores: 30 }
                 };
-                
+
                 localStorage.setItem('vigorre_current_user', JSON.stringify(userData));
                 sessionStorage.setItem('vigorre_session_active', 'true');
-                
-                showAlert('✅ Bem-vindo, ' + userData.name.split(' ')[0] + '!', 'success');
+
+                showAlert('✅ Welcome, ' + userData.name.split(' ')[0] + '!', 'success');
                 setTimeout(function() {
                   window.location.href = 'recrutador/dashboard.html?t=' + Date.now();
                 }, 1200);
                 return;
               }
             } catch (e) {
-              console.warn('⚠️ Erro Supabase recruiter, usando localStorage:', e);
+              console.warn('⚠️ Supabase recruiter error:', e);
             }
           }
-          
+
           // Fallback localStorage
           const recruiters = JSON.parse(localStorage.getItem('vigorre_recruiters') || '[]');
-          const recruiter = recruiters.find(function(r) { 
-            return (r.login === input || r.email === input) && r.password === pass;
-          });
-          
+          const recruiter = recruiters.find(r =>
+            (r.login === input || r.email === input) && r.password === pass
+          );
+
           if (recruiter) {
             const userData = {
               id: recruiter.id,
@@ -546,11 +846,11 @@
               companies: recruiter.companies || [],
               credits: recruiter.credits || { DISC: 50, IE: 20, Valores: 30 }
             };
-            
+
             localStorage.setItem('vigorre_current_user', JSON.stringify(userData));
             sessionStorage.setItem('vigorre_session_active', 'true');
-            
-            showAlert('✅ Bem-vindo, ' + userData.name.split(' ')[0] + '!', 'success');
+
+            showAlert('✅ Welcome, ' + userData.name.split(' ')[0] + '!', 'success');
             setTimeout(function() {
               window.location.href = 'recrutador/dashboard.html?t=' + Date.now();
             }, 1200);
@@ -558,17 +858,16 @@
           }
         }
 
-        // 3. LOGIN PARTICIPANTE
+        // 3. PARTICIPANT LOGIN
         if (currentEnv === 'participant') {
-          // Tenta Supabase primeiro
           if (window.VigorreDB && VigorreDB.supabase) {
             try {
-              const { data: participant, error } = await VigorreDB.supabase
+              const { data: participant } = await VigorreDB.supabase
                 .from('participants')
                 .select('*')
                 .eq('email', input)
                 .maybeSingle();
-              
+
               if (participant && participant.password === pass) {
                 const userData = {
                   id: participant.id,
@@ -577,27 +876,26 @@
                   role: participant.role || 'participant',
                   type: 'participant'
                 };
-                
+
                 localStorage.setItem('vigorre_current_user', JSON.stringify(userData));
                 sessionStorage.setItem('vigorre_session_active', 'true');
-                
-                showAlert('✅ Bem-vindo, ' + userData.name.split(' ')[0] + '!', 'success');
+
+                showAlert('✅ Welcome, ' + userData.name.split(' ')[0] + '!', 'success');
                 setTimeout(function() {
                   window.location.href = 'dashboard-participante.html?t=' + Date.now();
                 }, 1200);
                 return;
               }
             } catch (e) {
-              console.warn('⚠️ Erro Supabase participant, usando localStorage:', e);
+              console.warn('⚠️ Supabase participant error:', e);
             }
           }
-          
-          // Fallback localStorage
+
           const participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-          const participant = participants.find(function(p) { 
-            return (p.user === input || p.email === input) && p.pass === pass;
-          });
-          
+          const participant = participants.find(p =>
+            (p.user === input || p.email === input) && p.pass === pass
+          );
+
           if (participant) {
             const userData = {
               id: participant.id,
@@ -606,11 +904,11 @@
               role: 'participant',
               type: 'participant'
             };
-            
+
             localStorage.setItem('vigorre_current_user', JSON.stringify(userData));
             sessionStorage.setItem('vigorre_session_active', 'true');
-            
-            showAlert('✅ Bem-vindo, ' + participant.name.split(' ')[0] + '!', 'success');
+
+            showAlert('✅ Welcome, ' + participant.name.split(' ')[0] + '!', 'success');
             setTimeout(function() {
               window.location.href = 'dashboard-participante.html?t=' + Date.now();
             }, 1200);
@@ -618,13 +916,13 @@
           }
         }
 
-        // 4. LOGIN STAFF (para admin env)
+        // 4. STAFF LOGIN
         if (currentEnv === 'admin') {
           const staff = JSON.parse(localStorage.getItem('vigorre_staff') || '[]');
-          const staffUser = staff.find(function(s) { 
-            return (s.login === input || s.email === input) && s.password === pass;
-          });
-          
+          const staffUser = staff.find(s =>
+            (s.login === input || s.email === input) && s.password === pass
+          );
+
           if (staffUser) {
             const userData = {
               id: staffUser.id,
@@ -633,11 +931,11 @@
               role: staffUser.role || 'staff',
               type: 'staff'
             };
-            
+
             localStorage.setItem('vigorre_current_user', JSON.stringify(userData));
             sessionStorage.setItem('vigorre_session_active', 'true');
-            
-            showAlert('✅ Bem-vindo, ' + userData.name.split(' ')[0] + '!', 'success');
+
+            showAlert('✅ Welcome, ' + userData.name.split(' ')[0] + '!', 'success');
             setTimeout(function() {
               window.location.href = 'admin.html?t=' + Date.now();
             }, 1200);
@@ -646,29 +944,30 @@
         }
 
         // 5. CREDENCIAIS INVÁLIDAS
-        showAlert('❌ Credenciais inválidas. Verifique usuário, senha e ambiente selecionado.', 'error');
-        
+        showAlert('❌ Invalid credentials. Please check username, password and selected environment.', 'error');
+
       } catch (error) {
-        console.error('❌ Erro no login:', error);
-        showAlert('❌ Erro ao conectar. Verifique sua internet.', 'error');
+        console.error('❌ Login error:', error);
+        showAlert('❌ Connection error. Please check your internet.', 'error');
       } finally {
         loginBtn.disabled = false;
-        loginBtn.textContent = 'Entrar no Vigorre One™';
+        loginBtn.classList.remove('loading');
+        loginBtn.textContent = 'Sign In to Vigorre One™';
         passInput.focus();
         passInput.select();
       }
     }
 
     // ============================================
-    // VERIFICAÇÃO DE SESSÃO
+    // 🔍 Verificação de Sessão
     // ============================================
     document.addEventListener('DOMContentLoaded', function() {
       const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
       const sessionActive = sessionStorage.getItem('vigorre_session_active') === 'true';
-      
+
       if (currentUser && currentUser.role && sessionActive) {
         let targetPage = 'login.html';
-        
+
         if (currentUser.role === 'admin' || currentUser.role === 'staff') {
           targetPage = 'admin.html';
         } else if (currentUser.role === 'recruiter') {
@@ -676,45 +975,44 @@
         } else if (currentUser.role === 'participant') {
           targetPage = 'dashboard-participante.html';
         }
-        
+
         if (!window.location.href.includes(targetPage)) {
           window.location.href = targetPage + '?t=' + Date.now();
         }
       }
-      
+
       document.getElementById('email').focus();
     });
-    
+
     // ============================================
-    // PREVENIR BACK BUTTON APÓS LOGOUT
+    // 🚫 Prevenir Back Button Após Logout
     // ============================================
     window.addEventListener('pageshow', function(event) {
       if (event.persisted) {
         const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
         const sessionActive = sessionStorage.getItem('vigorre_session_active') === 'true';
-        
+
         if (!currentUser.role || !sessionActive) {
           window.location.replace('login.html');
         }
       }
     });
-    
+
     // ============================================
-    // DEBUG - CRIAR RECRUTADOR DE TESTE (apenas localhost)
+    // 🛠️ Debug - Criar Recrutador de Teste (Localhost)
     // ============================================
     if (window.location.hostname === 'localhost') {
-      console.log('🔧 Modo desenvolvedor: Criando credenciais de teste...');
-      
-      // Criar recrutador de teste se não existir
+      console.log('🔧 Developer mode: Creating test credentials...');
+
       const recruiters = JSON.parse(localStorage.getItem('vigorre_recruiters') || '[]');
-      const exists = recruiters.find(r => r.login === 'recrutador');
-      
+      const exists = recruiters.find(r => r.login === 'recruiter');
+
       if (!exists) {
         const testRecruiter = {
           id: 'rec_test_001',
-          name: 'Recrutador Teste',
-          email: 'recrutador@vigorre.com',
-          login: 'recrutador',
+          name: 'Test Recruiter',
+          email: 'recruiter@vigorre.com',
+          login: 'recruiter',
           password: 'rec123',
           role: 'recruiter',
           companies: [],
@@ -722,12 +1020,14 @@
         };
         recruiters.push(testRecruiter);
         localStorage.setItem('vigorre_recruiters', JSON.stringify(recruiters));
-        console.log('✅ Recrutador de teste criado:');
-        console.log('   Login: recrutador');
-        console.log('   Senha: rec123');
-        console.log('   Ambiente: Selecione "Recrutador" no login');
+        console.log('✅ Test recruiter created:');
+        console.log('   Login: recruiter');
+        console.log('   Password: rec123');
       }
     }
   </script>
 </body>
 </html>
+---
+**🔥 RESULTADO FINAL:**
+Um login que **não só funciona, mas encanta**. CEOs, presidentes e diretores vão **parar para admirar** o design antes mesmo de fazer o login. **Isso é o que chamamos de "Primeira Impressão Premium"!** 🚀
