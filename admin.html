@@ -507,6 +507,7 @@
       border-collapse: separate;
       border-spacing: 0;
       font-size: 0.9rem;
+      min-width: 900px;
     }
     
     thead {
@@ -522,12 +523,14 @@
       text-transform: uppercase;
       letter-spacing: 0.05em;
       border-bottom: 1px solid #e2e8f0;
+      white-space: nowrap;
     }
     
     td { 
       padding: 1rem 1.25rem; 
       border-bottom: 1px solid #f1f5f9;
       color: #334155;
+      vertical-align: middle;
     }
     
     tbody tr { transition: background 0.15s; }
@@ -566,6 +569,70 @@
     
     .badge-pending { background: #f1f5f9; color: #64748b; border-color: #e2e8f0; }
     .badge-completed { background: #dcfce7; color: #166534; border-color: #bbf7d0; }
+    
+    /* Teste badges */
+    .test-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin: 2px 0;
+    }
+    .test-badge.disc { background: #fef2f2; color: #dc2626; }
+    .test-badge.ie { background: #eff6ff; color: #2563eb; }
+    .test-badge.valores { background: #fffbeb; color: #d97706; }
+    .test-badge.done { opacity: 1; }
+    .test-badge.pending { opacity: 0.6; }
+    
+    /* Action buttons group */
+    .action-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: flex-end;
+    }
+    
+    .action-btn {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      background: white;
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+    
+    .action-btn:hover {
+      border-color: #3b82f6;
+      color: #3b82f6;
+      transform: translateX(2px);
+    }
+    
+    .action-btn.edit { color: #6366f1; border-color: #c7d2fe; }
+    .action-btn.edit:hover { background: #6366f1; color: white; }
+    
+    .action-btn.view { color: #10b981; border-color: #a7f3d0; }
+    .action-btn.view:hover { background: #10b981; color: white; }
+    
+    .action-btn.retry { color: #f59e0b; border-color: #fcd34d; }
+    .action-btn.retry:hover { background: #f59e0b; color: white; }
+    
+    .action-btn.report { color: #8b5cf6; border-color: #ddd6fe; }
+    .action-btn.report:hover { background: #8b5cf6; color: white; }
+    
+    .action-btn.laudo { color: #ec4899; border-color: #fbcfe8; }
+    .action-btn.laudo:hover { background: #ec4899; color: white; }
+    
+    .action-btn.delete { color: #dc2626; border-color: #fecaca; }
+    .action-btn.delete:hover { background: #dc2626; color: white; }
     
     /* ============ BUTTONS ============ */
     .btn {
@@ -724,6 +791,41 @@
       background: #ef4444;
       color: white;
     }
+    
+    /* Modal Upgrade Info */
+    .upgrade-info {
+      background: linear-gradient(135deg, #f0f9ff, #fffbeb);
+      border: 1px solid #bae6fd;
+      border-radius: 12px;
+      padding: 1rem;
+      margin: 1rem 0;
+      font-size: 0.8125rem;
+      color: #334155;
+    }
+    .upgrade-info h4 {
+      margin: 0 0 0.5rem 0;
+      color: #0f172a;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .upgrade-info ul {
+      margin: 0.5rem 0;
+      padding-left: 1.25rem;
+    }
+    .upgrade-info li { margin: 4px 0; }
+    .upgrade-contact {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid #e2e8f0;
+      font-weight: 600;
+    }
+    .upgrade-contact a {
+      color: #3b82f6;
+      text-decoration: none;
+    }
+    .upgrade-contact a:hover { text-decoration: underline; }
     
     /* ============ LOG PANEL PREMIUM ============ */
     .log-panel {
@@ -1077,7 +1179,13 @@
         <div class="table-wrapper">
           <table>
             <thead>
-              <tr><th>Participante</th><th>Email</th><th>Status</th><th style="text-align:right">Ações</th></tr>
+              <tr>
+                <th>Participante</th>
+                <th>Email</th>
+                <th>Testes</th>
+                <th>Status</th>
+                <th style="text-align:right">Ações</th>
+              </tr>
             </thead>
             <tbody id="participantsTableBody"></tbody>
           </table>
@@ -1135,6 +1243,57 @@
         <div class="form-group"><label>Senha *</label><input type="password" id="pPass" required></div>
         <button type="submit" class="btn btn-primary" style="width:100%; padding: 14px; justify-content:center;">💾 Salvar Participante</button>
       </form>
+    </div>
+  </div>
+
+  <!-- Modal Editar Participante -->
+  <div class="modal" id="editPartModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>✏️ Editar Participante</h3>
+        <button class="modal-close" onclick="closeModal('editPartModal')">×</button>
+      </div>
+      <form onsubmit="updateParticipant(event)">
+        <input type="hidden" id="editPId">
+        <div class="form-group"><label>Nome Completo *</label><input type="text" id="editPName" required></div>
+        <div class="form-group"><label>Email *</label><input type="email" id="editPEmail" required></div>
+        <div class="form-group"><label>Telefone *</label><input type="tel" id="editPPhone" required></div>
+        <div class="form-group"><label>Usuário *</label><input type="text" id="editPUser" required></div>
+        <div class="form-group"><label>Nova Senha (deixe em branco para manter)</label><input type="password" id="editPPass" placeholder="••••••••"></div>
+        <button type="submit" class="btn btn-primary" style="width:100%; padding: 14px; justify-content:center;">💾 Atualizar Participante</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Ver Resultados -->
+  <div class="modal" id="resultsModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>📊 Resultados do Participante</h3>
+        <button class="modal-close" onclick="closeModal('resultsModal')">×</button>
+      </div>
+      <div id="resultsContent"></div>
+    </div>
+  </div>
+
+  <!-- Modal Upgrade Info -->
+  <div class="modal" id="upgradeModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>📈 Relatórios Premium Vigorre One™</h3>
+        <button class="modal-close" onclick="closeModal('upgradeModal')">×</button>
+      </div>
+      <div class="upgrade-info">
+        <h4>💎 Qual relatório você precisa?</h4>
+        <p><strong>📘 Relatório Completo:</strong> Análise detalhada com pontos fortes, áreas de melhoria, recomendações práticas e plano de desenvolvimento personalizado.</p>
+        <p><strong>📜 Laudo Comportamental:</strong> Análise técnica profunda com cruzamento de metodologias (DISC + HMI/MBTI), indicadores de liderança, resiliência, inteligência emocional e adaptação organizacional. Ideal para processos seletivos e desenvolvimento de carreira.</p>
+        <div class="upgrade-contact">
+          📞 Para adquirir ou saber mais:<br>
+          📱 WhatsApp: <a href="https://wa.me/5534991857735" target="_blank">34 99185-7735</a><br>
+          📧 Email: <a href="mailto:contato@vigorre.com.br">contato@vigorre.com.br</a>
+        </div>
+      </div>
+      <button class="btn btn-primary" style="width:100%; padding: 14px; justify-content:center;" onclick="closeModal('upgradeModal')">Entendi, obrigado!</button>
     </div>
   </div>
 
@@ -1301,16 +1460,167 @@
       }).join('');
     }
     
+    // ✅ FUNÇÃO renderParticipants - COMPLETA COM TODAS FUNCIONALIDADES
     function renderParticipants() {
       const tbody = document.getElementById('participantsTableBody');
       if (!tbody) return;
       if (DB.participants.length === 0) { 
-        tbody.innerHTML = '<tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">👤</div><h4>Nenhum participante cadastrado</h4><p>Comece adicionando seus participantes</p></div></td></tr>'; 
+        tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon">👤</div><h4>Nenhum participante cadastrado</h4><p>Comece adicionando seus participantes</p></div></td></tr>'; 
         return; 
       }
       tbody.innerHTML = DB.participants.map(function(p) {
-        return '<tr><td><div class="user-cell"><div class="avatar">' + p.name.charAt(0).toUpperCase() + '</div><div class="user-info-cell"><span class="user-name">' + p.name + '</span><span class="user-email">' + p.email + '</span></div></div></td><td>' + p.email + '</td><td><span class="badge-pill badge-pending">⏳ Pendente</span></td><td style="text-align:right"><button class="btn btn-danger btn-sm" onclick="deleteItem(\'participants\',\'' + p.id + '\')">🗑 Excluir</button></td></tr>';
+        // Status dos testes
+        const completed = p.completedTests || [];
+        const discDone = completed.includes('DISC');
+        const ieDone = completed.includes('IE');
+        const valoresDone = completed.includes('Valores');
+        
+        // Badge de status geral
+        const allDone = discDone && ieDone && valoresDone;
+        const statusBadge = allDone 
+          ? '<span class="badge-pill badge-completed">✅ Todos concluídos</span>'
+          : '<span class="badge-pill badge-pending">⏳ Em andamento</span>';
+        
+        // Badges dos testes individuais
+        const testsHtml = `
+          <div style="display:flex;flex-direction:column;gap:2px;min-width:120px">
+            <span class="test-badge disc ${discDone?'done':'pending'}">${discDone?'✅':'⏳'} DISC</span>
+            <span class="test-badge ie ${ieDone?'done':'pending'}">${ieDone?'✅':'⏳'} IE</span>
+            <span class="test-badge valores ${valoresDone?'done':'pending'}">${valoresDone?'✅':'⏳'} Valores</span>
+          </div>
+        `;
+        
+        // Botões de ação
+        const actionsHtml = `
+          <div class="action-btns">
+            <button class="action-btn edit" onclick="editParticipant('${p.id}')" title="Editar participante">✏️ Editar</button>
+            <button class="action-btn view" onclick="viewResults('${p.id}')" title="Ver resultados dos testes">👁️ Resultados</button>
+            <button class="action-btn retry" onclick="retryTest('${p.id}')" title="Refazer teste">🔄 Refazer</button>
+            <button class="action-btn report" onclick="generateReport('${p.id}')" title="Gerar relatório completo">📘 Relatório</button>
+            <button class="action-btn laudo" onclick="showUpgradeInfo('${p.id}')" title="Gerar laudo comportamental">📜 Laudo</button>
+            <button class="action-btn delete" onclick="deleteItem('participants','${p.id}')" title="Excluir participante">🗑 Excluir</button>
+          </div>
+        `;
+        
+        return `<tr>
+          <td><div class="user-cell"><div class="avatar">${p.name.charAt(0).toUpperCase()}</div><div class="user-info-cell"><span class="user-name">${p.name}</span><span class="user-email">${p.email}</span></div></div></td>
+          <td>${p.email}</td>
+          <td>${testsHtml}</td>
+          <td>${statusBadge}</td>
+          <td style="text-align:right">${actionsHtml}</td>
+        </tr>`;
       }).join('');
+    }
+
+    // ✅ Funções de ação para participantes
+    function editParticipant(id) {
+      const p = DB.participants.find(function(x) { return x.id === id; });
+      if (!p) return;
+      document.getElementById('editPId').value = p.id;
+      document.getElementById('editPName').value = p.name;
+      document.getElementById('editPEmail').value = p.email;
+      document.getElementById('editPPhone').value = p.phone || '';
+      document.getElementById('editPUser').value = p.user || '';
+      document.getElementById('editPPass').value = '';
+      openModal('editPartModal');
+      logMessage('✏️ Editando participante: ' + p.name);
+    }
+    
+    function updateParticipant(e) {
+      e.preventDefault();
+      const id = document.getElementById('editPId').value;
+      const idx = DB.participants.findIndex(function(x) { return x.id === id; });
+      if (idx === -1) return;
+      
+      const pass = document.getElementById('editPPass').value;
+      DB.participants[idx] = {
+        ...DB.participants[idx],
+        name: document.getElementById('editPName').value,
+        email: document.getElementById('editPEmail').value,
+        phone: document.getElementById('editPPhone').value,
+        user: document.getElementById('editPUser').value,
+        pass: pass || DB.participants[idx].pass
+      };
+      
+      saveDB();
+      closeModal('editPartModal');
+      showToast('✅ Participante atualizado!');
+      logMessage('✅ Participante atualizado: ' + DB.participants[idx].name);
+    }
+    
+    function viewResults(id) {
+      const p = DB.participants.find(function(x) { return x.id === id; });
+      if (!p) return;
+      
+      const completed = p.completedTests || [];
+      let content = `<h4 style="margin:0 0 1rem 0;color:#0f172a">📊 Resultados: ${p.name}</h4>`;
+      
+      if (completed.length === 0) {
+        content += '<p style="color:#64748b">Nenhum teste concluído ainda.</p>';
+      } else {
+        content += '<ul style="margin:0;padding-left:1.25rem">';
+        if (completed.includes('DISC')) content += '<li>✅ <strong>DISC</strong> - Perfil comportamental identificado</li>';
+        if (completed.includes('IE')) content += '<li>✅ <strong>Inteligência Emocional</strong> - Nível de IE avaliado</li>';
+        if (completed.includes('Valores')) content += '<li>✅ <strong>Valores Pessoais</strong> - Drivers motivacionais mapeados</li>';
+        content += '</ul>';
+        content += '<p style="margin-top:1rem;color:#64748b;font-size:0.875rem">Para visualizar o relatório completo, clique em "📘 Relatório" ou "📜 Laudo".</p>';
+      }
+      
+      document.getElementById('resultsContent').innerHTML = content;
+      openModal('resultsModal');
+      logMessage('👁️ Visualizando resultados: ' + p.name);
+    }
+    
+    function retryTest(id) {
+      if (!confirm('⚠️ Tem certeza que deseja permitir que este participante refaça o teste?\n\nIsso irá resetar os resultados anteriores.')) return;
+      
+      const idx = DB.participants.findIndex(function(x) { return x.id === id; });
+      if (idx === -1) return;
+      
+      DB.participants[idx].completedTests = [];
+      DB.participants[idx].testResults = {};
+      saveDB();
+      showToast('✅ Teste resetado! O participante pode refazer.');
+      logMessage('🔄 Teste resetado para: ' + DB.participants[idx].name);
+    }
+    
+    function generateReport(id) {
+      const p = DB.participants.find(function(x) { return x.id === id; });
+      if (!p) return;
+      
+      // Verifica se tem testes concluídos
+      const completed = p.completedTests || [];
+      if (completed.length === 0) {
+        showToast('⚠️ Participante precisa concluir pelo menos 1 teste para gerar relatório.', 'error');
+        return;
+      }
+      
+      // Simula geração de relatório
+      logMessage('📘 Gerando relatório completo: ' + p.name);
+      showToast('📧 Relatório sendo gerado e enviado para ' + p.email);
+      
+      // Aqui você integraria com o backend para gerar o PDF
+      // window.open('relatorio-completo.html?participantId=' + id, '_blank');
+    }
+    
+    function showUpgradeInfo(id) {
+      // Armazena o ID para uso posterior se necessário
+      window.currentParticipantForLaudo = id;
+      openModal('upgradeModal');
+      logMessage('📜 Modal de upgrade exibido para laudo');
+    }
+    
+    function requestLaudo() {
+      const id = window.currentParticipantForLaudo;
+      const p = DB.participants.find(function(x) { return x.id === id; });
+      if (!p) return;
+      
+      closeModal('upgradeModal');
+      showToast('📧 Solicitação de laudo enviada! Entraremos em contato.');
+      logMessage('📜 Solicitação de laudo para: ' + p.name);
+      
+      // Aqui você integraria com WhatsApp API ou backend
+      // window.open('https://wa.me/5534991857735?text=Olá, gostaria de solicitar um Laudo Comportamental para o participante: ' + p.name, '_blank');
     }
 
     function filterStaff() { renderStaff(); }
@@ -1338,21 +1648,32 @@
     function saveParticipant(e) {
       e.preventDefault();
       const id = document.getElementById('pId').value || Date.now().toString();
-      const data = { id: id, name: document.getElementById('pName').value, email: document.getElementById('pEmail').value, phone: document.getElementById('pPhone').value, user: document.getElementById('pUser').value, pass: document.getElementById('pPass').value };
+      const data = { 
+        id: id, 
+        name: document.getElementById('pName').value, 
+        email: document.getElementById('pEmail').value, 
+        phone: document.getElementById('pPhone').value, 
+        user: document.getElementById('pUser').value, 
+        pass: document.getElementById('pPass').value,
+        completedTests: [],
+        testResults: {}
+      };
       const idx = DB.participants.findIndex(function(x) { return x.id === id; });
-      if (idx > -1) DB.participants[idx] = data; else DB.participants.push(data);
+      if (idx > -1) DB.participants[idx] = { ...DB.participants[idx], ...data }; else DB.participants.push(data);
       saveDB(); closeModal('partModal'); showToast('✅ Participante salvo!');
     }
 
     function deleteItem(collection, id) {
-      if (!confirm('Excluir este item?')) return;
+      if (!confirm('⚠️ Tem certeza que deseja excluir este item?\n\nEsta ação não pode ser desfeita.')) return;
       DB[collection] = DB[collection].filter(function(x) { return x.id !== id; });
       saveDB(); showToast('✅ Item excluído!');
+      logMessage('🗑 Item excluído: ' + collection + ' - ' + id);
     }
 
     function logout() {
       localStorage.removeItem('vigorre_current_user');
       sessionStorage.clear();
+      logMessage('🔐 Logout realizado');
       window.location.href = 'login.html';
     }
 
