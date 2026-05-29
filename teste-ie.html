@@ -81,6 +81,8 @@
       line-height: 1.6; 
       position: relative; 
       overflow-x: hidden;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
     }
     
     /* Background animado premium */
@@ -853,6 +855,312 @@
     .toast-icon { font-size: 1.25rem; }
     
     /* ============================================
+       PRINT OPTIMIZATION - ULTRA PREMIUM
+       ============================================ */
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 32mm 16mm 24mm 16mm;
+      }
+      
+      body { 
+        background: #ffffff !important;
+        color: #111111 !important;
+        font-size: 10pt;
+        line-height: 1.5;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      
+      /* Esconder elementos não impressos */
+      .no-print, header, .modal-overlay, .toast, .btn, .btn-report, .navigation-buttons { 
+        display: none !important; 
+      }
+      
+      /* Header de impressão */
+      .print-header {
+        display: flex !important;
+        background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
+        color: white !important;
+        padding: 8mm 16mm 4mm 16mm !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      
+      .print-header .print-header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 210mm;
+        margin: 0 auto;
+      }
+      
+      .print-header .print-logo-box {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      
+      .print-header .print-logo {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #06B6D4, #10B981) !important;
+        color: white;
+        border-radius: 10px;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        font-size: 20pt;
+      }
+      
+      .print-header .print-logo-text h4 {
+        font-size: 14pt;
+        font-weight: 700;
+        margin: 0;
+        color: white !important;
+      }
+      
+      .print-header .print-logo-text p {
+        font-size: 8pt;
+        margin: 0;
+        opacity: 0.9;
+        color: rgba(255,255,255,0.9) !important;
+      }
+      
+      .print-header h1 {
+        font-size: 14pt;
+        font-weight: 800;
+        margin: 0;
+        color: white !important;
+      }
+      
+      .print-header p {
+        font-size: 8pt;
+        margin: 0;
+        opacity: 0.9;
+        color: rgba(255,255,255,0.9) !important;
+      }
+      
+      /* Conteúdo principal com margem para header/footer */
+      main, .results-container {
+        margin-top: 32mm !important;
+        margin-bottom: 24mm !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+      
+      /* Cards na impressão */
+      .question-card, .results-header, .chart-card, .summary-card, .report-card {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: none !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        margin-bottom: 20px !important;
+      }
+      
+      .question-card {
+        padding: 2rem !important;
+        border-radius: 12px !important;
+      }
+      
+      .results-header {
+        padding: 2rem !important;
+        border-radius: 12px !important;
+        text-align: center !important;
+      }
+      
+      /* Gráficos na impressão */
+      .chart-container {
+        height: 280px !important;
+        max-width: 100% !important;
+        page-break-inside: avoid;
+      }
+      
+      canvas {
+        max-width: 100% !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      
+      /* Textos na impressão */
+      h1, h2, h3, h4 {
+        color: #0F172A !important;
+        page-break-after: avoid;
+      }
+      
+      p, li, td { 
+        color: #334155 !important; 
+      }
+      
+      /* Perfil badge na impressão */
+      .profile-badge {
+        background: #06B6D4 !important;
+        color: white !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
+      
+      /* Rodapé de impressão */
+      .print-footer {
+        display: flex !important;
+        background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
+        color: white !important;
+        padding: 3mm 16mm !important;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      
+      .print-footer .print-footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 7.5pt;
+        width: 100%;
+        max-width: 210mm;
+        margin: 0 auto;
+        color: white !important;
+      }
+      
+      .print-footer .print-footer-content div {
+        color: rgba(255,255,255,0.9) !important;
+      }
+      
+      .print-footer .footer-logo-box {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      
+      .print-footer .footer-logo {
+        width: 28px;
+        height: 28px;
+        background: linear-gradient(135deg, #06B6D4, #10B981) !important;
+        color: white;
+        border-radius: 8px;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        font-size: 12pt;
+      }
+      
+      .print-footer .footer-text h4 {
+        font-size: 9pt;
+        font-weight: 700;
+        margin: 0;
+        color: white !important;
+      }
+      
+      .print-footer .footer-text p {
+        font-size: 7pt;
+        margin: 0;
+        opacity: 0.9;
+        color: rgba(255,255,255,0.9) !important;
+      }
+      
+      .print-page-number::after {
+        content: "Página " counter(page) " de " counter(pages);
+        color: white !important;
+        font-weight: 600;
+        font-size: 8pt;
+      }
+      
+      /* Marca d'água */
+      .print-watermark {
+        display: block !important;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-30deg);
+        font-size: 120pt;
+        color: rgba(15, 23, 42, 0.04) !important;
+        font-weight: 900;
+        pointer-events: none;
+        z-index: 0;
+        white-space: nowrap;
+        letter-spacing: -5px;
+        text-transform: uppercase;
+      }
+      
+      /* Assinatura corporativa final */
+      .print-signature-block {
+        display: block !important;
+        margin-top: 2rem !important;
+        padding-top: 1.5rem !important;
+        border-top: 2px solid #06B6D4 !important;
+        text-align: center;
+        page-break-inside: avoid;
+      }
+      
+      .print-signature-title {
+        font-size: 9pt;
+        font-weight: 700;
+        color: #111 !important;
+        margin-bottom: 0.5rem;
+      }
+      
+      .print-signature-text {
+        font-size: 8pt;
+        color: #555 !important;
+        line-height: 1.4;
+      }
+      
+      .print-signature-contact {
+        margin-top: 0.5rem;
+        font-size: 7.5pt;
+        color: #777 !important;
+      }
+      
+      .print-signature-contact a {
+        color: #06B6D4 !important;
+        text-decoration: none;
+      }
+      
+      /* Quebras de página */
+      section, .question-card, .results-header, .chart-card, .summary-card {
+        page-break-inside: avoid !important;
+      }
+      
+      h2, h3, h4 {
+        page-break-after: avoid !important;
+      }
+      
+      p, ul, ol {
+        orphans: 3;
+        widows: 3;
+      }
+      
+      table {
+        page-break-inside: avoid;
+      }
+      
+      img, .logo-badge {
+        page-break-inside: avoid;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+    
+    .print-header { display: none; }
+    .print-footer { display: none; }
+    .print-watermark { display: none; }
+    .print-signature-block { display: none; }
+    .page-number { display: none; }
+    
+    /* ============================================
        RESPONSIVO
        ============================================ */
     @media (max-width: 768px) {
@@ -917,7 +1225,7 @@
 <body>
 
   <!-- Header Premium -->
-  <header>
+  <header class="no-print">
     <div class="header-content">
       <div class="logo">
         <div class="logo-badge">V</div>
@@ -934,6 +1242,66 @@
       </div>
     </div>
   </header>
+
+  <!-- Cabeçalho de Impressão -->
+  <div class="print-header">
+    <div class="print-header-content">
+      <div class="print-logo-box">
+        <div class="print-logo">V</div>
+        <div class="print-logo-text">
+          <h4>Vigorre One™</h4>
+          <p>Inteligência Emocional</p>
+        </div>
+      </div>
+      <div>
+        <h1>Resultado do Teste de IE</h1>
+        <p>Perfil Emocional • Metodologia Vigorre</p>
+      </div>
+      <div style="text-align: right;">
+        <p style="font-size: 8pt;">Confidencial</p>
+        <p style="font-size: 8pt; opacity: 0.8;">Vigorre One™ Analytics</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Marca d'água -->
+  <div class="print-watermark">VIGORRE ONE</div>
+
+  <!-- Rodapé de Impressão -->
+  <div class="print-footer">
+    <div class="print-footer-content">
+      <div class="footer-logo-box">
+        <div class="footer-logo">V</div>
+        <div class="footer-text">
+          <h4>Vigorre One™</h4>
+          <p>Inteligência Emocional</p>
+        </div>
+      </div>
+      <div style="text-align: center;">
+        <p style="margin: 0; font-size: 8pt;">Resultado do Teste IE • Gerado automaticamente</p>
+        <p style="margin: 0; font-size: 7pt; opacity: 0.7;">Documento confidencial • Vigorre One™</p>
+      </div>
+      <div style="text-align: right;">
+        <p style="margin: 0; font-size: 8pt;">contato@vigorre.com.br</p>
+        <p style="margin: 0; font-size: 7pt; opacity: 0.7;">vigorre.com.br</p>
+      </div>
+      <div class="print-page-number"></div>
+    </div>
+  </div>
+  
+  <!-- Assinatura corporativa final -->
+  <div class="print-signature-block">
+    <p class="print-signature-title">Documento Confidencial — Vigorre One™ People Analytics</p>
+    <p class="print-signature-text">
+      Este resultado foi gerado automaticamente pela plataforma Vigorre One™ utilizando metodologia proprietária de Inteligência Emocional.
+      O conteúdo é de uso exclusivo para desenvolvimento profissional, gestão de talentos e processos seletivos estratégicos.
+    </p>
+    <p class="print-signature-contact">
+      Para adquirir relatórios premium ou laudos personalizados: 
+      📱 <a href="https://wa.me/5534991857735">34 99185-7735</a> • 
+      📧 <a href="mailto:contato@vigorre.com.br">contato@vigorre.com.br</a>
+    </p>
+  </div>
 
   <!-- Main Content - Perguntas -->
   <main id="testContainer">
@@ -1615,6 +1983,96 @@
       supabase: {
         available: typeof window.VigorreDB !== 'undefined',
         connected: VigorreDB?.supabase ? 'conectado' : 'não conectado'
+      }
+    });
+
+    // ============================================
+    // JAVASCRIPT DE IMPRESSÃO ENTERPRISE PREMIUM
+    // ============================================
+
+    // Preencher metadados do header de impressão
+    function populatePrintMetadata() {
+      // Atualizar informações do participante no header de impressão
+      const printHeader = document.querySelector('.print-header h1');
+      if (printHeader && AppState.participant) {
+        printHeader.textContent = `Resultado IE: ${AppState.participant.name || 'Participante'}`;
+      }
+    }
+
+    // Preparar para impressão - otimizar gráficos e remover animações
+    window.onbeforeprint = function() {
+      console.log('🖨️ Preparando impressão do teste IE...');
+      
+      // Preencher metadados
+      populatePrintMetadata();
+      
+      // Otimizar gráficos para impressão (alta qualidade)
+      if (ieRadarChartInstance && ieRadarChartInstance.canvas) {
+        ieRadarChartInstance.resize();
+        ieRadarChartInstance.update('none');
+      }
+      if (ieBarChartInstance && ieBarChartInstance.canvas) {
+        ieBarChartInstance.resize();
+        ieBarChartInstance.update('none');
+      }
+      
+      // Remover animações que podem causar problemas na impressão
+      document.querySelectorAll('.fade-in, .slide-up, .pulse-slow').forEach(el => {
+        el.style.animation = 'none';
+        el.style.transition = 'none';
+      });
+      
+      console.log('✅ Gráficos otimizados para impressão');
+    };
+
+    // Restaurar interface após impressão
+    window.onafterprint = function() {
+      console.log('✅ Impressão concluída - restaurando interface');
+      
+      // Restaurar animações
+      document.querySelectorAll('.fade-in, .slide-up, .pulse-slow').forEach(el => {
+        el.style.animation = '';
+        el.style.transition = '';
+      });
+      
+      // Re-renderizar gráficos para a tela
+      setTimeout(() => {
+        if (AppState.completed) {
+          // Recarregar resultados se disponíveis
+          const results = JSON.parse(localStorage.getItem('vigorre_last_ie_result') || '{}');
+          if (results.percentages) {
+            renderCharts(results.percentages);
+          }
+        }
+        console.log('🔄 Gráficos restaurados para visualização');
+      }, 300);
+    };
+
+    // Função de exportação PDF aprimorada
+    function exportPDF() {
+      showToast('📄 Preparando PDF executivo de alta resolução...', 'success');
+      
+      // Pequeno delay para garantir que tudo esteja renderizado
+      setTimeout(() => {
+        // Chamar impressão nativa do navegador
+        window.print();
+        
+        // Log para analytics (se implementado)
+        console.log('📊 Resultado IE exportado:', {
+          participant: AppState.participant?.name,
+          avgQE: AppState.completed ? JSON.parse(localStorage.getItem('vigorre_last_ie_result') || '{}').avgQE : null,
+          timestamp: new Date().toISOString()
+        });
+      }, 800);
+    }
+
+    // ============================================
+    // INICIALIZAÇÃO FINAL
+    // ============================================
+    document.addEventListener('DOMContentLoaded', () => {
+      // Garantir que elementos de impressão existam
+      if (document.querySelector('.print-header')) {
+        console.log('✅ Elementos de impressão premium carregados');
       }
     });
   </script>
