@@ -240,12 +240,12 @@
     @media print {
       @page {
         size: A4 portrait;
-        margin: 15mm 15mm;
+        margin: 32mm 16mm 24mm 16mm;
       }
       
       body { 
         background: #ffffff !important;
-        color: #000000 !important;
+        color: #111111 !important;
         font-size: 10pt;
         line-height: 1.5;
         -webkit-print-color-adjust: exact !important;
@@ -260,7 +260,7 @@
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 15px 25px !important;
+        padding: 8mm 16mm 4mm 16mm !important;
         position: fixed;
         top: 0;
         left: 0;
@@ -287,20 +287,20 @@
       }
       
       .print-header .print-logo {
-        width: 30px;
-        height: 30px;
-        background: #ffffff !important;
-        color: #0A1628;
-        border-radius: 6px;
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #F59E0B, #D97706) !important;
+        color: white;
+        border-radius: 10px;
         display: flex !important;
         align-items: center;
         justify-content: center;
         font-weight: 900;
-        font-size: 16px;
+        font-size: 20pt;
       }
       
       .print-header .print-logo-text h4 {
-        font-size: 11pt;
+        font-size: 14pt;
         font-weight: 700;
         margin: 0;
         color: white !important;
@@ -329,9 +329,10 @@
       
       /* Conteúdo principal com margem para header/footer */
       main {
-        margin-top: 100px !important;
-        margin-bottom: 100px !important;
+        margin-top: 32mm !important;
+        margin-bottom: 24mm !important;
         padding: 0 !important;
+        max-width: 100% !important;
       }
       
       /* Cards na impressão */
@@ -372,12 +373,34 @@
         color: #334155 !important; 
       }
       
+      /* Badges na impressão */
+      .badge-pill { 
+        border: 1px solid #ccc !important; 
+        color: #333 !important; 
+        background: #f9f9f9 !important;
+      }
+      
+      /* Barras de aderência na impressão */
+      .aderencia-cultural-container { background: #eee !important; }
+      .aderencia-cultural-fill.alta { background: #10B981 !important; }
+      .aderencia-cultural-fill.media { background: #F59E0B !important; }
+      .aderencia-cultural-fill.baixa { background: #EF4444 !important; }
+      .aderencia-cultural-text { color: #fff !important; text-shadow: none !important; }
+      
+      /* Dashboard cultural na impressão */
+      .cultural-metric {
+        background: #f1f5f9 !important;
+        color: #000 !important;
+        border: 1px solid #ccc !important;
+      }
+      .cultural-metric-value { color: #F59E0B !important; }
+      
       /* Rodapé de impressão */
       .print-footer {
         display: flex !important;
         background: linear-gradient(135deg, #0A1628 0%, #1a365d 100%) !important;
         color: white !important;
-        padding: 15px 25px !important;
+        padding: 3mm 16mm !important;
         position: fixed;
         bottom: 0;
         left: 0;
@@ -391,7 +414,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: 9pt;
+        font-size: 7.5pt;
         width: 100%;
         max-width: 210mm;
         margin: 0 auto;
@@ -405,34 +428,41 @@
       .print-footer .footer-logo-box {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
       }
       
       .print-footer .footer-logo {
-        width: 30px;
-        height: 30px;
-        background: #ffffff !important;
-        color: #0A1628;
-        border-radius: 6px;
+        width: 28px;
+        height: 28px;
+        background: linear-gradient(135deg, #F59E0B, #D97706) !important;
+        color: white;
+        border-radius: 8px;
         display: flex !important;
         align-items: center;
         justify-content: center;
         font-weight: 900;
-        font-size: 16px;
+        font-size: 12pt;
       }
       
       .print-footer .footer-text h4 {
-        font-size: 11pt;
+        font-size: 9pt;
         font-weight: 700;
         margin: 0;
         color: white !important;
       }
       
       .print-footer .footer-text p {
-        font-size: 8pt;
+        font-size: 7pt;
         margin: 0;
         opacity: 0.9;
         color: rgba(255,255,255,0.9) !important;
+      }
+      
+      .print-page-number::after {
+        content: "Página " counter(page) " de " counter(pages);
+        color: white !important;
+        font-weight: 600;
+        font-size: 8pt;
       }
       
       /* Marca d'água */
@@ -442,11 +472,48 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%) rotate(-30deg);
-        font-size: 100pt;
-        color: rgba(15, 23, 42, 0.03) !important;
+        font-size: 120pt;
+        color: rgba(15, 23, 42, 0.04) !important;
         font-weight: 900;
         pointer-events: none;
         z-index: 0;
+        white-space: nowrap;
+        letter-spacing: -5px;
+        text-transform: uppercase;
+      }
+      
+      /* Assinatura corporativa final */
+      .print-signature-block {
+        display: block !important;
+        margin-top: 2rem !important;
+        padding-top: 1.5rem !important;
+        border-top: 2px solid #F59E0B !important;
+        text-align: center;
+        page-break-inside: avoid;
+      }
+      
+      .print-signature-title {
+        font-size: 9pt;
+        font-weight: 700;
+        color: #111 !important;
+        margin-bottom: 0.5rem;
+      }
+      
+      .print-signature-text {
+        font-size: 8pt;
+        color: #555 !important;
+        line-height: 1.4;
+      }
+      
+      .print-signature-contact {
+        margin-top: 0.5rem;
+        font-size: 7.5pt;
+        color: #777 !important;
+      }
+      
+      .print-signature-contact a {
+        color: #F59E0B !important;
+        text-decoration: none;
       }
       
       /* Paginação */
@@ -457,11 +524,36 @@
         font-size: 8pt;
         color: rgba(255,255,255,0.7) !important;
       }
+      
+      /* Quebras de página */
+      section, .vigorre-card, .cultural-metric {
+        page-break-inside: avoid !important;
+      }
+      
+      h2, h3, h4 {
+        page-break-after: avoid !important;
+      }
+      
+      p, ul, ol {
+        orphans: 3;
+        widows: 3;
+      }
+      
+      table {
+        page-break-inside: avoid;
+      }
+      
+      img, .vigorre-logo-box {
+        page-break-inside: avoid;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
     }
     
     .print-header { display: none; }
     .print-footer { display: none; }
     .print-watermark { display: none; }
+    .print-signature-block { display: none; }
     .page-number { display: none; }
     
     /* ============================================
@@ -549,14 +641,31 @@
         </div>
       </div>
       <div style="text-align: center;">
-        <p style="margin: 0; font-size: 9pt;">Relatório de Valores Pessoais • Gerado automaticamente</p>
-        <p style="margin: 0; font-size: 8pt; opacity: 0.7;">Documento confidencial • Vigorre One™</p>
+        <p style="margin: 0; font-size: 8pt;">Relatório de Valores Pessoais • Gerado automaticamente</p>
+        <p style="margin: 0; font-size: 7pt; opacity: 0.7;">Documento confidencial • Vigorre One™</p>
       </div>
       <div style="text-align: right;">
-        <p style="margin: 0; font-size: 9pt;">contato@vigorre.com.br</p>
-        <p style="margin: 0; font-size: 8pt; opacity: 0.7;">vigorre.com.br</p>
+        <p style="margin: 0; font-size: 8pt;">contato@vigorre.com.br</p>
+        <p style="margin: 0; font-size: 7pt; opacity: 0.7;">vigorre.com.br</p>
       </div>
+      <div class="print-page-number"></div>
     </div>
+  </div>
+  
+  <!-- ============================================
+       ASSINATURA CORPORATIVA FINAL
+       ============================================ -->
+  <div class="print-signature-block">
+    <p class="print-signature-title">Documento Confidencial — Vigorre One™ People Analytics</p>
+    <p class="print-signature-text">
+      Este relatório foi gerado automaticamente pela plataforma Vigorre One™ utilizando metodologia proprietária de Valores Pessoais.
+      O conteúdo é de uso exclusivo para desenvolvimento profissional, gestão de talentos e processos seletivos estratégicos.
+    </p>
+    <p class="print-signature-contact">
+      Para adquirir relatórios premium ou laudos personalizados: 
+      📱 <a href="https://wa.me/5534991857735">34 99185-7735</a> • 
+      📧 <a href="mailto:contato@vigorre.com.br">contato@vigorre.com.br</a>
+    </p>
   </div>
 
   <!-- ============================================
@@ -2535,6 +2644,138 @@
       }
     });
 
+    // ============================================
+    // JAVASCRIPT DE IMPRESSÃO ENTERPRISE PREMIUM
+    // ============================================
+
+    // Preencher metadados do header de impressão
+    function populatePrintMetadata() {
+      // Atualizar capa do relatório com dados do participante
+      const coverName = safeGetElement('coverName');
+      const coverCompany = safeGetElement('coverCompany');
+      const coverJob = safeGetElement('coverJob');
+      const coverCode = safeGetElement('coverCode');
+      
+      if (coverName && AppState.participant) {
+        coverName.textContent = AppState.participant.name || 
+                               AppState.participant.nome || 
+                               'Participante';
+      }
+      
+      if (coverCompany) {
+        let companyName = 'Independente';
+        if (AppState.company?.name) {
+          companyName = AppState.company.name;
+        } else if (AppState.participant?.companyName) {
+          companyName = AppState.participant.companyName;
+        }
+        coverCompany.textContent = companyName;
+      }
+      
+      if (coverJob) {
+        let jobName = 'Não vinculada';
+        if (AppState.jobs?.length > 0) {
+          jobName = AppState.jobs[0].name || AppState.jobs[0].title || 'Vaga vinculada';
+        } else if (AppState.participant?.jobName) {
+          jobName = AppState.participant.jobName;
+        }
+        coverJob.textContent = jobName;
+      }
+      
+      if (coverCode) {
+        const year = new Date().getFullYear();
+        const random = Math.floor(Math.random() * 9000 + 1000);
+        coverCode.textContent = `VIG-VAL-${year}-${random}`;
+      }
+    }
+
+    // Preparar para impressão - otimizar gráficos e remover animações
+    window.onbeforeprint = function() {
+      console.log('🖨️ Preparando impressão do relatório de Valores...');
+      
+      // Preencher metadados
+      populatePrintMetadata();
+      
+      // Otimizar gráficos para impressão (alta qualidade)
+      if (AppState.charts.radar && AppState.charts.radar.canvas) {
+        AppState.charts.radar.resize();
+        AppState.charts.radar.update('none');
+      }
+      if (AppState.charts.bar && AppState.charts.bar.canvas) {
+        AppState.charts.bar.resize();
+        AppState.charts.bar.update('none');
+      }
+      
+      // Remover animações que podem causar problemas na impressão
+      document.querySelectorAll('.fade-in, .slide-up, .pulse-slow').forEach(el => {
+        el.style.animation = 'none';
+        el.style.transition = 'none';
+      });
+      
+      // Garantir que barras de progresso estejam renderizadas
+      document.querySelectorAll('[id$="Bar"]').forEach(bar => {
+        const width = bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(() => { bar.style.width = width; }, 10);
+      });
+      
+      console.log('✅ Gráficos otimizados para impressão');
+    };
+
+    // Restaurar interface após impressão
+    window.onafterprint = function() {
+      console.log('✅ Impressão concluída - restaurando interface');
+      
+      // Restaurar animações
+      document.querySelectorAll('.fade-in, .slide-up, .pulse-slow').forEach(el => {
+        el.style.animation = '';
+        el.style.transition = '';
+      });
+      
+      // Re-renderizar gráficos para a tela
+      setTimeout(() => {
+        if (AppState.valuesResults?.dimensions) {
+          renderCharts(AppState.valuesResults.dimensions);
+        }
+        console.log('🔄 Gráficos restaurados para visualização');
+      }, 300);
+    };
+
+    // Função de exportação PDF aprimorada
+    function exportPDF() {
+      showToast('📄 Preparando PDF executivo de alta resolução...', 'success');
+      
+      // Pequeno delay para garantir que tudo esteja renderizado
+      setTimeout(() => {
+        // Chamar impressão nativa do navegador
+        window.print();
+        
+        // Log para analytics (se implementado)
+        console.log('📊 Relatório Valores exportado:', {
+          participant: AppState.participant?.name,
+          dominant: AppState.valuesResults?.dominant,
+          timestamp: new Date().toISOString()
+        });
+      }, 800);
+    }
+
+    // Inicializar metadados de impressão quando o relatório estiver pronto
+    const originalGenerateReport = generateReport;
+    generateReport = function() {
+      originalGenerateReport();
+      // Após gerar o relatório, preparar metadados de impressão
+      setTimeout(populatePrintMetadata, 100);
+    };
+
+    // ============================================
+    // INICIALIZAÇÃO FINAL
+    // ============================================
+    document.addEventListener('DOMContentLoaded', () => {
+      // Garantir que elementos de impressão existam
+      if (document.querySelector('.print-header')) {
+        console.log('✅ Elementos de impressão premium carregados');
+      }
+    });
   </script>
 </body>
 </html>
