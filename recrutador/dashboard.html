@@ -634,7 +634,7 @@
       // Check authentication
       const recruiter = JSON.parse(localStorage.getItem('vigorre_recruiter'));
       if (!recruiter) {
-        window.location.href = 'login-recrutador.html';
+        window.location.href = 'login.html';
         return;
       }
       
@@ -976,7 +976,7 @@
 
     function logout() {
       localStorage.removeItem('vigorre_recruiter');
-      window.location.href = 'login-recrutador.html';
+      window.location.href = 'login.html';
     }
   </script>
 </body>
