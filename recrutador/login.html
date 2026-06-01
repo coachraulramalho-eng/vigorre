@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Vigorre One™ - Login do Recrutador • People Analytics Enterprise">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Login Recrutador | Vigorre One™</title>
+  
+  <!-- Fonts Premium -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase-config.js"></script>
+  
+  <style>
+    :root {
+      --brand-navy: #0A1628;
+      --brand-blue: #1D4ED8;
+      --brand-purple: #7C3AED;
+      --brand-cyan: #06B6D4;
+      --brand-emerald: #10B981;
+      --brand-amber: #F59E0B;
+      --gold: #D4AF37;
+      --slate-50: #F8FAFC;
+      --slate-100: #F1F5F9;
+      --slate-200: #E2E8F0;
+      --slate-300: #CBD5E1;
+      --slate-400: #94A3B8;
+      --slate-500: #64748B;
+      --slate-600: #475569;
+      --slate-700: #334155;
+      --slate-800: #1E293B;
+      --slate-900: #0F172A;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, var(--brand-navy) 0%, var(--brand-cyan) 50%, var(--brand-emerald) 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    /* Background animado */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: 
+        radial-gradient(ellipse at 20% 80%, rgba(16, 185, 129, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(6, 182, 212, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(245, 158, 11, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      animation: float 30s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-20px) scale(1.02); }
+    }
+    
+    .login-container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 3rem;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      z-index: 1;
+      animation: slideUp 0.6s ease-out;
+    }
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .logo-area {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 2px solid var(--slate-100);
+    }
+    
+    .logo {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      border-radius: 20px;
+      overflow: hidden;
+      background: white;
+      padding: 10px;
+    }
+    
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    
+    .logo-fallback {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--brand-cyan), var(--brand-emerald));
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      font-weight: 900;
+      color: white;
+    }
+    
+    .logo-area h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--brand-navy);
+      margin-bottom: 0.5rem;
+    }
+    
+    .logo-area p {
+      color: var(--brand-cyan);
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    
+    .badge-recruiter {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--brand-cyan), var(--brand-emerald));
+      color: white;
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-top: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .credits-preview {
+      background: linear-gradient(135deg, var(--slate-50), white);
+      border: 1px solid var(--slate-200);
+      border-radius: 12px;
+      padding: 1rem;
+      margin: 1.5rem 0;
+      display: flex;
+      justify-content: space-around;
+      text-align: center;
+    }
+    
+    .credit-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .credit-item .icon {
+      font-size: 1.25rem;
+    }
+    
+    .credit-item .label {
+      font-size: 0.7rem;
+      color: var(--slate-500);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    .credit-item .value {
+      font-size: 1.125rem;
+      font-weight: 800;
+      color: var(--brand-navy);
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--slate-700);
+      font-size: 0.875rem;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid var(--slate-200);
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.3s;
+      background: white;
+    }
+    
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--brand-cyan);
+      box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.1);
+    }
+    
+    .btn-login {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--brand-cyan), var(--brand-emerald));
+      color: white;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(6, 182, 212, 0.4);
+    }
+    
+    .btn-login:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .btn-login.loading {
+      color: transparent;
+    }
+    
+    .btn-login.loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 24px;
+      height: 24px;
+      margin: -12px 0 0 -12px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .alert {
+      padding: 14px 16px;
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+      display: none;
+      font-weight: 600;
+      animation: slideDown 0.3s ease-out;
+    }
+    
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .alert.error {
+      background: rgba(239, 68, 68, 0.1);
+      color: #DC2626;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+    
+    .alert.success {
+      background: rgba(16, 185, 129, 0.1);
+      color: #059669;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+    
+    .footer-links {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--slate-200);
+      font-size: 0.875rem;
+    }
+    
+    .footer-links a {
+      color: var(--brand-cyan);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+    
+    .footer-links a:hover {
+      color: var(--brand-navy);
+      text-decoration: underline;
+    }
+    
+    .login-footer {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--slate-200);
+      font-size: 0.75rem;
+      color: var(--slate-500);
+    }
+    
+    .login-footer strong {
+      color: var(--brand-navy);
+      font-weight: 700;
+    }
+    
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 2rem 1.5rem;
+      }
+      .credits-preview {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="login-container">
+    <!-- Logo -->
+    <header class="logo-area">
+      <div class="logo">
+        <img src="../logo-vigorre.png" alt="Vigorre One™" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="logo-fallback" style="display:none;">V</div>
+      </div>
+      <h1>Vigorre One™</h1>
+      <p>People Analytics Enterprise</p>
+      <div class="badge-recruiter">🎯 Área do Recrutador</div>
+    </header>
+
+    <!-- Preview de Créditos -->
+    <div class="credits-preview">
+      <div class="credit-item">
+        <span class="icon">📊</span>
+        <span class="label">DISC</span>
+        <span class="value" id="creditDisc">--</span>
+      </div>
+      <div class="credit-item">
+        <span class="icon">🧠</span>
+        <span class="label">IE</span>
+        <span class="value" id="creditIe">--</span>
+      </div>
+      <div class="credit-item">
+        <span class="icon">💎</span>
+        <span class="label">Valores</span>
+        <span class="value" id="creditValores">--</span>
+      </div>
+    </div>
+
+    <!-- Alertas -->
+    <div id="alert" class="alert" role="alert"></div>
+
+    <!-- Formulário -->
+    <form id="loginForm" onsubmit="handleLogin(event)" novalidate autocomplete="off">
+      <div class="form-group">
+        <label for="email">Usuário ou E-mail</label>
+        <input type="text" id="email" name="email" required placeholder="Digite seu acesso" autocomplete="username">
+      </div>
+
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <input type="password" id="password" name="password" required placeholder="••••••••" autocomplete="current-password">
+      </div>
+
+      <button type="submit" class="btn-login" id="loginBtn">
+        Entrar no Painel
+      </button>
+    </form>
+
+    <!-- Links -->
+    <nav class="footer-links">
+      <a href="#" onclick="forgotPassword(event)">Esqueceu a senha?</a>
+      <a href="../index.html">← Voltar ao site</a>
+    </nav>
+
+    <!-- Rodapé -->
+    <footer class="login-footer">
+      <p>© 2024 <strong>Vigorre One™</strong> - Todos os direitos reservados</p>
+      <p>Gestão de Talentos • Assessment • People Analytics</p>
+    </footer>
+  </main>
+
+  <script>
+    'use strict';
+
+    // ========== Alertas ==========
+    function showAlert(msg, type) {
+      const alertEl = document.getElementById('alert');
+      alertEl.className = 'alert ' + type;
+      alertEl.textContent = msg;
+      alertEl.style.display = 'block';
+      setTimeout(hideAlert, type === 'error' ? 6000 : 4000);
+    }
+
+    function hideAlert() {
+      document.getElementById('alert').style.display = 'none';
+    }
+
+    // ========== Recuperar Senha ==========
+    function forgotPassword(e) {
+      if (e) e.preventDefault();
+      const email = prompt("Recuperar Senha\n\nDigite seu e-mail cadastrado:");
+      if (!email?.trim()) return;
+      const normalizedEmail = email.trim().toLowerCase();
+      
+      const recruiters = JSON.parse(localStorage.getItem('vigorre_recruiters') || '[]');
+      
+      if (recruiters.some(r => r.email?.toLowerCase() === normalizedEmail)) {
+        alert('Um e-mail de recuperação foi enviado para: ' + normalizedEmail);
+      } else {
+        showAlert('E-mail não encontrado.', 'error');
+      }
+    }
+
+    // ========== Login Principal ==========
+    async function handleLogin(e) {
+      e.preventDefault();
+      const emailInput = document.getElementById('email');
+      const passInput = document.getElementById('password');
+      const loginBtn = document.getElementById('loginBtn');
+
+      const input = emailInput.value.trim().toLowerCase();
+      const pass = passInput.value;
+
+      if (!input || !pass) {
+        showAlert('Preencha todos os campos.', 'error');
+        return;
+      }
+
+      loginBtn.disabled = true;
+      loginBtn.classList.add('loading');
+      loginBtn.textContent = 'Autenticando...';
+      hideAlert();
+
+      try {
+        // Tentar Supabase primeiro
+        let recruiter = null;
+        
+        if (window.VigorreDB?.supabase) {
+          try {
+            const { data } = await VigorreDB.supabase
+              .from('recruiters')
+              .select('*')
+              .eq('email', input)
+              .maybeSingle();
+            recruiter = data;
+          } catch (e) { 
+            console.warn('Supabase error:', e); 
+          }
+        }
+
+        // Fallback localStorage
+        if (!recruiter) {
+          const recruiters = JSON.parse(localStorage.getItem('vigorre_recruiters') || '[]');
+          recruiter = recruiters.find(r => 
+            (r.login === input || r.email === input) && r.password === pass
+          );
+        }
+
+        if (recruiter) {
+          // Preparar dados do usuário com créditos
+          const userData = {
+            id: recruiter.id,
+            name: recruiter.name,
+            email: recruiter.email,
+            role: 'recruiter',
+            type: 'recruiter',
+            companies: recruiter.companies || [],
+            credits: recruiter.credits || { 
+              DISC: 50, 
+              IE: 20, 
+              Valores: 30,
+              relatorios: 10,
+              laudos: 5
+            }
+          };
+          
+          // Salvar em chave específica para recrutador
+          localStorage.setItem('vigorre_recruiter', JSON.stringify(userData));
+          localStorage.setItem('vigorre_current_user', JSON.stringify(userData));
+          sessionStorage.setItem('vigorre_session_active', 'true');
+          
+          showAlert('Bem-vindo, ' + userData.name.split(' ')[0] + '!', 'success');
+          
+          setTimeout(() => {
+            window.location.href = 'dashboard.html?t=' + Date.now();
+          }, 1200);
+          return;
+        }
+
+        showAlert('Credenciais inválidas. Verifique usuário e senha.', 'error');
+
+      } catch (error) {
+        console.error('Login error:', error);
+        showAlert('Erro ao conectar. Verifique sua internet.', 'error');
+      } finally {
+        loginBtn.disabled = false;
+        loginBtn.classList.remove('loading');
+        loginBtn.textContent = 'Entrar no Painel';
+        passInput.focus();
+      }
+    }
+
+    // ========== Carregar Créditos de Demonstração ==========
+    function loadCreditsPreview() {
+      // Tenta carregar do localStorage se já houve login anterior
+      const recruiter = JSON.parse(localStorage.getItem('vigorre_recruiter') || '{}');
+      
+      if (recruiter.credits) {
+        document.getElementById('creditDisc').textContent = recruiter.credits.DISC || 0;
+        document.getElementById('creditIe').textContent = recruiter.credits.IE || 0;
+        document.getElementById('creditValores').textContent = recruiter.credits.Valores || 0;
+      } else {
+        // Valores padrão para demonstração
+        document.getElementById('creditDisc').textContent = '50';
+        document.getElementById('creditIe').textContent = '20';
+        document.getElementById('creditValores').textContent = '30';
+      }
+    }
+
+    // ========== Verificação de Sessão ==========
+    document.addEventListener('DOMContentLoaded', () => {
+      loadCreditsPreview();
+      
+      const currentUser = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+      const sessionActive = sessionStorage.getItem('vigorre_session_active') === 'true';
+
+      if (currentUser.role === 'recruiter' && sessionActive) {
+        if (!window.location.href.includes('recrutador/dashboard.html')) {
+          window.location.href = 'dashboard.html?t=' + Date.now();
+        }
+      }
+      document.getElementById('email').focus();
+    });
+
+    // ========== Debug ==========
+    console.log('🔍 Login Recrutador Vigorre One™ - Sistema pronto');
+  </script>
+</body>
+</html>
