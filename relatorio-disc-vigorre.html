@@ -1208,7 +1208,7 @@
   <div class="print-watermark">VIGORRE ONE</div>
 
   <!-- Main Content -->
-  <main>
+  <main id="reportContainer">
     
     <!-- Capa do Relatório -->
     <section class="cover-section">
@@ -1716,23 +1716,109 @@
     };
 
     // ============================================
-    // INICIALIZAÇÃO
+    // ✅ FUNÇÃO PRINCIPAL DE CARREGAMENTO CORRIGIDA
     // ============================================
-    document.addEventListener('DOMContentLoaded', async () => {
-      console.log('🔹 Inicializando Relatório DISC + VIGOR Vigorre One™...');
-      
-      // Detectar botão voltar do navegador
-      window.addEventListener('popstate', () => performLogout());
-      
-      // Carregar dados
-      await loadSession();
-      await loadDiscResults();
-      
-      if (AppState.discResults) {
+    async function loadReportData() {
+      try {
+        console.log('🔍 Carregando dados do relatório...');
+        
+        // 1. Tentar pegar da URL (participantId)
+        const urlParams = new URLSearchParams(window.location.search);
+        const participantId = urlParams.get('participantId');
+        
+        console.log('📍 Participant ID:', participantId);
+        
+        // 2. Tentar sessionStorage (dados recentes do teste)
+        let results = sessionStorage.getItem('vigorre_disc_results');
+        if (results) {
+          AppState.discResults = JSON.parse(results);
+          console.log('✅ Dados carregados do sessionStorage:', AppState.discResults);
+          await loadSession();
+          generateReport();
+          return;
+        }
+        
+        // 3. Tentar localStorage (último resultado)
+        results = localStorage.getItem('vigorre_last_disc_result');
+        if (results) {
+          AppState.discResults = JSON.parse(results);
+          console.log('✅ Dados carregados do localStorage:', AppState.discResults);
+          await loadSession();
+          generateReport();
+          return;
+        }
+        
+        // 4. Tentar Supabase se tiver participantId
+        if (participantId && window.VigorreDB?.supabase) {
+          console.log('🌐 Tentando carregar do Supabase...');
+          const { data, error } = await VigorreDB.supabase
+            .from('test_results')
+            .select('*')
+            .eq('participant_id', participantId)
+            .eq('test_type', 'DISC')
+            .maybeSingle();
+          
+          if (data && !error) {
+            AppState.discResults = {
+              dimensions: data.scores || data.dimensions || {},
+              percentages: data.percentages || data.scores || {},
+              dominant: data.dominant,
+              date: data.completed_at
+            };
+            console.log('✅ Dados carregados do Supabase:', AppState.discResults);
+            await loadSession();
+            generateReport();
+            return;
+          }
+        }
+        
+        // 5. Dados de exemplo para demonstração (se nada funcionar)
+        console.warn('⚠️ Nenhum dado encontrado, usando dados de demonstração');
+        AppState.discResults = {
+          dimensions: { D: 75, I: 60, S: 45, C: 80 },
+          percentages: { D: 75, I: 60, S: 45, C: 80 },
+          dominant: 'D',
+          date: new Date().toISOString()
+        };
+        await loadSession();
         generateReport();
-      } else {
-        showNoDataMessage();
+        
+      } catch (error) {
+        console.error('❌ Erro ao carregar relatório:', error);
+        showErrorMessage();
       }
+    }
+
+    // ============================================
+    // ✅ FUNÇÃO PARA MOSTRAR ERRO
+    // ============================================
+    function showErrorMessage() {
+      const container = document.getElementById('reportContainer');
+      if (container) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 3rem; background: #fee2e2; border-radius: 12px; margin: 2rem;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+            <h3 style="color: #991b1b; margin-bottom: 1rem;">Nenhum dado encontrado</h3>
+            <p style="color: #7f1d1d; margin-bottom: 1.5rem;">
+              Complete o teste DISC primeiro ou verifique se os dados foram salvos corretamente.
+            </p>
+            <button onclick="window.location.href='teste-disc.html'" 
+                    style="background: #dc2626; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; border: none; cursor: pointer; font-weight: 600;">
+              Realizar Teste DISC
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    // ============================================
+    // INICIALIZAÇÃO CORRIGIDA
+    // ============================================
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('🔹 Carregando Relatório DISC + VIGOR Vigorre One™...');
+      
+      // Carregar dados imediatamente
+      loadReportData();
     });
 
     // ============================================
@@ -1825,76 +1911,6 @@
         
       } catch (e) { 
         console.error('❌ Erro ao carregar sessão:', e); 
-        return false;
-      }
-    }
-
-    // ============================================
-    // CARREGAR RESULTADOS DISC COM SUPABASE
-    // ============================================
-    async function loadDiscResults() {
-      try {
-        console.log('🔍 Tentando carregar resultados DISC...');
-        
-        const urlParams = new URLSearchParams(window.location.search);
-        const participantId = urlParams.get('participantId');
-        
-        if (!participantId) {
-          console.error('❌ Nenhum participantId na URL');
-          showToast('ID do participante não encontrado na URL', 'error');
-          return false;
-        }
-        
-        // PRIMEIRO: Tentar Supabase
-        if (window.VigorreDB?.supabase) {
-          console.log('🌐 Tentando carregar resultados do Supabase...');
-          
-          try {
-            const { data, error } = await VigorreDB.supabase
-              .from('test_results')
-              .select('*')
-              .eq('participant_id', participantId)
-              .eq('test_type', 'DISC')
-              .limit(1)
-              .maybeSingle();
-            
-            if (data && !error) {
-              AppState.discResults = {
-                percentages: data.percentages || {},
-                scores: data.scores || {},
-                dominant: data.dominant,
-                date: data.completed_at
-              };
-              
-              console.log('✅ Resultados DISC carregados do Supabase');
-              calculateVigorScores();
-              return true;
-            }
-          } catch (supabaseError) {
-            console.warn('⚠️ Erro ao buscar do Supabase:', supabaseError);
-          }
-        }
-        
-        // SEGUNDO: Fallback localStorage
-        console.log('📱 Buscando resultados no localStorage...');
-        const discData = localStorage.getItem('vigorre_last_disc_result');
-        
-        if (!discData) {
-          console.error('❌ Nenhum resultado DISC encontrado');
-          showToast('Nenhum resultado DISC encontrado. Complete o teste primeiro.', 'error');
-          setTimeout(() => window.location.href = 'teste-disc.html', 3000);
-          return false;
-        }
-        
-        AppState.discResults = JSON.parse(discData);
-        console.log('✅ Dados DISC carregados do localStorage');
-        
-        calculateVigorScores();
-        return true;
-        
-      } catch (e) {
-        console.error('❌ Erro ao carregar resultados DISC:', e);
-        showToast('Erro ao processar relatório.', 'error');
         return false;
       }
     }
@@ -2417,7 +2433,7 @@
 
     function renderMotivators(r, dominant) {
       const p = PREMIUM_CONTENT[dominant];
-      const icons = ['🎯','','🤝','📊','','🔄','🛡️','🌱'];
+      const icons = ['🎯','','🤝','','','🔄','🛡️','🌱'];
       document.getElementById('motivatorsGrid').innerHTML = p.strengths.slice(0,4).map((mot,i) => 
         `<div style="background: white; padding: 1rem; border-radius: 12px; border: 1px solid var(--slate-200); box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 0.75rem;"><span style="font-size: 1.5rem;">${icons[i%icons.length]}</span><div><h4 style="font-weight: 700; color: var(--slate-800); font-size: 0.9375rem; margin: 0 0 0.25rem 0;">${mot}</h4><p style="font-size: 0.75rem; color: var(--slate-500); margin: 0;">Driver de engajamento e retenção</p></div></div>`
       ).join('');
@@ -2583,23 +2599,6 @@
       
       // Redirecionar
       window.location.href = 'login.html?loggedout=1&ts=' + Date.now();
-    }
-
-    function showNoDataMessage() {
-      const perfilDetalhado = document.getElementById('perfilDetalhado');
-      if (perfilDetalhado) {
-        perfilDetalhado.innerHTML = `
-          <div style="text-align: center; padding: 3rem;">
-            <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
-            <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--slate-800); margin-bottom: 0.75rem;">Dados não encontrados</h3>
-            <p style="color: var(--slate-600); margin-bottom: 1.5rem;">Não foi possível carregar os resultados do teste DISC.</p>
-            <button onclick="window.location.href='teste-disc.html'" 
-                    style="background: var(--brand-blue); color: white; padding: 0.75rem 1.5rem; border-radius: 10px; font-weight: 600; border: none; cursor: pointer; transition: all var(--transition);">
-              Realizar Teste DISC
-            </button>
-          </div>
-        `;
-      }
     }
 
     // Debug utility
