@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Vigorre One™ - Painel Administrativo Enterprise • People Analytics">
+  <title>Dashboard Administrativo | Vigorre One™</title>
+  
+  <!-- Fonts Premium -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Ícones Modernos (Phosphor Icons) -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <!-- Chart.js para Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase-config.js"></script>
+  
+  <style>
+    :root {
+      --brand-navy: #0f172a;
+      --brand-blue: #1D4ED8;
+      --brand-purple: #7C3AED;
+      --brand-cyan: #06B6D4;
+      --brand-emerald: #10B981;
+      --brand-gold: #D4AF37;
+      --bg-light: #f1f5f9;
+      --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --sidebar-width: 260px;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    
+    body {
+      background-color: var(--bg-light);
+      display: flex;
+      min-height: 100vh;
+      color: #334155;
+    }
+
+    /* =========================================
+       SIDEBAR PREMIUM
+       ========================================= */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--brand-navy);
+      color: white;
+      position: fixed;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 4px 0 20px rgba(0,0,0,0.2);
+      z-index: 50;
+    }
+    
+    .logo-box {
+      padding: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.25rem;
+    }
+    
+    .logo-text h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 2px; }
+    .logo-text p { font-size: 0.7rem; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px; }
+    
+    .nav-menu { flex: 1; padding: 1.5rem 0; overflow-y: auto; }
+    
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      color: #94a3b8;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s;
+      cursor: pointer;
+      border-left: 3px solid transparent;
+    }
+    
+    .nav-item:hover { background: rgba(255,255,255,0.05); color: white; }
+    
+    .nav-item.active {
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.15), transparent);
+      color: white;
+      border-left-color: var(--brand-blue);
+    }
+    
+    .nav-item i { font-size: 1.25rem; }
+    
+    .user-profile {
+      padding: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.2);
+    }
+    
+    .user-info h4 { font-size: 0.9rem; margin-bottom: 2px; }
+    .user-info p { font-size: 0.75rem; color: var(--brand-blue); font-weight: 600; }
+    
+    .logout-btn {
+      margin-top: 1rem;
+      width: 100%;
+      padding: 8px;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: 0.2s;
+    }
+    .logout-btn:hover { background: rgba(239, 68, 68, 0.2); color: white; }
+
+    /* =========================================
+       MAIN CONTENT
+       ========================================= */
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      padding: 2rem;
+    }
+    
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .header-top h1 { font-size: 1.75rem; color: var(--brand-navy); font-weight: 800; }
+    .header-top p { color: #64748b; margin-top: 4px; }
+    
+    /* CARDS DE KPI */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: var(--card-shadow);
+      border: 1px solid #e2e8f0;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
+    
+    .stat-card:hover { transform: translateY(-4px); }
+    
+    .stat-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .stat-value { font-size: 2rem; font-weight: 800; color: var(--brand-navy); }
+    .stat-label { color: #64748b; font-size: 0.875rem; font-weight: 500; margin-top: 4px; }
+    
+    /* Cores dos Cards */
+    .card-blue .stat-icon { background: #eff6ff; color: var(--brand-blue); }
+    .card-purple .stat-icon { background: #f5f3ff; color: var(--brand-purple); }
+    .card-cyan .stat-icon { background: #ecfeff; color: var(--brand-cyan); }
+    .card-gold .stat-icon { background: #fefce8; color: var(--brand-gold); }
+
+    /* =========================================
+       ANALYTICS SECTION
+       ========================================= */
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--brand-navy);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title i { color: var(--brand-blue); }
+    
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: var(--card-shadow);
+      padding: 1.5rem;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    .card-header h3 { font-size: 1.1rem; font-weight: 700; color: var(--brand-navy); }
+    
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+    
+    .action-btn {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+      text-align: center;
+      transition: 0.2s;
+      text-decoration: none;
+      color: var(--brand-navy);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .action-btn:hover { background: white; border-color: var(--brand-blue); color: var(--brand-blue); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .action-btn i { font-size: 1.5rem; }
+    .action-btn span { font-size: 0.8rem; font-weight: 600; }
+
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo-box">
+      <div class="logo-icon">V</div>
+      <div class="logo-text">
+        <h2>Vigorre One™</h2>
+        <p>Enterprise Suite</p>
+      </div>
+    </div>
+    
+    <nav class="nav-menu">
+      <a href="dashboard.html" class="nav-item active"><i class="ph ph-squares-four"></i> Dashboard</a>
+      <a href="#" class="nav-item"><i class="ph ph-users"></i> Staff Vigorre™</a>
+      <a href="#" class="nav-item"><i class="ph ph-buildings"></i> Empresas</a>
+      <a href="#" class="nav-item"><i class="ph ph-briefcase"></i> Vagas</a>
+      <a href="#" class="nav-item"><i class="ph ph-users-three"></i> Participantes</a>
+      <a href="#" class="nav-item"><i class="ph ph-target"></i> Recrutadores</a>
+      <div style="margin: 1rem 0; border-top: 1px solid rgba(255,255,255,0.1);"></div>
+      <a href="#" class="nav-item"><i class="ph ph-chart-line-up"></i> Analytics</a>
+      <a href="#" class="nav-item"><i class="ph ph-file-text"></i> Relatórios</a>
+      <a href="#" class="nav-item"><i class="ph ph-certificate"></i> Laudos</a>
+      <div style="margin: 1rem 0; border-top: 1px solid rgba(255,255,255,0.1);"></div>
+      <a href="#" class="nav-item"><i class="ph ph-gear"></i> Configurações</a>
+    </nav>
+    
+    <div class="user-profile">
+      <div class="user-info">
+        <h4 id="userName">Carregando...</h4>
+        <p>Administrador Master</p>
+      </div>
+      <button class="logout-btn" onclick="logout()">Sair do Sistema</button>
+    </div>
+  </aside>
+
+  <!-- Conteúdo Principal -->
+  <main class="main-content">
+    <header class="header-top">
+      <div>
+        <h1>Painel de Controle</h1>
+        <p>Bem-vindo ao centro de comando da Vigorre One™</p>
+      </div>
+      <div style="display:flex; align-items:center; gap:1rem;">
+        <span style="background: #ecfdf5; color: #059669; padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; border: 1px solid #a7f3d0;">
+          <i class="ph ph-check-circle"></i> Sistema Operacional
+        </span>
+      </div>
+    </header>
+
+    <!-- KPI Cards -->
+    <section class="stats-grid">
+      <div class="stat-card card-blue">
+        <div class="stat-icon"><i class="ph ph-buildings"></i></div>
+        <div class="stat-value" id="kpiEmpresas">--</div>
+        <div class="stat-label">Empresas Ativas</div>
+      </div>
+      
+      <div class="stat-card card-purple">
+        <div class="stat-icon"><i class="ph ph-users"></i></div>
+        <div class="stat-value" id="kpiParticipantes">--</div>
+        <div class="stat-label">Participantes</div>
+      </div>
+      
+      <div class="stat-card card-cyan">
+        <div class="stat-icon"><i class="ph ph-target"></i></div>
+        <div class="stat-value" id="kpiRecrutadores">--</div>
+        <div class="stat-label">Recrutadores</div>
+      </div>
+      
+      <div class="stat-card card-gold">
+        <div class="stat-icon"><i class="ph ph-certificate"></i></div>
+        <div class="stat-value" id="kpiLaudos">--</div>
+        <div class="stat-label">Laudos Gerados</div>
+      </div>
+    </section>
+
+    <!-- Analytics & Ações -->
+    <div class="analytics-grid">
+      <!-- Gráfico Principal -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="ph ph-chart-bar"></i> Vigorre Analytics™</h3>
+          <select style="border:1px solid #e2e8f0; padding:6px; border-radius:6px; font-size:0.8rem;">
+            <option>Últimos 30 dias</option>
+            <option>Este Mês</option>
+            <option>Este Ano</option>
+          </select>
+        </div>
+        <div style="height: 300px;">
+          <canvas id="mainChart"></canvas>
+        </div>
+      </div>
+      
+      <!-- Ações Rápidas -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="ph ph-lightning"></i> Ações Rápidas</h3>
+        </div>
+        <div class="quick-actions">
+          <a href="#" class="action-btn">
+            <i class="ph ph-user-plus" style="color:var(--brand-blue)"></i>
+            <span>Novo Participante</span>
+          </a>
+          <a href="#" class="action-btn">
+            <i class="ph ph-briefcase" style="color:var(--brand-purple)"></i>
+            <span>Nova Vaga</span>
+          </a>
+          <a href="#" class="action-btn">
+            <i class="ph ph-file-text" style="color:var(--brand-cyan)"></i>
+            <span>Gerar Relatório</span>
+          </a>
+          <a href="#" class="action-btn">
+            <i class="ph ph-certificate" style="color:var(--brand-gold)"></i>
+            <span>Emitir Laudo</span>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Seção Inferior -->
+    <div class="card" style="margin-top: 1.5rem;">
+      <div class="card-header">
+        <h3><i class="ph ph-clock"></i> Atividade Recente</h3>
+      </div>
+      <div style="color: #64748b; text-align: center; padding: 2rem;">
+        <i class="ph ph-info" style="font-size: 2rem; margin-bottom: 0.5rem; display:block;"></i>
+        O módulo de logs detalhados estará disponível em breve.
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    'use strict';
+    
+    // Verificação de Sessão
+    document.addEventListener('DOMContentLoaded', async () => {
+      const user = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+      const session = sessionStorage.getItem('vigorre_session_active');
+      
+      if (!user.id || !session || (user.role !== 'admin' && user.role !== 'staff')) {
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      document.getElementById('userName').textContent = user.name || 'Admin';
+      
+      // Carregar Dados do Supabase (ou Fallback)
+      await loadDashboardData();
+      
+      // Inicializar Gráfico
+      initChart();
+    });
+    
+    async function loadDashboardData() {
+      // Simulação de carregamento de dados (Substituir por Supabase real)
+      // Exemplo: const { count } = await supabase.from('empresas').select('*', { count: 'exact', head: true });
+      
+      setTimeout(() => {
+        document.getElementById('kpiEmpresas').textContent = '12';
+        document.getElementById('kpiParticipantes').textContent = '48';
+        document.getElementById('kpiRecrutadores').textContent = '3';
+        document.getElementById('kpiLaudos').textContent = '156';
+      }, 500);
+    }
+    
+    function initChart() {
+      const ctx = document.getElementById('mainChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+          datasets: [{
+            label: 'Testes Realizados',
+            data: [12, 19, 15, 25, 22, 30],
+            borderColor: '#1D4ED8',
+            backgroundColor: 'rgba(29, 78, 216, 0.1)',
+            tension: 0.4,
+            fill: true
+          }, {
+            label: 'Laudos Emitidos',
+            data: [5, 8, 12, 10, 15, 20],
+            borderColor: '#7C3AED',
+            backgroundColor: 'rgba(124, 58, 237, 0.0)',
+            tension: 0.4,
+            borderDash: [5, 5]
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'top' }
+          },
+          scales: {
+            y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+    }
+    
+    function logout() {
+      localStorage.removeItem('vigorre_current_user');
+      sessionStorage.clear();
+      window.location.href = 'login.html';
+    }
+  </script>
+</body>
+</html>
