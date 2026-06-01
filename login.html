@@ -548,7 +548,7 @@
           return;
         }
 
-        // ✅ Recruiter - CORREÇÃO: Usar dashboard.html (sem 'l') e preservar créditos
+        // ✅ Recruiter - CORREÇÃO: Usar dashboard.html e preservar créditos
         if (currentEnv === 'recruiter') {
           let recruiter = null;
           
@@ -593,7 +593,7 @@
               }
             };
             
-            // ✅ CORREÇÃO: Usar dashboard.html (sem 'l') conforme GitHub
+            // ✅ CORREÇÃO: Usar dashboard.html conforme estrutura
             saveUser(userData, 'recrutador/dashboard.html');
             return;
           }
@@ -666,6 +666,11 @@
 
     // ========== Função Auxiliar para Salvar Usuário ==========
     function saveUser(userData, redirectPage) {
+      // ✅ CORREÇÃO: Salvar recrutador em chave específica para o dashboard encontrar
+      if (userData.role === 'recruiter') {
+        localStorage.setItem('vigorre_recruiter', JSON.stringify(userData));
+      }
+      
       // ✅ Garantir que créditos sejam preservados na sessão
       if (userData.role === 'recruiter' && !userData.credits) {
         userData.credits = { 
@@ -677,6 +682,7 @@
         };
       }
       
+      // Manter chave geral para compatibilidade com outros ambientes
       localStorage.setItem('vigorre_current_user', JSON.stringify(userData));
       sessionStorage.setItem('vigorre_session_active', 'true');
       
@@ -694,11 +700,11 @@
       const sessionActive = sessionStorage.getItem('vigorre_session_active') === 'true';
 
       if (currentUser.role && sessionActive) {
-        // ✅ Mapeamento correto de páginas por role - USAR .htm para recrutador
+        // ✅ Mapeamento correto de páginas por role
         const pages = {
           admin: 'admin.html',
           staff: 'admin.html',
-          recruiter: 'recrutador/dashboard.html',  // ✅ CORREÇÃO: .htm sem 'l'
+          recruiter: 'recrutador/dashboard.html',
           participant: 'dashboard-participante.html'
         };
         
