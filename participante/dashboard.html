@@ -3,16 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Vigorre One™ - Minha Área • Autoconhecimento e Desenvolvimento">
   <title>Minha Área | Vigorre One™</title>
   
-  <!-- Fonts Premium -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Ícones -->
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  
-  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../supabase-config.js"></script>
   
@@ -21,7 +16,6 @@
       --brand-navy: #0f172a;
       --brand-purple: #8B5CF6;
       --brand-pink: #EC4899;
-      --brand-blue: #3B82F6;
       --bg-light: #f8fafc;
       --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
       --sidebar-width: 260px;
@@ -143,7 +137,7 @@
     .progress-fill {
       height: 100%;
       background: white;
-      width: 33%;
+      width: 0%;
       border-radius: 10px;
       transition: width 0.5s ease;
     }
@@ -175,7 +169,6 @@
     .test-card:hover { transform: translateY(-5px); box-shadow: 0 12px 20px rgba(0,0,0,0.1); }
     
     .test-card.completed { border-left: 4px solid var(--brand-purple); }
-    .test-card.locked { opacity: 0.7; cursor: not-allowed; }
     
     .test-icon {
       width: 56px; height: 56px;
@@ -271,6 +264,7 @@
   <script>
     'use strict';
     
+    // Configuração dos Testes (Caminhos relativos para a RAIZ ../)
     const testsData = [
       {
         id: 'disc',
@@ -278,7 +272,7 @@
         desc: 'Descubra seu perfil comportamental predominante e como você interage com o mundo.',
         icon: '📊',
         color: '#3B82F6',
-        link: 'teste-disc.html'
+        link: '../teste-disc.html' // CAMINHO PARA A RAIZ
       },
       {
         id: 'ie',
@@ -286,7 +280,7 @@
         desc: 'Avalie sua capacidade de reconhecer e gerenciar suas emoções e as dos outros.',
         icon: '🧠',
         color: '#8B5CF6',
-        link: 'teste-ie.html'
+        link: '../teste-ie.html' // CAMINHO PARA A RAIZ
       },
       {
         id: 'valores',
@@ -294,7 +288,7 @@
         desc: 'Entenda quais são seus valores fundamentais e o que motiva suas decisões.',
         icon: '💎',
         color: '#EC4899',
-        link: 'teste-valores.html'
+        link: '../teste-valores.html' // CAMINHO PARA A RAIZ
       }
     ];
 
@@ -311,8 +305,10 @@
       document.getElementById('userName').textContent = user.name || 'Participante';
       document.getElementById('welcomeName').textContent = user.name?.split(' ')[0] || 'Participante';
       
-      // Simular dados de progresso (Substituir por busca real no banco)
-      const completedTests = ['disc']; // Exemplo: já completou o DISC
+      // Carregar histórico de testes concluídos
+      const history = JSON.parse(localStorage.getItem(`test_history_${user.id}`) || '{}');
+      const completedTests = Object.keys(history);
+      
       renderTests(completedTests);
       updateProgress(completedTests);
     });
@@ -368,7 +364,7 @@
     
     function viewResult(testId) {
       alert(`Redirecionando para o resultado do ${testId.toUpperCase()}`);
-      // window.location.href = `resultado-${testId}.html`;
+      // Futuramente: window.location.href = `resultado-${testId}.html`;
     }
     
     function logout() {
