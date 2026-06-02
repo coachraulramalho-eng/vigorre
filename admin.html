@@ -303,6 +303,7 @@
     </section>
   </main>
 
+  <!-- MODAIS (mesmo código do seu arquivo original) -->
   <div class="modal" id="staffModal">
     <div class="modal-content">
       <div class="modal-header"><h3>Novo Staff</h3><button class="modal-close" onclick="closeModal('staffModal')">×</button></div>
@@ -503,19 +504,16 @@
     // 🗂️ MAPEAMENTO DOS ARQUIVOS DO SISTEMA
     // ============================================
     const ARQUIVOS = {
-      // Testes (onde o participante responde)
       teste: {
         DISC: 'teste-disc.html',
         IE: 'teste-ie.html',
         Valores: 'teste-valores.html'
       },
-      // Relatórios (resultado dos testes)
       relatorio: {
         DISC: 'relatorio-disc-vigorre.html',
         IE: 'relatorio-ie-vigorre.html',
         Valores: 'relatorio-valores-vigorre.html'
       },
-      // Laudo Premium (análise completa)
       laudo: 'laudo-vigorre.html'
     };
 
@@ -535,7 +533,126 @@
     function closeModal(id){ const m=document.getElementById(id); if(m){ m.classList.remove('active'); document.body.style.overflow=''; m.querySelectorAll('form').forEach(f=>f.reset()); } }
     function openModal(id){ const m=document.getElementById(id); if(m){ m.classList.add('active'); document.body.style.overflow='hidden'; } }
     function showSection(id,ev){ document.querySelectorAll('main section').forEach(s=>{s.classList.remove('active');}); const t=document.getElementById(id); if(t){ t.classList.add('active'); logMessage('📍 '+id); } document.querySelectorAll('.nav-menu a').forEach(a=>a.classList.remove('active')); if(ev&&ev.currentTarget)ev.currentTarget.classList.add('active'); const titles={dashboard:'Dashboard',staff:'Staff',companies:'Empresas',participants:'Participantes',recruiters:'Recrutadores'}; document.getElementById('pageTitle').textContent=titles[id]||id; document.getElementById('breadcrumbCurrent').textContent=titles[id]||id; return false; }
-    function saveDB(){ localStorage.setItem('vigorre_staff',JSON.stringify(DB.staff)); localStorage.setItem('vigorre_companies',JSON.stringify(DB.companies)); localStorage.setItem('vigorre_participants',JSON.stringify(DB.participants)); localStorage.setItem('vigorre_recruiters',JSON.stringify(DB.recruiters)); renderAll(); updateStats(); }
+    
+    // ============================================
+    // 💾 FUNÇÃO SAVEDB CORRIGIDA (SUPABASE + LOCAL)
+    // ============================================
+    async function saveDB() {
+      // Salvar no localStorage (cache local)
+      localStorage.setItem('vigorre_staff', JSON.stringify(DB.staff));
+      localStorage.setItem('vigorre_companies', JSON.stringify(DB.companies));
+      localStorage.setItem('vigorre_participants', JSON.stringify(DB.participants));
+      localStorage.setItem('vigorre_jobs', JSON.stringify(DB.jobs));
+      localStorage.setItem('vigorre_recruiters', JSON.stringify(DB.recruiters));
+      
+      // Salvar no Supabase (nuvem)
+      if (window.VigorreDB?.supabase) {
+        try {
+          logMessage('💾 Sincronizando com Supabase...');
+          
+          // Salvar participantes
+          if (DB.participants.length > 0) {
+            const { error: errParticipants } = await window.VigorreDB.supabase
+              .from('participants')
+              .upsert(DB.participants, { onConflict: 'id' });
+            if (errParticipants) throw errParticipants;
+          }
+          
+          // Salvar empresas
+          if (DB.companies.length > 0) {
+            const { error: errCompanies } = await window.VigorreDB.supabase
+              .from('companies')
+              .upsert(DB.companies, { onConflict: 'id' });
+            if (errCompanies) throw errCompanies;
+          }
+          
+          // Salvar jobs
+          if (DB.jobs.length > 0) {
+            const { error: errJobs } = await window.VigorreDB.supabase
+              .from('jobs')
+              .upsert(DB.jobs, { onConflict: 'id' });
+            if (errJobs) throw errJobs;
+          }
+          
+          // Salvar recruiters
+          if (DB.recruiters.length > 0) {
+            const { error: errRecruiters } = await window.VigorreDB.supabase
+              .from('recruiters')
+              .upsert(DB.recruiters, { onConflict: 'id' });
+            if (errRecruiters) throw errRecruiters;
+          }
+          
+          logMessage('✅ Dados sincronizados com Supabase!');
+        } catch (error) {
+          logMessage('❌ Erro ao sincronizar: ' + error.message, 'error');
+          console.error('Erro Supabase:', error);
+        }
+      }
+      
+      renderAll();
+      updateStats();
+    }
+
+    // ============================================
+    // 📥 FUNÇÃO PARA CARREGAR DO SUPABASE
+    // ============================================
+    async function loadFromSupabase() {
+      if (!window.VigorreDB?.supabase) {
+        logMessage('⚠️ Supabase não disponível, usando localStorage');
+        return;
+      }
+      
+      try {
+        logMessage('📥 Carregando dados do Supabase...');
+        
+        // Carregar participantes
+        const { data: participants, error: errP } = await window.VigorreDB.supabase
+          .from('participants')
+          .select('*');
+        if (!errP && participants) {
+          DB.participants = participants;
+          localStorage.setItem('vigorre_participants', JSON.stringify(participants));
+          logMessage(`✅ ${participants.length} participantes carregados`);
+        }
+        
+        // Carregar empresas
+        const { data: companies, error: errC } = await window.VigorreDB.supabase
+          .from('companies')
+          .select('*');
+        if (!errC && companies) {
+          DB.companies = companies;
+          localStorage.setItem('vigorre_companies', JSON.stringify(companies));
+          logMessage(`✅ ${companies.length} empresas carregadas`);
+        }
+        
+        // Carregar jobs
+        const { data: jobs, error: errJ } = await window.VigorreDB.supabase
+          .from('jobs')
+          .select('*');
+        if (!errJ && jobs) {
+          DB.jobs = jobs;
+          localStorage.setItem('vigorre_jobs', JSON.stringify(jobs));
+          logMessage(`✅ ${jobs.length} vagas carregadas`);
+        }
+        
+        // Carregar recruiters
+        const { data: recruiters, error: errR } = await window.VigorreDB.supabase
+          .from('recruiters')
+          .select('*');
+        if (!errR && recruiters) {
+          DB.recruiters = recruiters;
+          localStorage.setItem('vigorre_recruiters', JSON.stringify(recruiters));
+          logMessage(`✅ ${recruiters.length} recrutadores carregados`);
+        }
+        
+        renderAll();
+        updateStats();
+        
+      } catch (error) {
+        logMessage('❌ Erro ao carregar do Supabase: ' + error.message, 'error');
+      }
+    }
+    
     function renderAll(){ renderStaff(); renderCompanies(); renderParticipants(); renderRecruiters(); }
     function updateStats(){ document.getElementById('statParticipants').textContent=DB.participants.length; document.getElementById('statCompanies').textContent=DB.companies.length; document.getElementById('statTests').textContent=DB.participants.reduce((a,p)=>a+(p.completedTests?p.completedTests.length:0),0); document.getElementById('statReports').textContent=DB.reports.length; }
 
@@ -748,7 +865,7 @@
 
     function logout(){ localStorage.removeItem('vigorre_current_user'); sessionStorage.clear(); logMessage('🔐 Logout'); window.location.href='login.html'; }
 
-    document.addEventListener('DOMContentLoaded',function(){
+    document.addEventListener('DOMContentLoaded', async function(){
       logMessage('✅ Vigorre One™ carregado');
       logMessage('📂 Arquivos mapeados:');
       logMessage('  Testes: teste-disc/ie/valores.html');
@@ -757,6 +874,10 @@
       const user=JSON.parse(localStorage.getItem('vigorre_current_user')||'{}');
       if(!user.role){ window.location.href='login.html'; return; }
       document.getElementById('userName').textContent=user.name||'Admin';
+      
+      // 🔥 CARREGAR DO SUPABASE PRIMEIRO
+      await loadFromSupabase();
+      
       renderAll(); updateStats();
       document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModal(m.id);}));
       document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal.active').forEach(m=>closeModal(m.id));});
