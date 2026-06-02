@@ -6,13 +6,8 @@
   <meta name="description" content="Vigorre One™ - Dashboard do Recrutador • People Analytics">
   <title>Dashboard | Vigorre One™ • Recrutador</title>
   
-  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Ícones -->
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  
-  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../supabase-config.js"></script>
   
@@ -23,6 +18,7 @@
       --brand-emerald: #10B981;
       --brand-amber: #F59E0B;
       --brand-blue: #3B82F6;
+      --brand-purple: #7C3AED;
       --bg-light: #f8fafc;
       --sidebar-width: 280px;
     }
@@ -36,7 +32,6 @@
       color: #334155;
     }
 
-    /* SIDEBAR */
     .sidebar {
       width: var(--sidebar-width);
       background: linear-gradient(180deg, var(--brand-navy) 0%, #1e293b 100%);
@@ -115,7 +110,6 @@
     }
     .logout-btn:hover { background: rgba(239, 68, 68, 0.2); color: white; }
 
-    /* MAIN CONTENT */
     .main-content {
       margin-left: var(--sidebar-width);
       flex: 1;
@@ -127,7 +121,6 @@
     }
     .header-top h1 { font-size: 1.75rem; color: var(--brand-navy); font-weight: 800; }
     
-    /* SECTIONS */
     .section { display: none; }
     .section.active { display: block; animation: fadeIn 0.3s; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -158,7 +151,6 @@
     .card-amber .stat-icon { background: #fffbeb; color: var(--brand-amber); }
     .card-blue .stat-icon { background: #eff6ff; color: #3B82F6; }
 
-    /* CARDS */
     .card {
       background: white; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
       padding: 1.5rem; border: 1px solid #e2e8f0; margin-bottom: 1.5rem;
@@ -170,7 +162,6 @@
     }
     .card-header h3 { font-size: 1.1rem; font-weight: 700; color: var(--brand-navy); display: flex; align-items: center; gap: 8px; }
     
-    /* BUTTONS */
     .btn {
       padding: 10px 20px; border-radius: 10px; border: none; font-weight: 600;
       cursor: pointer; font-size: 0.9rem; transition: all 0.2s;
@@ -187,18 +178,23 @@
     .btn-danger:hover { background: #dc2626; color: white; }
     .btn-edit { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
     .btn-edit:hover { background: #2563eb; color: white; }
+    .btn-copy { background: #f5f3ff; color: #7c3aed; border: 1px solid #ddd6fe; }
+    .btn-copy:hover { background: #7c3aed; color: white; }
+    .btn-view { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+    .btn-view:hover { background: #16a34a; color: white; }
     
-    /* TABLE */
     .table-container { width: 100%; overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; }
     th { text-align: left; padding: 12px; border-bottom: 2px solid #e2e8f0; color: #64748b; font-size: 0.8rem; text-transform: uppercase; font-weight: 600; }
-    td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
+    td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; vertical-align: middle; }
     tbody tr:hover { background: #f8fafc; }
     
     .badge { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
     .badge-success { background: #ecfdf5; color: #059669; }
     .badge-warning { background: #fffbeb; color: #d97706; }
     .badge-credits { background: #fef3c7; color: #92400e; }
+    .badge-info { background: #eff6ff; color: #1d4ed8; }
+    .badge-purple { background: #f5f3ff; color: #7c3aed; }
     
     .action-row { display: flex; gap: 4px; justify-content: flex-end; flex-wrap: wrap; }
     .user-cell { display: flex; align-items: center; gap: 12px; }
@@ -211,11 +207,9 @@
     .user-name { font-weight: 600; color: #0f172a; }
     .user-email { font-size: 0.8125rem; color: #64748b; }
 
-    /* Empty State */
     .empty-state { text-align: center; padding: 3rem 2rem; color: #64748b; }
     .empty-state-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.4; }
     
-    /* Modal */
     .modal {
       display: none; position: fixed; inset: 0; z-index: 9999;
       align-items: center; justify-content: center;
@@ -227,7 +221,7 @@
     }
     .modal-content {
       background: white; border-radius: 20px; padding: 2rem;
-      max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto;
+      max-width: 700px; width: 90%; max-height: 90vh; overflow-y: auto;
       position: relative; z-index: 1; box-shadow: 0 25px 50px rgba(0,0,0,0.25);
     }
     .modal-header {
@@ -246,15 +240,66 @@
       display: block; font-weight: 600; color: #334155;
       font-size: 0.875rem; margin-bottom: 6px;
     }
-    .form-group input, .form-group select {
+    .form-group input, .form-group select, .form-group textarea {
       width: 100%; padding: 10px 14px; border: 1px solid #e2e8f0;
       border-radius: 8px; font-size: 0.9375rem; font-family: inherit;
     }
-    .form-group input:focus, .form-group select:focus {
+    .form-group textarea { resize: vertical; min-height: 80px; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
       outline: none; border-color: var(--brand-cyan);
       box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
     }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    
+    .form-hint {
+      font-size: 0.75rem; color: #94a3b8; font-weight: 400; margin-left: 4px;
+    }
+    
+    .checkbox-list {
+      max-height: 200px; overflow-y: auto;
+      border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.5rem;
+    }
+    .checkbox-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 12px; border-radius: 6px;
+      transition: background 0.2s;
+    }
+    .checkbox-item:hover { background: #f8fafc; }
+    .checkbox-item input[type="checkbox"] {
+      width: 18px; height: 18px; cursor: pointer;
+    }
+    .checkbox-item label {
+      cursor: pointer; font-weight: 500; color: #334155;
+      flex: 1;
+    }
+    
+    .select-all-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 12px; background: #f8fafc; border-radius: 6px;
+      margin-bottom: 0.5rem;
+    }
+    .select-all-bar button {
+      background: none; border: none; color: var(--brand-cyan);
+      font-size: 0.8rem; font-weight: 600; cursor: pointer;
+    }
+    
+    .copy-summary {
+      background: #f0fdf4; border: 1px solid #bbf7d0;
+      border-radius: 8px; padding: 12px; margin-top: 1rem;
+      color: #166534; font-size: 0.875rem;
+    }
+    
+    .vaga-desc {
+      max-width: 300px;
+      font-size: 0.85rem; color: #64748b;
+    }
+    
+    .vaga-perfil-tag {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 2px 8px; background: #f5f3ff; color: #7c3aed;
+      border-radius: 4px; font-size: 0.7rem; font-weight: 600;
+      margin: 2px;
+    }
     
     .toast {
       position: fixed; top: 24px; right: 24px;
@@ -277,7 +322,6 @@
 </head>
 <body>
 
-  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="logo-box">
       <img src="../logo-vigorre.png" alt="Vigorre" class="logo-img" onerror="this.style.background='linear-gradient(135deg,#06B6D4,#10B981)';this.outerHTML='<div class=\'logo-img\' style=\'display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#06B6D4,#10B981);color:white;font-weight:900;font-size:1.5rem\'>V</div>'">
@@ -323,10 +367,8 @@
     </div>
   </aside>
 
-  <!-- Main Content -->
   <main class="main-content">
     
-    <!-- SECTION: DASHBOARD -->
     <section id="dashboard" class="section active">
       <div class="header-top">
         <div>
@@ -375,7 +417,6 @@
       </div>
     </section>
 
-    <!-- SECTION: EMPRESAS -->
     <section id="empresas" class="section">
       <div class="header-top">
         <div>
@@ -394,19 +435,18 @@
               <tr><th>Empresa</th><th>CNPJ</th><th>Responsável</th><th>Contato</th><th>Vagas</th><th style="text-align:right">Ações</th></tr>
             </thead>
             <tbody id="empresasTable">
-              <tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">🏢</div><p>Nenhuma empresa cadastrada</p></div></td></tr>
+              <tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon"></div><p>Nenhuma empresa cadastrada</p></div></td></tr>
             </tbody>
           </table>
         </div>
       </div>
     </section>
 
-    <!-- SECTION: VAGAS -->
     <section id="vagas" class="section">
       <div class="header-top">
         <div>
           <h1>Vagas</h1>
-          <p style="color:#64748b">Gerencie suas vagas abertas</p>
+          <p style="color:#64748b">Gerencie suas vagas abertas com atividades e perfil desejado</p>
         </div>
         <button class="btn btn-primary" onclick="openModal('modalVaga')">
           <i class="ph ph-plus"></i> Nova Vaga
@@ -417,17 +457,23 @@
         <div class="table-container">
           <table>
             <thead>
-              <tr><th>Vaga</th><th>Empresa</th><th>Tipo</th><th>Participantes</th><th style="text-align:right">Ações</th></tr>
+              <tr>
+                <th>Vaga</th>
+                <th>Empresa</th>
+                <th>Atividades</th>
+                <th>Perfil DISC</th>
+                <th>Participantes</th>
+                <th style="text-align:right">Ações</th>
+              </tr>
             </thead>
             <tbody id="vagasTable">
-              <tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon">💼</div><p>Nenhuma vaga cadastrada</p></div></td></tr>
+              <tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">💼</div><p>Nenhuma vaga cadastrada</p></div></td></tr>
             </tbody>
           </table>
         </div>
       </div>
     </section>
 
-    <!-- SECTION: PARTICIPANTES -->
     <section id="participantes" class="section">
       <div class="header-top">
         <div>
@@ -453,7 +499,6 @@
       </div>
     </section>
 
-    <!-- SECTION: RELATÓRIOS -->
     <section id="relatorios" class="section">
       <div class="header-top">
         <div>
@@ -496,12 +541,12 @@
           <div class="form-group"><label>Email</label><input type="email" id="empEmail"></div>
           <div class="form-group"><label>WhatsApp</label><input type="tel" id="empPhone"></div>
         </div>
-        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:1rem">💾 Salvar</button>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:1rem"> Salvar</button>
       </form>
     </div>
   </div>
 
-  <!-- MODAL VAGA -->
+  <!-- MODAL VAGA (ATUALIZADO) -->
   <div class="modal" id="modalVaga">
     <div class="modal-content">
       <div class="modal-header">
@@ -510,26 +555,123 @@
       </div>
       <form onsubmit="saveVaga(event)">
         <input type="hidden" id="vagId">
-        <div class="form-group"><label>Título *</label><input type="text" id="vagTitulo" required></div>
+        
         <div class="form-group">
-          <label>Empresa *</label>
-          <select id="vagEmpresa" required>
-            <option value="">Selecione...</option>
-          </select>
+          <label>Título da Vaga *</label>
+          <input type="text" id="vagTitulo" placeholder="Ex: Analista de RH" required>
         </div>
+        
         <div class="form-row">
           <div class="form-group">
-            <label>Tipo</label>
+            <label>Empresa *</label>
+            <select id="vagEmpresa" required>
+              <option value="">Selecione...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Tipo de Contrato</label>
             <select id="vagTipo">
               <option value="CLT">CLT</option>
               <option value="PJ">PJ</option>
               <option value="Estágio">Estágio</option>
+              <option value="Temporário">Temporário</option>
             </select>
           </div>
-          <div class="form-group"><label>Localização</label><input type="text" id="vagLocal"></div>
         </div>
-        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:1rem">💾 Salvar</button>
+        
+        <div class="form-group">
+          <label>Localização</label>
+          <input type="text" id="vagLocal" placeholder="Ex: Uberlândia-MG ou Remoto">
+        </div>
+        
+        <div class="form-group">
+          <label>Atividades / Descrição da Vaga <span class="form-hint">(obrigatório)</span></label>
+          <textarea id="vagAtividades" rows="5" placeholder="Descreva as principais atividades e responsabilidades do cargo..." required></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label>Perfil Comportamental DISC <span class="form-hint">(opcional)</span></label>
+          <select id="vagDisc">
+            <option value="">Não especificar</option>
+            <option value="D">Dominância (D) - Perfil líder, direto, orientado a resultados</option>
+            <option value="I">Influência (I) - Perfil comunicativo, persuasivo, entusiasta</option>
+            <option value="S">Estabilidade (S) - Perfil paciente, estável, colaborativo</option>
+            <option value="C">Conformidade (C) - Perfil analítico, preciso, detalhista</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Competências / Requisitos <span class="form-hint">(opcional)</span></label>
+          <textarea id="vagPerfil" rows="4" placeholder="Ex: Superior completo, 3 anos de experiência, inglês avançado, habilidades em liderança..."></textarea>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>Faixa Salarial <span class="form-hint">(opcional)</span></label>
+            <input type="text" id="vagSalario" placeholder="Ex: R$ 5.000 - R$ 7.000">
+          </div>
+          <div class="form-group">
+            <label>Quantidade de Vagas <span class="form-hint">(opcional)</span></label>
+            <input type="number" id="vagQtd" value="1" min="1">
+          </div>
+        </div>
+        
+        <div style="display:flex;gap:0.5rem;margin-top:1rem">
+          <button type="button" class="btn" style="flex:1;background:#f1f5f9;color:#64748b" onclick="closeModal('modalVaga')">Cancelar</button>
+          <button type="submit" class="btn btn-primary" style="flex:2;justify-content:center">💾 Salvar Vaga</button>
+        </div>
       </form>
+    </div>
+  </div>
+
+  <!-- MODAL COPIAR VAGA -->
+  <div class="modal" id="modalCopiar">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>📋 Copiar Vaga para Outras Empresas</h3>
+        <button class="modal-close" onclick="closeModal('modalCopiar')">×</button>
+      </div>
+      
+      <div style="background:#eff6ff;border-radius:12px;padding:1rem;margin-bottom:1.5rem;border-left:4px solid var(--brand-blue)">
+        <strong id="copiarVagaNome"></strong>
+        <p style="font-size:0.875rem;color:#64748b;margin-top:0.25rem">Selecione as empresas para as quais deseja copiar esta vaga:</p>
+      </div>
+      
+      <input type="hidden" id="copiarVagaId">
+      
+      <div class="select-all-bar">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:600;color:#0f172a">
+          <input type="checkbox" id="selectAllEmpresas" onchange="toggleSelectAll(this)">
+          Selecionar todas
+        </label>
+        <span style="font-size:0.8rem;color:#64748b"><span id="countEmpSelecionadas">0</span> selecionadas</span>
+      </div>
+      
+      <div class="checkbox-list" id="listaEmpresasCopy">
+        <!-- Empresas preenchidas via JS -->
+      </div>
+      
+      <div class="copy-summary" id="copySummary" style="display:none">
+        A vaga será copiada para <strong id="countCopy">0</strong> empresa(s), mantendo todas as atividades e perfil comportamental.
+      </div>
+      
+      <div style="display:flex;gap:0.5rem;margin-top:1.5rem">
+        <button type="button" class="btn" style="flex:1;background:#f1f5f9;color:#64748b" onclick="closeModal('modalCopiar')">Cancelar</button>
+        <button type="button" class="btn btn-primary" style="flex:2;justify-content:center" onclick="confirmarCopiarVaga()">
+          <i class="ph ph-copy"></i> Confirmar Cópia
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL VISUALIZAR VAGA -->
+  <div class="modal" id="modalVerVaga">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3> Detalhes da Vaga</h3>
+        <button class="modal-close" onclick="closeModal('modalVerVaga')">×</button>
+      </div>
+      <div id="verVagaConteudo"></div>
     </div>
   </div>
 
@@ -537,7 +679,7 @@
   <div class="modal" id="modalParticipante">
     <div class="modal-content">
       <div class="modal-header">
-        <h3> Novo Participante</h3>
+        <h3>👤 Novo Participante</h3>
         <button class="modal-close" onclick="closeModal('modalParticipante')">×</button>
       </div>
       <form onsubmit="saveParticipante(event)">
@@ -571,7 +713,6 @@
     
     let currentUser = null;
     
-    // ===== INICIALIZAÇÃO =====
     document.addEventListener('DOMContentLoaded', async () => {
       currentUser = JSON.parse(localStorage.getItem('vigorre_recruiter') || localStorage.getItem('vigorre_current_user') || '{}');
       
@@ -590,7 +731,6 @@
       loadCredits();
       await carregarDados();
       
-      // Fechar modal ao clicar fora
       document.querySelectorAll('.modal').forEach(m => {
         m.addEventListener('click', e => {
           if (e.target === m) closeModal(m.id);
@@ -598,7 +738,6 @@
       });
     });
     
-    // ===== NAVEGAÇÃO ENTRE SEÇÕES =====
     function showSection(sectionId, element) {
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       document.getElementById(sectionId).classList.add('active');
@@ -609,7 +748,6 @@
       carregarDados();
     }
     
-    // ===== CARREGAR CRÉDITOS =====
     function loadCredits() {
       if (currentUser.credits) {
         const d = document.getElementById('credDisc');
@@ -626,13 +764,11 @@
       }
     }
     
-    // ===== CARREGAR DADOS =====
     async function carregarDados() {
       let empresas = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
       let vagas = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]');
       let participantes = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
       
-      // Tentar Supabase
       if (window.VigorreDB?.supabase) {
         try {
           const { data: emp } = await window.VigorreDB.supabase.from('companies').select('*');
@@ -644,21 +780,18 @@
         } catch(e) { console.warn('Erro Supabase:', e); }
       }
       
-      // Atualizar KPIs
       document.getElementById('kpiPart').textContent = participantes.length;
       document.getElementById('kpiTest').textContent = participantes.reduce((a, p) => a + (p.completedTests?.length || 0), 0);
       document.getElementById('kpiVag').textContent = vagas.length;
       document.getElementById('kpiEmp').textContent = empresas.length;
       
-      // Renderizar tabelas
       renderEmpresas(empresas);
-      renderVagas(vagas, empresas);
+      renderVagas(vagas, empresas, participantes);
       renderParticipantes(participantes, empresas);
       renderRelatorios(participantes);
       renderDashboardAtividades(participantes);
     }
     
-    // ===== RENDERIZAR EMPRESAS =====
     function renderEmpresas(empresas) {
       const tb = document.getElementById('empresasTable');
       if (!empresas || empresas.length === 0) {
@@ -679,29 +812,44 @@
         </tr>
       `).join('');
       
-      // Atualizar selects
       updateEmpresaSelects(empresas);
     }
     
-    // ===== RENDERIZAR VAGAS =====
-    function renderVagas(vagas, empresas) {
+    function renderVagas(vagas, empresas, participantes) {
       const tb = document.getElementById('vagasTable');
       if (!vagas || vagas.length === 0) {
-        tb.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon">💼</div><p>Nenhuma vaga cadastrada</p></div></td></tr>';
+        tb.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">💼</div><p>Nenhuma vaga cadastrada</p></div></td></tr>';
         return;
       }
       tb.innerHTML = vagas.map(v => {
         const emp = empresas?.find(e => e.id === v.compId);
-        const parts = JSON.parse(localStorage.getItem('vigorre_participants') || '[]').filter(p => p.jobId === v.id).length;
+        const parts = participantes?.filter(p => p.jobId === v.id).length || 0;
+        
+        const atividadesShort = v.atividades ? (v.atividades.length > 50 ? v.atividades.substring(0, 50) + '...' : v.atividades) : '-';
+        
+        const discLabel = {
+          'D': { label: 'Dominância', color: 'badge-success' },
+          'I': { label: 'Influência', color: 'badge-info' },
+          'S': { label: 'Estabilidade', color: 'badge-credits' },
+          'C': { label: 'Conformidade', color: 'badge-purple' }
+        };
+        const disc = v.disc ? `<span class="badge ${discLabel[v.disc].color}">${discLabel[v.disc].label}</span>` : '<span style="color:#94a3b8;font-size:0.8rem">Não definido</span>';
+        
         return `
           <tr>
-            <td><strong>${v.name}</strong></td>
-            <td>${emp?.name || '-'}</td>
-            <td><span class="badge badge-success">${v.type || '-'}</span></td>
-            <td>${parts}</td>
+            <td>
+              <div class="user-name">${v.name}</div>
+              <div style="font-size:0.75rem;color:#94a3b8;margin-top:2px">${v.type || '-'} • ${v.location || '-'}</div>
+            </td>
+            <td><strong>${emp?.name || '-'}</strong></td>
+            <td class="vaga-desc" title="${(v.atividades || '').replace(/"/g, '&quot;')}">${atividadesShort}</td>
+            <td>${disc}</td>
+            <td><span class="badge badge-credits">${parts}</span></td>
             <td style="text-align:right"><div class="action-row">
-              <button class="btn btn-sm btn-edit">✏️</button>
-              <button class="btn btn-sm btn-danger" onclick="deleteVaga('${v.id}')">🗑️</button>
+              <button class="btn btn-sm btn-view" onclick="verVaga('${v.id}')" title="Ver detalhes">️</button>
+              <button class="btn btn-sm btn-copy" onclick="abrirCopiarVaga('${v.id}')" title="Copiar para outras empresas">📋</button>
+              <button class="btn btn-sm btn-edit" onclick="editVaga('${v.id}')" title="Editar">️</button>
+              <button class="btn btn-sm btn-danger" onclick="deleteVaga('${v.id}')" title="Excluir">🗑️</button>
             </div></td>
           </tr>
         `;
@@ -710,7 +858,6 @@
       updateVagaSelects(vagas);
     }
     
-    // ===== RENDERIZAR PARTICIPANTES =====
     function renderParticipantes(participantes, empresas) {
       const tb = document.getElementById('participantesTable');
       if (!participantes || participantes.length === 0) {
@@ -728,14 +875,13 @@
             <td><span class="badge ${tests > 0 ? 'badge-success' : 'badge-warning'}">${tests} testes</span></td>
             <td style="text-align:right"><div class="action-row">
               <button class="btn btn-sm btn-edit">✏️</button>
-              <button class="btn btn-sm btn-danger" onclick="deleteParticipante('${p.id}')">️</button>
+              <button class="btn btn-sm btn-danger" onclick="deleteParticipante('${p.id}')">🗑️</button>
             </div></td>
           </tr>
         `;
       }).join('');
     }
     
-    // ===== RENDERIZAR RELATÓRIOS =====
     function renderRelatorios(participantes) {
       const tb = document.getElementById('relatoriosTable');
       const relatorios = [];
@@ -761,12 +907,11 @@
           <td><strong>${r.participant}</strong></td>
           <td><span class="badge badge-success">${r.type}</span></td>
           <td>${r.date}</td>
-          <td style="text-align:right"><button class="btn btn-sm btn-edit">📄</button></td>
+          <td style="text-align:right"><button class="btn btn-sm btn-view">📄</button></td>
         </tr>
       `).join('');
     }
     
-    // ===== RENDERIZAR ATIVIDADES DASHBOARD =====
     function renderDashboardAtividades(participantes) {
       const tb = document.getElementById('dashboardActivities');
       const atividades = [];
@@ -780,7 +925,7 @@
       });
       
       if (atividades.length === 0) {
-        tb.innerHTML = '<tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">📋</div><p>Nenhuma atividade</p></div></td></tr>';
+        tb.innerHTML = '<tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon"></div><p>Nenhuma atividade</p></div></td></tr>';
         return;
       }
       tb.innerHTML = atividades.slice(0, 5).map(a => `
@@ -793,7 +938,6 @@
       `).join('');
     }
     
-    // ===== UPDATE SELECTS =====
     function updateEmpresaSelects(empresas) {
       ['vagEmpresa', 'partEmpresa'].forEach(id => {
         const sel = document.getElementById(id);
@@ -813,17 +957,19 @@
       sel.value = currentVal;
     }
     
-    // ===== MODAIS =====
     function openModal(id) {
+      if (id === 'modalVaga') {
+        document.getElementById('vagId').value = '';
+        const form = document.querySelector('#modalVaga form');
+        if (form) form.reset();
+        document.getElementById('vagQtd').value = '1';
+      }
       document.getElementById(id).classList.add('active');
     }
     function closeModal(id) {
       document.getElementById(id).classList.remove('active');
-      const form = document.querySelector(`#${id} form`);
-      if (form) form.reset();
     }
     
-    // ===== SALVAR EMPRESA =====
     async function saveEmpresa(e) {
       e.preventDefault();
       const id = document.getElementById('empId').value || 'emp_' + Date.now();
@@ -841,7 +987,6 @@
       if (idx > -1) empresas[idx] = data; else empresas.push(data);
       localStorage.setItem('vigorre_companies', JSON.stringify(empresas));
       
-      // Salvar no Supabase
       if (window.VigorreDB?.supabase) {
         await window.VigorreDB.supabase.from('companies').upsert([data]);
       }
@@ -865,7 +1010,7 @@
     }
     
     async function deleteEmpresa(id) {
-      if (!confirm('Excluir esta empresa?')) return;
+      if (!confirm('Excluir esta empresa? As vagas vinculadas não serão excluídas.')) return;
       let empresas = JSON.parse(localStorage.getItem('vigorre_companies') || '[]').filter(x => x.id !== id);
       localStorage.setItem('vigorre_companies', JSON.stringify(empresas));
       if (window.VigorreDB?.supabase) {
@@ -875,20 +1020,30 @@
       carregarDados();
     }
     
-    // ===== SALVAR VAGA =====
     async function saveVaga(e) {
       e.preventDefault();
-      const id = 'vag_' + Date.now();
+      const editId = document.getElementById('vagId').value;
+      
       const data = {
-        id,
+        id: editId || 'vag_' + Date.now(),
         compId: document.getElementById('vagEmpresa').value,
         name: document.getElementById('vagTitulo').value,
         type: document.getElementById('vagTipo').value,
-        location: document.getElementById('vagLocal').value
+        location: document.getElementById('vagLocal').value,
+        atividades: document.getElementById('vagAtividades').value,
+        disc: document.getElementById('vagDisc').value,
+        perfil: document.getElementById('vagPerfil').value,
+        salario: document.getElementById('vagSalario').value,
+        qtd: parseInt(document.getElementById('vagQtd').value) || 1
       };
       
       let vagas = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]');
-      vagas.push(data);
+      if (editId) {
+        const idx = vagas.findIndex(x => x.id === editId);
+        if (idx > -1) vagas[idx] = { ...vagas[idx], ...data };
+      } else {
+        vagas.push(data);
+      }
       localStorage.setItem('vigorre_jobs', JSON.stringify(vagas));
       
       if (window.VigorreDB?.supabase) {
@@ -896,8 +1051,27 @@
       }
       
       closeModal('modalVaga');
-      showToast('✅ Vaga criada!');
+      showToast(editId ? '✅ Vaga atualizada!' : '✅ Vaga criada!');
       carregarDados();
+    }
+    
+    function editVaga(id) {
+      const vagas = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]');
+      const v = vagas.find(x => x.id === id);
+      if (!v) return;
+      
+      document.getElementById('vagId').value = v.id;
+      document.getElementById('vagTitulo').value = v.name || '';
+      document.getElementById('vagEmpresa').value = v.compId || '';
+      document.getElementById('vagTipo').value = v.type || 'CLT';
+      document.getElementById('vagLocal').value = v.location || '';
+      document.getElementById('vagAtividades').value = v.atividades || '';
+      document.getElementById('vagDisc').value = v.disc || '';
+      document.getElementById('vagPerfil').value = v.perfil || '';
+      document.getElementById('vagSalario').value = v.salario || '';
+      document.getElementById('vagQtd').value = v.qtd || 1;
+      
+      openModal('modalVaga');
     }
     
     async function deleteVaga(id) {
@@ -911,7 +1085,162 @@
       carregarDados();
     }
     
-    // ===== SALVAR PARTICIPANTE =====
+    function verVaga(id) {
+      const vagas = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]');
+      const empresas = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+      const participantes = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+      
+      const v = vagas.find(x => x.id === id);
+      if (!v) return;
+      
+      const emp = empresas.find(e => e.id === v.compId);
+      const parts = participantes.filter(p => p.jobId === v.id);
+      
+      const discLabel = {
+        'D': 'Dominância - Líder, direto, orientado a resultados',
+        'I': 'Influência - Comunicativo, persuasivo, entusiasta',
+        'S': 'Estabilidade - Paciente, estável, colaborativo',
+        'C': 'Conformidade - Analítico, preciso, detalhista'
+      };
+      
+      let html = `
+        <div style="margin-bottom:1.5rem">
+          <h2 style="font-size:1.5rem;color:#0f172a;margin-bottom:0.25rem">${v.name}</h2>
+          <p style="color:#64748b">${emp?.name || '-'} • ${v.type || '-'} • ${v.location || '-'}</p>
+        </div>
+        
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:1.5rem">
+          <div style="background:#f8fafc;padding:1rem;border-radius:10px">
+            <div style="font-size:0.75rem;color:#64748b;text-transform:uppercase;font-weight:600">Perfil DISC Desejado</div>
+            <div style="font-size:1rem;font-weight:700;color:#0f172a;margin-top:0.25rem">${v.disc ? discLabel[v.disc] : 'Não especificado'}</div>
+          </div>
+          <div style="background:#f8fafc;padding:1rem;border-radius:10px">
+            <div style="font-size:0.75rem;color:#64748b;text-transform:uppercase;font-weight:600">Faixa Salarial</div>
+            <div style="font-size:1rem;font-weight:700;color:#0f172a;margin-top:0.25rem">${v.salario || 'Não informada'}</div>
+          </div>
+        </div>
+        
+        <div style="margin-bottom:1.5rem">
+          <h4 style="font-weight:700;color:#0f172a;margin-bottom:0.5rem;display:flex;align-items:center;gap:8px">
+            <i class="ph ph-list-bullets" style="color:var(--brand-cyan)"></i> Atividades
+          </h4>
+          <div style="background:#f8fafc;padding:1rem;border-radius:10px;white-space:pre-wrap;color:#334155;line-height:1.6">${v.atividades || '<em style="color:#94a3b8">Nenhuma atividade descrita</em>'}</div>
+        </div>
+        
+        <div style="margin-bottom:1.5rem">
+          <h4 style="font-weight:700;color:#0f172a;margin-bottom:0.5rem;display:flex;align-items:center;gap:8px">
+            <i class="ph ph-user-circle" style="color:var(--brand-purple)"></i> Perfil / Competências
+          </h4>
+          <div style="background:#f8fafc;padding:1rem;border-radius:10px;white-space:pre-wrap;color:#334155;line-height:1.6">${v.perfil || '<em style="color:#94a3b8">Perfil não especificado</em>'}</div>
+        </div>
+        
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:1rem;background:#eff6ff;border-radius:10px">
+          <div>
+            <div style="font-size:0.8rem;color:#64748b">Participantes vinculados</div>
+            <div style="font-size:1.25rem;font-weight:700;color:#0f172a">${parts.length}</div>
+          </div>
+          <div>
+            <div style="font-size:0.8rem;color:#64748b">Quantidade de vagas</div>
+            <div style="font-size:1.25rem;font-weight:700;color:#0f172a">${v.qtd || 1}</div>
+          </div>
+        </div>
+      `;
+      
+      document.getElementById('verVagaConteudo').innerHTML = html;
+      openModal('modalVerVaga');
+    }
+    
+    function abrirCopiarVaga(id) {
+      const vagas = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]');
+      const empresas = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+      
+      const v = vagas.find(x => x.id === id);
+      if (!v) return;
+      
+      document.getElementById('copiarVagaId').value = id;
+      document.getElementById('copiarVagaNome').textContent = v.name;
+      
+      const outrasEmpresas = empresas.filter(e => e.id !== v.compId);
+      const lista = document.getElementById('listaEmpresasCopy');
+      
+      if (outrasEmpresas.length === 0) {
+        lista.innerHTML = '<div style="padding:1rem;text-align:center;color:#64748b">Não há outras empresas para copiar.</div>';
+        document.getElementById('selectAllEmpresas').parentElement.style.display = 'none';
+      } else {
+        document.getElementById('selectAllEmpresas').parentElement.style.display = 'flex';
+        document.getElementById('selectAllEmpresas').checked = false;
+        
+        lista.innerHTML = outrasEmpresas.map(e => `
+          <div class="checkbox-item">
+            <input type="checkbox" id="emp_${e.id}" value="${e.id}" class="empresa-checkbox" onchange="updateCopySummary()">
+            <label for="emp_${e.id}">
+              <strong>${e.name}</strong>
+              ${e.cnpj ? `<span style="font-size:0.75rem;color:#94a3b8"> • ${e.cnpj}</span>` : ''}
+            </label>
+          </div>
+        `).join('');
+      }
+      
+      document.getElementById('copySummary').style.display = 'none';
+      openModal('modalCopiar');
+    }
+    
+    function toggleSelectAll(masterCheckbox) {
+      document.querySelectorAll('.empresa-checkbox').forEach(cb => {
+        cb.checked = masterCheckbox.checked;
+      });
+      updateCopySummary();
+    }
+    
+    function updateCopySummary() {
+      const checked = document.querySelectorAll('.empresa-checkbox:checked').length;
+      document.getElementById('countEmpSelecionadas').textContent = checked;
+      document.getElementById('countCopy').textContent = checked;
+      document.getElementById('copySummary').style.display = checked > 0 ? 'block' : 'none';
+    }
+    
+    async function confirmarCopiarVaga() {
+      const vagaId = document.getElementById('copiarVagaId').value;
+      const empresasDestino = Array.from(document.querySelectorAll('.empresa-checkbox:checked')).map(cb => cb.value);
+      
+      if (empresasDestino.length === 0) {
+        showToast('⚠️ Selecione pelo menos uma empresa', 'error');
+        return;
+      }
+      
+      const vagas = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]');
+      const empresaOriginal = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+      const vagaOriginal = vagas.find(x => x.id === vagaId);
+      
+      if (!vagaOriginal) {
+        showToast('❌ Vaga original não encontrada', 'error');
+        return;
+      }
+      
+      const novasVagas = [];
+      empresasDestino.forEach(empId => {
+        const novaVaga = {
+          ...vagaOriginal,
+          id: 'vag_' + Date.now() + '_' + empId,
+          compId: empId,
+          copiedFrom: vagaId,
+          copiedAt: new Date().toISOString()
+        };
+        novasVagas.push(novaVaga);
+        vagas.push(novaVaga);
+      });
+      
+      localStorage.setItem('vigorre_jobs', JSON.stringify(vagas));
+      
+      if (window.VigorreDB?.supabase) {
+        await window.VigorreDB.supabase.from('jobs').upsert(novasVagas);
+      }
+      
+      closeModal('modalCopiar');
+      showToast(`✅ Vaga copiada para ${empresasDestino.length} empresa(s)!`);
+      carregarDados();
+    }
+    
     async function saveParticipante(e) {
       e.preventDefault();
       const id = 'part_' + Date.now();
@@ -931,7 +1260,7 @@
       
       let participantes = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
       participantes.push(data);
-      localStorage.setItem('vigorre_participants', JSON.stringify(participantes));
+      localStorage.setItem('vigorre_participantes', JSON.stringify(participantes));
       
       if (window.VigorreDB?.supabase) {
         await window.VigorreDB.supabase.from('participants').upsert([data]);
@@ -944,8 +1273,8 @@
     
     async function deleteParticipante(id) {
       if (!confirm('Excluir este participante?')) return;
-      let participantes = JSON.parse(localStorage.getItem('vigorre_participants') || '[]').filter(x => x.id !== id);
-      localStorage.setItem('vigorre_participants', JSON.stringify(participantes));
+      let participantes = JSON.parse(localStorage.getItem('vigorre_participantes') || '[]').filter(x => x.id !== id);
+      localStorage.setItem('vigorre_participantes', JSON.stringify(participantes));
       if (window.VigorreDB?.supabase) {
         await window.VigorreDB.supabase.from('participants').delete().eq('id', id);
       }
@@ -953,7 +1282,6 @@
       carregarDados();
     }
     
-    // ===== TOAST =====
     function showToast(msg, type='success') {
       const t = document.createElement('div');
       t.className = 'toast ' + (type === 'error' ? 'error' : '');
@@ -962,7 +1290,6 @@
       setTimeout(() => t.remove(), 3000);
     }
     
-    // ===== LOGOUT =====
     function logout() {
       localStorage.removeItem('vigorre_current_user');
       localStorage.removeItem('vigorre_recruiter');
