@@ -6,7 +6,7 @@
   <meta name="description" content="Vigorre One™ - Dashboard do Recrutador • People Analytics">
   <title>Dashboard | Vigorre One™ • Recrutador</title>
   
-  <!-- Fonts Premium -->
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
   <!-- Ícones -->
@@ -22,6 +22,7 @@
       --brand-cyan: #06B6D4;
       --brand-emerald: #10B981;
       --brand-amber: #F59E0B;
+      --brand-blue: #3B82F6;
       --bg-light: #f8fafc;
       --sidebar-width: 280px;
     }
@@ -126,6 +127,11 @@
     }
     .header-top h1 { font-size: 1.75rem; color: var(--brand-navy); font-weight: 800; }
     
+    /* SECTIONS */
+    .section { display: none; }
+    .section.active { display: block; animation: fadeIn 0.3s; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
     .stats-grid {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;
     }
@@ -152,28 +158,121 @@
     .card-amber .stat-icon { background: #fffbeb; color: var(--brand-amber); }
     .card-blue .stat-icon { background: #eff6ff; color: #3B82F6; }
 
-    /* TABLE */
+    /* CARDS */
     .card {
       background: white; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
       padding: 1.5rem; border: 1px solid #e2e8f0; margin-bottom: 1.5rem;
     }
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .card-header { 
+      display: flex; justify-content: space-between; align-items: center; 
+      margin-bottom: 1.5rem; padding-bottom: 1rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
     .card-header h3 { font-size: 1.1rem; font-weight: 700; color: var(--brand-navy); display: flex; align-items: center; gap: 8px; }
     
+    /* BUTTONS */
+    .btn {
+      padding: 10px 20px; border-radius: 10px; border: none; font-weight: 600;
+      cursor: pointer; font-size: 0.9rem; transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand-cyan), var(--brand-emerald));
+      color: white;
+      box-shadow: 0 4px 12px rgba(6, 182, 212, 0.25);
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(6, 182, 212, 0.35); }
+    .btn-sm { padding: 6px 12px; font-size: 0.8125rem; }
+    .btn-danger { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+    .btn-danger:hover { background: #dc2626; color: white; }
+    .btn-edit { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
+    .btn-edit:hover { background: #2563eb; color: white; }
+    
+    /* TABLE */
     .table-container { width: 100%; overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; }
     th { text-align: left; padding: 12px; border-bottom: 2px solid #e2e8f0; color: #64748b; font-size: 0.8rem; text-transform: uppercase; font-weight: 600; }
     td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
+    tbody tr:hover { background: #f8fafc; }
     
-    .badge { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+    .badge { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
     .badge-success { background: #ecfdf5; color: #059669; }
     .badge-warning { background: #fffbeb; color: #d97706; }
+    .badge-credits { background: #fef3c7; color: #92400e; }
+    
+    .action-row { display: flex; gap: 4px; justify-content: flex-end; flex-wrap: wrap; }
+    .user-cell { display: flex; align-items: center; gap: 12px; }
+    .avatar {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--brand-cyan), var(--brand-emerald));
+      color: white; display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.9375rem;
+    }
+    .user-name { font-weight: 600; color: #0f172a; }
+    .user-email { font-size: 0.8125rem; color: #64748b; }
 
     /* Empty State */
-    .empty-state {
-      text-align: center; padding: 3rem 2rem; color: #64748b;
-    }
+    .empty-state { text-align: center; padding: 3rem 2rem; color: #64748b; }
     .empty-state-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.4; }
+    
+    /* Modal */
+    .modal {
+      display: none; position: fixed; inset: 0; z-index: 9999;
+      align-items: center; justify-content: center;
+    }
+    .modal.active { display: flex; }
+    .modal::before {
+      content: ''; position: absolute; inset: 0;
+      background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px);
+    }
+    .modal-content {
+      background: white; border-radius: 20px; padding: 2rem;
+      max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto;
+      position: relative; z-index: 1; box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+    }
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #f1f5f9;
+    }
+    .modal-header h3 { font-size: 1.25rem; font-weight: 700; color: #0f172a; }
+    .modal-close {
+      background: #f1f5f9; border: none; width: 34px; height: 34px;
+      border-radius: 10px; font-size: 1.25rem; cursor: pointer; color: #64748b;
+    }
+    .modal-close:hover { background: #ef4444; color: white; }
+    
+    .form-group { margin-bottom: 1rem; }
+    .form-group label {
+      display: block; font-weight: 600; color: #334155;
+      font-size: 0.875rem; margin-bottom: 6px;
+    }
+    .form-group input, .form-group select {
+      width: 100%; padding: 10px 14px; border: 1px solid #e2e8f0;
+      border-radius: 8px; font-size: 0.9375rem; font-family: inherit;
+    }
+    .form-group input:focus, .form-group select:focus {
+      outline: none; border-color: var(--brand-cyan);
+      box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    
+    .toast {
+      position: fixed; top: 24px; right: 24px;
+      background: white; padding: 14px 20px; border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15); z-index: 10001;
+      border-left: 4px solid #10b981; font-weight: 500;
+      animation: toastIn 0.3s ease;
+    }
+    .toast.error { border-left-color: #f43f5e; }
+    @keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+    
+    @media (max-width: 768px) {
+      :root { --sidebar-width: 76px; }
+      .sidebar { padding: 1.25rem 0.75rem; }
+      .logo-text, .nav-item span:not(.nav-icon-wrap), .user-info, .credits-box h4, .credit-row span:first-child { display: none; }
+      .nav-item { justify-content: center; padding: 14px; }
+      .main-content { padding: 1.5rem; }
+    }
   </style>
 </head>
 <body>
@@ -181,14 +280,13 @@
   <!-- Sidebar -->
   <aside class="sidebar">
     <div class="logo-box">
-      <img src="../logo-vigorre.png" alt="Vigorre One™" class="logo-img" onerror="this.style.display='none'">
+      <img src="../logo-vigorre.png" alt="Vigorre" class="logo-img" onerror="this.style.background='linear-gradient(135deg,#06B6D4,#10B981)';this.outerHTML='<div class=\'logo-img\' style=\'display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#06B6D4,#10B981);color:white;font-weight:900;font-size:1.5rem\'>V</div>'">
       <div class="logo-text">
         <h2>Vigorre One™</h2>
         <p>Área do Recrutador</p>
       </div>
     </div>
     
-    <!-- Resumo de Créditos -->
     <div class="credits-box">
       <h4>Meus Créditos</h4>
       <div class="credit-row"><span>DISC</span><span class="credit-val" id="credDisc">0</span></div>
@@ -197,11 +295,21 @@
     </div>
     
     <nav class="nav-menu">
-      <a href="dashboard.html" class="nav-item active"><i class="ph ph-squares-four"></i> Dashboard</a>
-      <a href="empresas/" class="nav-item"><i class="ph ph-buildings"></i> Empresas</a>
-      <a href="vagas/" class="nav-item"><i class="ph ph-briefcase"></i> Vagas</a>
-      <a href="participantes/" class="nav-item"><i class="ph ph-users"></i> Participantes</a>
-      <a href="relatorios/" class="nav-item"><i class="ph ph-file-text"></i> Relatórios</a>
+      <div class="nav-item active" data-section="dashboard" onclick="showSection('dashboard', this)">
+        <i class="ph ph-squares-four"></i><span>Dashboard</span>
+      </div>
+      <div class="nav-item" data-section="empresas" onclick="showSection('empresas', this)">
+        <i class="ph ph-buildings"></i><span>Empresas</span>
+      </div>
+      <div class="nav-item" data-section="vagas" onclick="showSection('vagas', this)">
+        <i class="ph ph-briefcase"></i><span>Vagas</span>
+      </div>
+      <div class="nav-item" data-section="participantes" onclick="showSection('participantes', this)">
+        <i class="ph ph-users"></i><span>Participantes</span>
+      </div>
+      <div class="nav-item" data-section="relatorios" onclick="showSection('relatorios', this)">
+        <i class="ph ph-file-text"></i><span>Relatórios</span>
+      </div>
     </nav>
     
     <div class="user-profile">
@@ -209,197 +317,652 @@
         <h4 id="userName">Carregando...</h4>
         <p>Recrutador</p>
       </div>
-      <button class="logout-btn" onclick="logout()">Sair</button>
+      <button class="logout-btn" onclick="logout()">
+        <i class="ph ph-sign-out"></i> Sair
+      </button>
     </div>
   </aside>
 
   <!-- Main Content -->
   <main class="main-content">
-    <header class="header-top">
-      <div>
-        <h1>Dashboard do Recrutador</h1>
-        <p style="color:#64748b">Gerencie seus candidatos, vagas e créditos de testes.</p>
-      </div>
-    </header>
-
-    <!-- KPI Cards -->
-    <section class="stats-grid">
-      <div class="stat-card card-blue">
-        <div class="stat-icon"><i class="ph ph-users"></i></div>
-        <div class="stat-value" id="kpiCandidates">0</div>
-        <div class="stat-label">Participantes Ativos</div>
+    
+    <!-- SECTION: DASHBOARD -->
+    <section id="dashboard" class="section active">
+      <div class="header-top">
+        <div>
+          <h1>Dashboard</h1>
+          <p style="color:#64748b">Visão geral da sua operação de recrutamento</p>
+        </div>
       </div>
       
-      <div class="stat-card card-emerald">
-        <div class="stat-icon"><i class="ph ph-check-circle"></i></div>
-        <div class="stat-value" id="kpiTests">0</div>
-        <div class="stat-label">Testes Concluídos</div>
+      <div class="stats-grid">
+        <div class="stat-card card-blue">
+          <div class="stat-icon"><i class="ph ph-users"></i></div>
+          <div class="stat-value" id="kpiPart">0</div>
+          <div class="stat-label">Participantes</div>
+        </div>
+        <div class="stat-card card-emerald">
+          <div class="stat-icon"><i class="ph ph-check-circle"></i></div>
+          <div class="stat-value" id="kpiTest">0</div>
+          <div class="stat-label">Testes Concluídos</div>
+        </div>
+        <div class="stat-card card-amber">
+          <div class="stat-icon"><i class="ph ph-briefcase"></i></div>
+          <div class="stat-value" id="kpiVag">0</div>
+          <div class="stat-label">Vagas Ativas</div>
+        </div>
+        <div class="stat-card card-cyan">
+          <div class="stat-icon"><i class="ph ph-buildings"></i></div>
+          <div class="stat-value" id="kpiEmp">0</div>
+          <div class="stat-label">Empresas</div>
+        </div>
       </div>
       
-      <div class="stat-card card-amber">
-        <div class="stat-icon"><i class="ph ph-briefcase"></i></div>
-        <div class="stat-value" id="kpiVacancies">0</div>
-        <div class="stat-label">Vagas Abertas</div>
-      </div>
-      
-      <div class="stat-card card-cyan">
-        <div class="stat-icon"><i class="ph ph-file-text"></i></div>
-        <div class="stat-value" id="kpiReports">0</div>
-        <div class="stat-label">Relatórios Gerados</div>
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="ph ph-clock"></i> Atividades Recentes</h3>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr><th>Participante</th><th>Ação</th><th>Status</th><th>Data</th></tr>
+            </thead>
+            <tbody id="dashboardActivities">
+              <tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">📋</div><p>Nenhuma atividade</p></div></td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
 
-    <!-- Atividades Recentes -->
-    <div class="card">
-      <div class="card-header">
-        <h3><i class="ph ph-clock"></i> Atividades Recentes</h3>
+    <!-- SECTION: EMPRESAS -->
+    <section id="empresas" class="section">
+      <div class="header-top">
+        <div>
+          <h1>Empresas</h1>
+          <p style="color:#64748b">Gerencie suas empresas clientes</p>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('modalEmpresa')">
+          <i class="ph ph-plus"></i> Nova Empresa
+        </button>
       </div>
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Participante</th>
-              <th>Ação</th>
-              <th>Status</th>
-              <th>Data</th>
-            </tr>
-          </thead>
-          <tbody id="activitiesTable">
-            <tr>
-              <td colspan="4">
-                <div class="empty-state">
-                  <div class="empty-state-icon">📋</div>
-                  <p>Nenhuma atividade recente</p>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      
+      <div class="card">
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr><th>Empresa</th><th>CNPJ</th><th>Responsável</th><th>Contato</th><th>Vagas</th><th style="text-align:right">Ações</th></tr>
+            </thead>
+            <tbody id="empresasTable">
+              <tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">🏢</div><p>Nenhuma empresa cadastrada</p></div></td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <!-- SECTION: VAGAS -->
+    <section id="vagas" class="section">
+      <div class="header-top">
+        <div>
+          <h1>Vagas</h1>
+          <p style="color:#64748b">Gerencie suas vagas abertas</p>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('modalVaga')">
+          <i class="ph ph-plus"></i> Nova Vaga
+        </button>
+      </div>
+      
+      <div class="card">
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr><th>Vaga</th><th>Empresa</th><th>Tipo</th><th>Participantes</th><th style="text-align:right">Ações</th></tr>
+            </thead>
+            <tbody id="vagasTable">
+              <tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon">💼</div><p>Nenhuma vaga cadastrada</p></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: PARTICIPANTES -->
+    <section id="participantes" class="section">
+      <div class="header-top">
+        <div>
+          <h1>Participantes</h1>
+          <p style="color:#64748b">Gerencie seus candidatos</p>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('modalParticipante')">
+          <i class="ph ph-plus"></i> Novo Participante
+        </button>
+      </div>
+      
+      <div class="card">
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr><th>Nome</th><th>Email</th><th>Empresa</th><th>Testes</th><th style="text-align:right">Ações</th></tr>
+            </thead>
+            <tbody id="participantesTable">
+              <tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon"></div><p>Nenhum participante cadastrado</p></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: RELATÓRIOS -->
+    <section id="relatorios" class="section">
+      <div class="header-top">
+        <div>
+          <h1>Relatórios</h1>
+          <p style="color:#64748b">Relatórios gerados dos participantes</p>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr><th>Participante</th><th>Tipo</th><th>Data</th><th style="text-align:right">Ações</th></tr>
+            </thead>
+            <tbody id="relatoriosTable">
+              <tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">📊</div><p>Nenhum relatório gerado</p></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
 
   </main>
+
+  <!-- MODAL EMPRESA -->
+  <div class="modal" id="modalEmpresa">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>🏢 Nova Empresa</h3>
+        <button class="modal-close" onclick="closeModal('modalEmpresa')">×</button>
+      </div>
+      <form onsubmit="saveEmpresa(event)">
+        <input type="hidden" id="empId">
+        <div class="form-group"><label>Nome *</label><input type="text" id="empNome" required></div>
+        <div class="form-row">
+          <div class="form-group"><label>CNPJ</label><input type="text" id="empCnpj"></div>
+          <div class="form-group"><label>Responsável</label><input type="text" id="empResp"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Email</label><input type="email" id="empEmail"></div>
+          <div class="form-group"><label>WhatsApp</label><input type="tel" id="empPhone"></div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:1rem">💾 Salvar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL VAGA -->
+  <div class="modal" id="modalVaga">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>💼 Nova Vaga</h3>
+        <button class="modal-close" onclick="closeModal('modalVaga')">×</button>
+      </div>
+      <form onsubmit="saveVaga(event)">
+        <input type="hidden" id="vagId">
+        <div class="form-group"><label>Título *</label><input type="text" id="vagTitulo" required></div>
+        <div class="form-group">
+          <label>Empresa *</label>
+          <select id="vagEmpresa" required>
+            <option value="">Selecione...</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tipo</label>
+            <select id="vagTipo">
+              <option value="CLT">CLT</option>
+              <option value="PJ">PJ</option>
+              <option value="Estágio">Estágio</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Localização</label><input type="text" id="vagLocal"></div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:1rem">💾 Salvar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL PARTICIPANTE -->
+  <div class="modal" id="modalParticipante">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3> Novo Participante</h3>
+        <button class="modal-close" onclick="closeModal('modalParticipante')">×</button>
+      </div>
+      <form onsubmit="saveParticipante(event)">
+        <input type="hidden" id="partId">
+        <div class="form-group"><label>Nome *</label><input type="text" id="partNome" required></div>
+        <div class="form-row">
+          <div class="form-group"><label>Email *</label><input type="email" id="partEmail" required></div>
+          <div class="form-group"><label>WhatsApp *</label><input type="tel" id="partPhone" required></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Empresa</label>
+            <select id="partEmpresa"><option value="">Autônomo</option></select>
+          </div>
+          <div class="form-group">
+            <label>Vaga</label>
+            <select id="partVaga"><option value="">Nenhuma</option></select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Usuário *</label><input type="text" id="partUser" required></div>
+          <div class="form-group"><label>Senha *</label><input type="text" id="partPass" required></div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:1rem">💾 Salvar</button>
+      </form>
+    </div>
+  </div>
 
   <script>
     'use strict';
     
+    let currentUser = null;
+    
+    // ===== INICIALIZAÇÃO =====
     document.addEventListener('DOMContentLoaded', async () => {
-      // Verificação de Sessão
-      const user = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
-      const session = sessionStorage.getItem('vigorre_session_active');
+      currentUser = JSON.parse(localStorage.getItem('vigorre_recruiter') || localStorage.getItem('vigorre_current_user') || '{}');
       
-      if (!user.id || !session || user.role !== 'recruiter') {
-        window.location.href = '../login.html';
-        return;
+      if (!currentUser.id || currentUser.role !== 'recruiter') {
+        const sessao = sessionStorage.getItem('vigorre_session_active');
+        const userTemp = JSON.parse(localStorage.getItem('vigorre_current_user') || '{}');
+        if (userTemp.role === 'recruiter' && sessao) {
+          currentUser = userTemp;
+        } else {
+          window.location.href = '../login.html';
+          return;
+        }
       }
       
-      document.getElementById('userName').textContent = user.name || 'Recrutador';
+      document.getElementById('userName').textContent = currentUser.name || 'Recrutador';
+      loadCredits();
+      await carregarDados();
       
-      // Carregar Créditos
-      if (user.credits) {
-        const discEl = document.getElementById('credDisc');
-        const ieEl = document.getElementById('credIe');
-        const valEl = document.getElementById('credVal');
-        
-        discEl.textContent = user.credits.DISC || 0;
-        ieEl.textContent = user.credits.IE || 0;
-        valEl.textContent = user.credits.Valores || 0;
-        
-        if ((user.credits.DISC || 0) === 0) discEl.classList.add('zero');
-        if ((user.credits.IE || 0) === 0) ieEl.classList.add('zero');
-        if ((user.credits.Valores || 0) === 0) valEl.classList.add('zero');
-      }
-      
-      // Carregar dados reais do Supabase ou localStorage
-      await loadDashboardData();
+      // Fechar modal ao clicar fora
+      document.querySelectorAll('.modal').forEach(m => {
+        m.addEventListener('click', e => {
+          if (e.target === m) closeModal(m.id);
+        });
+      });
     });
     
-    async function loadDashboardData() {
-      try {
-        let participants = [];
-        let jobs = [];
-        let reports = [];
+    // ===== NAVEGAÇÃO ENTRE SEÇÕES =====
+    function showSection(sectionId, element) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById(sectionId).classList.add('active');
+      
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      if (element) element.classList.add('active');
+      
+      carregarDados();
+    }
+    
+    // ===== CARREGAR CRÉDITOS =====
+    function loadCredits() {
+      if (currentUser.credits) {
+        const d = document.getElementById('credDisc');
+        const i = document.getElementById('credIe');
+        const v = document.getElementById('credVal');
         
-        // Tentar Supabase primeiro
-        if (window.VigorreDB?.supabase) {
-          const { data: p } = await window.VigorreDB.supabase.from('participants').select('*');
-          const { data: j } = await window.VigorreDB.supabase.from('jobs').select('*');
-          participants = p || [];
-          jobs = j || [];
-        }
+        d.textContent = currentUser.credits.DISC || 0;
+        i.textContent = currentUser.credits.IE || 0;
+        v.textContent = currentUser.credits.Valores || 0;
         
-        // Fallback localStorage
-        if (participants.length === 0) {
-          participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-          jobs = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]');
-        }
-        
-        // Atualizar KPIs com dados REAIS
-        document.getElementById('kpiCandidates').textContent = participants.length;
-        document.getElementById('kpiTests').textContent = participants.reduce((acc, p) => acc + (p.completedTests?.length || 0), 0);
-        document.getElementById('kpiVacancies').textContent = jobs.length;
-        document.getElementById('kpiReports').textContent = participants.filter(p => p.testResults && Object.keys(p.testResults).length > 0).length;
-        
-        // Atualizar tabela de atividades
-        updateActivitiesTable(participants);
-        
-      } catch (error) {
-        console.error('Erro ao carregar dados:', error);
+        if ((currentUser.credits.DISC || 0) === 0) d.classList.add('zero');
+        if ((currentUser.credits.IE || 0) === 0) i.classList.add('zero');
+        if ((currentUser.credits.Valores || 0) === 0) v.classList.add('zero');
       }
     }
     
-    function updateActivitiesTable(participants) {
-      const tbody = document.getElementById('activitiesTable');
+    // ===== CARREGAR DADOS =====
+    async function carregarDados() {
+      let empresas = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+      let vagas = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]');
+      let participantes = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
       
-      if (participants.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="4">
-              <div class="empty-state">
-                <div class="empty-state-icon">📋</div>
-                <p>Nenhuma atividade recente</p>
-              </div>
-            </td>
-          </tr>
-        `;
-        return;
+      // Tentar Supabase
+      if (window.VigorreDB?.supabase) {
+        try {
+          const { data: emp } = await window.VigorreDB.supabase.from('companies').select('*');
+          const { data: vag } = await window.VigorreDB.supabase.from('jobs').select('*');
+          const { data: part } = await window.VigorreDB.supabase.from('participants').select('*');
+          if (emp) empresas = emp;
+          if (vag) vagas = vag;
+          if (part) participantes = part;
+        } catch(e) { console.warn('Erro Supabase:', e); }
       }
       
-      // Pegar últimas 5 atividades
-      const recentActivities = participants
-        .filter(p => p.completedTests && p.completedTests.length > 0)
-        .slice(0, 5)
-        .map(p => ({
-          name: p.name,
-          action: `Teste ${p.completedTests[p.completedTests.length - 1]} Concluído`,
-          status: 'Concluído',
-          date: new Date().toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
-        }));
+      // Atualizar KPIs
+      document.getElementById('kpiPart').textContent = participantes.length;
+      document.getElementById('kpiTest').textContent = participantes.reduce((a, p) => a + (p.completedTests?.length || 0), 0);
+      document.getElementById('kpiVag').textContent = vagas.length;
+      document.getElementById('kpiEmp').textContent = empresas.length;
       
-      if (recentActivities.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="4">
-              <div class="empty-state">
-                <div class="empty-state-icon">📋</div>
-                <p>Nenhuma atividade recente</p>
-              </div>
-            </td>
-          </tr>
-        `;
+      // Renderizar tabelas
+      renderEmpresas(empresas);
+      renderVagas(vagas, empresas);
+      renderParticipantes(participantes, empresas);
+      renderRelatorios(participantes);
+      renderDashboardAtividades(participantes);
+    }
+    
+    // ===== RENDERIZAR EMPRESAS =====
+    function renderEmpresas(empresas) {
+      const tb = document.getElementById('empresasTable');
+      if (!empresas || empresas.length === 0) {
+        tb.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">🏢</div><p>Nenhuma empresa cadastrada</p></div></td></tr>';
         return;
       }
-      
-      tbody.innerHTML = recentActivities.map(act => `
+      tb.innerHTML = empresas.map(e => `
         <tr>
-          <td><strong>${act.name}</strong></td>
-          <td>${act.action}</td>
-          <td><span class="badge badge-success">${act.status}</span></td>
-          <td>${act.date}</td>
+          <td><div class="user-cell"><div class="avatar">${e.name?.[0]?.toUpperCase() || '?'}</div><div><div class="user-name">${e.name}</div></div></div></td>
+          <td>${e.cnpj || '-'}</td>
+          <td>${e.resp || '-'}</td>
+          <td>${e.phone || '-'}</td>
+          <td><span class="badge badge-credits">${JSON.parse(localStorage.getItem('vigorre_jobs') || '[]').filter(j => j.compId === e.id).length} vagas</span></td>
+          <td style="text-align:right"><div class="action-row">
+            <button class="btn btn-sm btn-edit" onclick="editEmpresa('${e.id}')">✏️</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteEmpresa('${e.id}')">🗑️</button>
+          </div></td>
+        </tr>
+      `).join('');
+      
+      // Atualizar selects
+      updateEmpresaSelects(empresas);
+    }
+    
+    // ===== RENDERIZAR VAGAS =====
+    function renderVagas(vagas, empresas) {
+      const tb = document.getElementById('vagasTable');
+      if (!vagas || vagas.length === 0) {
+        tb.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon">💼</div><p>Nenhuma vaga cadastrada</p></div></td></tr>';
+        return;
+      }
+      tb.innerHTML = vagas.map(v => {
+        const emp = empresas?.find(e => e.id === v.compId);
+        const parts = JSON.parse(localStorage.getItem('vigorre_participants') || '[]').filter(p => p.jobId === v.id).length;
+        return `
+          <tr>
+            <td><strong>${v.name}</strong></td>
+            <td>${emp?.name || '-'}</td>
+            <td><span class="badge badge-success">${v.type || '-'}</span></td>
+            <td>${parts}</td>
+            <td style="text-align:right"><div class="action-row">
+              <button class="btn btn-sm btn-edit">✏️</button>
+              <button class="btn btn-sm btn-danger" onclick="deleteVaga('${v.id}')">🗑️</button>
+            </div></td>
+          </tr>
+        `;
+      }).join('');
+      
+      updateVagaSelects(vagas);
+    }
+    
+    // ===== RENDERIZAR PARTICIPANTES =====
+    function renderParticipantes(participantes, empresas) {
+      const tb = document.getElementById('participantesTable');
+      if (!participantes || participantes.length === 0) {
+        tb.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon">👤</div><p>Nenhum participante cadastrado</p></div></td></tr>';
+        return;
+      }
+      tb.innerHTML = participantes.map(p => {
+        const emp = empresas?.find(e => e.id === p.compId);
+        const tests = p.completedTests?.length || 0;
+        return `
+          <tr>
+            <td><div class="user-cell"><div class="avatar">${p.name?.[0]?.toUpperCase() || '?'}</div><div><div class="user-name">${p.name}</div><div class="user-email">${p.email}</div></div></div></td>
+            <td>${p.email}</td>
+            <td>${emp?.name || 'Autônomo'}</td>
+            <td><span class="badge ${tests > 0 ? 'badge-success' : 'badge-warning'}">${tests} testes</span></td>
+            <td style="text-align:right"><div class="action-row">
+              <button class="btn btn-sm btn-edit">✏️</button>
+              <button class="btn btn-sm btn-danger" onclick="deleteParticipante('${p.id}')">️</button>
+            </div></td>
+          </tr>
+        `;
+      }).join('');
+    }
+    
+    // ===== RENDERIZAR RELATÓRIOS =====
+    function renderRelatorios(participantes) {
+      const tb = document.getElementById('relatoriosTable');
+      const relatorios = [];
+      
+      participantes?.forEach(p => {
+        if (p.completedTests) {
+          p.completedTests.forEach(t => {
+            relatorios.push({
+              participant: p.name,
+              type: t,
+              date: p.created_at ? new Date(p.created_at).toLocaleDateString('pt-BR') : '-'
+            });
+          });
+        }
+      });
+      
+      if (relatorios.length === 0) {
+        tb.innerHTML = '<tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">📊</div><p>Nenhum relatório gerado</p></div></td></tr>';
+        return;
+      }
+      tb.innerHTML = relatorios.map(r => `
+        <tr>
+          <td><strong>${r.participant}</strong></td>
+          <td><span class="badge badge-success">${r.type}</span></td>
+          <td>${r.date}</td>
+          <td style="text-align:right"><button class="btn btn-sm btn-edit">📄</button></td>
         </tr>
       `).join('');
     }
     
+    // ===== RENDERIZAR ATIVIDADES DASHBOARD =====
+    function renderDashboardAtividades(participantes) {
+      const tb = document.getElementById('dashboardActivities');
+      const atividades = [];
+      
+      participantes?.forEach(p => {
+        if (p.completedTests?.length > 0) {
+          p.completedTests.forEach(t => {
+            atividades.push({ name: p.name, action: `${t} Concluído`, status: 'Concluído' });
+          });
+        }
+      });
+      
+      if (atividades.length === 0) {
+        tb.innerHTML = '<tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">📋</div><p>Nenhuma atividade</p></div></td></tr>';
+        return;
+      }
+      tb.innerHTML = atividades.slice(0, 5).map(a => `
+        <tr>
+          <td><strong>${a.name}</strong></td>
+          <td>${a.action}</td>
+          <td><span class="badge badge-success">${a.status}</span></td>
+          <td>Recente</td>
+        </tr>
+      `).join('');
+    }
+    
+    // ===== UPDATE SELECTS =====
+    function updateEmpresaSelects(empresas) {
+      ['vagEmpresa', 'partEmpresa'].forEach(id => {
+        const sel = document.getElementById(id);
+        if (!sel) return;
+        const currentVal = sel.value;
+        const options = empresas.map(e => `<option value="${e.id}">${e.name}</option>`).join('');
+        sel.innerHTML = id === 'partEmpresa' ? '<option value="">Autônomo</option>' + options : '<option value="">Selecione...</option>' + options;
+        sel.value = currentVal;
+      });
+    }
+    
+    function updateVagaSelects(vagas) {
+      const sel = document.getElementById('partVaga');
+      if (!sel) return;
+      const currentVal = sel.value;
+      sel.innerHTML = '<option value="">Nenhuma</option>' + vagas.map(v => `<option value="${v.id}">${v.name}</option>`).join('');
+      sel.value = currentVal;
+    }
+    
+    // ===== MODAIS =====
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+      const form = document.querySelector(`#${id} form`);
+      if (form) form.reset();
+    }
+    
+    // ===== SALVAR EMPRESA =====
+    async function saveEmpresa(e) {
+      e.preventDefault();
+      const id = document.getElementById('empId').value || 'emp_' + Date.now();
+      const data = {
+        id,
+        name: document.getElementById('empNome').value,
+        cnpj: document.getElementById('empCnpj').value,
+        resp: document.getElementById('empResp').value,
+        email: document.getElementById('empEmail').value,
+        phone: document.getElementById('empPhone').value
+      };
+      
+      let empresas = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+      const idx = empresas.findIndex(x => x.id === id);
+      if (idx > -1) empresas[idx] = data; else empresas.push(data);
+      localStorage.setItem('vigorre_companies', JSON.stringify(empresas));
+      
+      // Salvar no Supabase
+      if (window.VigorreDB?.supabase) {
+        await window.VigorreDB.supabase.from('companies').upsert([data]);
+      }
+      
+      closeModal('modalEmpresa');
+      showToast('✅ Empresa salva!');
+      carregarDados();
+    }
+    
+    function editEmpresa(id) {
+      const empresas = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
+      const e = empresas.find(x => x.id === id);
+      if (!e) return;
+      document.getElementById('empId').value = e.id;
+      document.getElementById('empNome').value = e.name;
+      document.getElementById('empCnpj').value = e.cnpj || '';
+      document.getElementById('empResp').value = e.resp || '';
+      document.getElementById('empEmail').value = e.email || '';
+      document.getElementById('empPhone').value = e.phone || '';
+      openModal('modalEmpresa');
+    }
+    
+    async function deleteEmpresa(id) {
+      if (!confirm('Excluir esta empresa?')) return;
+      let empresas = JSON.parse(localStorage.getItem('vigorre_companies') || '[]').filter(x => x.id !== id);
+      localStorage.setItem('vigorre_companies', JSON.stringify(empresas));
+      if (window.VigorreDB?.supabase) {
+        await window.VigorreDB.supabase.from('companies').delete().eq('id', id);
+      }
+      showToast('✅ Empresa excluída!');
+      carregarDados();
+    }
+    
+    // ===== SALVAR VAGA =====
+    async function saveVaga(e) {
+      e.preventDefault();
+      const id = 'vag_' + Date.now();
+      const data = {
+        id,
+        compId: document.getElementById('vagEmpresa').value,
+        name: document.getElementById('vagTitulo').value,
+        type: document.getElementById('vagTipo').value,
+        location: document.getElementById('vagLocal').value
+      };
+      
+      let vagas = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]');
+      vagas.push(data);
+      localStorage.setItem('vigorre_jobs', JSON.stringify(vagas));
+      
+      if (window.VigorreDB?.supabase) {
+        await window.VigorreDB.supabase.from('jobs').upsert([data]);
+      }
+      
+      closeModal('modalVaga');
+      showToast('✅ Vaga criada!');
+      carregarDados();
+    }
+    
+    async function deleteVaga(id) {
+      if (!confirm('Excluir esta vaga?')) return;
+      let vagas = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]').filter(x => x.id !== id);
+      localStorage.setItem('vigorre_jobs', JSON.stringify(vagas));
+      if (window.VigorreDB?.supabase) {
+        await window.VigorreDB.supabase.from('jobs').delete().eq('id', id);
+      }
+      showToast('✅ Vaga excluída!');
+      carregarDados();
+    }
+    
+    // ===== SALVAR PARTICIPANTE =====
+    async function saveParticipante(e) {
+      e.preventDefault();
+      const id = 'part_' + Date.now();
+      const data = {
+        id,
+        name: document.getElementById('partNome').value,
+        email: document.getElementById('partEmail').value,
+        phone: document.getElementById('partPhone').value,
+        compId: document.getElementById('partEmpresa').value || null,
+        jobId: document.getElementById('partVaga').value || null,
+        user: document.getElementById('partUser').value,
+        pass: document.getElementById('partPass').value,
+        completedTests: [],
+        testResults: {},
+        created_at: new Date().toISOString()
+      };
+      
+      let participantes = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+      participantes.push(data);
+      localStorage.setItem('vigorre_participants', JSON.stringify(participantes));
+      
+      if (window.VigorreDB?.supabase) {
+        await window.VigorreDB.supabase.from('participants').upsert([data]);
+      }
+      
+      closeModal('modalParticipante');
+      showToast('✅ Participante cadastrado!');
+      carregarDados();
+    }
+    
+    async function deleteParticipante(id) {
+      if (!confirm('Excluir este participante?')) return;
+      let participantes = JSON.parse(localStorage.getItem('vigorre_participants') || '[]').filter(x => x.id !== id);
+      localStorage.setItem('vigorre_participants', JSON.stringify(participantes));
+      if (window.VigorreDB?.supabase) {
+        await window.VigorreDB.supabase.from('participants').delete().eq('id', id);
+      }
+      showToast('✅ Participante excluído!');
+      carregarDados();
+    }
+    
+    // ===== TOAST =====
+    function showToast(msg, type='success') {
+      const t = document.createElement('div');
+      t.className = 'toast ' + (type === 'error' ? 'error' : '');
+      t.textContent = msg;
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 3000);
+    }
+    
+    // ===== LOGOUT =====
     function logout() {
       localStorage.removeItem('vigorre_current_user');
       localStorage.removeItem('vigorre_recruiter');
