@@ -3,17 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Vigorre One™ - Painel do Recrutador • People Analytics">
-  <title>Dashboard Recrutador | Vigorre One™</title>
+  <meta name="description" content="Vigorre One™ - Dashboard do Recrutador • People Analytics">
+  <title>Dashboard | Vigorre One™ • Recrutador</title>
   
   <!-- Fonts Premium -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- Ícones Modernos -->
+  <!-- Ícones -->
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -26,8 +23,7 @@
       --brand-emerald: #10B981;
       --brand-amber: #F59E0B;
       --bg-light: #f8fafc;
-      --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      --sidebar-width: 260px;
+      --sidebar-width: 280px;
     }
     
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
@@ -42,7 +38,7 @@
     /* SIDEBAR */
     .sidebar {
       width: var(--sidebar-width);
-      background: var(--brand-navy);
+      background: linear-gradient(180deg, var(--brand-navy) 0%, #1e293b 100%);
       color: white;
       position: fixed;
       height: 100vh;
@@ -60,23 +56,36 @@
       border-bottom: 1px solid rgba(255,255,255,0.1);
     }
     
-    .logo-icon {
-      width: 40px; height: 40px;
-      background: linear-gradient(135deg, var(--brand-cyan), var(--brand-emerald));
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 900; font-size: 1.25rem;
+    .logo-img {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      object-fit: contain;
+      background: white;
+      padding: 5px;
     }
     
     .logo-text h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 2px; }
     .logo-text p { font-size: 0.7rem; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px; }
     
-    .nav-menu { flex: 1; padding: 1.5rem 0; overflow-y: auto; }
+    .credits-box {
+      margin: 1.5rem;
+      padding: 1.25rem;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .credits-box h4 { font-size: 0.75rem; text-transform: uppercase; color: #94a3b8; margin-bottom: 0.75rem; letter-spacing: 0.5px; }
+    .credit-row { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.875rem; }
+    .credit-val { font-weight: 700; color: var(--brand-emerald); }
+    .credit-val.zero { color: var(--brand-amber); }
+    
+    .nav-menu { flex: 1; padding: 1rem 0; overflow-y: auto; }
     
     .nav-item {
       display: flex; align-items: center; gap: 12px;
       padding: 12px 24px;
-      color: #94a3b8; text-decoration: none; font-weight: 500;
+      color: rgba(255,255,255,0.7); text-decoration: none; font-weight: 500;
       transition: all 0.2s; cursor: pointer;
       border-left: 3px solid transparent;
     }
@@ -84,23 +93,11 @@
     .nav-item:hover { background: rgba(255,255,255,0.05); color: white; }
     
     .nav-item.active {
-      background: linear-gradient(90deg, rgba(6, 182, 212, 0.15), transparent);
+      background: linear-gradient(90deg, rgba(6, 182, 212, 0.2), transparent);
       color: white; border-left-color: var(--brand-cyan);
     }
     
     .nav-item i { font-size: 1.25rem; }
-    
-    .credits-box {
-      margin: 1rem 1.5rem;
-      padding: 1rem;
-      background: rgba(255,255,255,0.05);
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-    .credits-box h4 { font-size: 0.75rem; text-transform: uppercase; color: #94a3b8; margin-bottom: 0.5rem; letter-spacing: 0.5px; }
-    .credit-row { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 0.85rem; }
-    .credit-val { font-weight: 700; color: var(--brand-emerald); }
-    .credit-val.low { color: var(--brand-amber); }
     
     .user-profile {
       padding: 1.5rem;
@@ -130,12 +127,13 @@
     .header-top h1 { font-size: 1.75rem; color: var(--brand-navy); font-weight: 800; }
     
     .stats-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;
     }
     
     .stat-card {
       background: white; padding: 1.5rem; border-radius: 16px;
-      box-shadow: var(--card-shadow); border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e2e8f0;
       transition: transform 0.2s;
     }
     .stat-card:hover { transform: translateY(-4px); }
@@ -149,43 +147,33 @@
     .stat-value { font-size: 2rem; font-weight: 800; color: var(--brand-navy); }
     .stat-label { color: #64748b; font-size: 0.875rem; font-weight: 500; margin-top: 4px; }
     
-    /* Cores */
     .card-cyan .stat-icon { background: #ecfeff; color: var(--brand-cyan); }
     .card-emerald .stat-icon { background: #ecfdf5; color: var(--brand-emerald); }
     .card-amber .stat-icon { background: #fffbeb; color: var(--brand-amber); }
     .card-blue .stat-icon { background: #eff6ff; color: #3B82F6; }
 
-    /* CARDS & ALERTS */
+    /* TABLE */
     .card {
-      background: white; border-radius: 16px; box-shadow: var(--card-shadow);
+      background: white; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
       padding: 1.5rem; border: 1px solid #e2e8f0; margin-bottom: 1.5rem;
     }
     .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
     .card-header h3 { font-size: 1.1rem; font-weight: 700; color: var(--brand-navy); display: flex; align-items: center; gap: 8px; }
     
-    .alert-credit {
-      background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 1rem 1.5rem;
-      display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem;
-      color: #92400e;
-    }
-    .alert-credit i { font-size: 1.5rem; color: #f59e0b; }
-    
-    .btn-primary {
-      background: linear-gradient(135deg, var(--brand-cyan), var(--brand-emerald));
-      color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none;
-      font-weight: 600; font-size: 0.875rem; border: none; cursor: pointer; transition: 0.2s;
-    }
-    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
-    
     .table-container { width: 100%; overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; }
-    th { text-align: left; padding: 12px; border-bottom: 2px solid #e2e8f0; color: #64748b; font-size: 0.8rem; text-transform: uppercase; }
+    th { text-align: left; padding: 12px; border-bottom: 2px solid #e2e8f0; color: #64748b; font-size: 0.8rem; text-transform: uppercase; font-weight: 600; }
     td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
     
-    .badge { padding: 4px 8px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
-    .badge-active { background: #ecfdf5; color: #059669; }
-    .badge-pending { background: #fffbeb; color: #d97706; }
+    .badge { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+    .badge-success { background: #ecfdf5; color: #059669; }
+    .badge-warning { background: #fffbeb; color: #d97706; }
 
+    /* Empty State */
+    .empty-state {
+      text-align: center; padding: 3rem 2rem; color: #64748b;
+    }
+    .empty-state-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.4; }
   </style>
 </head>
 <body>
@@ -193,14 +181,14 @@
   <!-- Sidebar -->
   <aside class="sidebar">
     <div class="logo-box">
-      <div class="logo-icon">V</div>
+      <img src="../logo-vigorre.png" alt="Vigorre One™" class="logo-img" onerror="this.style.display='none'">
       <div class="logo-text">
         <h2>Vigorre One™</h2>
         <p>Área do Recrutador</p>
       </div>
     </div>
     
-    <!-- Resumo de Créditos na Sidebar -->
+    <!-- Resumo de Créditos -->
     <div class="credits-box">
       <h4>Meus Créditos</h4>
       <div class="credit-row"><span>DISC</span><span class="credit-val" id="credDisc">0</span></div>
@@ -210,10 +198,10 @@
     
     <nav class="nav-menu">
       <a href="dashboard.html" class="nav-item active"><i class="ph ph-squares-four"></i> Dashboard</a>
-      <a href="#" class="nav-item"><i class="ph ph-buildings"></i> Empresas</a>
-      <a href="#" class="nav-item"><i class="ph ph-briefcase"></i> Vagas</a>
-      <a href="#" class="nav-item"><i class="ph ph-users"></i> Participantes</a>
-      <a href="#" class="nav-item"><i class="ph ph-file-text"></i> Relatórios</a>
+      <a href="empresas/" class="nav-item"><i class="ph ph-buildings"></i> Empresas</a>
+      <a href="vagas/" class="nav-item"><i class="ph ph-briefcase"></i> Vagas</a>
+      <a href="participantes/" class="nav-item"><i class="ph ph-users"></i> Participantes</a>
+      <a href="relatorios/" class="nav-item"><i class="ph ph-file-text"></i> Relatórios</a>
     </nav>
     
     <div class="user-profile">
@@ -232,46 +220,36 @@
         <h1>Dashboard do Recrutador</h1>
         <p style="color:#64748b">Gerencie seus candidatos, vagas e créditos de testes.</p>
       </div>
-      <button class="btn-primary"><i class="ph ph-plus"></i> Novo Participante</button>
     </header>
-
-    <!-- Alerta de Crédito Baixo (Exemplo) -->
-    <div class="alert-credit" id="creditAlert" style="display:none;">
-      <i class="ph ph-warning-circle"></i>
-      <div>
-        <strong>Atenção:</strong> Seus créditos de DISC estão acabando.
-        <a href="#" style="color:inherit; font-weight:700; text-decoration:underline;">Adquirir mais</a>
-      </div>
-    </div>
 
     <!-- KPI Cards -->
     <section class="stats-grid">
       <div class="stat-card card-blue">
         <div class="stat-icon"><i class="ph ph-users"></i></div>
-        <div class="stat-value" id="kpiCandidates">12</div>
+        <div class="stat-value" id="kpiCandidates">0</div>
         <div class="stat-label">Participantes Ativos</div>
       </div>
       
       <div class="stat-card card-emerald">
         <div class="stat-icon"><i class="ph ph-check-circle"></i></div>
-        <div class="stat-value" id="kpiTests">45</div>
+        <div class="stat-value" id="kpiTests">0</div>
         <div class="stat-label">Testes Concluídos</div>
       </div>
       
       <div class="stat-card card-amber">
         <div class="stat-icon"><i class="ph ph-briefcase"></i></div>
-        <div class="stat-value" id="kpiVacancies">5</div>
+        <div class="stat-value" id="kpiVacancies">0</div>
         <div class="stat-label">Vagas Abertas</div>
       </div>
       
       <div class="stat-card card-cyan">
         <div class="stat-icon"><i class="ph ph-file-text"></i></div>
-        <div class="stat-value" id="kpiReports">28</div>
+        <div class="stat-value" id="kpiReports">0</div>
         <div class="stat-label">Relatórios Gerados</div>
       </div>
     </section>
 
-    <!-- Tabelas e Gráficos -->
+    <!-- Atividades Recentes -->
     <div class="card">
       <div class="card-header">
         <h3><i class="ph ph-clock"></i> Atividades Recentes</h3>
@@ -286,24 +264,14 @@
               <th>Data</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="activitiesTable">
             <tr>
-              <td><strong>Maria Antônia</strong></td>
-              <td>DISC Concluído</td>
-              <td><span class="badge badge-active">Concluído</span></td>
-              <td>Hoje, 10:30</td>
-            </tr>
-            <tr>
-              <td><strong>João Silva</strong></td>
-              <td>Convite Enviado</td>
-              <td><span class="badge badge-pending">Pendente</span></td>
-              <td>Ontem, 14:15</td>
-            </tr>
-            <tr>
-              <td><strong>Ana Souza</strong></td>
-              <td>Relatório Gerado</td>
-              <td><span class="badge badge-active">Concluído</span></td>
-              <td>22/05, 09:00</td>
+              <td colspan="4">
+                <div class="empty-state">
+                  <div class="empty-state-icon">📋</div>
+                  <p>Nenhuma atividade recente</p>
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -321,31 +289,122 @@
       const session = sessionStorage.getItem('vigorre_session_active');
       
       if (!user.id || !session || user.role !== 'recruiter') {
-        // Se não for recrutador, manda pro login
-        window.location.href = 'login.html';
+        window.location.href = '../login.html';
         return;
       }
       
       document.getElementById('userName').textContent = user.name || 'Recrutador';
       
-      // Carregar Créditos do Usuário
+      // Carregar Créditos
       if (user.credits) {
-        document.getElementById('credDisc').textContent = user.credits.DISC || 0;
-        document.getElementById('credIe').textContent = user.credits.IE || 0;
-        document.getElementById('credVal').textContent = user.credits.Valores || 0;
+        const discEl = document.getElementById('credDisc');
+        const ieEl = document.getElementById('credIe');
+        const valEl = document.getElementById('credVal');
         
-        // Alerta se crédito baixo
-        if ((user.credits.DISC || 0) < 5) {
-          document.getElementById('creditAlert').style.display = 'flex';
-        }
+        discEl.textContent = user.credits.DISC || 0;
+        ieEl.textContent = user.credits.IE || 0;
+        valEl.textContent = user.credits.Valores || 0;
+        
+        if ((user.credits.DISC || 0) === 0) discEl.classList.add('zero');
+        if ((user.credits.IE || 0) === 0) ieEl.classList.add('zero');
+        if ((user.credits.Valores || 0) === 0) valEl.classList.add('zero');
       }
+      
+      // Carregar dados reais do Supabase ou localStorage
+      await loadDashboardData();
     });
+    
+    async function loadDashboardData() {
+      try {
+        let participants = [];
+        let jobs = [];
+        let reports = [];
+        
+        // Tentar Supabase primeiro
+        if (window.VigorreDB?.supabase) {
+          const { data: p } = await window.VigorreDB.supabase.from('participants').select('*');
+          const { data: j } = await window.VigorreDB.supabase.from('jobs').select('*');
+          participants = p || [];
+          jobs = j || [];
+        }
+        
+        // Fallback localStorage
+        if (participants.length === 0) {
+          participants = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
+          jobs = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]');
+        }
+        
+        // Atualizar KPIs com dados REAIS
+        document.getElementById('kpiCandidates').textContent = participants.length;
+        document.getElementById('kpiTests').textContent = participants.reduce((acc, p) => acc + (p.completedTests?.length || 0), 0);
+        document.getElementById('kpiVacancies').textContent = jobs.length;
+        document.getElementById('kpiReports').textContent = participants.filter(p => p.testResults && Object.keys(p.testResults).length > 0).length;
+        
+        // Atualizar tabela de atividades
+        updateActivitiesTable(participants);
+        
+      } catch (error) {
+        console.error('Erro ao carregar dados:', error);
+      }
+    }
+    
+    function updateActivitiesTable(participants) {
+      const tbody = document.getElementById('activitiesTable');
+      
+      if (participants.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="4">
+              <div class="empty-state">
+                <div class="empty-state-icon">📋</div>
+                <p>Nenhuma atividade recente</p>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+      
+      // Pegar últimas 5 atividades
+      const recentActivities = participants
+        .filter(p => p.completedTests && p.completedTests.length > 0)
+        .slice(0, 5)
+        .map(p => ({
+          name: p.name,
+          action: `Teste ${p.completedTests[p.completedTests.length - 1]} Concluído`,
+          status: 'Concluído',
+          date: new Date().toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
+        }));
+      
+      if (recentActivities.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="4">
+              <div class="empty-state">
+                <div class="empty-state-icon">📋</div>
+                <p>Nenhuma atividade recente</p>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+      
+      tbody.innerHTML = recentActivities.map(act => `
+        <tr>
+          <td><strong>${act.name}</strong></td>
+          <td>${act.action}</td>
+          <td><span class="badge badge-success">${act.status}</span></td>
+          <td>${act.date}</td>
+        </tr>
+      `).join('');
+    }
     
     function logout() {
       localStorage.removeItem('vigorre_current_user');
-      localStorage.removeItem('vigorre_recruiter'); // Limpa chave específica
+      localStorage.removeItem('vigorre_recruiter');
       sessionStorage.clear();
-      window.location.href = 'login.html';
+      window.location.href = '../login.html';
     }
   </script>
 </body>
