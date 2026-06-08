@@ -3,137 +3,293 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Vigorre One™ - Painel Administrativo Enterprise de People Analytics">
-  <meta name="robots" content="noindex, nofollow">
-  <title>Dashboard | Vigorre One™ • People Analytics Enterprise</title>
+  <meta name="description" content="Vigorre One™ - Painel Administrativo Enterprise">
+  <title>Dashboard | Vigorre One™ • Admin</title>
   
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
-  <link rel="stylesheet" href="assets/css/globals.css">
   
   <style>
     :root {
       --sidebar-width: 280px;
-      --header-height: 76px;
+      --brand-navy: #0f172a;
+      --brand-blue: #1D4ED8;
+      --brand-purple: #7C3AED;
+      --brand-cyan: #06B6D4;
+      --brand-emerald: #10B981;
+      --brand-amber: #F59E0B;
+      --brand-rose: #F43F5E;
     }
     
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     
     body.admin-page { 
       margin: 0; padding: 0; min-height: 100vh;
-      background: radial-gradient(ellipse at top left, rgba(59, 130, 246, 0.04) 0%, transparent 50%),
-                  radial-gradient(ellipse at bottom right, rgba(124, 58, 237, 0.04) 0%, transparent 50%),
-                  linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #f0f9ff 0%, #f5f3ff 50%, #fef3c7 100%);
+      background-attachment: fixed;
+      font-family: 'Inter', sans-serif;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
     
+    /* SIDEBAR */
     .sidebar { 
       position: fixed; left: 0; top: 0; height: 100vh; width: var(--sidebar-width); 
-      background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%); color: white; 
-      padding: 1.75rem 1.25rem; display: flex; flex-direction: column; z-index: 100;
-      box-shadow: 4px 0 24px rgba(15, 23, 42, 0.08); border-right: 1px solid rgba(255, 255, 255, 0.05);
+      background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%); 
+      color: white; padding: 1.75rem 1.25rem; 
+      display: flex; flex-direction: column; z-index: 100;
+      box-shadow: 4px 0 24px rgba(15, 23, 42, 0.15);
     }
-    .sidebar .logo { display: flex; align-items: center; gap: 14px; margin-bottom: 2.5rem; padding-bottom: 1.75rem; border-bottom: 1px solid rgba(255,255,255,0.08); cursor: pointer; }
-    .logo-img { width: 48px; height: 48px; border-radius: 14px; object-fit: contain; background: white; padding: 5px; box-shadow: 0 10px 25px rgba(59, 130, 246, 0.35); }
-    .logo-text h2 { font-size: 1.25rem; font-weight: 800; margin: 0; background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .logo-text p { font-size: 0.6875rem; opacity: 0.6; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin: 2px 0 0 0; }
+    
+    .logo { 
+      display: flex; align-items: center; gap: 14px; 
+      margin-bottom: 2.5rem; padding-bottom: 1.75rem; 
+      border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer;
+    }
+    
+    .logo-premium {
+      width: 56px; height: 56px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #06B6D4 0%, #7C3AED 50%, #F59E0B 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.75rem; font-weight: 700; color: white;
+      box-shadow: 0 8px 24px rgba(6,182,212,0.4);
+      position: relative; overflow: hidden;
+    }
+    
+    .logo-premium::before {
+      content: ''; position: absolute;
+      top: -50%; left: -50%; width: 200%; height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+      transform: rotate(45deg);
+      animation: shine 3s infinite;
+    }
+    @keyframes shine {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+    
+    .logo-text h2 { 
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem; font-weight: 700; margin: 0;
+      background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .logo-text p { 
+      font-size: 0.6875rem; opacity: 0.6; font-weight: 600; 
+      letter-spacing: 0.12em; text-transform: uppercase; margin: 2px 0 0 0;
+    }
+    
     .nav-menu { list-style: none; flex: 1; padding: 0; margin: 0; }
     .nav-menu li { margin-bottom: 0.25rem; }
-    .nav-menu a { display: flex; align-items: center; gap: 14px; padding: 13px 16px; color: rgba(255,255,255,0.65); text-decoration: none; border-radius: 12px; transition: all 0.25s; cursor: pointer; font-weight: 500; font-size: 0.9375rem; position: relative; }
-    .nav-menu a:hover { color: white; background: rgba(255,255,255,0.06); transform: translateX(3px); }
-    .nav-menu a.active { background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(124, 58, 237, 0.15) 100%); color: white; font-weight: 600; }
-    .nav-menu a.active::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 3px; height: 60%; background: linear-gradient(180deg, #3b82f6, #7c3aed); border-radius: 0 4px 4px 0; }
+    .nav-menu a { 
+      display: flex; align-items: center; gap: 14px; 
+      padding: 13px 16px; color: rgba(255,255,255,0.65); 
+      text-decoration: none; border-radius: 12px; 
+      transition: all 0.25s; cursor: pointer; 
+      font-weight: 500; font-size: 0.9375rem; position: relative;
+      margin: 4px 8px;
+    }
+    .nav-menu a:hover { 
+      color: white; background: rgba(255,255,255,0.08); 
+      transform: translateX(3px);
+    }
+    .nav-menu a.active { 
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(124, 58, 237, 0.15)); 
+      color: white; font-weight: 600;
+      box-shadow: 0 4px 12px rgba(59,130,246,0.2);
+    }
+    .nav-menu a.active::before { 
+      content: ''; position: absolute; left: 0; top: 50%; 
+      transform: translateY(-50%); width: 3px; height: 60%; 
+      background: linear-gradient(180deg, #3b82f6, #7c3aed); 
+      border-radius: 0 4px 4px 0;
+    }
     .nav-menu a.danger { color: #fca5a5; margin-top: auto; }
     .nav-menu a.danger:hover { background: rgba(239, 68, 68, 0.15); color: #fecaca; }
     .nav-icon { font-size: 1.125rem; width: 22px; display: inline-flex; justify-content: center; }
-    .user-info { margin-top: 1rem; padding: 1rem 1.125rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; }
+    
+    .user-info { 
+      margin-top: 1rem; padding: 1rem 1.125rem; 
+      background: rgba(255,255,255,0.05); 
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+    }
     .user-info .user-name-info { font-weight: 700; color: white; margin-bottom: 2px; font-size: 0.875rem; }
     .user-info .user-role-info { opacity: 0.6; font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; }
     
+    /* MAIN */
     .main { margin-left: var(--sidebar-width); padding: 2rem 2.5rem; min-height: 100vh; position: relative; z-index: 1; }
     
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); padding: 1.125rem 1.75rem; border-radius: 16px; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.04); border: 1px solid rgba(226, 232, 240, 0.8); }
+    /* HEADER */
+    .header { 
+      display: flex; justify-content: space-between; align-items: center; 
+      margin-bottom: 2rem; background: rgba(255, 255, 255, 0.9); 
+      backdrop-filter: blur(20px); padding: 1.125rem 1.75rem; 
+      border-radius: 20px; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06); 
+      border: 1px solid rgba(226, 232, 240, 0.6);
+    }
     .header-left { display: flex; align-items: center; gap: 1rem; }
-    .header h1 { font-size: 1.375rem; color: #0f172a; font-weight: 800; margin: 0; }
+    .header h1 { 
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem; color: #0f172a; font-weight: 700; margin: 0;
+      background: linear-gradient(135deg, #0f172a 0%, #3b82f6 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
     .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 0.8125rem; color: #64748b; font-weight: 500; }
     .breadcrumb-sep { opacity: 0.4; }
     .header-actions { display: flex; align-items: center; gap: 0.875rem; }
-    .supabase-status { display: flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 100px; font-size: 0.8125rem; font-weight: 600; background: white; border: 1px solid #e2e8f0; }
+    .supabase-status { 
+      display: flex; align-items: center; gap: 10px; 
+      padding: 8px 14px; border-radius: 100px; 
+      font-size: 0.8125rem; font-weight: 600; 
+      background: white; border: 1px solid #e2e8f0;
+    }
     .status-dot { width: 8px; height: 8px; border-radius: 50%; }
     .status-dot.connected { background: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2); }
-    .status-dot.notloaded { background: #94a3b8; }
-    .btn-icon { width: 40px; height: 40px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; color: #64748b; font-size: 1.125rem; }
-    .btn-icon:hover { border-color: #3b82f6; color: #3b82f6; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15); }
+    .btn-icon { 
+      width: 40px; height: 40px; border-radius: 12px; 
+      border: 1px solid #e2e8f0; background: white; 
+      cursor: pointer; display: flex; align-items: center; justify-content: center; 
+      transition: all 0.2s; color: #64748b; font-size: 1.125rem;
+    }
+    .btn-icon:hover { border-color: #3b82f6; color: #3b82f6; transform: translateY(-1px); }
     
+    /* SECTIONS */
     main section { display: none !important; }
-    main section.active { display: block !important; animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+    main section.active { display: block !important; animation: fadeInUp 0.4s ease-out; }
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
     
+    /* STATS */
     .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 1.75rem; }
-    .stat-card { background: white; border-radius: 16px; padding: 1.5rem; border: 1px solid #e2e8f0; position: relative; overflow: hidden; transition: all 0.3s; cursor: pointer; }
-    .stat-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08); }
+    .stat-card { 
+      background: rgba(255,255,255,0.95); border-radius: 20px; 
+      padding: 1.5rem; border: 1px solid rgba(226, 232, 240, 0.6); 
+      position: relative; overflow: hidden; transition: all 0.3s; cursor: pointer;
+      backdrop-filter: blur(10px);
+    }
+    .stat-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, var(--accent-from), var(--accent-to));
+    }
+    .stat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(15, 23, 42, 0.1); }
     .stat-card[data-color="blue"] { --accent-from: #3b82f6; --accent-to: #6366f1; }
     .stat-card[data-color="purple"] { --accent-from: #8b5cf6; --accent-to: #ec4899; }
     .stat-card[data-color="emerald"] { --accent-from: #10b981; --accent-to: #14b8a6; }
     .stat-card[data-color="amber"] { --accent-from: #f59e0b; --accent-to: #ef4444; }
     .stat-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
-    .stat-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; background: linear-gradient(135deg, var(--accent-from), var(--accent-to)); color: white; }
+    .stat-icon { 
+      width: 48px; height: 48px; border-radius: 14px; 
+      display: flex; align-items: center; justify-content: center; 
+      font-size: 1.25rem; 
+      background: linear-gradient(135deg, var(--accent-from), var(--accent-to)); 
+      color: white; box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
     .stat-trend-badge { font-size: 0.6875rem; font-weight: 700; padding: 4px 10px; border-radius: 100px; background: rgba(16, 185, 129, 0.1); color: #059669; }
     .stat-value { font-size: 2.25rem; font-weight: 800; color: #0f172a; line-height: 1; margin-bottom: 0.5rem; }
     .stat-label { font-size: 0.875rem; color: #64748b; font-weight: 600; }
     .stat-meta { font-size: 0.75rem; color: #94a3b8; margin-top: 0.5rem; }
     
-    .card { background: white; border-radius: 18px; padding: 1.75rem; margin-bottom: 1.5rem; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.03); border: 1px solid #e2e8f0; }
-    .card h3 { margin: 0 0 1.25rem 0; color: #0f172a; display: flex; justify-content: space-between; align-items: center; font-size: 1.0625rem; font-weight: 700; }
-    .welcome-card { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; position: relative; overflow: hidden; }
-    .welcome-card::before { content: ''; position: absolute; top: -50%; right: -10%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%); border-radius: 50%; }
+    /* CARDS */
+    .card { 
+      background: rgba(255,255,255,0.95); border-radius: 24px; 
+      padding: 2rem; margin-bottom: 1.5rem; 
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06); 
+      border: 1px solid rgba(226, 232, 240, 0.6);
+      backdrop-filter: blur(10px);
+    }
+    .card h3 { 
+      margin: 0 0 1.25rem 0; color: #0f172a; 
+      display: flex; justify-content: space-between; align-items: center; 
+      font-size: 1.0625rem; font-weight: 700;
+      font-family: 'Playfair Display', serif;
+    }
+    .welcome-card { 
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
+      color: white; position: relative; overflow: hidden;
+    }
+    .welcome-card::before { 
+      content: ''; position: absolute; top: -50%; right: -10%; 
+      width: 400px; height: 400px; 
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%); 
+      border-radius: 50%;
+    }
     .welcome-card h3 { color: white; }
     .welcome-card p { color: rgba(255, 255, 255, 0.7); line-height: 1.7; max-width: 600px; }
     
-    .table-wrapper { overflow-x: auto; border-radius: 12px; border: 1px solid #e2e8f0; }
+    /* TABLE */
+    .table-wrapper { overflow-x: auto; border-radius: 16px; border: 1px solid rgba(226, 232, 240, 0.6); }
     table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9rem; min-width: 1100px; }
-    thead { background: #f8fafc; }
-    th { padding: 0.875rem 1.25rem; text-align: left; font-weight: 700; color: #64748b; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #e2e8f0; white-space: nowrap; }
-    td { padding: 1rem 1.25rem; border-bottom: 1px solid #f1f5f9; color: #334155; vertical-align: middle; }
-    tbody tr:hover { background: #f8fafc; }
+    thead { background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%); }
+    th { 
+      padding: 0.875rem 1.25rem; text-align: left; 
+      font-weight: 700; color: #64748b; font-size: 0.75rem; 
+      text-transform: uppercase; letter-spacing: 0.05em; 
+      border-bottom: 1px solid #e2e8f0; white-space: nowrap;
+    }
+    th:first-child { border-top-left-radius: 16px; }
+    th:last-child { border-top-right-radius: 16px; }
+    td { padding: 1rem 1.25rem; border-bottom: 1px solid #f1f5f9; color: #334155; vertical-align: middle; background: white; }
+    tbody tr:hover td { background: #f8fafc; }
+    tbody tr:last-child td:first-child { border-bottom-left-radius: 16px; }
+    tbody tr:last-child td:last-child { border-bottom-right-radius: 16px; }
     
-    .avatar { width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, #3b82f6, #7c3aed); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9375rem; }
+    .avatar { 
+      width: 40px; height: 40px; border-radius: 12px; 
+      background: linear-gradient(135deg, #3b82f6, #7c3aed); 
+      color: white; display: flex; align-items: center; justify-content: center; 
+      font-weight: 700; font-size: 0.9375rem;
+      box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+    }
     .user-cell { display: flex; align-items: center; gap: 12px; }
     .user-info-cell { display: flex; flex-direction: column; }
     .user-name { font-weight: 600; color: #0f172a; font-size: 0.9375rem; }
     .user-email { font-size: 0.8125rem; color: #64748b; }
     
-    .badge-pill { padding: 5px 12px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; border: 1px solid; }
+    /* BADGES */
+    .badge-pill { 
+      padding: 5px 12px; border-radius: 100px; 
+      font-size: 0.75rem; font-weight: 600; 
+      display: inline-flex; align-items: center; gap: 5px; 
+      border: 1px solid;
+    }
     .badge-pending { background: #f1f5f9; color: #64748b; border-color: #e2e8f0; }
     .badge-completed { background: #dcfce7; color: #166534; border-color: #bbf7d0; }
     .badge-credits { background: #fef3c7; color: #92400e; border-color: #fcd34d; }
     
-    .test-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; margin: 2px 0; }
+    .test-badge { 
+      display: inline-flex; align-items: center; gap: 4px; 
+      padding: 4px 10px; border-radius: 8px; 
+      font-size: 0.75rem; font-weight: 600; margin: 2px 0;
+    }
     .test-badge.disc { background: #fef2f2; color: #dc2626; }
     .test-badge.ie { background: #eff6ff; color: #2563eb; }
     .test-badge.valores { background: #fffbeb; color: #d97706; }
     .test-badge.done { opacity: 1; }
     .test-badge.pending { opacity: 0.6; }
     
+    /* BUTTONS */
     .action-group { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
     .action-row { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
     
-    .btn-report-sm { padding: 4px 10px; border-radius: 6px; border: 1px solid #e2e8f0; background: white; font-size: 0.7rem; font-weight: 500; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; }
+    .btn-report-sm { 
+      padding: 4px 10px; border-radius: 6px; 
+      border: 1px solid #e2e8f0; background: white; 
+      font-size: 0.7rem; font-weight: 500; cursor: pointer; 
+      transition: all 0.2s; display: inline-flex; align-items: center; gap: 3px;
+    }
     .btn-report-sm:hover { border-color: #3b82f6; color: #3b82f6; transform: translateX(2px); }
     .btn-report-sm.disc { color: #dc2626; border-color: #fecaca; }
     .btn-report-sm.ie { color: #2563eb; border-color: #bfdbfe; }
     .btn-report-sm.valores { color: #d97706; border-color: #fde68a; }
-    .btn-report-sm:hover { background: currentColor; color: white; }
-    .btn-credits { color: #d97706; border-color: #fde68a; }
-    .btn-credits:hover { background: #d97706; color: white; }
     
-    .action-btn { padding: 6px 12px; border-radius: 8px; border: 1px solid #e2e8f0; background: white; font-size: 0.75rem; font-weight: 500; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 4px; }
+    .action-btn { 
+      padding: 6px 12px; border-radius: 8px; 
+      border: 1px solid #e2e8f0; background: white; 
+      font-size: 0.75rem; font-weight: 500; cursor: pointer; 
+      transition: all 0.2s; display: inline-flex; align-items: center; gap: 4px;
+    }
     .action-btn:hover { border-color: #3b82f6; color: #3b82f6; transform: translateX(2px); }
     .action-btn.edit { color: #6366f1; border-color: #c7d2fe; }
     .action-btn.edit:hover { background: #6366f1; color: white; }
@@ -144,52 +300,93 @@
     .action-btn.test { color: #10b981; border-color: #bbf7d0; }
     .action-btn.test:hover { background: #10b981; color: white; }
     
-    .btn { padding: 10px 20px; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; font-family: inherit; }
-    .btn-primary { background: linear-gradient(135deg, #3b82f6, #6366f1); color: white; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25); }
+    .btn { 
+      padding: 10px 20px; border-radius: 10px; border: none; 
+      font-weight: 600; cursor: pointer; font-size: 0.9rem; 
+      transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; 
+      font-family: inherit;
+    }
+    .btn-primary { 
+      background: linear-gradient(135deg, #3b82f6, #6366f1); 
+      color: white; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+    }
     .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(59, 130, 246, 0.35); }
     .btn-danger { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
     .btn-danger:hover { background: #dc2626; color: white; }
-    .btn-sm { padding: 6px 12px; font-size: 0.8125rem; }
     
+    /* SEARCH */
     .search-bar { display: flex; gap: 0.875rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
     .search-input { flex: 1; min-width: 250px; position: relative; }
-    .search-input input { width: 100%; padding: 11px 16px 11px 42px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 0.9375rem; font-family: inherit; background: #f8fafc; }
+    .search-input input { 
+      width: 100%; padding: 11px 16px 11px 42px; 
+      border: 1px solid #e2e8f0; border-radius: 10px; 
+      font-size: 0.9375rem; font-family: inherit; background: #f8fafc;
+    }
     .search-input input:focus { outline: none; border-color: #3b82f6; background: white; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
     .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; pointer-events: none; }
     
+    /* FORMS */
     .form-group { margin-bottom: 1.125rem; }
     .form-group label { display: block; font-weight: 600; color: #334155; font-size: 0.875rem; margin-bottom: 6px; }
-    .form-group input, .form-group select { width: 100%; padding: 11px 14px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 0.9375rem; font-family: inherit; transition: all 0.2s; }
-    .form-group input:focus, .form-group select:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+    .form-group input, .form-group select, .form-group textarea { 
+      width: 100%; padding: 11px 14px; border: 2px solid #e2e8f0; 
+      border-radius: 10px; font-size: 0.9375rem; font-family: inherit; transition: all 0.2s;
+    }
+    .form-group textarea { resize: vertical; min-height: 80px; font-family: 'Inter', sans-serif; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { 
+      outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     .checkbox-group { display: flex; flex-direction: column; gap: 8px; }
     .checkbox-group label { display: flex; align-items: center; gap: 8px; font-weight: 500; color: #334155; cursor: pointer; }
-    .checkbox-group input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
+    .checkbox-group input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: #3b82f6; }
     
+    /* PASSWORD TOGGLE */
+    .password-wrapper { position: relative; }
+    .password-toggle {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: #94a3b8; cursor: pointer;
+      font-size: 1.25rem; padding: 4px; transition: all 0.2s;
+    }
+    .password-toggle:hover { color: #3b82f6; }
+    
+    /* EMPTY STATE */
     .empty-state { text-align: center; padding: 3rem 2rem; color: #64748b; }
     .empty-state-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.4; }
     .empty-state h4 { font-size: 1.0625rem; font-weight: 600; color: #334155; margin: 0 0 0.5rem 0; }
     
+    /* MODAL */
     .modal { display: none; position: fixed; inset: 0; z-index: 9999; align-items: center; justify-content: center; }
     .modal.active { display: flex; }
     .modal::before { content: ''; position: absolute; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px); }
-    .modal-content { background: white; border-radius: 20px; padding: 2rem; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25); animation: modalIn 0.3s; }
+    .modal-content { 
+      background: white; border-radius: 24px; padding: 2rem; 
+      max-width: 700px; width: 90%; max-height: 90vh; overflow-y: auto; 
+      position: relative; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25); 
+      animation: modalIn 0.3s;
+    }
     @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #f1f5f9; }
-    .modal-header h3 { margin: 0; font-size: 1.125rem; font-weight: 700; color: #0f172a; }
-    .modal-close { background: #f1f5f9; border: none; width: 34px; height: 34px; border-radius: 10px; font-size: 1.25rem; cursor: pointer; color: #64748b; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
-    .modal-close:hover { background: #ef4444; color: white; }
+    .modal-header h3 { margin: 0; font-size: 1.25rem; font-weight: 700; color: #0f172a; font-family: 'Playfair Display', serif; }
+    .modal-close { 
+      background: #f1f5f9; border: none; width: 34px; height: 34px; 
+      border-radius: 10px; font-size: 1.25rem; cursor: pointer; 
+      color: #64748b; display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+    }
+    .modal-close:hover { background: #ef4444; color: white; transform: rotate(90deg); }
     
     .modal-section { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #f1f5f9; }
     .modal-section:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
     .modal-section h4 { margin: 0 0 1rem 0; font-size: 0.9375rem; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 6px; }
     
+    /* UPGRADE */
     .upgrade-info { background: linear-gradient(135deg, #f0f9ff, #fffbeb); border: 1px solid #bae6fd; border-radius: 12px; padding: 1rem; margin: 1rem 0; font-size: 0.8125rem; color: #334155; }
     .upgrade-info h4 { margin: 0 0 0.5rem 0; color: #0f172a; font-weight: 700; }
     .upgrade-contact { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #e2e8f0; font-weight: 600; }
     .upgrade-contact a { color: #3b82f6; text-decoration: none; }
     .upgrade-contact a:hover { text-decoration: underline; }
     
+    /* LOG PANEL */
     .log-panel { position: fixed; bottom: 1.25rem; right: 1.25rem; width: 340px; max-height: 280px; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #10b981; border-radius: 14px; font-family: monospace; font-size: 0.7rem; z-index: 9998; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); overflow: hidden; display: flex; flex-direction: column; }
     .log-panel.minimized { max-height: 48px; width: 180px; }
     .log-panel.hidden { transform: translateY(calc(100% + 2rem)); opacity: 0; pointer-events: none; }
@@ -213,10 +410,12 @@
     .log-toggle-btn.visible { display: flex; }
     .log-toggle-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(0, 0, 0, 0.3); }
     
+    /* TOAST */
     .toast { position: fixed; top: 24px; right: 24px; background: white; padding: 14px 20px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); z-index: 10001; border-left: 4px solid #10b981; font-weight: 500; animation: toastIn 0.3s ease; }
     .toast.error { border-left-color: #f43f5e; }
     @keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
     
+    /* RESPONSIVE */
     @media (max-width: 1200px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 1024px) { :root { --sidebar-width: 76px; } .sidebar { padding: 1.25rem 0.75rem; } .logo-text, .nav-menu a span:not(.nav-icon), .user-info { display: none; } .nav-menu a { justify-content: center; padding: 14px; } .main { padding: 1.5rem; } }
     @media (max-width: 768px) { .stats-grid { grid-template-columns: 1fr; } .header { flex-direction: column; gap: 1rem; align-items: flex-start; } .log-panel { width: calc(100% - 2rem); right: 1rem; left: 1rem; } }
@@ -226,11 +425,11 @@
   
   <aside class="sidebar">
     <div class="logo" onclick="window.location.href='index.html'">
-      <img src="logo-vigorre.png" alt="Vigorre" class="logo-img" onerror="this.outerHTML='<div class=\'logo-img\' style=\'display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#3b82f6,#7c3aed);color:white;font-weight:900;font-size:1.5rem\'>V</div>'">
+      <div class="logo-premium">V</div>
       <div class="logo-text"><h2>Vigorre One™</h2><p>Enterprise Suite</p></div>
     </div>
     <ul class="nav-menu">
-      <li><a href="#" onclick="showSection('dashboard', event); return false;" class="active"><span class="nav-icon">📊</span><span>Dashboard</span></a></li>
+      <li><a href="#" onclick="showSection('dashboard', event); return false;" class="active"><span class="nav-icon"></span><span>Dashboard</span></a></li>
       <li><a href="#" onclick="showSection('staff', event); return false;"><span class="nav-icon">👥</span><span>Staff Vigorre™</span></a></li>
       <li><a href="#" onclick="showSection('companies', event); return false;"><span class="nav-icon">🏢</span><span>Empresas</span></a></li>
       <li><a href="#" onclick="showSection('participants', event); return false;"><span class="nav-icon">👤</span><span>Participantes</span></a></li>
@@ -263,7 +462,7 @@
     <section id="dashboard" class="active">
       <div class="stats-grid">
         <div class="stat-card" data-color="blue"><div class="stat-header"><div class="stat-icon">👤</div><span class="stat-trend-badge">↑ 12%</span></div><div class="stat-value" id="statParticipants">0</div><div class="stat-label">Participantes</div><div class="stat-meta">Total ativo</div></div>
-        <div class="stat-card" data-color="purple"><div class="stat-header"><div class="stat-icon">🏢</div><span class="stat-trend-badge">↑ 3 novas</span></div><div class="stat-value" id="statCompanies">0</div><div class="stat-label">Empresas</div><div class="stat-meta">Clientes</div></div>
+        <div class="stat-card" data-color="purple"><div class="stat-header"><div class="stat-icon"></div><span class="stat-trend-badge">↑ 3 novas</span></div><div class="stat-value" id="statCompanies">0</div><div class="stat-label">Empresas</div><div class="stat-meta">Clientes</div></div>
         <div class="stat-card" data-color="emerald"><div class="stat-header"><div class="stat-icon">✓</div><span class="stat-trend-badge">↑ 28%</span></div><div class="stat-value" id="statTests">0</div><div class="stat-label">Testes Concluídos</div><div class="stat-meta">Últimos 7 dias</div></div>
         <div class="stat-card" data-color="amber"><div class="stat-header"><div class="stat-icon">📊</div><span class="stat-trend-badge">Premium</span></div><div class="stat-value" id="statReports">0</div><div class="stat-label">Relatórios</div><div class="stat-meta">PDFs & Analytics</div></div>
       </div>
@@ -290,23 +489,23 @@
       <div class="card">
         <h3><span>👤 Participantes</span><button class="btn btn-primary" onclick="openModal('partModal')">+ Novo</button></h3>
         <div class="search-bar"><div class="search-input"><span class="search-icon">🔍</span><input type="text" id="participantSearch" placeholder="Buscar..." onkeyup="filterParticipants()"></div></div>
-        <div class="table-wrapper"><table><thead><tr><th>Participante</th><th>Login</th><th>Testes</th><th>Relatórios</th><th style="text-align:right">Ações</th></tr></thead><tbody id="participantsTableBody"></tbody></table></div>
+        <div class="table-wrapper"><table><thead><tr><th>Participante</th><th>Login</th><th>Empresa</th><th>Vaga</th><th>Testes</th><th>Relatórios</th><th style="text-align:right">Ações</th></tr></thead><tbody id="participantsTableBody"></tbody></table></div>
       </div>
     </section>
 
     <section id="recruiters">
       <div class="card">
         <h3><span>🎯 Recrutadores</span><button class="btn btn-primary" onclick="openModal('recruiterModal')">+ Novo Recrutador</button></h3>
-        <div class="search-bar"><div class="search-input"><span class="search-icon">🔍</span><input type="text" id="recruiterSearch" placeholder="Buscar..." onkeyup="filterRecruiters()"></div></div>
+        <div class="search-bar"><div class="search-input"><span class="search-icon"></span><input type="text" id="recruiterSearch" placeholder="Buscar..." onkeyup="filterRecruiters()"></div></div>
         <div class="table-wrapper"><table><thead><tr><th>Recrutador</th><th>Contato</th><th>Créditos</th><th style="text-align:right">Ações</th></tr></thead><tbody id="recruitersTableBody"></tbody></table></div>
       </div>
     </section>
   </main>
 
-  <!-- MODAIS (mesmo código do seu arquivo original) -->
+  <!-- MODAL STAFF -->
   <div class="modal" id="staffModal">
     <div class="modal-content">
-      <div class="modal-header"><h3>Novo Staff</h3><button class="modal-close" onclick="closeModal('staffModal')">×</button></div>
+      <div class="modal-header"><h3>👥 Novo Staff</h3><button class="modal-close" onclick="closeModal('staffModal')">×</button></div>
       <form onsubmit="saveStaff(event)">
         <input type="hidden" id="sId">
         <div class="modal-section">
@@ -316,7 +515,19 @@
         </div>
         <div class="modal-section">
           <h4>🔐 Credenciais de Acesso</h4>
-          <div class="form-row"><div class="form-group"><label>Usuário *</label><input type="text" id="sLogin" required></div><div class="form-group"><label>Senha *</label><input type="password" id="sPass" required></div></div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Usuário *</label>
+              <input type="text" id="sLogin" required>
+            </div>
+            <div class="form-group">
+              <label>Senha *</label>
+              <div class="password-wrapper">
+                <input type="password" id="sPass" required>
+                <button type="button" class="password-toggle" onclick="togglePassword('sPass')">👁️</button>
+              </div>
+            </div>
+          </div>
           <div class="form-group"><label>Perfil de Acesso *</label><select id="sRole" required><option value="admin">Administrador</option><option value="participant">Participante</option></select></div>
         </div>
         <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">💾 Salvar</button>
@@ -324,9 +535,10 @@
     </div>
   </div>
 
+  <!-- MODAL EMPRESA -->
   <div class="modal" id="compModal">
     <div class="modal-content">
-      <div class="modal-header"><h3>Nova Empresa</h3><button class="modal-close" onclick="closeModal('compModal')">×</button></div>
+      <div class="modal-header"><h3>🏢 Nova Empresa</h3><button class="modal-close" onclick="closeModal('compModal')">×</button></div>
       <form onsubmit="saveCompany(event)">
         <input type="hidden" id="cId">
         <div class="modal-section">
@@ -339,7 +551,7 @@
           <h4>💼 Cargos/Vagas</h4>
           <div id="jobsList"></div>
           <div class="form-row" style="margin-top:1rem">
-            <input type="text" id="jobName" placeholder="Nome do cargo">
+            <input type="text" id="jobName" placeholder="Nome do cargo/vaga">
             <button type="button" class="btn btn-primary" onclick="addJob()">+ Adicionar</button>
           </div>
         </div>
@@ -348,9 +560,18 @@
     </div>
   </div>
 
+  <!-- MODAL VAGA DETALHADA -->
+  <div class="modal" id="jobDetailModal">
+    <div class="modal-content">
+      <div class="modal-header"><h3> Detalhes da Vaga</h3><button class="modal-close" onclick="closeModal('jobDetailModal')">×</button></div>
+      <div id="jobDetailContent"></div>
+    </div>
+  </div>
+
+  <!-- MODAL PARTICIPANTE -->
   <div class="modal" id="partModal">
     <div class="modal-content">
-      <div class="modal-header"><h3>Novo Participante</h3><button class="modal-close" onclick="closeModal('partModal')">×</button></div>
+      <div class="modal-header"><h3> Novo Participante</h3><button class="modal-close" onclick="closeModal('partModal')">×</button></div>
       <form onsubmit="saveParticipant(event)">
         <input type="hidden" id="pId">
         <div class="modal-section">
@@ -365,14 +586,23 @@
         </div>
         <div class="modal-section">
           <h4>🔐 Liberação de Acesso</h4>
-          <div class="form-row"><div class="form-group"><label>Usuário *</label><input type="text" id="pUser" required></div><div class="form-group"><label>Senha *</label><input type="password" id="pPass" required></div></div>
+          <div class="form-row">
+            <div class="form-group"><label>Usuário *</label><input type="text" id="pUser" required></div>
+            <div class="form-group">
+              <label>Senha *</label>
+              <div class="password-wrapper">
+                <input type="password" id="pPass" required>
+                <button type="button" class="password-toggle" onclick="togglePassword('pPass')">👁️</button>
+              </div>
+            </div>
+          </div>
           <div class="form-group"><label>Validade do Acesso</label><input type="date" id="pExp"></div>
         </div>
         <div class="modal-section">
           <h4>🧪 Testes Liberados</h4>
           <div class="checkbox-group">
             <label><input type="checkbox" class="test-check" value="DISC" checked> 📊 DISC</label>
-            <label><input type="checkbox" class="test-check" value="IE"> 🧠 Inteligência Emocional</label>
+            <label><input type="checkbox" class="test-check" value="IE">  Inteligência Emocional</label>
             <label><input type="checkbox" class="test-check" value="Valores"> 💎 Valores Pessoais</label>
           </div>
         </div>
@@ -381,6 +611,7 @@
     </div>
   </div>
 
+  <!-- MODAL EDITAR PARTICIPANTE -->
   <div class="modal" id="editPartModal">
     <div class="modal-content">
       <div class="modal-header"><h3>✏️ Editar Participante</h3><button class="modal-close" onclick="closeModal('editPartModal')">×</button></div>
@@ -398,15 +629,24 @@
         </div>
         <div class="modal-section">
           <h4>🔐 Acesso</h4>
-          <div class="form-row"><div class="form-group"><label>Usuário *</label><input type="text" id="editPUser" required></div><div class="form-group"><label>Nova Senha (deixe em branco para manter)</label><input type="password" id="editPPass"></div></div>
+          <div class="form-row">
+            <div class="form-group"><label>Usuário *</label><input type="text" id="editPUser" required></div>
+            <div class="form-group">
+              <label>Nova Senha (deixe em branco para manter)</label>
+              <div class="password-wrapper">
+                <input type="password" id="editPPass">
+                <button type="button" class="password-toggle" onclick="togglePassword('editPPass')">👁️</button>
+              </div>
+            </div>
+          </div>
           <div class="form-group"><label>Validade</label><input type="date" id="editPExp"></div>
         </div>
         <div class="modal-section">
-          <h4>🧪 Testes</h4>
+          <h4> Testes</h4>
           <div class="checkbox-group" id="editTestChecks"></div>
           <h4 style="margin-top:1.5rem">📄 Imprimir Relatórios</h4>
           <div class="action-row" style="margin-top:0.5rem">
-            <button type="button" class="btn-report-sm disc" onclick="printParticipantTest('DISC')">📄 DISC</button>
+            <button type="button" class="btn-report-sm disc" onclick="printParticipantTest('DISC')"> DISC</button>
             <button type="button" class="btn-report-sm ie" onclick="printParticipantTest('IE')">📄 IE</button>
             <button type="button" class="btn-report-sm valores" onclick="printParticipantTest('Valores')">📄 Valores</button>
           </div>
@@ -423,18 +663,49 @@
             <button type="button" class="action-btn delete" onclick="retryParticipantTest('Valores')">🔄 Refazer Valores</button>
           </div>
         </div>
-        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">💾 Atualizar</button>
+        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;"> Atualizar</button>
       </form>
     </div>
   </div>
 
-  <div class="modal" id="resultsModal">
+  <!-- MODAL RECRUTADOR -->
+  <div class="modal" id="recruiterModal">
     <div class="modal-content">
-      <div class="modal-header"><h3>📊 Resultados</h3><button class="modal-close" onclick="closeModal('resultsModal')">×</button></div>
-      <div id="resultsContent"></div>
+      <div class="modal-header"><h3>🎯 Novo Recrutador</h3><button class="modal-close" onclick="closeModal('recruiterModal')">×</button></div>
+      <form onsubmit="saveRecruiter(event)">
+        <input type="hidden" id="rId">
+        <div class="modal-section">
+          <h4> Informações Pessoais</h4>
+          <div class="form-group"><label>Nome *</label><input type="text" id="rName" required></div>
+          <div class="form-row"><div class="form-group"><label>Email *</label><input type="email" id="rEmail" required></div><div class="form-group"><label>WhatsApp *</label><input type="tel" id="rPhone" required></div></div>
+        </div>
+        <div class="modal-section">
+          <h4>🔐 Credenciais de Acesso</h4>
+          <div class="form-row">
+            <div class="form-group"><label>Usuário *</label><input type="text" id="rLogin" required></div>
+            <div class="form-group">
+              <label>Senha *</label>
+              <div class="password-wrapper">
+                <input type="password" id="rPass" required>
+                <button type="button" class="password-toggle" onclick="togglePassword('rPass')">👁️</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-section">
+          <h4>🪙 Créditos de Testes</h4>
+          <div class="form-row">
+            <div class="form-group"><label>DISC</label><input type="number" id="rCreditsDisc" value="0" min="0"></div>
+            <div class="form-group"><label>IE</label><input type="number" id="rCreditsIe" value="0" min="0"></div>
+            <div class="form-group"><label>Valores</label><input type="number" id="rCreditsValores" value="0" min="0"></div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">💾 Salvar Recrutador</button>
+      </form>
     </div>
   </div>
 
+  <!-- MODAL LAUDO -->
   <div class="modal" id="upgradeModal">
     <div class="modal-content">
       <div class="modal-header"><h3>📈 Laudo Comportamental Premium</h3><button class="modal-close" onclick="closeModal('upgradeModal')">×</button></div>
@@ -455,33 +726,7 @@
     </div>
   </div>
 
-  <div class="modal" id="recruiterModal">
-    <div class="modal-content">
-      <div class="modal-header"><h3>Novo Recrutador</h3><button class="modal-close" onclick="closeModal('recruiterModal')">×</button></div>
-      <form onsubmit="saveRecruiter(event)">
-        <input type="hidden" id="rId">
-        <div class="modal-section">
-          <h4>📋 Informações Pessoais</h4>
-          <div class="form-group"><label>Nome *</label><input type="text" id="rName" required></div>
-          <div class="form-row"><div class="form-group"><label>Email *</label><input type="email" id="rEmail" required></div><div class="form-group"><label>WhatsApp *</label><input type="tel" id="rPhone" required></div></div>
-        </div>
-        <div class="modal-section">
-          <h4>🔐 Credenciais de Acesso</h4>
-          <div class="form-row"><div class="form-group"><label>Usuário *</label><input type="text" id="rLogin" required></div><div class="form-group"><label>Senha *</label><input type="password" id="rPass" required></div></div>
-        </div>
-        <div class="modal-section">
-          <h4>🪙 Créditos de Testes</h4>
-          <div class="form-row">
-            <div class="form-group"><label>DISC</label><input type="number" id="rCreditsDisc" value="0" min="0"></div>
-            <div class="form-group"><label>IE</label><input type="number" id="rCreditsIe" value="0" min="0"></div>
-            <div class="form-group"><label>Valores</label><input type="number" id="rCreditsValores" value="0" min="0"></div>
-          </div>
-        </div>
-        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">💾 Salvar Recrutador</button>
-      </form>
-    </div>
-  </div>
-
+  <!-- LOG PANEL -->
   <div class="log-panel" id="logPanel">
     <div class="log-header" onclick="toggleMinimize(event)"><div class="log-title"><span class="log-title-dot"></span><span>Logs</span></div><div class="log-controls"><button class="log-btn" onclick="clearLogs(event)">🗑</button><button class="log-btn" id="minBtn" onclick="toggleMinimize(event)">−</button><button class="log-btn close-btn" onclick="hideLogPanel(event)">×</button></div></div>
     <div class="log-body" id="logContent"></div>
@@ -500,20 +745,9 @@
     };
     let currentEditParticipant = null;
 
-    // ============================================
-    // 🗂️ MAPEAMENTO DOS ARQUIVOS DO SISTEMA
-    // ============================================
     const ARQUIVOS = {
-      teste: {
-        DISC: 'teste-disc.html',
-        IE: 'teste-ie.html',
-        Valores: 'teste-valores.html'
-      },
-      relatorio: {
-        DISC: 'relatorio-disc-vigorre.html',
-        IE: 'relatorio-ie-vigorre.html',
-        Valores: 'relatorio-valores-vigorre.html'
-      },
+      teste: { DISC: 'teste-disc.html', IE: 'teste-ie.html', Valores: 'teste-valores.html' },
+      relatorio: { DISC: 'relatorio-disc-vigorre.html', IE: 'relatorio-ie-vigorre.html', Valores: 'relatorio-valores-vigorre.html' },
       laudo: 'laudo-vigorre.html'
     };
 
@@ -532,122 +766,71 @@
     function showToast(msg,type='success'){ logMessage(msg,type); const t=document.createElement('div'); t.className='toast '+(type==='error'?'error':''); t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),4000); }
     function closeModal(id){ const m=document.getElementById(id); if(m){ m.classList.remove('active'); document.body.style.overflow=''; m.querySelectorAll('form').forEach(f=>f.reset()); } }
     function openModal(id){ const m=document.getElementById(id); if(m){ m.classList.add('active'); document.body.style.overflow='hidden'; } }
-    function showSection(id,ev){ document.querySelectorAll('main section').forEach(s=>{s.classList.remove('active');}); const t=document.getElementById(id); if(t){ t.classList.add('active'); logMessage('📍 '+id); } document.querySelectorAll('.nav-menu a').forEach(a=>a.classList.remove('active')); if(ev&&ev.currentTarget)ev.currentTarget.classList.add('active'); const titles={dashboard:'Dashboard',staff:'Staff',companies:'Empresas',participants:'Participantes',recruiters:'Recrutadores'}; document.getElementById('pageTitle').textContent=titles[id]||id; document.getElementById('breadcrumbCurrent').textContent=titles[id]||id; return false; }
     
-    // ============================================
-    // 💾 FUNÇÃO SAVEDB CORRIGIDA (SUPABASE + LOCAL)
-    // ============================================
+    // TOGGLE PASSWORD
+    function togglePassword(inputId) {
+      const input = document.getElementById(inputId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        input.nextElementSibling.textContent = '🙈';
+      } else {
+        input.type = 'password';
+        input.nextElementSibling.textContent = '👁️';
+      }
+    }
+    
+    function showSection(id,ev){ document.querySelectorAll('main section').forEach(s=>{s.classList.remove('active');}); const t=document.getElementById(id); if(t){ t.classList.add('active'); logMessage(' '+id); } document.querySelectorAll('.nav-menu a').forEach(a=>a.classList.remove('active')); if(ev&&ev.currentTarget)ev.currentTarget.classList.add('active'); const titles={dashboard:'Dashboard',staff:'Staff',companies:'Empresas',participants:'Participantes',recruiters:'Recrutadores'}; document.getElementById('pageTitle').textContent=titles[id]||id; document.getElementById('breadcrumbCurrent').textContent=titles[id]||id; return false; }
+    
     async function saveDB() {
-      // Salvar no localStorage (cache local)
       localStorage.setItem('vigorre_staff', JSON.stringify(DB.staff));
       localStorage.setItem('vigorre_companies', JSON.stringify(DB.companies));
       localStorage.setItem('vigorre_participants', JSON.stringify(DB.participants));
       localStorage.setItem('vigorre_jobs', JSON.stringify(DB.jobs));
       localStorage.setItem('vigorre_recruiters', JSON.stringify(DB.recruiters));
       
-      // Salvar no Supabase (nuvem)
       if (window.VigorreDB?.supabase) {
         try {
           logMessage('💾 Sincronizando com Supabase...');
-          
-          // Salvar participantes
           if (DB.participants.length > 0) {
-            const { error: errParticipants } = await window.VigorreDB.supabase
-              .from('participants')
-              .upsert(DB.participants, { onConflict: 'id' });
-            if (errParticipants) throw errParticipants;
+            const { error } = await window.VigorreDB.supabase.from('participants').upsert(DB.participants, { onConflict: 'id' });
+            if (error) throw error;
           }
-          
-          // Salvar empresas
           if (DB.companies.length > 0) {
-            const { error: errCompanies } = await window.VigorreDB.supabase
-              .from('companies')
-              .upsert(DB.companies, { onConflict: 'id' });
-            if (errCompanies) throw errCompanies;
+            const { error } = await window.VigorreDB.supabase.from('companies').upsert(DB.companies, { onConflict: 'id' });
+            if (error) throw error;
           }
-          
-          // Salvar jobs
           if (DB.jobs.length > 0) {
-            const { error: errJobs } = await window.VigorreDB.supabase
-              .from('jobs')
-              .upsert(DB.jobs, { onConflict: 'id' });
-            if (errJobs) throw errJobs;
+            const { error } = await window.VigorreDB.supabase.from('jobs').upsert(DB.jobs, { onConflict: 'id' });
+            if (error) throw error;
           }
-          
-          // Salvar recruiters
           if (DB.recruiters.length > 0) {
-            const { error: errRecruiters } = await window.VigorreDB.supabase
-              .from('recruiters')
-              .upsert(DB.recruiters, { onConflict: 'id' });
-            if (errRecruiters) throw errRecruiters;
+            const { error } = await window.VigorreDB.supabase.from('recruiters').upsert(DB.recruiters, { onConflict: 'id' });
+            if (error) throw error;
           }
-          
           logMessage('✅ Dados sincronizados com Supabase!');
         } catch (error) {
           logMessage('❌ Erro ao sincronizar: ' + error.message, 'error');
-          console.error('Erro Supabase:', error);
         }
       }
-      
-      renderAll();
-      updateStats();
+      renderAll(); updateStats();
     }
 
-    // ============================================
-    // 📥 FUNÇÃO PARA CARREGAR DO SUPABASE
-    // ============================================
     async function loadFromSupabase() {
       if (!window.VigorreDB?.supabase) {
         logMessage('⚠️ Supabase não disponível, usando localStorage');
         return;
       }
-      
       try {
         logMessage('📥 Carregando dados do Supabase...');
-        
-        // Carregar participantes
-        const { data: participants, error: errP } = await window.VigorreDB.supabase
-          .from('participants')
-          .select('*');
-        if (!errP && participants) {
-          DB.participants = participants;
-          localStorage.setItem('vigorre_participants', JSON.stringify(participants));
-          logMessage(`✅ ${participants.length} participantes carregados`);
-        }
-        
-        // Carregar empresas
-        const { data: companies, error: errC } = await window.VigorreDB.supabase
-          .from('companies')
-          .select('*');
-        if (!errC && companies) {
-          DB.companies = companies;
-          localStorage.setItem('vigorre_companies', JSON.stringify(companies));
-          logMessage(`✅ ${companies.length} empresas carregadas`);
-        }
-        
-        // Carregar jobs
-        const { data: jobs, error: errJ } = await window.VigorreDB.supabase
-          .from('jobs')
-          .select('*');
-        if (!errJ && jobs) {
-          DB.jobs = jobs;
-          localStorage.setItem('vigorre_jobs', JSON.stringify(jobs));
-          logMessage(`✅ ${jobs.length} vagas carregadas`);
-        }
-        
-        // Carregar recruiters
-        const { data: recruiters, error: errR } = await window.VigorreDB.supabase
-          .from('recruiters')
-          .select('*');
-        if (!errR && recruiters) {
-          DB.recruiters = recruiters;
-          localStorage.setItem('vigorre_recruiters', JSON.stringify(recruiters));
-          logMessage(`✅ ${recruiters.length} recrutadores carregados`);
-        }
-        
-        renderAll();
-        updateStats();
-        
+        const { data: participants, error: errP } = await window.VigorreDB.supabase.from('participants').select('*');
+        if (!errP && participants) { DB.participants = participants; localStorage.setItem('vigorre_participants', JSON.stringify(participants)); logMessage(`✅ ${participants.length} participantes carregados`); }
+        const { data: companies, error: errC } = await window.VigorreDB.supabase.from('companies').select('*');
+        if (!errC && companies) { DB.companies = companies; localStorage.setItem('vigorre_companies', JSON.stringify(companies)); logMessage(`✅ ${companies.length} empresas carregadas`); }
+        const { data: jobs, error: errJ } = await window.VigorreDB.supabase.from('jobs').select('*');
+        if (!errJ && jobs) { DB.jobs = jobs; localStorage.setItem('vigorre_jobs', JSON.stringify(jobs)); logMessage(`✅ ${jobs.length} vagas carregadas`); }
+        const { data: recruiters, error: errR } = await window.VigorreDB.supabase.from('recruiters').select('*');
+        if (!errR && recruiters) { DB.recruiters = recruiters; localStorage.setItem('vigorre_recruiters', JSON.stringify(recruiters)); logMessage(`✅ ${recruiters.length} recrutadores carregados`); }
+        renderAll(); updateStats();
       } catch (error) {
         logMessage('❌ Erro ao carregar do Supabase: ' + error.message, 'error');
       }
@@ -668,28 +851,30 @@
       tb.innerHTML=DB.companies.map(c=>{
         const jobs=DB.jobs.filter(j=>j.compId===c.id).length;
         const parts=DB.participants.filter(p=>p.compId===c.id).length;
-        return `<tr><td><div class="user-cell"><div class="avatar">${c.name[0].toUpperCase()}</div><div class="user-info-cell"><span class="user-name">${c.name}</span><span class="user-email">${c.cnpj||''}</span></div></div></td><td>${c.resp}</td><td>${c.phone||'-'}</td><td><span class="badge-pill">${jobs}</span></td><td><span class="badge-pill">${parts}</span></td><td style="text-align:right"><div class="action-row"><button class="action-btn edit" onclick="editCompany('${c.id}')">✏️</button><button class="action-btn delete" onclick="deleteItem('companies','${c.id}')">🗑</button></div></td></tr>`;
+        return `<tr><td><div class="user-cell"><div class="avatar">${c.name[0].toUpperCase()}</div><div class="user-info-cell"><span class="user-name">${c.name}</span><span class="user-email">${c.cnpj||''}</span></div></div></td><td>${c.resp}</td><td>${c.phone||'-'}</td><td><span class="badge-pill">${jobs} vagas</span></td><td><span class="badge-pill">${parts} part.</span></td><td style="text-align:right"><div class="action-row"><button class="action-btn edit" onclick="editCompany('${c.id}')">✏️</button><button class="action-btn delete" onclick="deleteItem('companies','${c.id}')">🗑</button></div></td></tr>`;
       }).join('');
     }
 
     function renderParticipants(){
       const tb=document.getElementById('participantsTableBody'); if(!tb)return;
-      if(DB.participants.length===0){ tb.innerHTML='<tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon">👤</div><h4>Nenhum participante</h4></div></td></tr>'; return; }
+      if(DB.participants.length===0){ tb.innerHTML='<tr><td colspan="7"><div class="empty-state"><div class="empty-state-icon"></div><h4>Nenhum participante</h4></div></td></tr>'; return; }
       tb.innerHTML=DB.participants.map(p=>{
         const completed=p.completedTests||[];
-        const testsHtml=`<div style="display:flex;flex-direction:column;gap:2px"><span class="test-badge disc ${completed.includes('DISC')?'done':'pending'}">${completed.includes('DISC')?'✅':'⏳'} DISC</span><span class="test-badge ie ${completed.includes('IE')?'done':'pending'}">${completed.includes('IE')?'✅':'⏳'} IE</span><span class="test-badge valores ${completed.includes('Valores')?'done':'pending'}">${completed.includes('Valores')?'✅':'⏳'} Valores</span></div>`;
-        const reportsHtml=`<div class="action-row"><button class="btn-report-sm disc" onclick="printTestFor('${p.id}','DISC')" title="Relatório DISC">📄 DISC</button><button class="btn-report-sm ie" onclick="printTestFor('${p.id}','IE')" title="Relatório IE">📄 IE</button><button class="btn-report-sm valores" onclick="printTestFor('${p.id}','Valores')" title="Relatório Valores">📄 Valores</button></div>`;
-        const actionsHtml=`<div class="action-group"><div class="action-row"><button class="action-btn edit" onclick="editParticipant('${p.id}')" title="Editar">✏️</button><button class="action-btn test" onclick="openTestFor('${p.id}','DISC')" title="Abrir Teste DISC">🧪</button><button class="action-btn laudo" onclick="showUpgradeInfo('${p.id}')" title="Laudo Premium">📜</button><button class="action-btn delete" onclick="deleteItem('participants','${p.id}')" title="Excluir">🗑</button></div></div>`;
-        return `<tr><td><div class="user-cell"><div class="avatar">${p.name[0].toUpperCase()}</div><div class="user-info-cell"><span class="user-name">${p.name}</span><span class="user-email">${p.email}</span></div></div></td><td><code style="background:#f1f5f9;padding:4px 8px;border-radius:6px;font-size:0.8rem">${p.user||'-'}</code></td><td>${testsHtml}</td><td>${reportsHtml}</td><td style="text-align:right">${actionsHtml}</td></tr>`;
+        const emp = DB.companies.find(c => c.id === p.compId);
+        const job = DB.jobs.find(j => j.id === p.jobId);
+        const testsHtml=`<div style="display:flex;flex-direction:column;gap:2px"><span class="test-badge disc ${completed.includes('DISC')?'done':'pending'}">${completed.includes('DISC')?'✅':'⏳'} DISC</span><span class="test-badge ie ${completed.includes('IE')?'done':'pending'}">${completed.includes('IE')?'✅':''} IE</span><span class="test-badge valores ${completed.includes('Valores')?'done':'pending'}">${completed.includes('Valores')?'✅':''} Valores</span></div>`;
+        const reportsHtml=`<div class="action-row"><button class="btn-report-sm disc" onclick="printTestFor('${p.id}','DISC')">📄 DISC</button><button class="btn-report-sm ie" onclick="printTestFor('${p.id}','IE')"> IE</button><button class="btn-report-sm valores" onclick="printTestFor('${p.id}','Valores')">📄 Valores</button></div>`;
+        const actionsHtml=`<div class="action-group"><div class="action-row"><button class="action-btn edit" onclick="editParticipant('${p.id}')">✏️</button><button class="action-btn test" onclick="openTestFor('${p.id}','DISC')"></button><button class="action-btn laudo" onclick="showUpgradeInfo('${p.id}')">📜</button><button class="action-btn delete" onclick="deleteItem('participants','${p.id}')">🗑</button></div></div>`;
+        return `<tr><td><div class="user-cell"><div class="avatar">${p.name[0].toUpperCase()}</div><div class="user-info-cell"><span class="user-name">${p.name}</span><span class="user-email">${p.email}</span></div></div></td><td><code style="background:#f1f5f9;padding:4px 8px;border-radius:6px;font-size:0.8rem">${p.user||'-'}</code></td><td>${emp ? `<span class="badge-pill" style="background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe">${emp.name}</span>` : '<span style="color:#94a3b8">Autônomo</span>'}</td><td>${job ? `<span class="badge-pill" style="background:#f5f3ff;color:#7c3aed;border-color:#ddd6fe">${job.name}</span>` : '<span style="color:#94a3b8">-</span>'}</td><td>${testsHtml}</td><td>${reportsHtml}</td><td style="text-align:right">${actionsHtml}</td></tr>`;
       }).join('');
     }
 
     function renderRecruiters(){
       const tb=document.getElementById('recruitersTableBody'); if(!tb)return;
-      if(DB.recruiters.length===0){ tb.innerHTML='<tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">🎯</div><h4>Nenhum recrutador</h4><p>Cadastre recrutadores para gerenciar créditos e acessos</p></div></td></tr>'; return; }
+      if(DB.recruiters.length===0){ tb.innerHTML='<tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">🎯</div><h4>Nenhum recrutador</h4></div></td></tr>'; return; }
       tb.innerHTML=DB.recruiters.map(r=>{
         const credits=`DISC: ${r.credits?.DISC||0} | IE: ${r.credits?.IE||0} | Valores: ${r.credits?.Valores||0}`;
-        return `<tr><td><div class="user-cell"><div class="avatar">${r.name[0].toUpperCase()}</div><div class="user-info-cell"><span class="user-name">${r.name}</span><span class="user-email">${r.email}</span></div></div></td><td>${r.phone||'-'}</td><td><span class="badge-pill badge-credits">${credits}</span></td><td style="text-align:right"><div class="action-row"><button class="action-btn edit" onclick="editRecruiter('${r.id}')">✏️</button><button class="action-btn delete" onclick="deleteItem('recruiters','${r.id}')">🗑</button></div></td></tr>`;
+        return `<tr><td><div class="user-cell"><div class="avatar">${r.name[0].toUpperCase()}</div><div class="user-info-cell"><span class="user-name">${r.name}</span><span class="user-email">${r.email}</span></div></div></td><td>${r.phone||'-'}</td><td><span class="badge-pill badge-credits">${credits}</span></td><td style="text-align:right"><div class="action-row"><button class="action-btn edit" onclick="editRecruiter('${r.id}')">✏️</button><button class="action-btn delete" onclick="deleteItem('recruiters','${r.id}')"></button></div></td></tr>`;
       }).join('');
     }
 
@@ -697,187 +882,89 @@
     function saveStaff(e){ e.preventDefault(); const id=document.getElementById('sId').value||Date.now().toString(); const data={id:id,name:document.getElementById('sName').value,email:document.getElementById('sEmail').value,phone:document.getElementById('sPhone').value,login:document.getElementById('sLogin').value,password:document.getElementById('sPass').value,role:document.getElementById('sRole').value}; const idx=DB.staff.findIndex(x=>x.id===id); if(idx>-1)DB.staff[idx]=data;else DB.staff.push(data); saveDB(); closeModal('staffModal'); showToast('✅ Staff salvo!'); }
 
     function editCompany(id){ const c=DB.companies.find(x=>x.id===id); if(!c)return; document.getElementById('cId').value=c.id; document.getElementById('cName').value=c.name; document.getElementById('cCnpj').value=c.cnpj||''; document.getElementById('cResp').value=c.resp; document.getElementById('cPhone').value=c.phone||''; document.getElementById('cEmail').value=c.email||''; renderJobsList(c.id); openModal('compModal'); }
-    function renderJobsList(compId){ const list=document.getElementById('jobsList'); const jobs=DB.jobs.filter(j=>j.compId===compId); if(jobs.length===0){ list.innerHTML='<p style="color:#64748b;font-size:0.875rem">Nenhuma vaga cadastrada</p>'; return; } list.innerHTML=jobs.map(j=>`<div style="background:#f8fafc;padding:0.75rem 1rem;border-radius:8px;margin-bottom:0.5rem;display:flex;justify-content:space-between;align-items:center"><span><strong>${j.name}</strong><br><small style="color:#64748b">${j.desc||'-'}</small></span><button class="action-btn delete" onclick="deleteJob('${j.id}')">🗑</button></div>`).join(''); }
-    function addJob(){ const compId=document.getElementById('cId').value; const name=document.getElementById('jobName').value; if(!name||!compId)return; DB.jobs.push({id:Date.now().toString(),compId:compId,name:name,desc:''}); localStorage.setItem('vigorre_jobs',JSON.stringify(DB.jobs)); document.getElementById('jobName').value=''; renderJobsList(compId); showToast('✅ Vaga adicionada!'); }
+    function renderJobsList(compId){ const list=document.getElementById('jobsList'); const jobs=DB.jobs.filter(j=>j.compId===compId); if(jobs.length===0){ list.innerHTML='<p style="color:#64748b;font-size:0.875rem">Nenhuma vaga cadastrada</p>'; return; } list.innerHTML=jobs.map(j=>`<div style="background:#f8fafc;padding:0.75rem 1rem;border-radius:8px;margin-bottom:0.5rem;display:flex;justify-content:space-between;align-items:center"><span><strong>${j.name}</strong>${j.disc ? `<span class="vaga-perfil-tag" style="margin-left:8px">${j.disc}</span>` : ''}</span><button class="action-btn delete" onclick="deleteJob('${j.id}')"></button></div>`).join(''); }
+    function addJob(){ const compId=document.getElementById('cId').value; const name=document.getElementById('jobName').value; if(!name||!compId)return; DB.jobs.push({id:Date.now().toString(),compId:compId,name:name,desc:'',atividades:'',disc:'',perfil:''}); localStorage.setItem('vigorre_jobs',JSON.stringify(DB.jobs)); document.getElementById('jobName').value=''; renderJobsList(compId); showToast('✅ Vaga adicionada!'); }
     function deleteJob(id){ if(!confirm('Excluir esta vaga?'))return; DB.jobs=DB.jobs.filter(j=>j.id!==id); localStorage.setItem('vigorre_jobs',JSON.stringify(DB.jobs)); renderCompanies(); }
     function saveCompany(e){ e.preventDefault(); const id=document.getElementById('cId').value||Date.now().toString(); const data={id:id,name:document.getElementById('cName').value,cnpj:document.getElementById('cCnpj').value,resp:document.getElementById('cResp').value,phone:document.getElementById('cPhone').value,email:document.getElementById('cEmail').value}; const idx=DB.companies.findIndex(x=>x.id===id); if(idx>-1)DB.companies[idx]=data;else DB.companies.push(data); saveDB(); closeModal('compModal'); showToast('✅ Empresa salva!'); }
 
     function loadCompaniesSelect(selectId,selected=''){ const sel=document.getElementById(selectId); if(!sel)return; sel.innerHTML='<option value="">Autônomo / Avaliação Pessoal</option>'+DB.companies.map(c=>`<option value="${c.id}"${c.id===selected?' selected':''}>${c.name}</option>`).join(''); }
     function loadJobsForParticipant(){ const compId=document.getElementById('pComp').value; const jobSel=document.getElementById('pJob'); if(!jobSel)return; jobSel.innerHTML='<option value="">Selecione uma vaga (opcional)</option>'; if(!compId)return; const jobs=DB.jobs.filter(j=>j.compId===compId); jobs.forEach(j=>{ const opt=document.createElement('option'); opt.value=j.id; opt.textContent=j.name; jobSel.appendChild(opt); }); }
     function saveParticipant(e){ e.preventDefault(); const id=document.getElementById('pId').value||Date.now().toString(); const tests=Array.from(document.querySelectorAll('#partModal .test-check:checked')).map(cb=>cb.value); const data={id:id,name:document.getElementById('pName').value,email:document.getElementById('pEmail').value,phone:document.getElementById('pPhone').value,compId:document.getElementById('pComp').value||null,jobId:document.getElementById('pJob').value||null,user:document.getElementById('pUser').value,pass:document.getElementById('pPass').value,exp:document.getElementById('pExp').value||null,assignedTests:tests,completedTests:[],testResults:{}}; const idx=DB.participants.findIndex(x=>x.id===id); if(idx>-1)DB.participants[idx]={...DB.participants[idx],...data};else DB.participants.push(data); saveDB(); closeModal('partModal'); showToast('✅ Participante salvo!'); }
-    function editParticipant(id){ const p=DB.participants.find(x=>x.id===id); if(!p)return; currentEditParticipant=p; document.getElementById('editPId').value=p.id; document.getElementById('editPName').value=p.name; document.getElementById('editPEmail').value=p.email; document.getElementById('editPPhone').value=p.phone||''; document.getElementById('editPUser').value=p.user||''; document.getElementById('editPPass').value=''; document.getElementById('editPExp').value=p.exp||''; loadCompaniesSelect('editPComp',p.compId||''); loadJobsForEdit(p.compId,p.jobId); document.getElementById('editTestChecks').innerHTML=['DISC','IE','Valores'].map(t=>`<label><input type="checkbox" class="test-check" value="${t}"${(p.assignedTests||[]).includes(t)?' checked':''}> ${t==='DISC'?'📊':t==='IE'?'🧠':''} ${t}</label>`).join(''); openModal('editPartModal'); }
+    function editParticipant(id){ const p=DB.participants.find(x=>x.id===id); if(!p)return; currentEditParticipant=p; document.getElementById('editPId').value=p.id; document.getElementById('editPName').value=p.name; document.getElementById('editPEmail').value=p.email; document.getElementById('editPPhone').value=p.phone||''; document.getElementById('editPUser').value=p.user||''; document.getElementById('editPPass').value=''; document.getElementById('editPExp').value=p.exp||''; loadCompaniesSelect('editPComp',p.compId||''); loadJobsForEdit(p.compId,p.jobId); document.getElementById('editTestChecks').innerHTML=['DISC','IE','Valores'].map(t=>`<label><input type="checkbox" class="test-check" value="${t}"${(p.assignedTests||[]).includes(t)?' checked':''}> ${t==='DISC'?'📊':t==='IE'?'':''} ${t}</label>`).join(''); openModal('editPartModal'); }
     function loadJobsForEdit(compId,selectedJob){ const sel=document.getElementById('editPJob'); if(!sel)return; sel.innerHTML='<option value="">Nenhuma</option>'; if(!compId)return; const jobs=DB.jobs.filter(j=>j.compId===compId); jobs.forEach(j=>{ const opt=document.createElement('option'); opt.value=j.id; opt.textContent=j.name; if(j.id===selectedJob)opt.selected=true; sel.appendChild(opt); }); }
     function updateParticipant(e){ e.preventDefault(); const id=document.getElementById('editPId').value; const idx=DB.participants.findIndex(x=>x.id===id); if(idx===-1)return; const pass=document.getElementById('editPPass').value; const tests=Array.from(document.querySelectorAll('#editPartModal .test-check:checked')).map(cb=>cb.value); DB.participants[idx]={...DB.participants[idx],name:document.getElementById('editPName').value,email:document.getElementById('editPEmail').value,phone:document.getElementById('editPPhone').value,compId:document.getElementById('editPComp').value||null,jobId:document.getElementById('editPJob').value||null,user:document.getElementById('editPUser').value,pass:pass||DB.participants[idx].pass,exp:document.getElementById('editPExp').value||null,assignedTests:tests}; saveDB(); closeModal('editPartModal'); showToast('✅ Participante atualizado!'); }
 
-    // ============================================
-    // 🔧 FUNÇÕES DE ABERTURA DE RELATÓRIOS E TESTES
-    // ============================================
-    
     function abrirNovaJanela(url, descricao) {
       logMessage('🌐 Abrindo: ' + url);
       const novaJanela = window.open(url, '_blank');
-      
-      if (!novaJanela || novaJanela.closed) {
-        showToast('⚠️ Pop-up bloqueado! Permita pop-ups deste site.', 'error');
-        logMessage('⚠️ Pop-up bloqueado pelo navegador', 'warn');
-        return false;
-      }
-      
+      if (!novaJanela || novaJanela.closed) { showToast('⚠️ Pop-up bloqueado!', 'error'); return false; }
       logMessage('✅ ' + descricao + ' aberto com sucesso');
       return true;
     }
     
-    // 📄 ABRIR RELATÓRIO (imprimir resultado de teste)
     function printTestFor(pid, test) {
       const p = DB.participants.find(x => x.id === pid);
-      if (!p) {
-        showToast('❌ Participante não encontrado', 'error');
-        return;
-      }
-      
+      if (!p) { showToast('❌ Participante não encontrado', 'error'); return; }
       const arquivoRelatorio = ARQUIVOS.relatorio[test];
-      if (!arquivoRelatorio) {
-        showToast('❌ Tipo de relatório inválido: ' + test, 'error');
-        return;
-      }
-      
       logMessage(`📄 Abrindo relatório ${test} para: ${p.name}`);
-      showToast(`📄 Abrindo relatório ${test} de ${p.name}...`);
-      
-      // Gerar dados de exemplo se não tiver (para o relatório funcionar)
+      showToast(` Abrindo relatório ${test} de ${p.name}...`);
       if (test === 'DISC' && (!p.testResults || !p.testResults.DISC)) {
-        const fakeResult = {
-          dimensions: { D: 75, I: 60, S: 45, C: 80 },
-          percentages: { D: 75, I: 60, S: 45, C: 80 },
-          dominant: 'C',
-          date: new Date().toISOString()
-        };
+        const fakeResult = { dimensions: { D: 75, I: 60, S: 45, C: 80 }, percentages: { D: 75, I: 60, S: 45, C: 80 }, dominant: 'C', date: new Date().toISOString() };
         if (!p.testResults) p.testResults = {};
         p.testResults.DISC = fakeResult;
         localStorage.setItem('vigorre_last_disc_result', JSON.stringify(fakeResult));
         sessionStorage.setItem('vigorre_disc_results', JSON.stringify(fakeResult));
         const idx = DB.participants.findIndex(x => x.id === pid);
-        if (idx > -1) {
-          DB.participants[idx] = p;
-          localStorage.setItem('vigorre_participants', JSON.stringify(DB.participants));
-        }
+        if (idx > -1) { DB.participants[idx] = p; localStorage.setItem('vigorre_participants', JSON.stringify(DB.participants)); }
       } else if (p.testResults && p.testResults[test]) {
         const key = test === 'DISC' ? 'vigorre_last_disc_result' : 'vigorre_last_' + test.toLowerCase() + '_result';
         localStorage.setItem(key, JSON.stringify(p.testResults[test]));
         sessionStorage.setItem('vigorre_' + test.toLowerCase() + '_results', JSON.stringify(p.testResults[test]));
       }
-      
-      // Abrir relatório em nova aba
       const url = arquivoRelatorio + '?participantId=' + pid + '&t=' + Date.now();
       abrirNovaJanela(url, 'Relatório ' + test);
     }
 
-    // 📄 IMPRIMIR RELATÓRIO (dentro do modal de edição)
-    function printParticipantTest(test) {
-      if (!currentEditParticipant) {
-        showToast('❌ Nenhum participante selecionado', 'error');
-        return;
-      }
-      printTestFor(currentEditParticipant.id, test);
-    }
-
-    // 🧪 ABRIR TESTE (página onde o participante responde)
+    function printParticipantTest(test) { if (!currentEditParticipant) { showToast('❌ Nenhum participante selecionado', 'error'); return; } printTestFor(currentEditParticipant.id, test); }
     function openTestFor(pid, test) {
       const p = DB.participants.find(x => x.id === pid);
-      if (!p) {
-        showToast('❌ Participante não encontrado', 'error');
-        return;
-      }
-      
+      if (!p) { showToast('❌ Participante não encontrado', 'error'); return; }
       const arquivoTeste = ARQUIVOS.teste[test];
-      if (!arquivoTeste) {
-        showToast('❌ Tipo de teste inválido: ' + test, 'error');
-        return;
-      }
-      
       logMessage(`🧪 Abrindo teste ${test} para: ${p.name}`);
       showToast(`🧪 Abrindo teste ${test}...`);
-      
       const url = arquivoTeste + '?participantId=' + pid + '&t=' + Date.now();
       abrirNovaJanela(url, 'Teste ' + test);
     }
-
-    // 🧪 ABRIR TESTE (dentro do modal de edição)
-    function openTestForParticipant(test) {
-      if (!currentEditParticipant) {
-        showToast('❌ Nenhum participante selecionado', 'error');
-        return;
-      }
-      openTestFor(currentEditParticipant.id, test);
-    }
-
-    // 📜 ABRIR LAUDO PREMIUM
+    function openTestForParticipant(test) { if (!currentEditParticipant) { showToast('❌ Nenhum participante selecionado', 'error'); return; } openTestFor(currentEditParticipant.id, test); }
     function openLaudoForCurrent() {
       const pid = window.currentParticipantForLaudo;
-      if (!pid) {
-        showToast('❌ Nenhum participante selecionado', 'error');
-        return;
-      }
-      
+      if (!pid) { showToast('❌ Nenhum participante selecionado', 'error'); return; }
       const p = DB.participants.find(x => x.id === pid);
-      if (!p) {
-        showToast('❌ Participante não encontrado', 'error');
-        return;
-      }
-      
+      if (!p) { showToast(' Participante não encontrado', 'error'); return; }
       logMessage(`📜 Abrindo Laudo Premium para: ${p.name}`);
-      showToast(`📜 Abrindo Laudo Premium...`);
-      
       closeModal('upgradeModal');
-      
       const url = ARQUIVOS.laudo + '?participantId=' + pid + '&t=' + Date.now();
       abrirNovaJanela(url, 'Laudo Premium');
     }
 
-    function retryParticipantTest(test){ 
-      if(!confirm(`⚠️ Tem certeza que deseja permitir refazer o teste ${test}?\n\nIsso resetará o resultado anterior.`))return; 
-      if(!currentEditParticipant)return; 
-      const idx=DB.participants.findIndex(x=>x.id===currentEditParticipant.id); 
-      if(idx===-1)return; 
-      if(!DB.participants[idx].completedTests)DB.participants[idx].completedTests=[]; 
-      DB.participants[idx].completedTests=DB.participants[idx].completedTests.filter(t=>t!==test); 
-      if(!DB.participants[idx].testResults)DB.participants[idx].testResults={}; 
-      delete DB.participants[idx].testResults[test]; 
-      saveDB(); 
-      showToast(`🔄 ${test} resetado para ${currentEditParticipant.name}`); 
-      logMessage(`🔄 ${test} resetado: ${currentEditParticipant.name}`); 
-    }
+    function retryParticipantTest(test){ if(!confirm(`⚠️ Tem certeza que deseja permitir refazer o teste ${test}?`))return; if(!currentEditParticipant)return; const idx=DB.participants.findIndex(x=>x.id===currentEditParticipant.id); if(idx===-1)return; if(!DB.participants[idx].completedTests)DB.participants[idx].completedTests=[]; DB.participants[idx].completedTests=DB.participants[idx].completedTests.filter(t=>t!==test); if(!DB.participants[idx].testResults)DB.participants[idx].testResults={}; delete DB.participants[idx].testResults[test]; saveDB(); showToast(`🔄 ${test} resetado para ${currentEditParticipant.name}`); }
 
     function filterRecruiters(){ renderRecruiters(); }
     function editRecruiter(id){ const r=DB.recruiters.find(x=>x.id===id); if(!r)return; document.getElementById('rId').value=r.id; document.getElementById('rName').value=r.name; document.getElementById('rEmail').value=r.email; document.getElementById('rPhone').value=r.phone||''; document.getElementById('rLogin').value=r.login; document.getElementById('rPass').value=''; document.getElementById('rCreditsDisc').value=r.credits?.DISC||0; document.getElementById('rCreditsIe').value=r.credits?.IE||0; document.getElementById('rCreditsValores').value=r.credits?.Valores||0; openModal('recruiterModal'); }
-    function saveRecruiter(e){ e.preventDefault(); const id=document.getElementById('rId').value||Date.now().toString(); const data={id:id,name:document.getElementById('rName').value,email:document.getElementById('rEmail').value,phone:document.getElementById('rPhone').value,login:document.getElementById('rLogin').value,password:document.getElementById('rPass').value,credits:{DISC:parseInt(document.getElementById('rCreditsDisc').value)||0,IE:parseInt(document.getElementById('rCreditsIe').value)||0,Valores:parseInt(document.getElementById('rCreditsValores').value)||0},role:'recruiter'}; const idx=DB.recruiters.findIndex(x=>x.id===id); if(idx>-1)DB.recruiters[idx]={...DB.recruiters[idx],...data};else DB.recruiters.push(data); localStorage.setItem('vigorre_recruiters',JSON.stringify(DB.recruiters)); renderRecruiters(); closeModal('recruiterModal'); showToast('✅ Recrutador salvo!'); logMessage('🎯 Recrutador salvo: '+data.name); }
-
-    function showUpgradeInfo(id){ 
-      window.currentParticipantForLaudo=id; 
-      openModal('upgradeModal'); 
-    }
-
+    function saveRecruiter(e){ e.preventDefault(); const id=document.getElementById('rId').value||Date.now().toString(); const data={id:id,name:document.getElementById('rName').value,email:document.getElementById('rEmail').value,phone:document.getElementById('rPhone').value,login:document.getElementById('rLogin').value,password:document.getElementById('rPass').value,credits:{DISC:parseInt(document.getElementById('rCreditsDisc').value)||0,IE:parseInt(document.getElementById('rCreditsIe').value)||0,Valores:parseInt(document.getElementById('rCreditsValores').value)||0},role:'recruiter'}; const idx=DB.recruiters.findIndex(x=>x.id===id); if(idx>-1)DB.recruiters[idx]={...DB.recruiters[idx],...data};else DB.recruiters.push(data); saveDB(); closeModal('recruiterModal'); showToast('✅ Recrutador salvo!'); }
+    function showUpgradeInfo(id){ window.currentParticipantForLaudo=id; openModal('upgradeModal'); }
     function filterStaff(){ renderStaff(); }
     function filterCompanies(){ renderCompanies(); }
     function filterParticipants(){ renderParticipants(); }
-
-    function deleteItem(col,id){ if(!confirm('⚠️ Excluir este item?\n\nEsta ação não pode ser desfeita.'))return; DB[col]=DB[col].filter(x=>x.id!==id); saveDB(); showToast('✅ Item excluído!'); logMessage(`🗑 ${col} excluído: ${id}`); }
-
-    function logout(){ localStorage.removeItem('vigorre_current_user'); sessionStorage.clear(); logMessage('🔐 Logout'); window.location.href='login.html'; }
+    function deleteItem(col,id){ if(!confirm('⚠️ Excluir este item?'))return; DB[col]=DB[col].filter(x=>x.id!==id); saveDB(); showToast('✅ Item excluído!'); }
+    function logout(){ localStorage.removeItem('vigorre_current_user'); sessionStorage.clear(); logMessage(' Logout'); window.location.href='login.html'; }
 
     document.addEventListener('DOMContentLoaded', async function(){
       logMessage('✅ Vigorre One™ carregado');
-      logMessage('📂 Arquivos mapeados:');
-      logMessage('  Testes: teste-disc/ie/valores.html');
-      logMessage('  Relatórios: relatorio-disc/ie/valores-vigorre.html');
-      logMessage('  Laudo: laudo-vigorre.html');
       const user=JSON.parse(localStorage.getItem('vigorre_current_user')||'{}');
       if(!user.role){ window.location.href='login.html'; return; }
       document.getElementById('userName').textContent=user.name||'Admin';
-      
-      // 🔥 CARREGAR DO SUPABASE PRIMEIRO
       await loadFromSupabase();
-      
       renderAll(); updateStats();
       document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModal(m.id);}));
       document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal.active').forEach(m=>closeModal(m.id));});
