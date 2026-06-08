@@ -3,11 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Vigorre One™ - Dashboard do Recrutador • People Analytics">
+  <meta name="description" content="Vigorre One™ - Dashboard Premium do Recrutador">
   <title>Dashboard | Vigorre One™ • Recrutador</title>
   
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Fonts Premium -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  
+  <!-- Ícones -->
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../supabase-config.js"></script>
   
@@ -19,304 +24,810 @@
       --brand-amber: #F59E0B;
       --brand-blue: #3B82F6;
       --brand-purple: #7C3AED;
+      --brand-rose: #F43F5E;
       --bg-light: #f8fafc;
-      --sidebar-width: 280px;
+      --sidebar-width: 300px;
+      --glass-bg: rgba(255, 255, 255, 0.95);
+      --glass-border: rgba(255, 255, 255, 0.2);
     }
     
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
     
     body {
-      background-color: var(--bg-light);
+      background: linear-gradient(135deg, #f0f9ff 0%, #f5f3ff 50%, #fef3c7 100%);
+      background-attachment: fixed;
       display: flex;
       min-height: 100vh;
       color: #334155;
     }
 
+    /* SIDEBAR PREMIUM */
     .sidebar {
       width: var(--sidebar-width);
-      background: linear-gradient(180deg, var(--brand-navy) 0%, #1e293b 100%);
+      background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
       color: white;
       position: fixed;
       height: 100vh;
       display: flex;
       flex-direction: column;
-      box-shadow: 4px 0 20px rgba(0,0,0,0.2);
+      box-shadow: 8px 0 32px rgba(0,0,0,0.15);
       z-index: 50;
+      overflow-y: auto;
     }
     
     .logo-box {
-      padding: 2rem;
+      padding: 2.5rem 2rem;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 16px;
       border-bottom: 1px solid rgba(255,255,255,0.1);
+      background: linear-gradient(135deg, rgba(6,182,212,0.1) 0%, rgba(124,58,237,0.1) 100%);
     }
     
-    .logo-img {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      object-fit: contain;
-      background: white;
-      padding: 5px;
+    .logo-premium {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #06B6D4 0%, #7C3AED 50%, #F59E0B 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: white;
+      box-shadow: 0 8px 24px rgba(6,182,212,0.4);
+      position: relative;
+      overflow: hidden;
     }
     
-    .logo-text h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 2px; }
-    .logo-text p { font-size: 0.7rem; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px; }
+    .logo-premium::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+      transform: rotate(45deg);
+      animation: shine 3s infinite;
+    }
+    
+    @keyframes shine {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+    
+    .logo-text h2 { 
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem; 
+      font-weight: 700; 
+      margin-bottom: 4px;
+      background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .logo-text p { 
+      font-size: 0.7rem; 
+      opacity: 0.7; 
+      text-transform: uppercase; 
+      letter-spacing: 2px; 
+      font-weight: 600;
+    }
     
     .credits-box {
       margin: 1.5rem;
-      padding: 1.25rem;
+      padding: 1.5rem;
       background: rgba(255,255,255,0.05);
-      border-radius: 12px;
+      border-radius: 16px;
       border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
     }
-    .credits-box h4 { font-size: 0.75rem; text-transform: uppercase; color: #94a3b8; margin-bottom: 0.75rem; letter-spacing: 0.5px; }
-    .credit-row { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.875rem; }
-    .credit-val { font-weight: 700; color: var(--brand-emerald); }
+    .credits-box h4 { 
+      font-size: 0.75rem; 
+      text-transform: uppercase; 
+      color: #94a3b8; 
+      margin-bottom: 1rem; 
+      letter-spacing: 1px;
+      font-weight: 700;
+    }
+    .credit-row { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      margin-bottom: 0.75rem; 
+      font-size: 0.9rem;
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    .credit-row:hover { background: rgba(255,255,255,0.08); }
+    .credit-val { 
+      font-weight: 800; 
+      color: var(--brand-emerald);
+      font-size: 1.1rem;
+    }
     .credit-val.zero { color: var(--brand-amber); }
     
     .nav-menu { flex: 1; padding: 1rem 0; overflow-y: auto; }
     
     .nav-item {
-      display: flex; align-items: center; gap: 12px;
-      padding: 12px 24px;
-      color: rgba(255,255,255,0.7); text-decoration: none; font-weight: 500;
-      transition: all 0.2s; cursor: pointer;
-      border-left: 3px solid transparent;
+      display: flex; 
+      align-items: center; 
+      gap: 14px;
+      padding: 14px 24px;
+      color: rgba(255,255,255,0.7); 
+      text-decoration: none; 
+      font-weight: 500;
+      transition: all 0.3s; 
+      cursor: pointer;
+      border-left: 4px solid transparent;
+      margin: 4px 12px;
+      border-radius: 12px;
     }
     
-    .nav-item:hover { background: rgba(255,255,255,0.05); color: white; }
+    .nav-item:hover { 
+      background: rgba(255,255,255,0.08); 
+      color: white;
+      transform: translateX(4px);
+    }
     
     .nav-item.active {
-      background: linear-gradient(90deg, rgba(6, 182, 212, 0.2), transparent);
-      color: white; border-left-color: var(--brand-cyan);
+      background: linear-gradient(90deg, rgba(6, 182, 212, 0.25), rgba(124, 58, 237, 0.15));
+      color: white; 
+      border-left-color: var(--brand-cyan);
+      box-shadow: 0 4px 12px rgba(6,182,212,0.2);
     }
     
-    .nav-item i { font-size: 1.25rem; }
+    .nav-item i { font-size: 1.35rem; }
+    .nav-item span { font-weight: 600; }
     
     .user-profile {
       padding: 1.5rem;
       border-top: 1px solid rgba(255,255,255,0.1);
-      background: rgba(0,0,0,0.2);
+      background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.3) 100%);
     }
-    .user-info h4 { font-size: 0.9rem; margin-bottom: 2px; }
+    .user-info h4 { font-size: 0.95rem; margin-bottom: 4px; font-weight: 700; }
     .user-info p { font-size: 0.75rem; color: var(--brand-cyan); font-weight: 600; }
     
     .logout-btn {
-      margin-top: 1rem; width: 100%; padding: 8px;
-      background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2);
-      color: #fca5a5; border-radius: 6px; cursor: pointer; font-size: 0.8rem; transition: 0.2s;
+      margin-top: 1rem; 
+      width: 100%; 
+      padding: 12px;
+      background: rgba(239, 68, 68, 0.15); 
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5; 
+      border-radius: 12px; 
+      cursor: pointer; 
+      font-size: 0.85rem; 
+      font-weight: 600;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
-    .logout-btn:hover { background: rgba(239, 68, 68, 0.2); color: white; }
+    .logout-btn:hover { 
+      background: rgba(239, 68, 68, 0.3); 
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(239,68,68,0.3);
+    }
 
+    /* MAIN CONTENT */
     .main-content {
       margin-left: var(--sidebar-width);
       flex: 1;
-      padding: 2rem;
+      padding: 2.5rem;
     }
     
     .header-top {
-      display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid rgba(226, 232, 240, 0.6);
     }
-    .header-top h1 { font-size: 1.75rem; color: var(--brand-navy); font-weight: 800; }
+    .header-top h1 { 
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem; 
+      color: var(--brand-navy); 
+      font-weight: 700;
+      background: linear-gradient(135deg, #0f172a 0%, #3b82f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
     
-    .section { display: none; }
-    .section.active { display: block; animation: fadeIn 0.3s; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .section { display: none; animation: fadeIn 0.4s ease-out; }
+    .section.active { display: block; }
+    @keyframes fadeIn { 
+      from { opacity: 0; transform: translateY(20px); } 
+      to { opacity: 1; transform: translateY(0); } 
+    }
     
     .stats-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
+      gap: 1.5rem; 
+      margin-bottom: 2.5rem;
     }
     
     .stat-card {
-      background: white; padding: 1.5rem; border-radius: 16px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      border: 1px solid #e2e8f0;
-      transition: transform 0.2s;
+      background: var(--glass-bg);
+      padding: 1.75rem; 
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+      border: 1px solid var(--glass-border);
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
     }
-    .stat-card:hover { transform: translateY(-4px); }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent-from), var(--accent-to));
+    }
+    .stat-card:hover { 
+      transform: translateY(-6px); 
+      box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+    }
     
     .stat-icon {
-      width: 48px; height: 48px; border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.5rem; margin-bottom: 1rem;
+      width: 56px; 
+      height: 56px; 
+      border-radius: 16px;
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      font-size: 1.75rem; 
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--accent-from), var(--accent-to));
+      color: white;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     }
     
-    .stat-value { font-size: 2rem; font-weight: 800; color: var(--brand-navy); }
-    .stat-label { color: #64748b; font-size: 0.875rem; font-weight: 500; margin-top: 4px; }
+    .stat-value { 
+      font-size: 2.25rem; 
+      font-weight: 800; 
+      color: var(--brand-navy);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .stat-label { 
+      color: #64748b; 
+      font-size: 0.9rem; 
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
     
-    .card-cyan .stat-icon { background: #ecfeff; color: var(--brand-cyan); }
-    .card-emerald .stat-icon { background: #ecfdf5; color: var(--brand-emerald); }
-    .card-amber .stat-icon { background: #fffbeb; color: var(--brand-amber); }
-    .card-blue .stat-icon { background: #eff6ff; color: #3B82F6; }
+    .card-cyan { --accent-from: #06B6D4; --accent-to: #3B82F6; }
+    .card-emerald { --accent-from: #10B981; --accent-to: #06B6D4; }
+    .card-amber { --accent-from: #F59E0B; --accent-to: #F43F5E; }
+    .card-purple { --accent-from: #7C3AED; --accent-to: #EC4899; }
 
+    /* CARDS PREMIUM */
     .card {
-      background: white; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      padding: 1.5rem; border: 1px solid #e2e8f0; margin-bottom: 1.5rem;
+      background: var(--glass-bg);
+      border-radius: 24px; 
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+      padding: 2rem; 
+      border: 1px solid var(--glass-border);
+      margin-bottom: 2rem;
+      backdrop-filter: blur(10px);
     }
     .card-header { 
-      display: flex; justify-content: space-between; align-items: center; 
-      margin-bottom: 1.5rem; padding-bottom: 1rem;
-      border-bottom: 1px solid #e2e8f0;
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      margin-bottom: 2rem; 
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid rgba(226, 232, 240, 0.6);
     }
-    .card-header h3 { font-size: 1.1rem; font-weight: 700; color: var(--brand-navy); display: flex; align-items: center; gap: 8px; }
+    .card-header h3 { 
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem; 
+      font-weight: 700; 
+      color: var(--brand-navy); 
+      display: flex; 
+      align-items: center; 
+      gap: 10px;
+    }
     
+    /* BUTTONS PREMIUM */
     .btn {
-      padding: 10px 20px; border-radius: 10px; border: none; font-weight: 600;
-      cursor: pointer; font-size: 0.9rem; transition: all 0.2s;
-      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px; 
+      border-radius: 12px; 
+      border: none; 
+      font-weight: 700;
+      cursor: pointer; 
+      font-size: 0.9rem; 
+      transition: all 0.3s;
+      display: inline-flex; 
+      align-items: center; 
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 0; height: 0;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+    .btn:hover::before {
+      width: 300px; height: 300px;
     }
     .btn-primary {
-      background: linear-gradient(135deg, var(--brand-cyan), var(--brand-emerald));
+      background: linear-gradient(135deg, var(--brand-cyan), var(--brand-purple));
       color: white;
-      box-shadow: 0 4px 12px rgba(6, 182, 212, 0.25);
+      box-shadow: 0 4px 16px rgba(6,182,212,0.35);
     }
-    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(6, 182, 212, 0.35); }
-    .btn-sm { padding: 6px 12px; font-size: 0.8125rem; }
-    .btn-danger { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
-    .btn-danger:hover { background: #dc2626; color: white; }
-    .btn-edit { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
-    .btn-edit:hover { background: #2563eb; color: white; }
-    .btn-copy { background: #f5f3ff; color: #7c3aed; border: 1px solid #ddd6fe; }
-    .btn-copy:hover { background: #7c3aed; color: white; }
-    .btn-view { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
-    .btn-view:hover { background: #16a34a; color: white; }
+    .btn-primary:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 8px 24px rgba(6,182,212,0.45);
+    }
+    .btn-sm { padding: 8px 16px; font-size: 0.825rem; }
+    .btn-danger { 
+      background: linear-gradient(135deg, #fee2e2, #fecaca); 
+      color: #dc2626; 
+      border: 1px solid #fecaca;
+    }
+    .btn-danger:hover { 
+      background: linear-gradient(135deg, #fecaca, #fca5a5); 
+      color: white;
+      transform: translateY(-2px);
+    }
+    .btn-edit { 
+      background: linear-gradient(135deg, #dbeafe, #bfdbfe); 
+      color: #2563eb; 
+      border: 1px solid #bfdbfe;
+    }
+    .btn-edit:hover { 
+      background: linear-gradient(135deg, #bfdbfe, #93c5fd); 
+      color: white;
+      transform: translateY(-2px);
+    }
+    .btn-copy { 
+      background: linear-gradient(135deg, #f5f3ff, #ddd6fe); 
+      color: #7c3aed; 
+      border: 1px solid #ddd6fe;
+    }
+    .btn-copy:hover { 
+      background: linear-gradient(135deg, #ddd6fe, #c4b5fd); 
+      color: white;
+      transform: translateY(-2px);
+    }
+    .btn-view { 
+      background: linear-gradient(135deg, #d1fae5, #a7f3d0); 
+      color: #059669; 
+      border: 1px solid #a7f3d0;
+    }
+    .btn-view:hover { 
+      background: linear-gradient(135deg, #a7f3d0, #6ee7b7); 
+      color: white;
+      transform: translateY(-2px);
+    }
     
-    .table-container { width: 100%; overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; }
-    th { text-align: left; padding: 12px; border-bottom: 2px solid #e2e8f0; color: #64748b; font-size: 0.8rem; text-transform: uppercase; font-weight: 600; }
-    td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; vertical-align: middle; }
-    tbody tr:hover { background: #f8fafc; }
+    /* TABLE PREMIUM */
+    .table-container { 
+      width: 100%; 
+      overflow-x: auto;
+      border-radius: 16px;
+      border: 1px solid rgba(226, 232, 240, 0.6);
+    }
+    table { 
+      width: 100%; 
+      border-collapse: separate; 
+      border-spacing: 0;
+    }
+    th { 
+      text-align: left; 
+      padding: 16px; 
+      background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+      border-bottom: 2px solid #e2e8f0; 
+      color: #64748b; 
+      font-size: 0.8rem; 
+      text-transform: uppercase; 
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    th:first-child { border-top-left-radius: 16px; }
+    th:last-child { border-top-right-radius: 16px; }
+    td { 
+      padding: 16px; 
+      border-bottom: 1px solid #f1f5f9; 
+      font-size: 0.925rem;
+      background: white;
+      transition: all 0.2s;
+    }
+    tbody tr:hover td { 
+      background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+    }
+    tbody tr:last-child td:first-child { border-bottom-left-radius: 16px; }
+    tbody tr:last-child td:last-child { border-bottom-right-radius: 16px; }
     
-    .badge { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
-    .badge-success { background: #ecfdf5; color: #059669; }
-    .badge-warning { background: #fffbeb; color: #d97706; }
-    .badge-credits { background: #fef3c7; color: #92400e; }
-    .badge-info { background: #eff6ff; color: #1d4ed8; }
-    .badge-purple { background: #f5f3ff; color: #7c3aed; }
+    .badge { 
+      padding: 6px 14px; 
+      border-radius: 20px; 
+      font-size: 0.775rem; 
+      font-weight: 700; 
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-success { 
+      background: linear-gradient(135deg, #d1fae5, #a7f3d0); 
+      color: #059669;
+      border: 1px solid #a7f3d0;
+    }
+    .badge-warning { 
+      background: linear-gradient(135deg, #fef3c7, #fde68a); 
+      color: #d97706;
+      border: 1px solid #fde68a;
+    }
+    .badge-credits { 
+      background: linear-gradient(135deg, #fef3c7, #fcd34d); 
+      color: #92400e;
+      border: 1px solid #fcd34d;
+    }
+    .badge-info { 
+      background: linear-gradient(135deg, #dbeafe, #bfdbfe); 
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+    }
+    .badge-purple { 
+      background: linear-gradient(135deg, #f5f3ff, #ddd6fe); 
+      color: #7c3aed;
+      border: 1px solid #ddd6fe;
+    }
     
-    .action-row { display: flex; gap: 4px; justify-content: flex-end; flex-wrap: wrap; }
-    .user-cell { display: flex; align-items: center; gap: 12px; }
+    .action-row { 
+      display: flex; 
+      gap: 6px; 
+      justify-content: flex-end; 
+      flex-wrap: wrap;
+    }
+    .user-cell { 
+      display: flex; 
+      align-items: center; 
+      gap: 14px;
+    }
     .avatar {
-      width: 38px; height: 38px; border-radius: 10px;
-      background: linear-gradient(135deg, var(--brand-cyan), var(--brand-emerald));
-      color: white; display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 0.9375rem;
+      width: 44px; 
+      height: 44px; 
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--brand-cyan), var(--brand-purple));
+      color: white; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      font-weight: 800; 
+      font-size: 1rem;
+      box-shadow: 0 4px 12px rgba(6,182,212,0.3);
     }
-    .user-name { font-weight: 600; color: #0f172a; }
-    .user-email { font-size: 0.8125rem; color: #64748b; }
+    .user-name { 
+      font-weight: 700; 
+      color: #0f172a;
+      font-size: 0.975rem;
+    }
+    .user-email { 
+      font-size: 0.825rem; 
+      color: #64748b;
+      font-weight: 500;
+    }
 
-    .empty-state { text-align: center; padding: 3rem 2rem; color: #64748b; }
-    .empty-state-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.4; }
+    .empty-state { 
+      text-align: center; 
+      padding: 4rem 2rem; 
+      color: #94a3b8;
+      background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+      border-radius: 16px;
+    }
+    .empty-state-icon { 
+      font-size: 4rem; 
+      margin-bottom: 1.5rem; 
+      opacity: 0.3;
+    }
+    .empty-state p {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #64748b;
+    }
     
+    /* MODAL PREMIUM */
     .modal {
-      display: none; position: fixed; inset: 0; z-index: 9999;
-      align-items: center; justify-content: center;
+      display: none; 
+      position: fixed; 
+      inset: 0; 
+      z-index: 9999;
+      align-items: center; 
+      justify-content: center;
+      backdrop-filter: blur(8px);
     }
     .modal.active { display: flex; }
     .modal::before {
-      content: ''; position: absolute; inset: 0;
-      background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px);
+      content: ''; 
+      position: absolute; 
+      inset: 0;
+      background: rgba(15, 23, 42, 0.7);
     }
     .modal-content {
-      background: white; border-radius: 20px; padding: 2rem;
-      max-width: 700px; width: 90%; max-height: 90vh; overflow-y: auto;
-      position: relative; z-index: 1; box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border-radius: 28px; 
+      padding: 2.5rem;
+      max-width: 750px; 
+      width: 90%; 
+      max-height: 90vh; 
+      overflow-y: auto;
+      position: relative; 
+      z-index: 1; 
+      box-shadow: 0 32px 64px rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.3);
+      animation: modalSlide 0.3s ease-out;
+    }
+    @keyframes modalSlide {
+      from { opacity: 0; transform: scale(0.95) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
     }
     .modal-header {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #f1f5f9;
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      margin-bottom: 2rem; 
+      padding-bottom: 1.5rem; 
+      border-bottom: 2px solid rgba(226, 232, 240, 0.6);
     }
-    .modal-header h3 { font-size: 1.25rem; font-weight: 700; color: #0f172a; }
+    .modal-header h3 { 
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem; 
+      font-weight: 700; 
+      color: var(--brand-navy);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
     .modal-close {
-      background: #f1f5f9; border: none; width: 34px; height: 34px;
-      border-radius: 10px; font-size: 1.25rem; cursor: pointer; color: #64748b;
+      background: linear-gradient(135deg, #f1f5f9, #e2e8f0); 
+      border: none; 
+      width: 40px; 
+      height: 40px;
+      border-radius: 12px; 
+      font-size: 1.5rem; 
+      cursor: pointer; 
+      color: #64748b;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .modal-close:hover { background: #ef4444; color: white; }
+    .modal-close:hover { 
+      background: linear-gradient(135deg, #ef4444, #dc2626); 
+      color: white;
+      transform: rotate(90deg);
+    }
     
-    .form-group { margin-bottom: 1rem; }
+    .form-group { 
+      margin-bottom: 1.25rem;
+    }
     .form-group label {
-      display: block; font-weight: 600; color: #334155;
-      font-size: 0.875rem; margin-bottom: 6px;
+      display: block; 
+      font-weight: 700; 
+      color: #334155;
+      font-size: 0.9rem; 
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
-    .form-group input, .form-group select, .form-group textarea {
-      width: 100%; padding: 10px 14px; border: 1px solid #e2e8f0;
-      border-radius: 8px; font-size: 0.9375rem; font-family: inherit;
+    .form-group input, 
+    .form-group select, 
+    .form-group textarea {
+      width: 100%; 
+      padding: 12px 16px; 
+      border: 2px solid #e2e8f0;
+      border-radius: 12px; 
+      font-size: 0.95rem; 
+      font-family: inherit;
+      transition: all 0.3s;
+      background: white;
     }
-    .form-group textarea { resize: vertical; min-height: 80px; }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-      outline: none; border-color: var(--brand-cyan);
-      box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+    .form-group textarea { 
+      resize: vertical; 
+      min-height: 100px;
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
     }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group input:focus, 
+    .form-group select:focus, 
+    .form-group textarea:focus {
+      outline: none; 
+      border-color: var(--brand-cyan);
+      box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.15);
+      transform: translateY(-2px);
+    }
+    .form-row { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 1.25rem;
+    }
+    
+    .password-wrapper {
+      position: relative;
+    }
+    .password-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      font-size: 1.25rem;
+      padding: 4px;
+      transition: all 0.2s;
+    }
+    .password-toggle:hover {
+      color: var(--brand-cyan);
+      transform: translateY(-50%) scale(1.1);
+    }
     
     .form-hint {
-      font-size: 0.75rem; color: #94a3b8; font-weight: 400; margin-left: 4px;
+      font-size: 0.8rem; 
+      color: #94a3b8; 
+      font-weight: 500; 
+      margin-left: 6px;
     }
     
     .checkbox-list {
-      max-height: 200px; overflow-y: auto;
-      border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.5rem;
+      max-height: 220px; 
+      overflow-y: auto;
+      border: 2px solid #e2e8f0; 
+      border-radius: 12px; 
+      padding: 0.75rem;
+      background: white;
     }
     .checkbox-item {
-      display: flex; align-items: center; gap: 8px;
-      padding: 8px 12px; border-radius: 6px;
-      transition: background 0.2s;
+      display: flex; 
+      align-items: center; 
+      gap: 12px;
+      padding: 10px 14px; 
+      border-radius: 10px;
+      transition: all 0.2s;
+      margin-bottom: 4px;
     }
-    .checkbox-item:hover { background: #f8fafc; }
+    .checkbox-item:hover { 
+      background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+      transform: translateX(4px);
+    }
     .checkbox-item input[type="checkbox"] {
-      width: 18px; height: 18px; cursor: pointer;
+      width: 20px; 
+      height: 20px; 
+      cursor: pointer;
+      accent-color: var(--brand-cyan);
     }
     .checkbox-item label {
-      cursor: pointer; font-weight: 500; color: #334155;
+      cursor: pointer; 
+      font-weight: 600; 
+      color: #334155;
       flex: 1;
+      font-size: 0.925rem;
     }
     
     .select-all-bar {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 8px 12px; background: #f8fafc; border-radius: 6px;
-      margin-bottom: 0.5rem;
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      padding: 12px 16px; 
+      background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%); 
+      border-radius: 10px;
+      margin-bottom: 0.75rem;
+      border: 1px solid #e2e8f0;
     }
-    .select-all-bar button {
-      background: none; border: none; color: var(--brand-cyan);
-      font-size: 0.8rem; font-weight: 600; cursor: pointer;
+    .select-all-bar label {
+      display: flex; 
+      align-items: center; 
+      gap: 10px; 
+      cursor: pointer; 
+      font-weight: 700; 
+      color: #0f172a;
+      font-size: 0.9rem;
+    }
+    .select-all-bar input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--brand-cyan);
+    }
+    .select-all-bar span {
+      font-size: 0.85rem; 
+      color: #64748b;
+      font-weight: 600;
     }
     
     .copy-summary {
-      background: #f0fdf4; border: 1px solid #bbf7d0;
-      border-radius: 8px; padding: 12px; margin-top: 1rem;
-      color: #166534; font-size: 0.875rem;
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); 
+      border: 2px solid #a7f3d0;
+      border-radius: 14px; 
+      padding: 16px; 
+      margin-top: 1.5rem;
+      color: #065f46; 
+      font-size: 0.925rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .copy-summary strong {
+      color: #047857;
+      font-size: 1.1rem;
     }
     
     .vaga-desc {
-      max-width: 300px;
-      font-size: 0.85rem; color: #64748b;
+      max-width: 320px;
+      font-size: 0.875rem; 
+      color: #64748b;
+      line-height: 1.5;
     }
     
     .vaga-perfil-tag {
-      display: inline-flex; align-items: center; gap: 4px;
-      padding: 2px 8px; background: #f5f3ff; color: #7c3aed;
-      border-radius: 4px; font-size: 0.7rem; font-weight: 600;
+      display: inline-flex; 
+      align-items: center; 
+      gap: 4px;
+      padding: 4px 10px; 
+      background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); 
+      color: #7c3aed;
+      border: 1px solid #ddd6fe;
+      border-radius: 6px; 
+      font-size: 0.725rem; 
+      font-weight: 700;
       margin: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
     
     .toast {
-      position: fixed; top: 24px; right: 24px;
-      background: white; padding: 14px 20px; border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15); z-index: 10001;
-      border-left: 4px solid #10b981; font-weight: 500;
-      animation: toastIn 0.3s ease;
+      position: fixed; 
+      top: 24px; 
+      right: 24px;
+      background: white; 
+      padding: 16px 24px; 
+      border-radius: 16px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.2); 
+      z-index: 10001;
+      border-left: 5px solid #10b981; 
+      font-weight: 600;
+      animation: toastSlide 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
-    .toast.error { border-left-color: #f43f5e; }
-    @keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+    .toast.error { 
+      border-left-color: #f43f5e;
+      background: linear-gradient(180deg, #fff 0%, #fef2f2 100%);
+    }
+    @keyframes toastSlide { 
+      from { opacity: 0; transform: translateX(100px) scale(0.8); } 
+      to { opacity: 1; transform: translateX(0) scale(1); } 
+    }
     
     @media (max-width: 768px) {
-      :root { --sidebar-width: 76px; }
+      :root { --sidebar-width: 80px; }
       .sidebar { padding: 1.25rem 0.75rem; }
-      .logo-text, .nav-item span:not(.nav-icon-wrap), .user-info, .credits-box h4, .credit-row span:first-child { display: none; }
-      .nav-item { justify-content: center; padding: 14px; }
+      .logo-text, .nav-item span, .user-info, .credits-box h4, .credit-row span:first-child { display: none; }
+      .nav-item { justify-content: center; padding: 16px; }
       .main-content { padding: 1.5rem; }
+      .form-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -324,18 +835,18 @@
 
   <aside class="sidebar">
     <div class="logo-box">
-      <img src="../logo-vigorre.png" alt="Vigorre" class="logo-img" onerror="this.style.background='linear-gradient(135deg,#06B6D4,#10B981)';this.outerHTML='<div class=\'logo-img\' style=\'display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#06B6D4,#10B981);color:white;font-weight:900;font-size:1.5rem\'>V</div>'">
+      <div class="logo-premium">V</div>
       <div class="logo-text">
         <h2>Vigorre One™</h2>
-        <p>Área do Recrutador</p>
+        <p>Enterprise Suite</p>
       </div>
     </div>
     
     <div class="credits-box">
-      <h4>Meus Créditos</h4>
-      <div class="credit-row"><span>DISC</span><span class="credit-val" id="credDisc">0</span></div>
-      <div class="credit-row"><span>IE</span><span class="credit-val" id="credIe">0</span></div>
-      <div class="credit-row"><span>Valores</span><span class="credit-val" id="credVal">0</span></div>
+      <h4><i class="ph ph-wallet" style="margin-right:6px"></i>Meus Créditos</h4>
+      <div class="credit-row"><span>📊 DISC</span><span class="credit-val" id="credDisc">0</span></div>
+      <div class="credit-row"><span>🧠 IE</span><span class="credit-val" id="credIe">0</span></div>
+      <div class="credit-row"><span>💎 Valores</span><span class="credit-val" id="credVal">0</span></div>
     </div>
     
     <nav class="nav-menu">
@@ -359,10 +870,10 @@
     <div class="user-profile">
       <div class="user-info">
         <h4 id="userName">Carregando...</h4>
-        <p>Recrutador</p>
+        <p><i class="ph ph-briefcase" style="margin-right:4px"></i>Recrutador</p>
       </div>
       <button class="logout-btn" onclick="logout()">
-        <i class="ph ph-sign-out"></i> Sair
+        <i class="ph ph-sign-out"></i> Sair do Sistema
       </button>
     </div>
   </aside>
@@ -372,16 +883,16 @@
     <section id="dashboard" class="section active">
       <div class="header-top">
         <div>
-          <h1>Dashboard</h1>
-          <p style="color:#64748b">Visão geral da sua operação de recrutamento</p>
+          <h1>Dashboard Executivo</h1>
+          <p style="color:#64748b;margin-top:4px">Visão estratégica da sua operação de recrutamento</p>
         </div>
       </div>
       
       <div class="stats-grid">
-        <div class="stat-card card-blue">
+        <div class="stat-card card-cyan">
           <div class="stat-icon"><i class="ph ph-users"></i></div>
           <div class="stat-value" id="kpiPart">0</div>
-          <div class="stat-label">Participantes</div>
+          <div class="stat-label">Participantes Ativos</div>
         </div>
         <div class="stat-card card-emerald">
           <div class="stat-icon"><i class="ph ph-check-circle"></i></div>
@@ -391,9 +902,9 @@
         <div class="stat-card card-amber">
           <div class="stat-icon"><i class="ph ph-briefcase"></i></div>
           <div class="stat-value" id="kpiVag">0</div>
-          <div class="stat-label">Vagas Ativas</div>
+          <div class="stat-label">Vagas Abertas</div>
         </div>
-        <div class="stat-card card-cyan">
+        <div class="stat-card card-purple">
           <div class="stat-icon"><i class="ph ph-buildings"></i></div>
           <div class="stat-value" id="kpiEmp">0</div>
           <div class="stat-label">Empresas</div>
@@ -402,7 +913,7 @@
       
       <div class="card">
         <div class="card-header">
-          <h3><i class="ph ph-clock"></i> Atividades Recentes</h3>
+          <h3><i class="ph ph-clock" style="color:var(--brand-cyan)"></i>Atividades Recentes</h3>
         </div>
         <div class="table-container">
           <table>
@@ -410,7 +921,7 @@
               <tr><th>Participante</th><th>Ação</th><th>Status</th><th>Data</th></tr>
             </thead>
             <tbody id="dashboardActivities">
-              <tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">📋</div><p>Nenhuma atividade</p></div></td></tr>
+              <tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">📋</div><p>Nenhuma atividade registrada</p></div></td></tr>
             </tbody>
           </table>
         </div>
@@ -420,11 +931,11 @@
     <section id="empresas" class="section">
       <div class="header-top">
         <div>
-          <h1>Empresas</h1>
-          <p style="color:#64748b">Gerencie suas empresas clientes</p>
+          <h1>Gestão de Empresas</h1>
+          <p style="color:#64748b;margin-top:4px">Cadastre e gerencie suas empresas clientes</p>
         </div>
         <button class="btn btn-primary" onclick="openModal('modalEmpresa')">
-          <i class="ph ph-plus"></i> Nova Empresa
+          <i class="ph ph-plus-circle"></i> Nova Empresa
         </button>
       </div>
       
@@ -432,10 +943,17 @@
         <div class="table-container">
           <table>
             <thead>
-              <tr><th>Empresa</th><th>CNPJ</th><th>Responsável</th><th>Contato</th><th>Vagas</th><th style="text-align:right">Ações</th></tr>
+              <tr>
+                <th>Empresa</th>
+                <th>CNPJ</th>
+                <th>Responsável</th>
+                <th>Contato</th>
+                <th>Vagas</th>
+                <th style="text-align:right">Ações</th>
+              </tr>
             </thead>
             <tbody id="empresasTable">
-              <tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon"></div><p>Nenhuma empresa cadastrada</p></div></td></tr>
+              <tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">🏢</div><p>Nenhuma empresa cadastrada</p></div></td></tr>
             </tbody>
           </table>
         </div>
@@ -445,11 +963,11 @@
     <section id="vagas" class="section">
       <div class="header-top">
         <div>
-          <h1>Vagas</h1>
-          <p style="color:#64748b">Gerencie suas vagas abertas com atividades e perfil desejado</p>
+          <h1>Gestão de Vagas</h1>
+          <p style="color:#64748b;margin-top:4px">Cadastre vagas com atividades e perfil comportamental</p>
         </div>
         <button class="btn btn-primary" onclick="openModal('modalVaga')">
-          <i class="ph ph-plus"></i> Nova Vaga
+          <i class="ph ph-plus-circle"></i> Nova Vaga
         </button>
       </div>
       
@@ -477,11 +995,11 @@
     <section id="participantes" class="section">
       <div class="header-top">
         <div>
-          <h1>Participantes</h1>
-          <p style="color:#64748b">Gerencie seus candidatos</p>
+          <h1>Gestão de Participantes</h1>
+          <p style="color:#64748b;margin-top:4px">Cadastre e gerencie seus candidatos</p>
         </div>
         <button class="btn btn-primary" onclick="openModal('modalParticipante')">
-          <i class="ph ph-plus"></i> Novo Participante
+          <i class="ph ph-user-plus"></i> Novo Participante
         </button>
       </div>
       
@@ -489,10 +1007,17 @@
         <div class="table-container">
           <table>
             <thead>
-              <tr><th>Nome</th><th>Email</th><th>Empresa</th><th>Testes</th><th style="text-align:right">Ações</th></tr>
+              <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Empresa</th>
+                <th>Vaga</th>
+                <th>Testes</th>
+                <th style="text-align:right">Ações</th>
+              </tr>
             </thead>
             <tbody id="participantesTable">
-              <tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon"></div><p>Nenhum participante cadastrado</p></div></td></tr>
+              <tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">👤</div><p>Nenhum participante cadastrado</p></div></td></tr>
             </tbody>
           </table>
         </div>
@@ -503,7 +1028,7 @@
       <div class="header-top">
         <div>
           <h1>Relatórios</h1>
-          <p style="color:#64748b">Relatórios gerados dos participantes</p>
+          <p style="color:#64748b;margin-top:4px">Acompanhe os relatórios gerados</p>
         </div>
       </div>
       
@@ -511,7 +1036,12 @@
         <div class="table-container">
           <table>
             <thead>
-              <tr><th>Participante</th><th>Tipo</th><th>Data</th><th style="text-align:right">Ações</th></tr>
+              <tr>
+                <th>Participante</th>
+                <th>Tipo</th>
+                <th>Data</th>
+                <th style="text-align:right">Ações</th>
+              </tr>
             </thead>
             <tbody id="relatoriosTable">
               <tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">📊</div><p>Nenhum relatório gerado</p></div></td></tr>
@@ -527,30 +1057,48 @@
   <div class="modal" id="modalEmpresa">
     <div class="modal-content">
       <div class="modal-header">
-        <h3>🏢 Nova Empresa</h3>
+        <h3><i class="ph ph-buildings" style="color:var(--brand-cyan)"></i>Nova Empresa</h3>
         <button class="modal-close" onclick="closeModal('modalEmpresa')">×</button>
       </div>
       <form onsubmit="saveEmpresa(event)">
         <input type="hidden" id="empId">
-        <div class="form-group"><label>Nome *</label><input type="text" id="empNome" required></div>
-        <div class="form-row">
-          <div class="form-group"><label>CNPJ</label><input type="text" id="empCnpj"></div>
-          <div class="form-group"><label>Responsável</label><input type="text" id="empResp"></div>
+        <div class="form-group">
+          <label>Nome da Empresa *</label>
+          <input type="text" id="empNome" placeholder="Ex: Empresa XYZ Ltda" required>
         </div>
         <div class="form-row">
-          <div class="form-group"><label>Email</label><input type="email" id="empEmail"></div>
-          <div class="form-group"><label>WhatsApp</label><input type="tel" id="empPhone"></div>
+          <div class="form-group">
+            <label>CNPJ</label>
+            <input type="text" id="empCnpj" placeholder="00.000.000/0001-00">
+          </div>
+          <div class="form-group">
+            <label>Responsável</label>
+            <input type="text" id="empResp" placeholder="Nome do responsável">
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:1rem"> Salvar</button>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="empEmail" placeholder="contato@empresa.com">
+          </div>
+          <div class="form-group">
+            <label>WhatsApp</label>
+            <input type="tel" id="empPhone" placeholder="(34) 99999-9999">
+          </div>
+        </div>
+        <div style="display:flex;gap:0.75rem;margin-top:1.5rem">
+          <button type="button" class="btn" style="flex:1;background:#f1f5f9;color:#64748b" onclick="closeModal('modalEmpresa')">Cancelar</button>
+          <button type="submit" class="btn btn-primary" style="flex:2;justify-content:center"><i class="ph ph-check-circle"></i> Salvar Empresa</button>
+        </div>
       </form>
     </div>
   </div>
 
-  <!-- MODAL VAGA (ATUALIZADO) -->
+  <!-- MODAL VAGA -->
   <div class="modal" id="modalVaga">
     <div class="modal-content">
       <div class="modal-header">
-        <h3>💼 Nova Vaga</h3>
+        <h3><i class="ph ph-briefcase" style="color:var(--brand-emerald)"></i>Nova Vaga</h3>
         <button class="modal-close" onclick="closeModal('modalVaga')">×</button>
       </div>
       <form onsubmit="saveVaga(event)">
@@ -558,14 +1106,14 @@
         
         <div class="form-group">
           <label>Título da Vaga *</label>
-          <input type="text" id="vagTitulo" placeholder="Ex: Analista de RH" required>
+          <input type="text" id="vagTitulo" placeholder="Ex: Analista de Recursos Humanos" required>
         </div>
         
         <div class="form-row">
           <div class="form-group">
             <label>Empresa *</label>
             <select id="vagEmpresa" required>
-              <option value="">Selecione...</option>
+              <option value="">Selecione uma empresa...</option>
             </select>
           </div>
           <div class="form-group">
@@ -585,7 +1133,7 @@
         </div>
         
         <div class="form-group">
-          <label>Atividades / Descrição da Vaga <span class="form-hint">(obrigatório)</span></label>
+          <label>Atividades / Descrição <span class="form-hint">(obrigatório)</span></label>
           <textarea id="vagAtividades" rows="5" placeholder="Descreva as principais atividades e responsabilidades do cargo..." required></textarea>
         </div>
         
@@ -593,16 +1141,16 @@
           <label>Perfil Comportamental DISC <span class="form-hint">(opcional)</span></label>
           <select id="vagDisc">
             <option value="">Não especificar</option>
-            <option value="D">Dominância (D) - Perfil líder, direto, orientado a resultados</option>
-            <option value="I">Influência (I) - Perfil comunicativo, persuasivo, entusiasta</option>
-            <option value="S">Estabilidade (S) - Perfil paciente, estável, colaborativo</option>
-            <option value="C">Conformidade (C) - Perfil analítico, preciso, detalhista</option>
+            <option value="D">Dominância (D) - Líder, direto, orientado a resultados</option>
+            <option value="I">Influência (I) - Comunicativo, persuasivo, entusiasta</option>
+            <option value="S">Estabilidade (S) - Paciente, estável, colaborativo</option>
+            <option value="C">Conformidade (C) - Analítico, preciso, detalhista</option>
           </select>
         </div>
         
         <div class="form-group">
           <label>Competências / Requisitos <span class="form-hint">(opcional)</span></label>
-          <textarea id="vagPerfil" rows="4" placeholder="Ex: Superior completo, 3 anos de experiência, inglês avançado, habilidades em liderança..."></textarea>
+          <textarea id="vagPerfil" rows="4" placeholder="Ex: Superior completo, 3 anos de experiência, inglês avançado..."></textarea>
         </div>
         
         <div class="form-row">
@@ -616,9 +1164,9 @@
           </div>
         </div>
         
-        <div style="display:flex;gap:0.5rem;margin-top:1rem">
+        <div style="display:flex;gap:0.75rem;margin-top:1.5rem">
           <button type="button" class="btn" style="flex:1;background:#f1f5f9;color:#64748b" onclick="closeModal('modalVaga')">Cancelar</button>
-          <button type="submit" class="btn btn-primary" style="flex:2;justify-content:center">💾 Salvar Vaga</button>
+          <button type="submit" class="btn btn-primary" style="flex:2;justify-content:center"><i class="ph ph-check-circle"></i> Salvar Vaga</button>
         </div>
       </form>
     </div>
@@ -628,23 +1176,23 @@
   <div class="modal" id="modalCopiar">
     <div class="modal-content">
       <div class="modal-header">
-        <h3>📋 Copiar Vaga para Outras Empresas</h3>
+        <h3><i class="ph ph-copy" style="color:var(--brand-purple)"></i>Copiar Vaga</h3>
         <button class="modal-close" onclick="closeModal('modalCopiar')">×</button>
       </div>
       
-      <div style="background:#eff6ff;border-radius:12px;padding:1rem;margin-bottom:1.5rem;border-left:4px solid var(--brand-blue)">
-        <strong id="copiarVagaNome"></strong>
-        <p style="font-size:0.875rem;color:#64748b;margin-top:0.25rem">Selecione as empresas para as quais deseja copiar esta vaga:</p>
+      <div style="background:linear-gradient(135deg,#eff6ff 0%,#dbeafe 100%);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem;border-left:5px solid var(--brand-blue)">
+        <strong id="copiarVagaNome" style="font-size:1.1rem;color:#0f172a;display:block;margin-bottom:0.5rem"></strong>
+        <p style="font-size:0.9rem;color:#64748b">Selecione as empresas para as quais deseja copiar esta vaga:</p>
       </div>
       
       <input type="hidden" id="copiarVagaId">
       
       <div class="select-all-bar">
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:600;color:#0f172a">
+        <label>
           <input type="checkbox" id="selectAllEmpresas" onchange="toggleSelectAll(this)">
-          Selecionar todas
+          Selecionar todas as empresas
         </label>
-        <span style="font-size:0.8rem;color:#64748b"><span id="countEmpSelecionadas">0</span> selecionadas</span>
+        <span><span id="countEmpSelecionadas">0</span> selecionada(s)</span>
       </div>
       
       <div class="checkbox-list" id="listaEmpresasCopy">
@@ -652,10 +1200,11 @@
       </div>
       
       <div class="copy-summary" id="copySummary" style="display:none">
-        A vaga será copiada para <strong id="countCopy">0</strong> empresa(s), mantendo todas as atividades e perfil comportamental.
+        <i class="ph ph-info" style="font-size:1.25rem"></i>
+        <span>A vaga será copiada para <strong id="countCopy">0</strong> empresa(s), mantendo todas as atividades e perfil comportamental.</span>
       </div>
       
-      <div style="display:flex;gap:0.5rem;margin-top:1.5rem">
+      <div style="display:flex;gap:0.75rem;margin-top:1.5rem">
         <button type="button" class="btn" style="flex:1;background:#f1f5f9;color:#64748b" onclick="closeModal('modalCopiar')">Cancelar</button>
         <button type="button" class="btn btn-primary" style="flex:2;justify-content:center" onclick="confirmarCopiarVaga()">
           <i class="ph ph-copy"></i> Confirmar Cópia
@@ -664,46 +1213,62 @@
     </div>
   </div>
 
-  <!-- MODAL VISUALIZAR VAGA -->
-  <div class="modal" id="modalVerVaga">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3> Detalhes da Vaga</h3>
-        <button class="modal-close" onclick="closeModal('modalVerVaga')">×</button>
-      </div>
-      <div id="verVagaConteudo"></div>
-    </div>
-  </div>
-
   <!-- MODAL PARTICIPANTE -->
   <div class="modal" id="modalParticipante">
     <div class="modal-content">
       <div class="modal-header">
-        <h3>👤 Novo Participante</h3>
+        <h3><i class="ph ph-user-plus" style="color:var(--brand-amber)"></i>Novo Participante</h3>
         <button class="modal-close" onclick="closeModal('modalParticipante')">×</button>
       </div>
       <form onsubmit="saveParticipante(event)">
         <input type="hidden" id="partId">
-        <div class="form-group"><label>Nome *</label><input type="text" id="partNome" required></div>
+        <div class="form-group">
+          <label>Nome Completo *</label>
+          <input type="text" id="partNome" placeholder="Nome completo do participante" required>
+        </div>
         <div class="form-row">
-          <div class="form-group"><label>Email *</label><input type="email" id="partEmail" required></div>
-          <div class="form-group"><label>WhatsApp *</label><input type="tel" id="partPhone" required></div>
+          <div class="form-group">
+            <label>Email *</label>
+            <input type="email" id="partEmail" placeholder="email@exemplo.com" required>
+          </div>
+          <div class="form-group">
+            <label>WhatsApp *</label>
+            <input type="tel" id="partPhone" placeholder="(34) 99999-9999" required>
+          </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label>Empresa</label>
-            <select id="partEmpresa"><option value="">Autônomo</option></select>
+            <select id="partEmpresa">
+              <option value="">Autônomo / Não vinculado</option>
+            </select>
           </div>
           <div class="form-group">
             <label>Vaga</label>
-            <select id="partVaga"><option value="">Nenhuma</option></select>
+            <select id="partVaga">
+              <option value="">Nenhuma vaga vinculada</option>
+            </select>
           </div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label>Usuário *</label><input type="text" id="partUser" required></div>
-          <div class="form-group"><label>Senha *</label><input type="text" id="partPass" required></div>
+          <div class="form-group">
+            <label>Usuário de Acesso *</label>
+            <div class="password-wrapper">
+              <input type="text" id="partUser" placeholder="login" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Senha de Acesso *</label>
+            <div class="password-wrapper">
+              <input type="password" id="partPass" placeholder="••••••••" required>
+              <button type="button" class="password-toggle" onclick="togglePassword('partPass')">👁️</button>
+            </div>
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:1rem">💾 Salvar</button>
+        <div style="display:flex;gap:0.75rem;margin-top:1.5rem">
+          <button type="button" class="btn" style="flex:1;background:#f1f5f9;color:#64748b" onclick="closeModal('modalParticipante')">Cancelar</button>
+          <button type="submit" class="btn btn-primary" style="flex:2;justify-content:center"><i class="ph ph-check-circle"></i> Salvar Participante</button>
+        </div>
       </form>
     </div>
   </div>
@@ -787,7 +1352,7 @@
       
       renderEmpresas(empresas);
       renderVagas(vagas, empresas, participantes);
-      renderParticipantes(participantes, empresas);
+      renderParticipantes(participantes, empresas, vagas);
       renderRelatorios(participantes);
       renderDashboardAtividades(participantes);
     }
@@ -798,19 +1363,31 @@
         tb.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">🏢</div><p>Nenhuma empresa cadastrada</p></div></td></tr>';
         return;
       }
-      tb.innerHTML = empresas.map(e => `
-        <tr>
-          <td><div class="user-cell"><div class="avatar">${e.name?.[0]?.toUpperCase() || '?'}</div><div><div class="user-name">${e.name}</div></div></div></td>
-          <td>${e.cnpj || '-'}</td>
-          <td>${e.resp || '-'}</td>
-          <td>${e.phone || '-'}</td>
-          <td><span class="badge badge-credits">${JSON.parse(localStorage.getItem('vigorre_jobs') || '[]').filter(j => j.compId === e.id).length} vagas</span></td>
-          <td style="text-align:right"><div class="action-row">
-            <button class="btn btn-sm btn-edit" onclick="editEmpresa('${e.id}')">✏️</button>
-            <button class="btn btn-sm btn-danger" onclick="deleteEmpresa('${e.id}')">🗑️</button>
-          </div></td>
-        </tr>
-      `).join('');
+      tb.innerHTML = empresas.map(e => {
+        const vagasCount = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]').filter(j => j.compId === e.id).length;
+        return `
+          <tr>
+            <td>
+              <div class="user-cell">
+                <div class="avatar">${e.name?.[0]?.toUpperCase() || '?'}</div>
+                <div>
+                  <div class="user-name">${e.name}</div>
+                </div>
+              </div>
+            </td>
+            <td>${e.cnpj || '-'}</td>
+            <td>${e.resp || '-'}</td>
+            <td>${e.phone || '-'}</td>
+            <td><span class="badge badge-credits">${vagasCount} vagas</span></td>
+            <td style="text-align:right">
+              <div class="action-row">
+                <button class="btn btn-sm btn-edit" onclick="editEmpresa('${e.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+                <button class="btn btn-sm btn-danger" onclick="deleteEmpresa('${e.id}')" title="Excluir"><i class="ph ph-trash"></i></button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
       
       updateEmpresaSelects(empresas);
     }
@@ -825,7 +1402,7 @@
         const emp = empresas?.find(e => e.id === v.compId);
         const parts = participantes?.filter(p => p.jobId === v.id).length || 0;
         
-        const atividadesShort = v.atividades ? (v.atividades.length > 50 ? v.atividades.substring(0, 50) + '...' : v.atividades) : '-';
+        const atividadesShort = v.atividades ? (v.atividades.length > 60 ? v.atividades.substring(0, 60) + '...' : v.atividades) : '-';
         
         const discLabel = {
           'D': { label: 'Dominância', color: 'badge-success' },
@@ -833,24 +1410,25 @@
           'S': { label: 'Estabilidade', color: 'badge-credits' },
           'C': { label: 'Conformidade', color: 'badge-purple' }
         };
-        const disc = v.disc ? `<span class="badge ${discLabel[v.disc].color}">${discLabel[v.disc].label}</span>` : '<span style="color:#94a3b8;font-size:0.8rem">Não definido</span>';
+        const disc = v.disc ? `<span class="badge ${discLabel[v.disc].color}">${discLabel[v.disc].label}</span>` : '<span style="color:#94a3b8;font-size:0.85rem">-</span>';
         
         return `
           <tr>
             <td>
-              <div class="user-name">${v.name}</div>
-              <div style="font-size:0.75rem;color:#94a3b8;margin-top:2px">${v.type || '-'} • ${v.location || '-'}</div>
+              <div style="font-weight:700;color:#0f172a">${v.name}</div>
+              <div style="font-size:0.8rem;color:#64748b;margin-top:2px">${v.type || '-'} • ${v.location || '-'}</div>
             </td>
             <td><strong>${emp?.name || '-'}</strong></td>
             <td class="vaga-desc" title="${(v.atividades || '').replace(/"/g, '&quot;')}">${atividadesShort}</td>
             <td>${disc}</td>
             <td><span class="badge badge-credits">${parts}</span></td>
-            <td style="text-align:right"><div class="action-row">
-              <button class="btn btn-sm btn-view" onclick="verVaga('${v.id}')" title="Ver detalhes">️</button>
-              <button class="btn btn-sm btn-copy" onclick="abrirCopiarVaga('${v.id}')" title="Copiar para outras empresas">📋</button>
-              <button class="btn btn-sm btn-edit" onclick="editVaga('${v.id}')" title="Editar">️</button>
-              <button class="btn btn-sm btn-danger" onclick="deleteVaga('${v.id}')" title="Excluir">🗑️</button>
-            </div></td>
+            <td style="text-align:right">
+              <div class="action-row">
+                <button class="btn btn-sm btn-copy" onclick="abrirCopiarVaga('${v.id}')" title="Copiar para outras empresas"><i class="ph ph-copy"></i></button>
+                <button class="btn btn-sm btn-edit" onclick="editVaga('${v.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+                <button class="btn btn-sm btn-danger" onclick="deleteVaga('${v.id}')" title="Excluir"><i class="ph ph-trash"></i></button>
+              </div>
+            </td>
           </tr>
         `;
       }).join('');
@@ -858,25 +1436,37 @@
       updateVagaSelects(vagas);
     }
     
-    function renderParticipantes(participantes, empresas) {
+    function renderParticipantes(participantes, empresas, vagas) {
       const tb = document.getElementById('participantesTable');
       if (!participantes || participantes.length === 0) {
-        tb.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon">👤</div><p>Nenhum participante cadastrado</p></div></td></tr>';
+        tb.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">👤</div><p>Nenhum participante cadastrado</p></div></td></tr>';
         return;
       }
       tb.innerHTML = participantes.map(p => {
         const emp = empresas?.find(e => e.id === p.compId);
+        const vaga = vagas?.find(v => v.id === p.jobId);
         const tests = p.completedTests?.length || 0;
         return `
           <tr>
-            <td><div class="user-cell"><div class="avatar">${p.name?.[0]?.toUpperCase() || '?'}</div><div><div class="user-name">${p.name}</div><div class="user-email">${p.email}</div></div></div></td>
+            <td>
+              <div class="user-cell">
+                <div class="avatar">${p.name?.[0]?.toUpperCase() || '?'}</div>
+                <div>
+                  <div class="user-name">${p.name}</div>
+                  <div class="user-email">${p.email}</div>
+                </div>
+              </div>
+            </td>
             <td>${p.email}</td>
-            <td>${emp?.name || 'Autônomo'}</td>
+            <td>${emp ? `<span class="badge badge-info">${emp.name}</span>` : '<span style="color:#94a3b8">Autônomo</span>'}</td>
+            <td>${vaga ? `<span class="badge badge-purple">${vaga.name}</span>` : '<span style="color:#94a3b8">-</span>'}</td>
             <td><span class="badge ${tests > 0 ? 'badge-success' : 'badge-warning'}">${tests} testes</span></td>
-            <td style="text-align:right"><div class="action-row">
-              <button class="btn btn-sm btn-edit">✏️</button>
-              <button class="btn btn-sm btn-danger" onclick="deleteParticipante('${p.id}')">🗑️</button>
-            </div></td>
+            <td style="text-align:right">
+              <div class="action-row">
+                <button class="btn btn-sm btn-edit" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+                <button class="btn btn-sm btn-danger" onclick="deleteParticipante('${p.id}')" title="Excluir"><i class="ph ph-trash"></i></button>
+              </div>
+            </td>
           </tr>
         `;
       }).join('');
@@ -907,7 +1497,7 @@
           <td><strong>${r.participant}</strong></td>
           <td><span class="badge badge-success">${r.type}</span></td>
           <td>${r.date}</td>
-          <td style="text-align:right"><button class="btn btn-sm btn-view">📄</button></td>
+          <td style="text-align:right"><button class="btn btn-sm btn-view" title="Visualizar"><i class="ph ph-eye"></i></button></td>
         </tr>
       `).join('');
     }
@@ -925,7 +1515,7 @@
       });
       
       if (atividades.length === 0) {
-        tb.innerHTML = '<tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon"></div><p>Nenhuma atividade</p></div></td></tr>';
+        tb.innerHTML = '<tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">📋</div><p>Nenhuma atividade registrada</p></div></td></tr>';
         return;
       }
       tb.innerHTML = atividades.slice(0, 5).map(a => `
@@ -944,7 +1534,7 @@
         if (!sel) return;
         const currentVal = sel.value;
         const options = empresas.map(e => `<option value="${e.id}">${e.name}</option>`).join('');
-        sel.innerHTML = id === 'partEmpresa' ? '<option value="">Autônomo</option>' + options : '<option value="">Selecione...</option>' + options;
+        sel.innerHTML = id === 'partEmpresa' ? '<option value="">Autônomo / Não vinculado</option>' + options : '<option value="">Selecione uma empresa...</option>' + options;
         sel.value = currentVal;
       });
     }
@@ -953,7 +1543,7 @@
       const sel = document.getElementById('partVaga');
       if (!sel) return;
       const currentVal = sel.value;
-      sel.innerHTML = '<option value="">Nenhuma</option>' + vagas.map(v => `<option value="${v.id}">${v.name}</option>`).join('');
+      sel.innerHTML = '<option value="">Nenhuma vaga vinculada</option>' + vagas.map(v => `<option value="${v.id}">${v.name}</option>`).join('');
       sel.value = currentVal;
     }
     
@@ -968,6 +1558,17 @@
     }
     function closeModal(id) {
       document.getElementById(id).classList.remove('active');
+    }
+    
+    function togglePassword(inputId) {
+      const input = document.getElementById(inputId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        input.nextElementSibling.textContent = '🙈';
+      } else {
+        input.type = 'password';
+        input.nextElementSibling.textContent = '👁️';
+      }
     }
     
     async function saveEmpresa(e) {
@@ -992,7 +1593,7 @@
       }
       
       closeModal('modalEmpresa');
-      showToast('✅ Empresa salva!');
+      showToast('✅ Empresa salva com sucesso!');
       carregarDados();
     }
     
@@ -1051,7 +1652,7 @@
       }
       
       closeModal('modalVaga');
-      showToast(editId ? '✅ Vaga atualizada!' : '✅ Vaga criada!');
+      showToast(editId ? '✅ Vaga atualizada!' : '✅ Vaga criada com sucesso!');
       carregarDados();
     }
     
@@ -1085,71 +1686,6 @@
       carregarDados();
     }
     
-    function verVaga(id) {
-      const vagas = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]');
-      const empresas = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
-      const participantes = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
-      
-      const v = vagas.find(x => x.id === id);
-      if (!v) return;
-      
-      const emp = empresas.find(e => e.id === v.compId);
-      const parts = participantes.filter(p => p.jobId === v.id);
-      
-      const discLabel = {
-        'D': 'Dominância - Líder, direto, orientado a resultados',
-        'I': 'Influência - Comunicativo, persuasivo, entusiasta',
-        'S': 'Estabilidade - Paciente, estável, colaborativo',
-        'C': 'Conformidade - Analítico, preciso, detalhista'
-      };
-      
-      let html = `
-        <div style="margin-bottom:1.5rem">
-          <h2 style="font-size:1.5rem;color:#0f172a;margin-bottom:0.25rem">${v.name}</h2>
-          <p style="color:#64748b">${emp?.name || '-'} • ${v.type || '-'} • ${v.location || '-'}</p>
-        </div>
-        
-        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:1.5rem">
-          <div style="background:#f8fafc;padding:1rem;border-radius:10px">
-            <div style="font-size:0.75rem;color:#64748b;text-transform:uppercase;font-weight:600">Perfil DISC Desejado</div>
-            <div style="font-size:1rem;font-weight:700;color:#0f172a;margin-top:0.25rem">${v.disc ? discLabel[v.disc] : 'Não especificado'}</div>
-          </div>
-          <div style="background:#f8fafc;padding:1rem;border-radius:10px">
-            <div style="font-size:0.75rem;color:#64748b;text-transform:uppercase;font-weight:600">Faixa Salarial</div>
-            <div style="font-size:1rem;font-weight:700;color:#0f172a;margin-top:0.25rem">${v.salario || 'Não informada'}</div>
-          </div>
-        </div>
-        
-        <div style="margin-bottom:1.5rem">
-          <h4 style="font-weight:700;color:#0f172a;margin-bottom:0.5rem;display:flex;align-items:center;gap:8px">
-            <i class="ph ph-list-bullets" style="color:var(--brand-cyan)"></i> Atividades
-          </h4>
-          <div style="background:#f8fafc;padding:1rem;border-radius:10px;white-space:pre-wrap;color:#334155;line-height:1.6">${v.atividades || '<em style="color:#94a3b8">Nenhuma atividade descrita</em>'}</div>
-        </div>
-        
-        <div style="margin-bottom:1.5rem">
-          <h4 style="font-weight:700;color:#0f172a;margin-bottom:0.5rem;display:flex;align-items:center;gap:8px">
-            <i class="ph ph-user-circle" style="color:var(--brand-purple)"></i> Perfil / Competências
-          </h4>
-          <div style="background:#f8fafc;padding:1rem;border-radius:10px;white-space:pre-wrap;color:#334155;line-height:1.6">${v.perfil || '<em style="color:#94a3b8">Perfil não especificado</em>'}</div>
-        </div>
-        
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:1rem;background:#eff6ff;border-radius:10px">
-          <div>
-            <div style="font-size:0.8rem;color:#64748b">Participantes vinculados</div>
-            <div style="font-size:1.25rem;font-weight:700;color:#0f172a">${parts.length}</div>
-          </div>
-          <div>
-            <div style="font-size:0.8rem;color:#64748b">Quantidade de vagas</div>
-            <div style="font-size:1.25rem;font-weight:700;color:#0f172a">${v.qtd || 1}</div>
-          </div>
-        </div>
-      `;
-      
-      document.getElementById('verVagaConteudo').innerHTML = html;
-      openModal('modalVerVaga');
-    }
-    
     function abrirCopiarVaga(id) {
       const vagas = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]');
       const empresas = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
@@ -1164,7 +1700,7 @@
       const lista = document.getElementById('listaEmpresasCopy');
       
       if (outrasEmpresas.length === 0) {
-        lista.innerHTML = '<div style="padding:1rem;text-align:center;color:#64748b">Não há outras empresas para copiar.</div>';
+        lista.innerHTML = '<div style="padding:1.5rem;text-align:center;color:#64748b">Não há outras empresas para copiar.</div>';
         document.getElementById('selectAllEmpresas').parentElement.style.display = 'none';
       } else {
         document.getElementById('selectAllEmpresas').parentElement.style.display = 'flex';
@@ -1175,7 +1711,7 @@
             <input type="checkbox" id="emp_${e.id}" value="${e.id}" class="empresa-checkbox" onchange="updateCopySummary()">
             <label for="emp_${e.id}">
               <strong>${e.name}</strong>
-              ${e.cnpj ? `<span style="font-size:0.75rem;color:#94a3b8"> • ${e.cnpj}</span>` : ''}
+              ${e.cnpj ? `<span style="font-size:0.8rem;color:#94a3b8"> • ${e.cnpj}</span>` : ''}
             </label>
           </div>
         `).join('');
@@ -1209,7 +1745,6 @@
       }
       
       const vagas = JSON.parse(localStorage.getItem('vigorre_jobs') || '[]');
-      const empresaOriginal = JSON.parse(localStorage.getItem('vigorre_companies') || '[]');
       const vagaOriginal = vagas.find(x => x.id === vagaId);
       
       if (!vagaOriginal) {
@@ -1260,21 +1795,21 @@
       
       let participantes = JSON.parse(localStorage.getItem('vigorre_participants') || '[]');
       participantes.push(data);
-      localStorage.setItem('vigorre_participantes', JSON.stringify(participantes));
+      localStorage.setItem('vigorre_participants', JSON.stringify(participantes));
       
       if (window.VigorreDB?.supabase) {
         await window.VigorreDB.supabase.from('participants').upsert([data]);
       }
       
       closeModal('modalParticipante');
-      showToast('✅ Participante cadastrado!');
+      showToast('✅ Participante cadastrado com sucesso!');
       carregarDados();
     }
     
     async function deleteParticipante(id) {
       if (!confirm('Excluir este participante?')) return;
-      let participantes = JSON.parse(localStorage.getItem('vigorre_participantes') || '[]').filter(x => x.id !== id);
-      localStorage.setItem('vigorre_participantes', JSON.stringify(participantes));
+      let participantes = JSON.parse(localStorage.getItem('vigorre_participants') || '[]').filter(x => x.id !== id);
+      localStorage.setItem('vigorre_participants', JSON.stringify(participantes));
       if (window.VigorreDB?.supabase) {
         await window.VigorreDB.supabase.from('participants').delete().eq('id', id);
       }
@@ -1285,9 +1820,10 @@
     function showToast(msg, type='success') {
       const t = document.createElement('div');
       t.className = 'toast ' + (type === 'error' ? 'error' : '');
-      t.textContent = msg;
+      t.innerHTML = type === 'error' ? '<i class="ph ph-warning-circle" style="font-size:1.25rem"></i>' : '<i class="ph ph-check-circle" style="font-size:1.25rem"></i>';
+      t.innerHTML += msg;
       document.body.appendChild(t);
-      setTimeout(() => t.remove(), 3000);
+      setTimeout(() => t.remove(), 4000);
     }
     
     function logout() {
